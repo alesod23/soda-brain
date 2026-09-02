@@ -5,8 +5,10 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: b3102940-5e76-40e1-8354-ffd1883e672a
-  modified: 2026-07-31T04:52:15.365Z
+  modified: 2026-09-02T19:57:20.857Z
 ---
+
+RETIRED 2026-09-02: replaced by Notion AI Meeting Notes + Call Intake agent; vbs moved to Startup\_disabled.
 
 # granola-auto (built 2026-07-30)
 
