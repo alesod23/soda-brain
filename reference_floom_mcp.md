@@ -8,6 +8,37 @@ metadata:
   modified: 2026-08-03T02:10:06.551Z
 ---
 
+## ✅ STATUS 2026-09-02: endpoint is BACK UP — and there are TWO Floom accounts, not one
+
+- **The 404 is GONE.** `tools/list`, `workspace.info`, `connections.list`, `workers.list` all return
+  HTTP 200 against `https://workeros-api.floom.dev/mcp/ws_9b31dcfd40154f` with the stored bearer
+  from `~/.env/floom.env`. The 2026-08-02 outage below was transient. The MCP entry can be restored
+  with the `claude mcp add` line further down whenever it's wanted.
+- **Alessandro has TWO separate Floom accounts, each signed in with a DIFFERENT personal Google
+  account.** Floom names a workspace after the email local-part, so `workspace_name` identifies the
+  login. `workspace.info` returns `email: null`, so the login email comes from `workspace_name` plus
+  the CLI credential files at `~/.config/floom/`:
+
+  | Floom account | Google login | workspace_id | authed | Connections | Workers |
+  |---|---|---|---|---|---|
+  | `a99a1a49-626f-4529-9f38-b55bea822302` | **alesoda2002@gmail.com** | `ws_9b31dcfd40154f` | 2026-07-02 | gmail → `alessandro.sodano@cdtm.com` (active/healthy) | text-normalizer, gmail-summary-agent, tundra-followup-brief |
+  | `e5a45167-ebb3-4205-b090-c4eb522c410d` | **alessandrosodano23@gmail.com** | `ws_d8b676b8295748` | 2026-07-19 | linkedin → `alessandrosodano23@gmail.com` (active/healthy) | none (empty workspace) |
+
+- **`~/.config/floom/active` currently points at `e5a45167-…` = alessandrosodano23@gmail.com**, i.e. the
+  EMPTY workspace. The `floom` CLI therefore talks to the wrong workspace by default. All the real
+  workers live under alesoda2002@gmail.com. Switch the active account before any `floom` CLI work.
+- **`~/.env/floom.env` holds the alesoda2002 token** (`floom_lC…`, matches
+  `~/.config/floom/credentials/a99a1a49-….json`). The alessandrosodano23 token (`floom_ZX7F…`) is in
+  `~/.config/floom/credentials.json`. Both are valid.
+- **Do NOT answer "which account is Floom on?" with a work address.** `alessandro.sodano@cdtm.com`
+  is only the Gmail DATA CONNECTION inside workspace #1, never the login.
+  `alessandro@tundrahealth.ai` has no Floom relationship at all.
+- Mail check 2026-09-02: zero Floom messages in cdtm, tundra, or lobbly mailboxes — consistent with
+  both signups living in the two personal Gmails (whose `triage/tokens/` are revoked, so those
+  mailboxes can't be searched programmatically right now).
+
+---
+
 ## ⚠️ STATUS 2026-08-02: endpoint 404s, token relocated, entry removed from settings.json
 
 - **The workspace endpoint is DEAD.** `POST tools/list` to
