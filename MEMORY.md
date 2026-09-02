@@ -86,7 +86,8 @@
 - [OAuth login_hint + verify](feedback_oauth_login_hint_and_verify.md).
 - 🔑 [Open URLs with correct account](feedback_open_urls_with_correct_account.md) — AccountChooser?Email=...&continue=..., never bare Start-Process on account-bound URLs.
 - [MCP-first routing](feedback_mcp_over_pw.md) · [linkedin-mcp](reference_linkedin_mcp.md).
-- ✉️ [Cold email to operator = ask to learn](feedback_cold_email_operator_ask_for_advice.md) — ask LAST; register scales by audience.
+- ✉️ [Cold email to operator = ask to learn](feedback_cold_email_operator_ask_for_advice.md) — ask LAST; register scales by audience; university = shortest recognisable name (TUM in DE/tech).
+- 🎯 [Outreach voice: ASK FIRST](feedback_outreach_ask_first_peer_voice.md) — peers get ask-first + reciprocity; "student founder" untranslated; gold in `skills/linkedin-outreach/examples.md`.
 - [Lovable pattern](feedback_cold_email_lovable_pattern.md) — touchpoint+ask opener, lived micro-story.
 - [Template mining](feedback_outreach_template_mining.md) · [ONE cible/tpl](feedback_template_cible_single_persona.md) · [OUTREACH-SYSTEM.md read+UPDATE](reference_outreach_system.md).
 - [User Life Context](context_user_life.md) — APPEND.

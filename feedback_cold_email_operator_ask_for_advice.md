@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: bcf4ed36-d8ed-4e48-817b-146c5998e5ca
-  modified: 2026-08-10T11:39:29.721Z
+  modified: 2026-09-02T14:56:25.339Z
 ---
 
 Set 2026-08-10 after he rewrote my Nehal Kapadia (MGH biomedical engineering) draft and said *"your email was terrible."* **Treat my version as the anti-pattern.** Confirmed line by line via his own edits plus a preference pass.
@@ -32,7 +32,7 @@ Set 2026-08-10 after he rewrote my Nehal Kapadia (MGH biomedical engineering) dr
 3. **The ask, last, in its own paragraph**, with the flattery attached: "Your expertise would help us better understand the field."
 4. Availability, then a full signature (title, phone, company).
 
-**University: always the full name, never "CDTM" outside Munich.** Nobody abroad knows it; "Technical University of Munich" is the recognisable one.
+**University: use the SHORTEST name the recipient will recognise** (refined 2026-09-02). Never "CDTM" outside Munich, nobody knows it. But the long "Technical University of Munich" is only for people who would NOT recognise the short form (a US hospital operator, a French institution). **Anyone working in Germany, or in tech, knows TUM: write "a TUM" / "at TUM".** Spelling it out to them is noise. See [[feedback_outreach_ask_first_peer_voice]].
 
 "I" vs "we" is *"not a big deal"* — don't spend edits there.
 
