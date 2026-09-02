@@ -59,6 +59,7 @@
 - [claude-bar](reference_claude_bar.md) · [GSD statusline](reference_gsd_statusline.md) — npm-tarball-only.
 - 🔇 [Never-surface groups](feedback_sodanotif_never_surface_groups.md) — CDTM Engineering + Servus & See You are NEVER actionable; add JIDs to `muted-jids.json` (wa.js + recap.ps1); /triage unaffected.
 - SODANOtif: [core](reference_sodanotif.md) · [card format](feedback_sodanotif_card_format.md) · [battery](feedback_sodanotif_battery_power_task_setting.md) · [stale-Gmail filter](reference_sodanotif_recap_stale_gmail_fix.md) · [noreply never](feedback_noreply_never_in_notifications.md).
+- 🔴🟣 [Gmail + Slack LIVE on the VPS](reference_sodanotif_live_gmail_slack.md) — 60s pollers → stores → daemon cards; re-seed = delete state entry; `--replay-latest` test hook; recap no longer first-seen for email/Slack.
 - [lby DEAD](reference_lby_dead.md) — Gmail=cdtm only.
 - [Email catch-up](feedback_email_catchup_consistency.md) — same fields; calendar noise separate.
 - [Track phased plans](feedback_track_phased_plans.md) — "later" = commitment.

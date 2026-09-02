@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-02T16:28:34.999Z
+  modified: 2026-09-02T17:20:14.637Z
 ---
 
 # LinkedIn poll lane (SODANOtif 4th source)
@@ -21,6 +21,9 @@ Read-only inbox watcher. `get_inbox` ONLY, never `get_conversation` (that marks 
   - **Store** `G:\My Drive\DA\linkedin-store.jsonl` (== VPS `/home/da/gdrive/DA/linkedin-store.jsonl`, rclone ~10-30s). Line = WA-store-like object: `{id:"li:<thread>:<hash>", ts, iso, timestamp (detection unix s), source:"linkedin", chatId, chatName, sender, text, time_label, ts_precision, url, fromMe:false}`.
 - **Daemon source** `sodanotif/sources/linkedin.js` (`startLinkedInSource`, same contract as wa.js: offset tail, start-gate on `timestamp`, dedupe by id, 5s poll is the real trigger on the FUSE mount). Wired in `daemon.js` next to WA: source key `LinkedIn`, blue dot `🔵`, no "(LinkedIn)" tag, thread url rendered as one `<a>open</a>` link and stored in notif-log/last-notification (`url` field). Day-only labels ("Sep 1") are passed as `when` verbatim instead of "Sep 1, 00:00". VPS unit has `Environment=SODANOTIF_LI_STORE=/home/da/gdrive/DA/linkedin-store.jsonl`. WA prompt verified byte-identical after the refactor. Unit test: `node sodanotif/test-linkedin-source.js`.
 - **Langfuse:** poll = trace `linkedin-poll` (spans spawn/get_inbox/parse/diff/write); `probe.py` = trace `linkedin-probe` (spawn/get_inbox/parse, no state, no write) = TARGET for /langfuse-bananza, launch prompt at `~/.claude/loops/langfuse-optimizer/launch-linkedin.md`. Baseline 2026-09-02: spawn 4.3s, get_inbox 25.4s, total 30s.
+
+## Optimizer results (2026-09-02)
+Three poller-gated shims live in `~/.linkedin-mcp/launcher.py`, each double-gated on `--user-data-dir` in argv AND an env flag that only `li_inbox.SERVER_ENV` sets, so all of them are INERT for the live-session launcher (a Claude session's `linkedin-mcp` server runs upstream code unchanged). Kept: `LINKEDIN_SKIP_STARTUP_FEED_CHECK=1` (no /feed/ pre-flight + remember-me wait; get_inbox's own navigation still raises AuthenticationError on a dead clone) and `LINKEDIN_FAST_THREAD_REFS=1` (active-row shortcut + 20ms poll in the sidebar click loop, same output). Tried and REVERTED: `LINKEDIN_FAST_MODAL_CLOSE` (count()-gated `handle_modal_close`): the ~1s there is LinkedIn's main thread still hydrating, any CDP call blocks, the no-op just moves the stall into the click loop (net 0); a NOTE above `main()` records this so it is not retried. Final probe timing: baseline 28.2s -> 15.5s (-45%); poll.py `poll ok ... 14.2s`. Not shimmable: `import fastmcp` ~3s of the 4s spawn. Declined: INBOX_LIMIT 25->10 (~2s for 6 fewer tracked threads) and the Voyager API path (different data path, unsafe). Full record: `~/.claude/loops/langfuse-optimizer/REPORT-linkedin.md`, `state-linkedin.json`.
 
 ## Profile clone (why + how to re-login)
 The poller MUST NOT share `~/.linkedin-mcp/profile` with a live Claude session's server (Chromium lock + launcher.py reaps same-class launchers; the poller passes `--user-data-dir` so it is its own class). `clone-profile.ps1` robocopy-/MIR-mirrors profile -> `profile-poll` excluding lock files AND the Cookies DB (exclusively locked while a session is up), then `seed-cookies.py` (server venv) imports `~/.linkedin-mcp/cookies.json` into the clone and checks the feed loads. Refuses to run while a poller launcher is alive.
