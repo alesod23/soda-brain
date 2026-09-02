@@ -1,0 +1,147 @@
+# Memory Index
+
+- 📌 ["Make this a rule" = write NOW](feedback_rule_requests_are_binding.md) — file + index line + confirm, same turn.
+- 🧩 [Skills go on BOTH machines](feedback_skills_install_on_both_machines.md) — every new/updated skill: laptop + `/home/da/.claude/skills/`, same turn.
+- 🖥️ [Startup opens NOTHING](feedback_laptop_startup_clean.md) — he runs Restore-CC/Restore-Savior himself.
+- ↩️ ["nvm" cancels previous message](feedback_nvm_cancels_previous_message.md) — drop it; if acted, offer undo.
+- 💰 [Investor leads CDTM](reference_investor_leads_cdtm.md) — Viet Le-Martin first; +Waltenberger, Jablonka.
+- 📝 [Tundra Weekly doc](reference_tundra_weekly_meeting_doc.md) — agenda = calendar event's Google Doc, add via `gdoc_agenda.py`.
+- 🚨 [Account migration PENDING](project_account_migration.md) — diff against `MIGRATION-account-switch.md`; 3 MCPs pre-broken.
+- [DA SYSTEM](project_da_system.md) — laptop-off Claude, approve/reject loop, self-maintaining brain, y/n corpus.
+- 📥 [Notion Inbox](project_notion_signals.md) — shared Tundra drop-box; Caleb types, CC/DA pushes rows (plumbing stays local); ONE `Inbox filer` agent files on Approved; Granola→Notion manual even on Business.
+- [Cloud routine alerts → Calendar popup](reference_cloud_routine_alert_delivery.md) — connector Gmail can't send; create_event popup.
+- [Approval-hub (4180)](reference_approval_hub.md) — canonical y/n; POST /pending; card ≤58 lines; Push-Lane-Watchdog.
+- ["Ping" = hub card](feedback_approvals_are_pings.md) — never numbered questions in chat.
+- 🔕 [Approval cards ping ONCE](feedback_approval_ping_once.md) — TG re-notify repeat disabled 2026-08-31; never re-ping a pending card.
+- 🔌 [LAPTOP + PHONE ping cards DEACTIVATED, not deleted](feedback_laptop_ping_card_deactivated.md) — `LAPTOP_POPUP_ENABLED` / `PHONE_POPUP_ENABLED` = false; **TELEGRAM IS THE ONLY CHANNEL** (2026-08-12), every card, complete, re-firing across sessions.
+- 🃏 ["PING CARD" = laptop+phone approval, must be FULL](feedback_ping_cards_must_be_full.md) — /next + TG now carry `context`; phone stays capped (buttons vanish); decision in `text`, artifact in `context`.
+- [Simple send = fast](feedback_simple_send_fast_no_diagnostics.md) — ONE call, no retry-loop.
+- 🎙️ [Call recording](reference_pixel_call_recording.md) — MacroDroid CANNOT (Android blocks it); Pixel = Google Call Assist, laptop = OBS `Call Recorder` dual-track + `Split-CallRecording.ps1`.
+- [Long-form voice lane](reference_voice_longform_lane.md) — ON THE VPS (`da-voice.timer`); laptop `Voice-Longform` DISABLED; safe words butterfly/ghost-cat.
+- [Email to-do = find existing thread](feedback_email_todo_find_existing_thread.md) — find which account, REPLY.
+- [GTM v3 stack](project_gtm_v3_stack.md) — `gtm-eng\stack-decision.html`; lemlist €109.
+- [message-builder corpus](reference_message_builder_corpus.md) — SentCorpus-Harvest is authorized.
+- [Pending-send: check before nudging](feedback_pending_send_check_before_nudge.md).
+- [KB split needs bridge](feedback_kb_split_needs_bridge.md).
+- [Tundra CRM taxonomy](reference_tundra_crm_taxonomy.md) — categories in 4 places; Hunter.io grading.
+- [NPD vs Tundra separate](feedback_npd_vs_tundra_separate.md).
+- [MPD Granola folder](reference_mpd_granola_folder.md) — drop-to-Raw, no Notion.
+- [/design-lib](reference_design_lib.md) — push=free, get_file=expensive; INDEX.md = ID registry.
+- [tail -f LOCKS logfiles on Windows](feedback_windows_tail_locks_logfile.md).
+- [granola-auto](reference_granola_auto.md) — watcher → Meetings row + Raw; sees ONLY Tundra Health workspace; folder=Type.
+- Telegram: [reply tool every turn](feedback_telegram_reply_tool_every_turn.md) · [reply_to inbound id](feedback_telegram_reply_to_threading.md) · [bare N = Nth-newest card](feedback_telegram_ordinal_message_reference.md) · [swipe-reply resolver](reference_tg_reply_resolver.md).
+- [.ps1 ASCII-only](feedback_ps1_ascii_only_no_unicode_dashes.md).
+- [PS5.1 @(ConvertFrom-Json) doesn't unroll](feedback_ps51_convertfrom_json_no_unroll.md) — assign first.
+- [Email-not-findable tracking](feedback_email_not_findable_tracking.md) — stamp "email introuvable".
+- [Transcript artifact format](feedback_transcript_artifact_format.md) — clinic-call CSS; external .md raw.
+- [Notion Tundra system](reference_notion_tundra_system.md) — verify `fetch self` before writes.
+- [coattio→Notion sync](reference_coattio_notion_sync.md) — pre-authorized lane #1 (#2 = granola-auto).
+- [Tundra stack](../../medtech-brain/_system/TUNDRA-STACK.md) — READ ALWAYS for Tundra; Drive→tundrahealth, Calendar→cdtm, Gmail NOT connected.
+- [Tundra deliverables → gsheet](feedback_tundra_deliverables_gdrive.md) — Shared Drive/Outreach, not .csv.
+- [coattio servers](reference_coattio_servers.md) — 4124+4137, Coattio-Watchdog, NEVER run_in_background; [Tailscale](reference_coattio_tailscale.md).
+- [/overnight](reference_overnight_harness.md) — Workflow `args` is JSON STRING.
+- [Floom MCP](reference_floom_mcp.md) · [RadioCLI](project_radiocli.md) · [Restore-CC](reference_restore_cc.md) — savior excluded by CONTENT.
+- [Laptop power states](reference_laptop_power_states.md) — Modern-Standby; Ctrl+Alt+F12 hibernates.
+- [Drive public share](reference_gdrive_public_share.md) — `G:\My Drive` → anyone:reader.
+- 🗂️ [VPS gdrive mounts](reference_vps_gdrive_mounts.md) — box mounts CDTM(`/home/da/gdrive`=`G:`)+Tundra Shared; laptop Downloads/Screenshots now route into CDTM Drive; HEC OneDrive = dead end (admin-locked).
+- [Dynamic-HTML](reference_dynamic_html.md) — node 4140; [static DEFAULT](feedback_dynamic_html_default.md).
+- [Channel msgs separate](feedback_channel_sequential_handling.md).
+- [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_bot.
+- [AHK autostart](reference_ahk_autostart.md) — `::td`, Ctrl+Alt+T.
+- [/granola reminder timing](feedback_granola_reminder_next_day.md) — surface_on per call.
+- [CDTM kickoff TF](project_cdtm_kickoff_tf.md) — Fri email to Raunaq.
+- [sodaOS](project_sodaos.md) — phone-first journaling.
+- [Phone→desktop](project_phone_to_desktop.md) — `G:\My Drive\From phone\`; supersedes [WA Web media](feedback_wa_web_for_media.md).
+- Obsidian: [sequential opens ~1.5s](feedback_obsidian_sequential_opens.md) · [obsidian:// preferred](reference_obsidian_app_path.md).
+- [Paper notes → Raw](feedback_paper_notes_standalone_raw.md).
+- [BIG MOVE backup](reference_big_move_backup.md) — robocopy exit 1=ok.
+- [/audio-to-notes](reference_audio_to_notes.md) — faster-whisper → Raw.
+- [claude-bar](reference_claude_bar.md) · [GSD statusline](reference_gsd_statusline.md) — npm-tarball-only.
+- 🔇 [Never-surface groups](feedback_sodanotif_never_surface_groups.md) — CDTM Engineering + Servus & See You are NEVER actionable; add JIDs to `muted-jids.json` (wa.js + recap.ps1); /triage unaffected.
+- SODANOtif: [core](reference_sodanotif.md) · [card format](feedback_sodanotif_card_format.md) · [battery](feedback_sodanotif_battery_power_task_setting.md) · [stale-Gmail filter](reference_sodanotif_recap_stale_gmail_fix.md) · [noreply never](feedback_noreply_never_in_notifications.md).
+- [lby DEAD](reference_lby_dead.md) — Gmail=cdtm only.
+- [Email catch-up](feedback_email_catchup_consistency.md) — same fields; calendar noise separate.
+- [Track phased plans](feedback_track_phased_plans.md) — "later" = commitment.
+- [NEVER headless-send fuzzy](feedback_no_headless_fuzzy_send.md) — remote=draft-only.
+- [tg-bridge](reference_tg_bridge.md).
+- 🧭 [Trippy naming](reference_trippy_naming.md) — `/trippy` CURRENT; code dir `v2\`.
+- Trippy: [core](project_trippy_v2.md) · [metro](feedback_trippy_metro_airport_normalization.md) · [headless](feedback_trippy_headless_parallel.md) · [links](feedback_trippy_durable_links.md) · [two-pass](feedback_trippy_deep_dive.md) · [airline-direct](feedback_airline_direct_for_known_carrier.md).
+- [Allowlist widening needs OK](reference_permission_allowlist_gaps.md).
+- 🔎 [Diagnose before naming a cause](feedback_diagnose_before_naming_root_cause.md) — cheap discriminating check first.
+- [Never fabricate fetched](feedback_never_fabricate_fetched_content.md).
+- 📊 [Deliverable figures need sources](feedback_deliverable_figures_need_sources.md) - derived amounts inherit invented inputs; research + options-with-links UI, ~30 words/card.
+- [Notion MCP scoped](reference_notion_mcp_access.md) — empty search=scope.
+- [Clipboard drafts](feedback_clipboard_all_paste_drafts.md) — verify before claiming.
+- [Langfuse pains](project_langfuse_pains.md) · [scoring](feedback_pain_corpus_scoring.md).
+- [Tundra Talents](project_tundra_talents.md) · [Claude Setup Repo](project_claude_setup.md).
+- [User Background](user_background.md) — CS student new to coding; 1-2 first-principles sentences.
+- [Plan compute not API keys](feedback_no_api_keys.md).
+- [WA Stack](reference_wa_sender.md) — wa-daemon; send.js/4119.
+- WA ops: [creds zeroed](reference_wa_daemon_creds_corruption.md) · [RE-LINK = QR ONLY, never codes/428](reference_wa_daemon_repair.md) · [health](reference_wa_daemon_health.md) · [flap lies](feedback_wa_daemon_flap_and_outgoing_gap.md) · [Web scrape](reference_wa_web_scrape.md) · [UTC-guard](reference_wa_scheduled_sends.md) · [recipient variants](feedback_wa_recipient_resolution.md).
+- [Triage Gmail helper](reference_triage_gmail.md) · [Slack helper](reference_slack_helper.md) — dry-run default.
+- [slack.cmd eats newlines](feedback_slack_cmd_newline_truncation.md) — drive from Python.
+- 🚫 [NEVER bare account chooser](feedback_never_trigger_bare_account_chooser.md) — token-exists is NOT enough; gmail.py/drive.py now hard-block interactive auth.
+- 📁 [drive.py CLI](reference_drive_cli.md) — reaches `_CDTM Munich`; MCP Drive is tundra-only; `update` dry-runs.
+- [Resolve account BEFORE linking](feedback_resolve_account_before_linking.md) — whoami; `setup_all_accounts.py`, never gmail.py re-auth.
+- [OAuth login_hint + verify](feedback_oauth_login_hint_and_verify.md).
+- 🔑 [Open URLs with correct account](feedback_open_urls_with_correct_account.md) — AccountChooser?Email=...&continue=..., never bare Start-Process on account-bound URLs.
+- [MCP-first routing](feedback_mcp_over_pw.md) · [linkedin-mcp](reference_linkedin_mcp.md).
+- ✉️ [Cold email to operator = ask to learn](feedback_cold_email_operator_ask_for_advice.md) — ask LAST; register scales by audience.
+- [Lovable pattern](feedback_cold_email_lovable_pattern.md) — touchpoint+ask opener, lived micro-story.
+- [Template mining](feedback_outreach_template_mining.md) · [ONE cible/tpl](feedback_template_cible_single_persona.md) · [OUTREACH-SYSTEM.md read+UPDATE](reference_outreach_system.md).
+- [User Life Context](context_user_life.md) — APPEND.
+- [YouTube transcripts](feedback_yt_transcripts.md) — fetch.js; WebFetch=boilerplate.
+- [travel-search](reference_travel_search.md).
+- Triage plumbing: [v2 reply](reference_triage_v2_reply.md) · [operations](reference_triage_operations.md) · [v3 aliases](reference_triage_aliases_and_state.md).
+- [Shared inbox cutoff](feedback_shared_inbox_cutoff.md) — read AND advance.
+- [web-fetch-pw](reference_web_fetch_pw.md) — JS pages; Granola reader.
+- [KB drift guard](feedback_kb_systems_drift_guard.md) · [systems doc READ-FIRST](reference_kb_systems.md).
+- [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
+- [Lobbly](project_lobbly.md) · [Outreach CRM :4123](project_outreach_crm.md) · [Unclear-disclosure corpus](project_unclear_disclosure_corpus.md).
+- [Practitioner research](feedback_practitioner_research_methodology.md) — stories not claims.
+- [Bare replies → notif-log](feedback_resolve_reply_from_notiflog.md).
+- [WA Web in default browser](feedback_open_wa_web_in_comet.md) — never desktop app.
+- 🚫🪐 [COMET ABANDONED — Chrome ONLY](feedback_browser_chrome_default.md) — 2026-09-02; never open comet.exe again; trippy → Chrome profile (needs carrier re-logins); all auto-opens land in Chrome (CDTM).
+- [Italy travel](context_travel_patterns.md).
+- [Long-running agents](feedback_agent_long_running.md) — dispatch-and-reaper.
+- ⏳ [Agent output files are INTERIM](feedback_agent_output_file_is_interim.md) — final only at the completion notification; they rewrite wholesale.
+- [Calendar availability](reference_calendar_availability_link.md) — suggest_time lies.
+- [OneDrive path](reference_onedrive_path.md) · [Python full path](feedback_python_full_path.md).
+- [Curriculum tracker](feedback_curriculum_tracker.md) — :4117; [weekly learnings](reference_weekly_learnings.md).
+- [Env files](reference_env_files.md) — `~/.env/<service>.env`.
+- Triage rules: [chips+24h](feedback_triage_askquestion_and_24h.md) · [24h cap](feedback_triage_24h_cap.md) · [actionable def](feedback_triage_actionable_definition.md) · [WA window-only](feedback_triage_wa_dm_window_only.md) · [--jid only](feedback_triage_wa_send_jid.md) · [unread-tail](feedback_triage_unread_tail_slicing.md) · [Slack cutoff](feedback_slack_cutoff_filter.md).
+- [AskUserQuestion for prefs](feedback_ask_user_question_preference.md) — multiSelect.
+- [Vault task system](reference_vault.md) — `~/task-land/`.
+- /daily: [11-step](reference_daily_briefing.md) · [dedup](feedback_daily_dedup_today_page.md) · [full-section](feedback_daily_full_section_contract.md) · [deletion→Waiting](feedback_daily_deletion_parks_to_waiting.md) · [no rollover](feedback_daily_waiting_and_no_rollover.md) · [page = only edit surface](feedback_daily_is_interface_folders_are_plumbing.md).
+- Task fields: [surface_on vs due](feedback_future_due_to_inbox.md) · [/dump dated → inbox](feedback_dump_dated_followups_to_inbox.md).
+- [Raw filename MM-DD](feedback_raw_note_filename_month_day.md).
+- [KB vault](reference_kb_vault.md) — root CLAUDE.md is contract.
+- ✉️ [Remind, don't re-confirm](feedback_remind_dont_reconfirm.md) — already accepted? inform, never reopen; no unsolicited tech check.
+- Email style: [professor](feedback_professor_email_style.md) · [warm-intro](feedback_warm_intro_phrasing.md) · [Italian tu/Lei](feedback_italian_practitioner_followup_style.md) · [HTML multipart](feedback_gmail_html_rendering.md).
+- [Message-send protocol](feedback_message_send_protocol.md) — "dsend"=now; "quotes"=verbatim; else hub card.
+- [dsend includes attachment](feedback_dsend_includes_attachment.md).
+- [React 👀 FIRST on TG](feedback_react_eyes_before_working.md).
+- HEC Outlook: [setup](project_hec_outlook_setup.md) · [COM, Classic only](reference_hec_outlook.md).
+- [No polling bg tasks](feedback_no_polling_on_background_tasks.md).
+- [Output delivery CANONICAL](feedback_output_delivery_rules.md) — file:/// links; HTML auto-open; vault .md→Obsidian+clipboard.
+- 🌐 [TundraPage repo](project_tundrapage_repo.md) — alesod23 READ-ONLY; branch→PR→Caleb's review.
+- [git commit -F not -m](feedback_git_commit_message_file_on_powershell.md).
+- [Git identity](reference_git_github_identity.md) — alesod23; no Claude trailer on PERSONAL repos.
+- 🏔️ [Tundra commits NEED the Claude trailer](feedback_tundra_commits_need_claude_trailer.md) — Caleb's rule; overrides the personal-repo no-trailer rule; not GPG signing.
+- [Daily tag CSS](reference_daily_tag_css_split_fix.md).
+- ⚠️ [Mixed threads leak internal comms](feedback_thread_reply_leaks_internal_comms.md) — gmail.py now quotes by recipient; still check who's in the thread.
+- [Read source thread first](feedback_read_source_thread_before_acting.md) · [Follow links not labels](feedback_follow_links_not_link_labels.md).
+- [Email draft = real Gmail draft](feedback_email_draft_must_be_real_not_clipboard.md).
+- [Deck→PDF print snapshot](feedback_deck_pdf_needs_print_snapshot.md).
+- Tundra decks: [Design source only](feedback_tundra_deck_workflow.md) · [bridged EN pinned](reference_tundra_bridged_deck_source.md) · [pull-before-write](feedback_designsync_pull_before_write.md) · [fingerprint+fitz](feedback_deck_source_fingerprint_and_render.md).
+- [ICO prospect Renou](project_tundra_ico_renou.md).
+- [Notion writes need approval](feedback_notion_write_needs_approval.md).
+- [Local server start](feedback_local_server_start_pattern.md) — detached, no run_in_background.
+- [Tundra call-prep](reference_tundra_call_prep_flow.md) · [Tundra Granola folder](reference_tundra_granola_folder.md).
+- [Gmail Snippets ext](project_gmail_snippets_extension.md).
+- [Schtasks need VBS](feedback_schtasks_vbs_wrapper_no_console_flash.md).
+- [Voice fast lane](reference_voice_lane.md) — "go" executes.
+- [Quick Claude](reference_quick_claude.md) — Ctrl+Alt+Q.
+- [NEVER respawn savior](feedback_never_respawn_savior_session.md) — savior now ON THE VPS: `restore-savior` (attach-or-create) / `vpsc`.
+- 🎨 [Claude Design asks every push](reference_claude_design_permissions.md) — finalize_plan is a hardcoded ask; only a PreToolUse hook clears it.
+- 🔔 [Approval-only notifications](reference_claude_code_notifications.md) — Notification hook matches on type; trust dialog opened on "No".
