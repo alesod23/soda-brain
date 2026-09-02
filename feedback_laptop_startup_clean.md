@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 26333c6f-5f43-43b7-badf-07594a1db485
-  modified: 2026-08-05T20:29:30.996Z
+  modified: 2026-09-02T17:37:53.707Z
 ---
 
 **Standing rule (set 2026-08-05):** a Windows login must leave the screen **empty**. Nothing I
@@ -38,6 +38,8 @@ to solve. Background work is welcome — **hidden** background work. Visible win
 - `coattio KPI widget (ctrl alt s).ahk` — showed the always-on-top KPI overlay at login.
   Now created with `Show("Hide …")` and `gVisible := false`, so **Ctrl+Alt+S is the only way it
   appears**; the 15s poll of `localhost:4124` is armed on show and disarmed on hide.
+  UPDATE 2026-09-02: the script is now `_disabled - coattio KPI widget (ctrl alt s).ahk`, skipped by
+  the launcher, so Ctrl+Alt+S is bound to nothing. Master list: [[feedback_shortcuts_master_file]].
 
 **How to apply going forward:** anything that must run at boot goes in as a hidden background
 worker — a Task Scheduler job launching a `wscript //B` `.vbs`

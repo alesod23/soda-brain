@@ -1,6 +1,7 @@
 # Memory Index
 
 - 📌 ["Make this a rule" = write NOW](feedback_rule_requests_are_binding.md) — file + index line + confirm, same turn.
+- ⌨️ [SHORTCUTS.md = master list](feedback_shortcuts_master_file.md) — `task-land/_system/SHORTCUTS.md`; update SAME TURN any hotkey/alias/skill changes.
 - 🧩 [Skills go on BOTH machines](feedback_skills_install_on_both_machines.md) — every new/updated skill: laptop + `/home/da/.claude/skills/`, same turn.
 - 🖥️ [Startup opens NOTHING](feedback_laptop_startup_clean.md) — he runs Restore-CC/Restore-Savior himself.
 - ↩️ ["nvm" cancels previous message](feedback_nvm_cancels_previous_message.md) — drop it; if acted, offer undo.
