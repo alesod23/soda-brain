@@ -69,6 +69,7 @@
 - 🧭 [Trippy naming](reference_trippy_naming.md) — `/trippy` CURRENT; code dir `v2\`.
 - Trippy: [core](project_trippy_v2.md) · [metro](feedback_trippy_metro_airport_normalization.md) · [headless](feedback_trippy_headless_parallel.md) · [links](feedback_trippy_durable_links.md) · [two-pass](feedback_trippy_deep_dive.md) · [airline-direct](feedback_airline_direct_for_known_carrier.md).
 - [Allowlist widening needs OK](reference_permission_allowlist_gaps.md).
+- 🧪 [Verify "not possible" claims from agents](feedback_verify_agent_capability_claims.md) — check vendor changelog before designing a workaround (Notion "Meeting note summarized" miss, 2026-09-02).
 - 🔎 [Diagnose before naming a cause](feedback_diagnose_before_naming_root_cause.md) — cheap discriminating check first.
 - [Never fabricate fetched](feedback_never_fabricate_fetched_content.md).
 - 📊 [Deliverable figures need sources](feedback_deliverable_figures_need_sources.md) - derived amounts inherit invented inputs; research + options-with-links UI, ~30 words/card.
