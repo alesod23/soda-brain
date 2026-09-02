@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-02T16:24:41.011Z
+  modified: 2026-09-02T16:28:34.999Z
 ---
 
 # LinkedIn poll lane (SODANOtif 4th source)
@@ -16,6 +16,7 @@ Read-only inbox watcher. `get_inbox` ONLY, never `get_conversation` (that marks 
 - **Laptop poller** `C:\Users\Alessandro\.claude\linkedin-poll\`
   - `poll.py` (venv `linkedin-poll\venv`, pinned mcp 1.27.1 + langfuse 4.6.1): spawns `~/.linkedin-mcp/launcher.py --tool-timeout 600 --user-data-dir ~/.linkedin-mcp/profile-poll` (hand-rolled JSON-RPC over stdio, 120s call timeout), `get_inbox(25)`, parses text dump + `references.inbox`, diffs preview hashes against `state.json` (`{last_seen: {thread_id: hash}}`), appends NEW non-"You:" previews to the store, then **taskkill /T /F** the launcher tree (never a graceful close: that would re-export the shared `~/.linkedin-mcp/cookies.json`). Logs to `poll.log`; raw last inbox in `last-inbox.json`. `--seed` = record everything, emit nothing (first run / after a storm risk). Corrupt or missing state.json without `--seed` is FATAL by design (no notification storm).
   - `li_inbox.py` = shared engine (spawn / call / parse / store-line shape). `tracing.py` = Langfuse spans (copy of stripe-shopper pattern).
+  - **Run lock** `linkedin-poll/.run.lock` (pid, stale-safe): poll and probe serialize on it (bounded 150s wait) because two launchers on the profile-poll class reap each other (launcher.py singleton guard). Found live: the task-land supervisor "repaired" the never-run task while probe.py was running. Running the optimizer loop alongside the 15-min task is safe because of this lock; `lock_wait` shows up in the probe timings.
   - **Cadence knob:** `POLL_INTERVAL_MIN = 15` at the top of `poll.py` AND the schtask trigger `LinkedIn-Poll` (wscript `poll-hidden.vbs`, `-Once` + `RepetitionInterval` 15 min, no elevation). Change both. Health: `task-land\_system\health-snapshot.ps1` `$TaskExpect['LinkedIn-Poll']=45`.
   - **Store** `G:\My Drive\DA\linkedin-store.jsonl` (== VPS `/home/da/gdrive/DA/linkedin-store.jsonl`, rclone ~10-30s). Line = WA-store-like object: `{id:"li:<thread>:<hash>", ts, iso, timestamp (detection unix s), source:"linkedin", chatId, chatName, sender, text, time_label, ts_precision, url, fromMe:false}`.
 - **Daemon source** `sodanotif/sources/linkedin.js` (`startLinkedInSource`, same contract as wa.js: offset tail, start-gate on `timestamp`, dedupe by id, 5s poll is the real trigger on the FUSE mount). Wired in `daemon.js` next to WA: source key `LinkedIn`, blue dot `🔵`, no "(LinkedIn)" tag, thread url rendered as one `<a>open</a>` link and stored in notif-log/last-notification (`url` field). Day-only labels ("Sep 1") are passed as `when` verbatim instead of "Sep 1, 00:00". VPS unit has `Environment=SODANOTIF_LI_STORE=/home/da/gdrive/DA/linkedin-store.jsonl`. WA prompt verified byte-identical after the refactor. Unit test: `node sodanotif/test-linkedin-source.js`.
