@@ -41,6 +41,7 @@
 - [Tundra deliverables → gsheet](feedback_tundra_deliverables_gdrive.md) — Shared Drive/Outreach, not .csv.
 - [coattio servers](reference_coattio_servers.md) — 4124+4137, Coattio-Watchdog, NEVER run_in_background; [Tailscale](reference_coattio_tailscale.md).
 - ⌥⇧M [Alt+Shift+M = background Claude draft](reference_alt_shift_m_ai_draft.md) — /ai-draft on 4137, full template library adapted not pasted, 300-char cap, stacks per profile.
+- 🗂️ [GTM boards (4141)](reference_gtm_boards.md) — batch review page: evidence + channel buttons + editable msg + Commit → Claude sends; Chrome group "GTM" via gtm-tabs extension.
 - [/overnight](reference_overnight_harness.md) — Workflow `args` is JSON STRING.
 - [Floom MCP](reference_floom_mcp.md) · [RadioCLI](project_radiocli.md) · [Restore-CC](reference_restore_cc.md) — savior excluded by CONTENT.
 - [Laptop power states](reference_laptop_power_states.md) — Modern-Standby; Ctrl+Alt+F12 hibernates.
