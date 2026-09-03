@@ -102,6 +102,7 @@
 - [Shared inbox cutoff](feedback_shared_inbox_cutoff.md) — read AND advance.
 - [web-fetch-pw](reference_web_fetch_pw.md) — JS pages; Granola reader.
 - [KB drift guard](feedback_kb_systems_drift_guard.md) · [systems doc READ-FIRST](reference_kb_systems.md).
+- [Thesis: Seeling scale-back + cumulative ch8](feedback_thesis_seeling_and_cumulative_conclusion.md) - doc2-latex is the base; cut co-founder cites; ch8 builds on patent-quality canon.
 - [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
 - [Lobbly](project_lobbly.md) · [Outreach CRM :4123](project_outreach_crm.md) · [Unclear-disclosure corpus](project_unclear_disclosure_corpus.md).
 - [Practitioner research](feedback_practitioner_research_methodology.md) — stories not claims.
