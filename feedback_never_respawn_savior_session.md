@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: b75b1302-8e9b-4e42-b796-f57031e2eebf
-  modified: 2026-09-01T12:39:19.801Z
+  modified: 2026-09-03T11:16:27.091Z
 ---
 
 User rule (2026-07-19, after two bad experiences the same night): when the Telegram lane dies, do NOT spawn a new `claude --channels`/start-savior2 session automatically — not from a watchdog, not as a "fix". A respawned session has no context, competes for the bot token, confuses the user with error tabs, and "You're not capable of that. That shouldn't be the fixed solution."
@@ -15,3 +15,5 @@ User rule (2026-07-19, after two bad experiences the same night): when the Teleg
 **How to apply:** TG-Savior-Watchdog stays ALERT-ONLY (phone push via sodanotif push.js): "lane offline → run /mcp in the savior terminal; if the session is truly gone, run start-savior2.ps1 manually." `/mcp` reconnect in the live savior session re-acquires the token (proven repeatedly). Only the USER decides to start a fresh savior. See [[reference_telegram_channel_plugin]].
 
 **2026-09-01 — the savior moved to the DA VPS.** The ritual is now: user double-Ctrl+C's any laptop savior, then types `restore-savior` on the box (or `vpsc` from laptop PowerShell = ssh + restore-savior). `/usr/local/bin/restore-savior` on the box is ATTACH-OR-CREATE for tmux session `savior` running `claude --continue --channels plugin:telegram@claude-plugins-official` — running it twice re-attaches, so the never-respawn rule is structurally enforced; ssh dropping only detaches. Token+allowlist live at `/home/da/.claude/channels/telegram/` (v3 bot). The rule still holds for ME: never start/kill the savior tmux as a "fix"; alert and let him run restore-savior.
+
+**2026-09-03 — the laptop/box token war, diagnosed and closed.** He kept running laptop `Restore-Savior` while the box savior was alive: same v3 token, two (then FOUR) `bun ... telegram/0.0.7` pollers on the laptop plus the box one. Telegram hands each update to whichever poller asks first, so a laptop session got 👀-reactions from one place, replies from another, and stale "hi" replays after `/mcp reconnect`; "connected plugin but receives nothing" = this, every time. Fix in `~/.claude/scripts/start-savior2.ps1`: (1) `Restore-Savior` now ssh-checks `tmux has-session -t savior` on the box and ATTACHES (= vpsc) when alive; a laptop savior starts only if the box is unreachable or with `-Local`; (2) laptop launch uses `claude --name "savior 3 (dd-MM)"` so the tab is titled without the `:sa` hotstring; (3) the `/mcp reconnect` keystroke injector is OFF by default (`-Reconnect` opts in). **Diagnostic when the lane "looks connected but is deaf": count pollers on BOTH machines** (`Get-CimInstance Win32_Process | ? CommandLine -like '*telegram/0.0.7*'` on the laptop, `pgrep -af telegram` on the box); more than one total = the bug.
