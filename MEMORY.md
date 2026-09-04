@@ -71,6 +71,7 @@
 - [Track phased plans](feedback_track_phased_plans.md) — "later" = commitment.
 - [NEVER headless-send fuzzy](feedback_no_headless_fuzzy_send.md) — remote=draft-only.
 - [tg-bridge](reference_tg_bridge.md).
+- ✈️ [gflights engine (VPS, no browser)](reference_gflights_engine.md) — Google Flights `tfs` protobuf over plain curl; 20 cells/3.3s; RT label differs from OW; datacenter IP is the real blocker, not the browser.
 - 🧭 [Trippy naming](reference_trippy_naming.md) — `/trippy` CURRENT; code dir `v2\`.
 - Trippy: [core](project_trippy_v2.md) · [metro](feedback_trippy_metro_airport_normalization.md) · [headless](feedback_trippy_headless_parallel.md) · [links](feedback_trippy_durable_links.md) · [two-pass](feedback_trippy_deep_dive.md) · [airline-direct](feedback_airline_direct_for_known_carrier.md).
 - [Allowlist widening needs OK](reference_permission_allowlist_gaps.md).
