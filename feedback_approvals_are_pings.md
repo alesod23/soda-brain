@@ -28,5 +28,14 @@ reaches him when he is at the terminal; the ping reaches him anywhere, which is 
   no action, so approving is a verdict I read back and execute; say so on the card.
 - Superseding a card = resolve `no` WITH feedback text (a bare no fires a disapprove ping at him).
 - Check for a verdict already set by `phone-macrodroid` before assuming a card is unanswered.
+- **NEVER deliver a ping through `tg-bridge/send-to-phone.js`.** That script talks to the
+  tg-bridge bot, a different bot in a different chat from the approval-hub Telegram lane; a
+  message sent there does not reach him as a ping even though the script prints
+  "Sent to phone ... message_id=N". On 2026-09-04 I used it for the Tobias Doeringer drafts and
+  he got nothing: "hello?? why did you not tg ping me?????" The ONLY correct path, in every
+  session, is `POST http://127.0.0.1:4180/pending`. `send-to-phone.js` is for pushing a raw
+  string (an IP, a token) he asked for, never for a ping or an approval.
+- Verify the hub is up first (`curl -s http://127.0.0.1:4180/pending`); if 4180 is dead, say so
+  rather than falling back to another bot.
 
 Related: [[reference_approval_hub]], [[feedback_message_send_protocol]], [[reference_voice_lane]].

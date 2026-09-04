@@ -12,7 +12,7 @@
 - 📥 [Notion Inbox](project_notion_signals.md) — shared Tundra drop-box; Caleb types, CC/DA pushes rows (plumbing stays local); ONE `Inbox filer` agent files on Approved; Granola→Notion manual even on Business.
 - [Cloud routine alerts → Calendar popup](reference_cloud_routine_alert_delivery.md) — connector Gmail can't send; create_event popup.
 - [Approval-hub (4180)](reference_approval_hub.md) — canonical y/n; POST /pending; card ≤58 lines; Push-Lane-Watchdog.
-- ["Ping" = hub card](feedback_approvals_are_pings.md) — never numbered questions in chat.
+- ["Ping" = hub card](feedback_approvals_are_pings.md) — POST 127.0.0.1:4180/pending ONLY; never numbered questions in chat, never `tg-bridge/send-to-phone.js` (wrong bot, he never sees it).
 - 🔕 [Approval cards ping ONCE](feedback_approval_ping_once.md) — TG re-notify repeat disabled 2026-08-31; never re-ping a pending card.
 - 🔌 [LAPTOP + PHONE ping cards DEACTIVATED, not deleted](feedback_laptop_ping_card_deactivated.md) — `LAPTOP_POPUP_ENABLED` / `PHONE_POPUP_ENABLED` = false; **TELEGRAM IS THE ONLY CHANNEL** (2026-08-12), every card, complete, re-firing across sessions.
 - 🃏 ["PING CARD" = laptop+phone approval, must be FULL](feedback_ping_cards_must_be_full.md) — /next + TG now carry `context`; phone stays capped (buttons vanish); decision in `text`, artifact in `context`.
