@@ -19,3 +19,6 @@ metadata:
 - Executor contract (`system-prompt.md`): WA send allowed ONLY on exact aliases/contacts name match via send.js `--to` (allowlisted in settings since 2026-07-19), else draft-only; todos via capture.py; email = gmail.py DRAFT only, never send; full python path; final message = the receipt.
 - Receipt: runner pushes `⚡ Quick Claude` card (request + result) to the Claudio TG chat via sodanotif push.js. Request/screenshot temp files deleted after.
 - GOTCHA that broke v1: AHK v2 single-quoted strings can't nest `'''` — never inline PowerShell with quotes in AHK; call a .ps1 with -File and pass paths as parameters.
+
+
+**2026-09-04:** the panel launches `claude --model sonnet` (user: Sonnet only, for speed). Change the model in `quick claude (alt win j).ahk` line ~45 if that ever needs to move.
