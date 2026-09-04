@@ -39,6 +39,7 @@
 - [coattio→Notion sync](reference_coattio_notion_sync.md) — pre-authorized lane #1 (#2 = granola-auto).
 - [Tundra stack](../../medtech-brain/_system/TUNDRA-STACK.md) — READ ALWAYS for Tundra; Drive→tundrahealth, Calendar→cdtm, Gmail NOT connected.
 - [Tundra deliverables → gsheet](feedback_tundra_deliverables_gdrive.md) — Shared Drive/Outreach, not .csv.
+- 🧭 [coattio v2](project_coattio_v2.md) — contract `~/.medtech-crm/WORKPLAN-20260904-coattio-v2.md`; facts + warmth, one owner per person (CRM vs task-land), daily CRM line; lemlist API locked.
 - [coattio servers](reference_coattio_servers.md) — 4124+4137, Coattio-Watchdog, NEVER run_in_background; [Tailscale](reference_coattio_tailscale.md).
 - ⌥⇧M [Alt+Shift+M = background Claude draft](reference_alt_shift_m_ai_draft.md) — /ai-draft on 4137, full template library adapted not pasted, 300-char cap, stacks per profile.
 - 🗂️ [GTM boards (4141)](reference_gtm_boards.md) — batch review page: evidence + channel buttons + editable msg + Commit → Claude sends; Chrome group "GTM" via gtm-tabs extension.
