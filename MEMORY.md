@@ -51,7 +51,7 @@
 - 🗂️ [VPS gdrive mounts](reference_vps_gdrive_mounts.md) — box mounts CDTM(`/home/da/gdrive`=`G:`)+Tundra Shared; laptop Downloads/Screenshots now route into CDTM Drive; HEC OneDrive = dead end (admin-locked).
 - [Dynamic-HTML](reference_dynamic_html.md) — node 4140; [static DEFAULT](feedback_dynamic_html_default.md).
 - [Channel msgs separate](feedback_channel_sequential_handling.md).
-- [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_bot.
+- [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_v3_bot; **BOX owns the savior lane since 2026-09-05**, laptop poller stays dead; any `claude -p` without `--strict-mcp-config` kills the poller.
 - [AHK autostart](reference_ahk_autostart.md) — `::td`, Ctrl+Alt+T.
 - [/granola reminder timing](feedback_granola_reminder_next_day.md) — surface_on per call.
 - [CDTM kickoff TF](project_cdtm_kickoff_tf.md) — Fri email to Raunaq.
