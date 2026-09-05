@@ -1,11 +1,11 @@
 ---
 name: project_thesis_checkpoint_2026_09
-description: "Thesis state as of 2026-09-04 after the junior-supervisor call - read CHECKPOINT-20260904.md first; experiment is strong and significant, CITATIONS are the open flank."
+description: "Thesis state as of 2026-09-04 after the junior-supervisor call - read CHECKPOINT-20260904.md first; experiment is strong and significant, CITATIONS + over-reliance on his interviews are the open flank."
 metadata: 
   node_type: memory
   type: project
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-04T23:57:11.427Z
+  modified: 2026-09-05T18:00:00.000Z
 ---
 
 # Thesis checkpoint, 2026-09-04 (paused, resumes in a few days)
@@ -26,6 +26,13 @@ Fast orientation:
   (share of primary legal material vs commentary vs CS/NLP papers), plus finding a benchmark
   thesis written **under an IP-law chair with an AI angle** - deliberately NOT the Caleb/Seeling
   shape, which is a CS-chair thesis with an IP topic. He wants to read the mirror image.
+- **THE INTERVIEWS ARE OVER-USED (2026-09-05).** The thesis must stand on its own with every
+  personal interview REMOVED and still meet the source-count/quality bar; interviews are an
+  optional plus, still to be approved. 41 attributed `(interview notes, ...)` citations exist in
+  the doc2 sources. Next session: walk `thesis-attempt/INTERVIEW-INVENTORY.md` mention by
+  mention, state the phrasing and the claim it carries, he approves or rejects each one, and an
+  approved one keeps its excerpt visible. Never batch this.
+
 - **Settled in the call, do not reopen:** EU/US source mix is fine; one worked example in the
   appendix is fine with a disclaimer; 80 pages +/- 10%; Times New Roman 12pt, 1.5 spacing,
   3.5 cm left margin.
