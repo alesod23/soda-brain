@@ -31,3 +31,19 @@ hooks out of `examples.md` and attaches them to the wrong person.
 
 Restart after editing either file per [[reference_coattio_servers]] (never `run_in_background`).
 Extension code lives in `~/medtech-capture-extension/` and must be reloaded in Chrome after a change.
+
+**Alt+L comments are a contact-capture lane (2026-09-05).** Paste an Apollo/lemlist panel into the
+comment box and `contact-extract.js` pulls out EVERY email and phone (first = primary, rest into
+`p.emails`/`p.phones`, max 3 each) and writes them onto the person. The popup confirms what it
+parsed, so a paste that matched nothing is visible immediately. There is no need to install the
+Apollo extension for the screenshot path.
+
+**Every new comment line now runs through `/ask`** (`comment-agent.js`, on a timer from
+`crm-app/server.js`): structured, undoable writes (facts, timeline, next step, update_identity).
+It posts to `127.0.0.1:4137/ask` over HTTP rather than requiring `ask-api.js`, so the intake
+server stays the single writer of `crm.json`. A line matching a scheduling regex ALSO gets the
+legacy calendar pass, because `/ask` has no calendar tool; a plain contact paste costs one call.
+
+**Alt+L still screenshots** (`captureVisibleTab`) and that screenshot IS the enrichment engine (a
+vision job reads name/role/company/category). Alt+K is the full-screen variant whose prompt reads
+Apollo/Kaspr/lemlist panels for email and phone.
