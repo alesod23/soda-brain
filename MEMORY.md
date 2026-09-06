@@ -85,6 +85,8 @@
 - [Tundra Talents](project_tundra_talents.md) · [Claude Setup Repo](project_claude_setup.md).
 - [User Background](user_background.md) — CS student new to coding; 1-2 first-principles sentences.
 - [Plan compute not API keys](feedback_no_api_keys.md).
+- 🧳 [Parked MCPs: cc-with, never global](feedback_mcp_per_session_not_global.md) — zotero+langfuse parked; one-off = `cc-with <name>`; langfuse is NOT retroactive.
+- 💻 [16 GB but Windows sees 11.7](reference_laptop_memory_pressure.md) — 4 GB Radeon 760M UMA carve-out, NOT a VM; watch commit-vs-limit.
 - [WA Stack](reference_wa_sender.md) — wa-daemon; send.js/4119.
 - WA ops: [creds zeroed](reference_wa_daemon_creds_corruption.md) · [RE-LINK = QR ONLY, never codes/428](reference_wa_daemon_repair.md) · [health](reference_wa_daemon_health.md) · [flap lies](feedback_wa_daemon_flap_and_outgoing_gap.md) · [Web scrape](reference_wa_web_scrape.md) · [UTC-guard](reference_wa_scheduled_sends.md) · [recipient variants](feedback_wa_recipient_resolution.md).
 - [Triage Gmail helper](reference_triage_gmail.md) · [Slack helper](reference_slack_helper.md) — dry-run default.
