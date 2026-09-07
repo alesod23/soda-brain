@@ -10,6 +10,8 @@ metadata:
 
 > **2026-09-02: COMET ABANDONED — every "Comet" below now means CHROME (the default browser). See [[feedback-browser-chrome-default]].**
 
+> **CHRONOLOGY LIVES ELSEWHERE (2026-09-07):** every outage + fix is logged in `~/task-land/_system/TELEGRAM-BRIDGE-LOG.md`. Read that FIRST when the lane is broken and append an entry after every fix. This file stays the reference for HOW the plugin works (mechanics, buttons, diagnostics); it is not the incident record.
+
 Official `telegram@claude-plugins-official` plugin (the "channel" bridge, distinct from the homemade [[reference_tg_bridge]] and tg-terminal). State dir: `~/.claude/channels/telegram/` (`.env` holds `TELEGRAM_BOT_TOKEN`, `access.json` holds dmPolicy/allowFrom/pending, `bot.pid`). Server = `bun server.ts` long-poller spawned per session via `.mcp.json`.
 
 **Two non-obvious rules that cost hours on 2026-06-21:**
