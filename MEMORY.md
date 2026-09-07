@@ -94,4 +94,5 @@
 - [Gmail Snippets ext](project_gmail_snippets_extension.md).
 - 🎨 [Claude Design asks every push](reference_claude_design_permissions.md) — finalize_plan is a hardcoded ask; only a PreToolUse hook clears it.
 - 🔔 [Approval-only notifications](reference_claude_code_notifications.md) — Notification hook matches on type; trust dialog opened on "No".
+- 🔔 [Done-notifications = PushNotification](feedback_done_notifications.md) — long task (>5 min) finished or a job failed/blocked: Claude push (clickable into the session), never a TG card; no per-agent balloons, no end-of-turn ping.
 - 📱➡️📅 [Notion meeting filer](reference_notion_meeting_filer.md) — phone AI Meeting Notes land as loose pages even with the default DB set; laptop task Notion-MeetingFiler (60 min, haiku + Notion MCP) moves them into Meetings.
