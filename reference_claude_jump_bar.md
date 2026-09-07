@@ -1,21 +1,27 @@
 ---
 name: reference_claude_jump_bar
-description: "Claude Jump Bar (AHK v2, Ctrl+Alt+J) — semi-transparent sticky strip over Windows Terminal showing the previous prompt of the focused Claude session; click = jump to previous WT mark. Needs CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1."
+description: "Claude Jump Bar (Ctrl+Alt+J) — AHK v2 overlay under the Windows Terminal tab row showing the focused Claude session's last prompt; click = jump to the previous mark. Why alt-screen had to go, why hooks/OSC 133 cannot do it."
 metadata: 
   node_type: memory
   type: reference
-  originSessionId: af24706c-a858-4161-b258-835e14e610bf
-  modified: 2026-09-07T19:15:24.510Z
+  originSessionId: 8cae6285-834c-4e46-935c-46d18e42bd8b
+  modified: 2026-09-07T23:40:53.575Z
 ---
 
-`OneDrive - HEC Paris\Documents\AutoHotkey\claude jump bar (ctrl alt j).ahk` (AHK v2, built 2026-09-07). One process (~14 MB WS / 3 MB private) serves every Claude session.
+Built 2026-09-07/08 after the user asked for the VS Code-style "semi-transparent sticky bar, click to jump back" inside Windows Terminal (he does not use VS Code). Nothing off the shelf does it on Windows (checked Warp, WezTerm, Tabby, Wave, Ghostty, Alacritty, Hyper, ConEmu, WT Canary — see session af24706c).
 
-**Why it exists:** Claude Code's fullscreen TUI takes the alternate screen buffer, so Windows Terminal has no scrollback, no scrollbar thumb, and never places prompt marks (`Terminal.cpp`: `autoMarkPrompts` is skipped `_inAltBuffer()`). No Windows terminal has VS Code-style sticky scroll (WT #14754 backlog; Warp treats a Claude session as one block). Claude Code cannot emit OSC 133: hook `terminalSequence` allowlist is only OSC 0/1/2/9/99/777 + BEL (string in the binary), hook stdout is captured, and a child process writing OSC 133 to `CONOUT$` produced zero marks (tested). So the bar is an external overlay.
+**Script:** `OneDrive - HEC Paris\Documents\AutoHotkey\claude jump bar (ctrl alt j).ahk` (autostart folder; starts OFF per [[feedback_laptop_startup_clean]]; args `on`, `debug` (log `%TEMP%\claude-jumpbar.log`), `any` (show over every WT window, testing)). One AHK64 process ≈ 14 MB WS / 3 MB private for all sessions.
 
-**How it works:** 400 ms timer; if the active window is `WindowsTerminal.exe`, strips the status glyph from its title and matches it against the last `"type":"custom-title"` / `"type":"ai-title"` record in recently-modified `~/.claude/projects/*/*.jsonl` (64 KB tail read, cached by mtime); shows the session's last `"type":"last-prompt"` text. Gui is `-Caption +AlwaysOnTop +ToolWindow +E0x08000000` (WS_EX_NOACTIVATE, so a click never steals focus), alpha 232, pinned at client-top + tab-strip height, all scaled by `GetDpiForWindow` (4K monitor = 144 dpi). Left-click sends `^{Up}`, right-click `^{Down}` — the WT keybindings added the same day (`scrollToMark previous/next`, in WT `settings.json`, backup `settings.json.bak-20260907`; also `showMarksOnScrollbar: true`, `scrollbarState: always`, `autoMarkPrompts: true`).
+**How it works**
+- 400 ms timer: active window must be `WindowsTerminal.exe`; its title (minus the ✳ glyph) is matched against `"type":"custom-title"` / `"type":"ai-title"` records in the tail (64 KB) of every `~/.claude/projects/*/*.jsonl` modified in the last 12 h (re-read only when mtime changes). `Quick Claude…` titles fall back to the newest transcript in the quick-claude workspace. Prompt text = the last `"type":"last-prompt"` record.
+- Bar = `Gui -Caption +AlwaysOnTop +ToolWindow +E0x08000000` (WS_EX_NOACTIVATE, so a click never steals focus), alpha 232, positioned at client-top + 40 px × per-monitor DPI (`GetDpiForWindow`; the 4K monitor is 144 dpi → 60 px tab strip, 45 px bar).
+- Left-click sends Ctrl+Up, right-click Ctrl+Down → Windows Terminal `scrollToMark previous/next` (bound in WT settings.json).
+- **Marks are placed by the bar, not by WT's Enter heuristic:** when the active tab's transcript shows a new prompt, the bar sends `ctrl+alt+shift+m` = WT `addMark` (autoMarkPrompts is now `false`; the Enter heuristic gave 4 marks for 7 prompts inside Claude Code).
 
-**Args:** `on` (start enabled; default is OFF per the launch-folder rule), `debug` (log to `%TEMP%\claude-jumpbar.log`, 1 line / 1.5 s), `any` (show over every WT window; testing only).
+**Prerequisites that took a day to establish**
+- Claude Code's fullscreen TUI lives in the **alternate screen buffer**: no scrollback, no scrollbar thumb, and WT refuses to mark there (`Terminal.cpp: if (_autoMarkPrompts && _mainBuffer && !_inAltBuffer())`). `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` (+ `CLAUDE_CODE_DISABLE_MOUSE=1` so the wheel scrolls the terminal) is persisted in `~/.claude/settings.json` `env` (approved 2026-09-08; backup `settings.json.bak-20260908-jumpbar`).
+- Claude Code cannot emit OSC 133 itself: hook `terminalSequence` allowlist is "OSC 0/1/2/9/99/777 and BEL" only (string in the binary), hook stdout is captured, and a child process writing OSC 133 to `CONOUT$` produced zero marks (tested).
+- WT `scrollbarState: "always"` was tried and REVERTED: it appears to eat the wheel in alt-buffer tabs (ssh/tmux on the box).
+- WT settings backup: `settings.json.bak-20260907` in the WT LocalState folder.
 
-**Prerequisite:** the Claude session must run with `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` (terminal owns scrollback). Marks are per Enter keypress, not per message, and are not rebuilt on `--resume`. If the wheel dies in such a session, add `CLAUDE_CODE_DISABLE_MOUSE=1` (Claude keeps mouse tracking on otherwise). Verified 2026-09-07: click scrolled a test terminal from bottom to the previous mark; wheel still scrolls with the bar present.
-
-**Gotchas:** every variable assigned inside `Tick()` must be in its `global` line (an unlisted one throws "local variable has not been assigned" and hides the bar). `wt.exe` word-splits `--title`/`-Command` args — pass a `-File` script. Hard rule from [[reference_ahk_autostart]]: nothing displayed at login. Listed in `task-land/_system/SHORTCUTS.md`.
+**Related:** [[reference_ahk_autostart]], [[feedback_shortcuts_master_file]] (row added), [[reference_gsd_statusline]] (the "context bar underneath" from the same era).
