@@ -24,3 +24,5 @@ This is more accurate than just "student at CDTM" — it grounds the user in TUM
 **Why:** User established this style on 2026-05-20 after drafting the Ann email, having shipped Henkel/Grabmair under the older (verbose-sig, "Very best,") style and decided MiMI-first phrasing + kind-regards close + no-sig was the cleaner default. See [[reference_triage_operations]] for related Gmail draft conventions and [[feedback_gmail_html_rendering]] for the underlying gmail.py HTML fix.
 
 **How to apply:** Default for any professor cold-email going forward. If the user explicitly requests "include the full signature" or a different sign-off, override. Do not transplant this style to non-professor outreach (founders, recruiters, vendor contacts) without checking — the formality + MiMI framing isn't universal.
+
+**2026-09-08:** the no-signature-block rule is now UNIVERSAL, not professor-only - see [[feedback_email_no_signature_block]]. End every draft with a bare `Alessandro`.

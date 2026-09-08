@@ -82,6 +82,7 @@
 - /daily: [11-step](reference_daily_briefing.md) · [dedup](feedback_daily_dedup_today_page.md) · [full-section](feedback_daily_full_section_contract.md) · [deletion→Waiting](feedback_daily_deletion_parks_to_waiting.md) · [no rollover](feedback_daily_waiting_and_no_rollover.md) · [page = only edit surface](feedback_daily_is_interface_folders_are_plumbing.md) · [tag CSS](reference_daily_tag_css_split_fix.md).
 - Task fields: [surface_on vs due](feedback_future_due_to_inbox.md) · [/dump dated → inbox](feedback_dump_dated_followups_to_inbox.md).
 - ✉️ [Remind, don't re-confirm](feedback_remind_dont_reconfirm.md) — already accepted? inform, never reopen; no unsolicited tech check.
+- ✍️ [NO signature block, end with 'Alessandro'](feedback_email_no_signature_block.md) — Gmail's per-account sig is his; ask-first is the DEFAULT everywhere (2026-09-08).
 - Email style: [professor](feedback_professor_email_style.md) · [warm-intro](feedback_warm_intro_phrasing.md) · [Italian tu/Lei](feedback_italian_practitioner_followup_style.md) · [HTML multipart](feedback_gmail_html_rendering.md).
 - [Message-send protocol](feedback_message_send_protocol.md) — "dsend"=now; "quotes"=verbatim; else hub card · [dsend includes attachment](feedback_dsend_includes_attachment.md).
 - HEC Outlook: [setup](project_hec_outlook_setup.md) · [COM, Classic only](reference_hec_outlook.md).
