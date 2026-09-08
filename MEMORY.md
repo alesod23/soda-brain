@@ -98,4 +98,4 @@
 - 🔔 [Approval-only notifications](reference_claude_code_notifications.md) — Notification hook matches on type; trust dialog opened on "No".
 - 🔔 [Done-notifications = PushNotification](feedback_done_notifications.md) — long task (>5 min) finished or a job failed/blocked: Claude push (clickable into the session), never a TG card; no per-agent balloons, no end-of-turn ping.
 - 📱➡️📅 [Notion meeting filer](reference_notion_meeting_filer.md) — phone AI Meeting Notes land as loose pages even with the default DB set; laptop task Notion-MeetingFiler (60 min, haiku + Notion MCP) moves them into Meetings.
-- ⏮️ [CC message jump: Ctrl+Up/Down](reference_claude_jump_bar.md) — WT `scrollToMark` over `autoMarkPrompts`; needs `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1`+`DISABLE_MOUSE=1` (settings.json env). Overlay bar REMOVED (couldn't track split panes); keyboard-only.
+- ⏮️ [CC message jump: Ctrl+Up/Down](reference_claude_jump_bar.md) — headless `claude message marks.ahk` places one WT mark per promptId; needs `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1`+`DISABLE_MOUSE=1`. Overlay REMOVED (no pane geometry). **Never run focus-stealing test windows on his machine.**
