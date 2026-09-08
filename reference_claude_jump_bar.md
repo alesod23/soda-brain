@@ -1,28 +1,23 @@
 ---
 name: reference_claude_jump_bar
-description: "Jumping between messages in Claude Code on Windows Terminal — Ctrl+Up/Down over one mark per message, placed by the headless `claude message marks.ahk` watcher. Why the alternate screen had to go, why the overlay bar was removed, why VS Code (not WT) had the sticky bar the user remembered."
+description: "Message-jump in Claude Code on Windows Terminal — built (overlay bar, then Ctrl+Up/Down marks), REVERTED 2026-09-08 because it cannot coexist with Claude Code's native fullscreen features. Why: alternate screen buffer. What the user remembered was VS Code's Sticky Scroll."
 metadata:
   node_type: memory
   type: reference
   originSessionId: 8cae6285-834c-4e46-935c-46d18e42bd8b
-  modified: 2026-09-08T13:18:21.455Z
+  modified: 2026-09-08T14:43:21.220Z
 ---
 
-The user wanted back a VS Code-style semi-transparent sticky bar, click to jump to the previous message, in Windows Terminal + Claude Code CLI (2026-09-07/08).
+**Outcome (2026-09-08): everything reverted, machine back to stock.** Claude `~/.claude/settings.json` `env` is `{}` again; Windows Terminal `settings.json` restored from `settings.json.bak-20260907` (LocalState); the AHK overlay (`claude jump bar (ctrl alt j).ahk`) and the headless marker (`claude message marks.ahk`) are deleted; no processes left. User's decision: "if they cannot coexist, I'd rather go to the Claude things."
 
-**What it actually was:** VS Code's integrated-terminal Sticky Scroll, NOT a WT or Claude Code feature. Proven: grepped the 218 MB `claude.exe` — zero `]133`/`]633`/`133;A`/`osc133`/`shellIntegration`/`stickyHeader` and no "jump to previous message" strings; WT's schema has no "sticky". VS Code had `claudeCode.preferredLocation: panel` dated 2026-06-03, so he ran Claude Code in VS Code's panel (shell = PowerShell). To get the ORIGINAL back: run Claude Code in VS Code's panel.
+**The hard incompatibility (do not re-attempt without a new fact):** Claude Code's native features — Ctrl+End / Ctrl+Home / PgUp / PgDn scroll keys, the clickable "Jump to bottom / N new messages" pill, mouse copy — all live in its **fullscreen renderer, which uses the alternate screen buffer**. The alternate buffer has no scrollback, so Windows Terminal cannot place or jump to marks there (`Terminal.cpp: if (_autoMarkPrompts && _mainBuffer && !_inAltBuffer())`). A WT-mark message-jump requires `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1`, which switches the renderer off and loses every native feature above. Mutually exclusive by construction. The fullscreen renderer's complete scroll action list (from the binary) is `scroll:top/bottom/pageUp/pageDown/halfPageUp/halfPageDown/fullPageUp/fullPageDown/lineUp/lineDown` — there is **no per-message navigation** to hook. Upstream request for exactly this: anthropics/claude-code#58991 (Ctrl+Up/Down jump), closed. True coexistence needs Anthropic to add it to the renderer.
 
-**What is shipped and KEPT — keyboard message-jump (Ctrl+Up / Ctrl+Down):**
-- WT `settings.json` (LocalState): `showMarksOnScrollbar: true`, `autoMarkPrompts: false`, actions `scrollToMark previous/next` bound to **Ctrl+Up / Ctrl+Down**, and `addMark` bound to **Ctrl+Alt+Shift+M** (used only by the watcher below).
-- **`claude message marks.ahk`** (AHK autostart folder, headless, no window, ~14 MB, one process for all sessions): every 500 ms it resolves the focused WT window's title to a transcript (`custom-title`/`ai-title` in the newest-first 256 KB tail, Quick Claude fallback), reads the LAST `"promptId"` on a `"type":"user"` line, and when it changes fires `Send "^!+m"` = WT addMark. Adopts a session on first sight without marking (fresh session adopted at `""` so its first prompt marks; a pre-existing session adopts its current id so history isn't retro-marked). If the terminal isn't focused at that tick it does NOT advance — it retries until focused, so a mark is never dropped. Verified in a simulated session: one tick per submitted prompt; Ctrl+Up steps prompt N → N-1 → N-2.
-- Why not WT's `autoMarkPrompts`: its Enter heuristic misses prompts inside the Claude TUI (2 of 4, 4 of 7). Deterministic transcript-watching replaced it.
-- REQUIRES Claude Code out of the alternate screen (else no scrollback, no marks, Ctrl+Up goes to top). Persisted in `~/.claude/settings.json` `env`: `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` + `CLAUDE_CODE_DISABLE_MOUSE=1` (approved 2026-09-08; backup `settings.json.bak-20260908-jumpbar`). Only tabs opened AFTER that render into scrollback. Trade-off: no flicker-free render, no mouse inside Claude Code.
-- WT settings backup: `settings.json.bak-20260907` (LocalState).
+**What the user actually remembered:** VS Code's integrated-terminal Sticky Scroll (semi-transparent top bar, click to jump). Not a WT or Claude Code feature: grepped the 218 MB `claude.exe`, zero `]133`/`]633`/`133;A`/`osc133`/`shellIntegration`/`stickyHeader`; WT schema has no "sticky". VS Code had `claudeCode.preferredLocation: panel` dated 2026-06-03 — he ran Claude Code in VS Code's panel then. To get THAT back: run Claude Code in VS Code's panel (Sticky Scroll is on by default there).
 
-**The overlay bar — BUILT then REMOVED 2026-09-08.** A translucent strip under the tab row showing the last prompt, click = Ctrl+Up. Deleted because WT exposes no per-pane geometry to an outside process: over a split-pane window it could only span the full width and collided with every pane ("window-long broken header"). He runs heavy pane splits. Do not retry an external overlay for paned layouts.
+**What was proven to work, if ever wanted again (at the cost of native mode):** with `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` + `CLAUDE_CODE_DISABLE_MOUSE=1`, WT `scrollToMark` bound to Ctrl+Up/Down steps message-by-message, and a headless AHK watcher that fires WT `addMark` on each new transcript `promptId` gives exactly one mark per message (WT's own `autoMarkPrompts` heuristic missed prompts: 2 of 4, 4 of 7). The overlay bar was removed earlier because WT exposes no per-pane geometry (full-width "broken header" over his split panes).
 
-**HARD RULE from this build (2026-09-08): never run test windows that hold/steal focus on his machine** — it blocks him entirely. He will take screenshots for me on request instead.
+**Dead ends:** hook `terminalSequence` allowlist is OSC 0/1/2/9/99/777+BEL only; hook stdout captured; child writing OSC 133 to `CONOUT$` placed zero marks; WT `scrollbarState: "always"` appeared to eat the wheel in alt-buffer tabs.
 
-**Dead ends (do not retry):** Claude Code emitting OSC 133 via a hook (`terminalSequence` allowlist is OSC 0/1/2/9/99/777+BEL only; hook stdout captured; child writing OSC 133 to `CONOUT$` placed zero marks). WT `scrollbarState: "always"` (appeared to eat the wheel in alt-buffer/ssh tabs).
+**HARD RULE: never run test windows that hold/steal focus on his machine** — it blocks him entirely; he screenshots for me instead.
 
 **Related:** [[reference_ahk_autostart]], [[feedback_shortcuts_master_file]], [[reference_gsd_statusline]].

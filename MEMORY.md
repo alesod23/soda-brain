@@ -73,7 +73,7 @@
 - [RadioCLI](project_radiocli.md) · [Restore-CC](reference_restore_cc.md) · [Claude Setup Repo](project_claude_setup.md) · [Dynamic-HTML](reference_dynamic_html.md) · [static DEFAULT](feedback_dynamic_html_default.md).
 
 ## Machine / tools / gotchas
-- Local tools: [AHK autostart](reference_ahk_autostart.md) · [claude-bar](reference_claude_bar.md) · [GSD statusline](reference_gsd_statusline.md) · 📄 [markless](reference_markless.md) · ⏮️ [CC message jump Ctrl+Up/Down](reference_claude_jump_bar.md) — never focus-stealing test windows.
+- Local tools: [AHK autostart](reference_ahk_autostart.md) · [claude-bar](reference_claude_bar.md) · [GSD statusline](reference_gsd_statusline.md) · 📄 [markless](reference_markless.md) · ⏮️ [CC message-jump REVERTED](reference_claude_jump_bar.md) — can't coexist with native fullscreen (alt-screen = no marks); he chose native; the bar he remembered = VS Code Sticky Scroll. Never focus-stealing test windows.
 - Windows/PS: [tail -f LOCKS logfiles](feedback_windows_tail_locks_logfile.md) · [.ps1 ASCII-only](feedback_ps1_ascii_only_no_unicode_dashes.md) · [PS5.1 ConvertFrom-Json no unroll](feedback_ps51_convertfrom_json_no_unroll.md) · [git commit -F](feedback_git_commit_message_file_on_powershell.md) · [schtasks need VBS](feedback_schtasks_vbs_wrapper_no_console_flash.md) · [bare `python` OK](feedback_python_full_path.md) · [OneDrive path](reference_onedrive_path.md) · [Env files](reference_env_files.md).
 - Agents: [long-running](feedback_agent_long_running.md) · ⏳ [output files are INTERIM](feedback_agent_output_file_is_interim.md) · [no polling bg tasks](feedback_no_polling_on_background_tasks.md).
 - [User Background](user_background.md) · [User Life Context](context_user_life.md) — APPEND.
