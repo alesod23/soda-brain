@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-08T14:26:36.129Z
+  modified: 2026-09-08T17:14:20.079Z
 ---
 
 **Contract + workplan (READ FIRST for any email drafting):** `task-land/_system/WORKPLAN-20260908-draft-review-lane.md` (rulings, spec addendum, build log) and `task-land/_system/EMAIL-REVIEW-CONTRACT.md` (H1-H17 hard rules, soft register table, C1-C5 ruled).
@@ -19,5 +19,7 @@ metadata:
 **Where it runs:** hub + `reconcile.py` cron (5 min: Sent detection -> `sent` + card closed via `POST /close`; his Gmail edits -> `edited_in_gmail`, his text becomes the base) on the box; the AHK D chord, the `drafts-tabs` Chrome extension (`~/browser-extensions/drafts-tabs`, polls intake `GET :4137/drafts/queue`) on the laptop. `gmail.py get-draft` exists on both machines since 2026-09-08. Hub backups `server.js.bak-20260908`, `push.js.bak-20260908`.
 
 **Test state (2026-09-08):** UPMC draft = card #1 silent, MEDICON draft = card #2 in his chat, both HOLD, neither sent. The critic is a TEST (A/B open-ended, "I'll say when"): show him both versions every time. Needs him: load the extension (Load unpacked), restart the intake server once, press Alt+Win+J then D on a Gmail draft.
+
+**Gotcha (2026-09-08):** `claude --mcp-config` is variadic (a list of paths). A positional prompt AFTER it is read as another config file ("MCP config file not found: ...\Read HANDOFF.md"). Put the prompt before `--strict-mcp-config --mcp-config`.
 
 **How to apply:** never send; never call Telegram `getUpdates`; any `claude -p` gets `--strict-mcp-config`; keep the queue append-only per machine (git-synced file). See [[reference_approval_hub]], [[reference_quick_claude]], [[feedback_email_no_signature_block]], [[feedback_message_send_protocol]].
