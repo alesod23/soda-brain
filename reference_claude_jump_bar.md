@@ -1,27 +1,26 @@
 ---
 name: reference_claude_jump_bar
-description: "Claude Jump Bar (Ctrl+Alt+J) — AHK v2 overlay under the Windows Terminal tab row showing the focused Claude session's last prompt; click = jump to the previous mark. Why alt-screen had to go, why hooks/OSC 133 cannot do it."
-metadata: 
+description: "Jumping between messages in Claude Code on Windows Terminal — Ctrl+Up/Down over per-prompt marks. Why the alternate screen had to go, why the overlay bar was tried and removed, why VS Code (not WT) had the sticky bar the user remembered."
+metadata:
   node_type: memory
   type: reference
   originSessionId: 8cae6285-834c-4e46-935c-46d18e42bd8b
-  modified: 2026-09-07T23:40:53.575Z
+  modified: 2026-09-08T12:39:02.717Z
 ---
 
-Built 2026-09-07/08 after the user asked for the VS Code-style "semi-transparent sticky bar, click to jump back" inside Windows Terminal (he does not use VS Code). Nothing off the shelf does it on Windows (checked Warp, WezTerm, Tabby, Wave, Ghostty, Alacritty, Hyper, ConEmu, WT Canary — see session af24706c).
+The user wanted back a VS Code-style semi-transparent sticky bar at the top of the terminal, click to jump to the previous message, in Windows Terminal + Claude Code CLI (session af24706c/8cae6285, 2026-09-07/08).
 
-**Script:** `OneDrive - HEC Paris\Documents\AutoHotkey\claude jump bar (ctrl alt j).ahk` (autostart folder; starts OFF per [[feedback_laptop_startup_clean]]; args `on`, `debug` (log `%TEMP%\claude-jumpbar.log`), `any` (show over every WT window, testing)). One AHK64 process ≈ 14 MB WS / 3 MB private for all sessions.
+**What it actually was:** that bar is **VS Code's integrated-terminal Sticky Scroll**, NOT a Windows Terminal or Claude Code feature. Proven: grepped the 218 MB `claude.exe` — zero `]133`/`]633`/`133;A`/`osc133`/`shellIntegration`/`stickyHeader` and no "jump to previous message" strings; WT's settings schema has no "sticky". The machine had `claudeCode.preferredLocation: panel` in VS Code settings dated 2026-06-03, so he'd run Claude Code in VS Code's panel (shell = PowerShell, hence "MS PowerShell terminal" in his memory). To truly get it back: run Claude Code in VS Code's panel.
 
-**How it works**
-- 400 ms timer: active window must be `WindowsTerminal.exe`; its title (minus the ✳ glyph) is matched against `"type":"custom-title"` / `"type":"ai-title"` records in the tail (64 KB) of every `~/.claude/projects/*/*.jsonl` modified in the last 12 h (re-read only when mtime changes). `Quick Claude…` titles fall back to the newest transcript in the quick-claude workspace. Prompt text = the last `"type":"last-prompt"` record.
-- Bar = `Gui -Caption +AlwaysOnTop +ToolWindow +E0x08000000` (WS_EX_NOACTIVATE, so a click never steals focus), alpha 232, positioned at client-top + 40 px × per-monitor DPI (`GetDpiForWindow`; the 4K monitor is 144 dpi → 60 px tab strip, 45 px bar).
-- Left-click sends Ctrl+Up, right-click Ctrl+Down → Windows Terminal `scrollToMark previous/next` (bound in WT settings.json).
-- **Marks are placed by the bar, not by WT's Enter heuristic:** when the active tab's transcript shows a new prompt, the bar sends `ctrl+alt+shift+m` = WT `addMark` (autoMarkPrompts is now `false`; the Enter heuristic gave 4 marks for 7 prompts inside Claude Code).
+**What we shipped instead — keyboard message-jump in Windows Terminal (KEEP):**
+- WT `~/.claude`... no: WT `settings.json` (LocalState) has `autoMarkPrompts: true` + `showMarksOnScrollbar: true`, and two keybindings: **Ctrl+Up = `scrollToMark previous`, Ctrl+Down = `scrollToMark next`**. One mark per Enter; Ctrl+Up/Down step message-to-message (verified: bottom → prompt N → N-1 → N-2). Marks also show as scrollbar ticks.
+- REQUIRES Claude Code out of the alternate screen, else there is no scrollback and no marks and Ctrl+Up just goes to the top. Persisted in `~/.claude/settings.json` `env`: `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` + `CLAUDE_CODE_DISABLE_MOUSE=1` (approved 2026-09-08; backup `settings.json.bak-20260908-jumpbar`). Only tabs opened AFTER that render into scrollback; older sessions stay alt-screen. Trade-off accepted: no flicker-free render, no mouse inside Claude Code.
+- WT settings backup: `settings.json.bak-20260907` (LocalState).
 
-**Prerequisites that took a day to establish**
-- Claude Code's fullscreen TUI lives in the **alternate screen buffer**: no scrollback, no scrollbar thumb, and WT refuses to mark there (`Terminal.cpp: if (_autoMarkPrompts && _mainBuffer && !_inAltBuffer())`). `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1` (+ `CLAUDE_CODE_DISABLE_MOUSE=1` so the wheel scrolls the terminal) is persisted in `~/.claude/settings.json` `env` (approved 2026-09-08; backup `settings.json.bak-20260908-jumpbar`).
-- Claude Code cannot emit OSC 133 itself: hook `terminalSequence` allowlist is "OSC 0/1/2/9/99/777 and BEL" only (string in the binary), hook stdout is captured, and a child process writing OSC 133 to `CONOUT$` produced zero marks (tested).
-- WT `scrollbarState: "always"` was tried and REVERTED: it appears to eat the wheel in alt-buffer tabs (ssh/tmux on the box).
-- WT settings backup: `settings.json.bak-20260907` in the WT LocalState folder.
+**The overlay bar — BUILT then REMOVED 2026-09-08.** An AHK v2 overlay (`claude jump bar (ctrl alt j).ahk`) drew a translucent strip under the tab row showing the focused session's last prompt, click = Ctrl+Up. **Deleted** because Windows Terminal exposes no per-pane geometry to an outside process, so over a split-pane window the bar could only span the FULL window width and collided with every pane's top line ("window-long broken header"). The user runs heavy pane splits, so keyboard-only won. If ever rebuilt, this pane limitation is the blocker — do not retry the external-overlay approach for paned layouts.
 
-**Related:** [[reference_ahk_autostart]], [[feedback_shortcuts_master_file]] (row added), [[reference_gsd_statusline]] (the "context bar underneath" from the same era).
+**Dead ends (do not retry):**
+- Claude Code emitting OSC 133 via a hook: the `terminalSequence` allowlist is "OSC 0/1/2/9/99/777 and BEL" only (string in the binary); hook stdout is captured; a child writing OSC 133 to `CONOUT$` placed zero marks. All tested.
+- WT `scrollbarState: "always"`: tried and reverted, it appeared to eat the mouse wheel in alt-buffer tabs (ssh/tmux on the box).
+
+**Related:** [[reference_ahk_autostart]], [[feedback_shortcuts_master_file]], [[reference_gsd_statusline]] (the "context bar underneath" from the same era).
