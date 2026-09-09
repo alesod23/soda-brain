@@ -5,13 +5,23 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-05T18:00:00.000Z
+  modified: 2026-09-09T17:07:51.397Z
 ---
 
 # Thesis checkpoint, 2026-09-04 (paused, resumes in a few days)
 
 **Read `C:\Users\Alessandro\thesis-attempt\CHECKPOINT-20260904.md` first.** It holds the full
 state: file map, call answers, the four Word comments with their anchors, and the next actions.
+
+**2026-09-09 (TTT build, section 0 of the checkpoint):** all five comment items implemented; four
+strict-reviewer agents rewrote every chapter in place; **39 `{source needed}` markers** left in the
+text (yellow in the DOCX) for him to fill by hand. Three substantive corrections: §5(2) ArbnErfG was
+misquoted (statute says *hat ... zu beschreiben*, not *soll ... darstellen*); Table 6.7's two
+"enriched lower" directions were NOT pre-registered, so two-sided p recomputed (PatentSBERTa 0.020
+survives, BERTScore 0.187 does not); §7.1 still claimed no significance. Benchmark master's theses
+from IP-law chairs all use **footnotes with pinpointed Board of Appeal and BGH citations, 15-26
+decisions each**; ours has two, unread, plus eight US cases, and no German commentary. That is the
+biggest remaining gap. Offline pack at `thesis-attempt/sources/index.html`.
 
 Fast orientation:
 
