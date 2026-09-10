@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-10T14:27:59.742Z
+  modified: 2026-09-10T23:49:10.657Z
 ---
 
 **The trip starts 2026-09-11 at 06:15.** From then Alessandro is on a train with no reliable
@@ -22,6 +22,14 @@ Everything he needs offline lives in two places:
 He asked (2026-09-10) to also review draft ONE (`drafts/doc1-claude-deep.md`, parked since
 1 September) against draft TWO (the working base), as a Google Doc with margin comments explaining
 the differences, for inspiration on approach, citations and text.
+
+**2026-09-11 01:50, the file he now works in:** `doc2-TTT-2026-09-11-LINKED.docx` (his 00:52 edit
+of the v2 file with every source hyperlinked: 245 links to local PDFs in the Drive mirror, 54 online,
+all tested; Seeling 2026 unlinked). Copies in `G:\My Drive\Downloads\`, `thesis-attempt\deliverables\`
+and the 01 mirror. He edits the docx in Word from `G:\My Drive\Downloads` (Word's "Downloads"
+location is the Drive folder, not `C:\Users\Alessandro\Downloads`). Regenerate links after his edits
+with `hyperlink_sources.py <in> <out> report.md source_urls.json`, test with `verify_hyperlinks.py`.
+His second train leaves around 05:00 on 2026-09-11 ("in 4 hours" said at 01:00).
 
 **Why:** he may still message before 06:15; after that assume he is offline and cannot fetch
 anything. Do not start work that needs him online after that time.
