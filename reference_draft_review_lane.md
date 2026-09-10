@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-08T17:39:57.543Z
+  modified: 2026-09-10T15:39:34.272Z
 ---
 
 **Contract + workplan (READ FIRST for any email drafting):** `task-land/_system/WORKPLAN-20260908-draft-review-lane.md` (rulings, spec addendum, build log) and `task-land/_system/EMAIL-REVIEW-CONTRACT.md` (H1-H17 hard rules, soft register table, C1-C5 ruled).
@@ -21,6 +21,8 @@ metadata:
 **Test state (2026-09-08):** UPMC draft = card #1 silent, MEDICON draft = card #2 in his chat, both HOLD, neither sent. The critic is a TEST (A/B open-ended, "I'll say when"): show him both versions every time. Needs him: load the extension (Load unpacked), restart the intake server once, press Alt+Win+J then D on a Gmail draft.
 
 **GTM boards too (2026-09-08 evening):** `handoff.py board:<slug>` / a `127.0.0.1:4141/b/<slug>` URL renders the board + his `state.json` + commits + `gtm-eng/boards/<slug>/CONTEXT.md` (the brief: his ask, rules, per-person status; write one per board, same idea as a sidecar). The D chord handles a board tab. A Quick Claude changes messages via `POST /api/board/<slug>/state`; LinkedIn sends only via Commit + a normal session. Estonia's CONTEXT.md exists (Richard never named to Terje/Annika/Peeter; hacker house did not happen and is confidential; Tallinn hook being walked back).
+
+**Is the Drafts tab group working? (2026-09-10):** do not guess from Chrome. `drafts-tabs` 1.2 posts a heartbeat after every 30 s poll; read `GET http://127.0.0.1:4137/drafts/tabs-status` (`groups`, `tabs_in_group`, `queue`, `opened_now`, `errors`, `stale_seconds`). `status:null` = the extension has not polled since the intake server started (not loaded, or needs a reload at chrome://extensions, which only he can click). A retest = register a draft to himself with `--origin quick-claude --no-critic`, then read that endpoint.
 
 **Gotcha (2026-09-08):** `claude --mcp-config` is variadic (a list of paths). A positional prompt AFTER it is read as another config file ("MCP config file not found: ...\Read HANDOFF.md"). Put the prompt before `--strict-mcp-config --mcp-config`.
 
