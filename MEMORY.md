@@ -6,6 +6,7 @@
 - 🧩 [Skills on BOTH machines](feedback_skills_install_on_both_machines.md) — laptop + `/home/da/.claude/skills/`.
 - 🖥️ [Startup opens NOTHING](feedback_laptop_startup_clean.md) · [power states](reference_laptop_power_states.md) · [16 GB, Windows sees 11.7](reference_laptop_memory_pressure.md).
 - ↩️ ["nvm" cancels previous message](feedback_nvm_cancels_previous_message.md).
+- 💾 [Tool mirrors = backups in task-land](reference_tool_mirrors.md) — `_system/laptop-tools/`, `_system/box-tools/` (git-sync step 0, secrets excluded); no new repos, never run from a mirror.
 - ✉️🔍 [Email draft-review lane](reference_draft_review_lane.md) — draft → `_system/drafts/register.py` → hub card #N → `N dsend/no/change:`; Quick Claude Alt+Win+J then D; NEVER send.
 - ["Ping" = hub card](feedback_approvals_are_pings.md) — POST 127.0.0.1:4180/pending ONLY; never `tg-bridge/send-to-phone.js` · [Approval-hub](reference_approval_hub.md) — canonical y/n, card ≤58 lines.
 - 🔕 [Cards ping ONCE](feedback_approval_ping_once.md) · 🔌 [laptop+phone popups deactivated, TELEGRAM ONLY](feedback_laptop_ping_card_deactivated.md) · 🃏 [ping cards must be FULL](feedback_ping_cards_must_be_full.md) — decision in `text`, artifact in `context`.
