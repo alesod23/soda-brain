@@ -1,0 +1,29 @@
+---
+name: project_thesis_ttt_trip
+description: Thesis train to Termoli (TTT) departs 2026-09-11 at 06:15; everything must be offline-ready before then. Where the offline pack and the Drive mirror live.
+metadata: 
+  node_type: memory
+  type: project
+  originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
+  modified: 2026-09-10T14:27:59.742Z
+---
+
+**The trip starts 2026-09-11 at 06:15.** From then Alessandro is on a train with no reliable
+internet for a long stretch, doing the "human side" of the thesis: rewriting sections by hand,
+reading sources in full, judging the interview citations one by one.
+
+Everything he needs offline lives in two places:
+- Local, always on disk: `C:\Users\Alessandro\thesis-attempt\` (entry point `sources/index.html`).
+- Google Drive mirror, structured for the trip: `G:\My Drive\thesis-attempt\` with
+  `00-READ-ME-FIRST.html`, `01-REVIEW-ON-THE-TRAIN`, `02-DOC1-AND-COMPARISON`,
+  `03-EXPERIMENT-DATA`, `04-ARCHIVE-OLD-VERSIONS`, `05-CHAPTER-SOURCE-FILES`.
+  He must mark the folder "Available offline" in Drive for Desktop himself.
+
+He asked (2026-09-10) to also review draft ONE (`drafts/doc1-claude-deep.md`, parked since
+1 September) against draft TWO (the working base), as a Google Doc with margin comments explaining
+the differences, for inspiration on approach, citations and text.
+
+**Why:** he may still message before 06:15; after that assume he is offline and cannot fetch
+anything. Do not start work that needs him online after that time.
+**How to apply:** before 06:15 on 2026-09-11, any deliverable must land in the Drive mirror AND
+locally; after that, prepare things for when he is back. Related: [[project_thesis_checkpoint_2026_09]].
