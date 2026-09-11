@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-11T14:05:31.523Z
+  modified: 2026-09-11T14:25:31.268Z
 ---
 
 **The trip starts 2026-09-11 at 06:15.** From then Alessandro is on a train with no reliable
@@ -34,7 +34,10 @@ Notion progress tracker under his private "Thesis" page in the Tundra Health wor
 https://app.notion.com/p/3d8b30c6d57e816ab649e0b8acb0ef77 . Two inline databases: "Progress" (one row,
 relation to all sections, rollups Pages covered / Pages total, formula Percent and a text "Progress bar")
 and "Thesis sections" (61 rows = smallest headings, properties Chapter, Pages (weight, measured from the
-Word PDF export), Starts on p., Done checkbox, Covered formula). Ticking Done moves the bar. Built via
+Word PDF export), Starts on p., Done checkbox, Covered formula). Ticking Done moves the bar.
+Per his call (2026-09-11 02:50): appendices and back matter are NOT in the relation, so the total is
+66.9 pages (chapters 1 to 8 plus Abstract); the view is a flat table in reading order (Notion's API
+cannot set manual group order, alphabetical grouping put "Back matter" above Chapter 1). Built via
 headless `claude -p` with the Notion MCP because the session's own Notion connection had failed.
 Page weights come from `scratchpad/hl/spans.json` logic: heading positions in the exported PDF.
 
