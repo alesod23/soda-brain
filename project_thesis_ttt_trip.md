@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-10T23:49:10.657Z
+  modified: 2026-09-11T13:55:01.061Z
 ---
 
 **The trip starts 2026-09-11 at 06:15.** From then Alessandro is on a train with no reliable
@@ -30,6 +30,9 @@ and the 01 mirror. He edits the docx in Word from `G:\My Drive\Downloads` (Word'
 location is the Drive folder, not `C:\Users\Alessandro\Downloads`). Regenerate links after his edits
 with `hyperlink_sources.py <in> <out> report.md source_urls.json`, test with `verify_hyperlinks.py`.
 His second train leaves around 05:00 on 2026-09-11 ("in 4 hours" said at 01:00).
+Notion progress checklist (75 to-dos, one per chapter/sub-chapter), under his private "Thesis" page
+in the Tundra Health workspace: https://app.notion.com/p/3d8b30c6d57e816ab649e0b8acb0ef77 . Created via
+headless `claude -p` with the Notion MCP because the session's own Notion connection had failed.
 
 **Why:** he may still message before 06:15; after that assume he is offline and cannot fetch
 anything. Do not start work that needs him online after that time.
