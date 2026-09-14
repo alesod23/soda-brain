@@ -63,3 +63,5 @@ synced it. `ffprobe` reports the error immediately; check that before assuming a
 missing for some subtler reason.
 
 Related: [[reference_voice_lane]] (the fast lane), [[reference_approval_hub]], [[project_sodaos]].
+
+**2026-09-14 incident + guard.** His phone recorded **12.6 h** overnight (`sodaos/2026-09-13_22-21-28.3gp`, 82 MB, recorder left on). `voice-longform-vps.py` tried it at 11:05 and 11:13, whisper `small` ballooned to ~5.9 GB RSS on the 8 GB box, both attempts were OOM-killed (they also killed two of the savior's background shells), and because nothing was written to `state.json` the timer crashlooped every tick. Fixed the same morning: the file was marked `processed` by hand, and the runner got a **`MAX_DURATION_MIN = 240` guard** (skip + log line + mark processed; file untouched on Drive), backup `voice-longform-vps.py.bak-20260914`. If he wants the first minutes of such a file, transcribe a trimmed copy separately. Watch for: `lane.log` showing the same file "processing" twice with no "done" = this failure mode.
