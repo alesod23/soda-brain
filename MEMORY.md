@@ -67,6 +67,7 @@
 - Task fields: [surface_on vs due](feedback_future_due_to_inbox.md) · [/dump dated → inbox](feedback_dump_dated_followups_to_inbox.md) · [AskUserQuestion for prefs](feedback_ask_user_question_preference.md) · [Curriculum tracker](feedback_curriculum_tracker.md) · [weekly learnings](reference_weekly_learnings.md).
 - KB: [split needs bridge](feedback_kb_split_needs_bridge.md) · [drift guard](feedback_kb_systems_drift_guard.md) · [systems doc READ-FIRST](reference_kb_systems.md) · [KB vault](reference_kb_vault.md).
 - Obsidian: [sequential opens](feedback_obsidian_sequential_opens.md) · [obsidian:// preferred](reference_obsidian_app_path.md) · Capture: [paper notes → Raw](feedback_paper_notes_standalone_raw.md) · [Raw filename MM-DD](feedback_raw_note_filename_month_day.md) · [/audio-to-notes](reference_audio_to_notes.md) · 🎙️ [Call recording](reference_pixel_call_recording.md).
+- 🎙️📁 [Phone recordings on the box](reference_phone_recordings_on_box.md) — `gdrive/From phone/`; FUSE hides same-name files (use `rclone lsl`); WA store starts 2026-08-23; transcribe with voice-lane venv faster-whisper `small`.
 - [Transcript artifact format](feedback_transcript_artifact_format.md) · [sodaOS](project_sodaos.md) · [Phone→desktop](project_phone_to_desktop.md) · [WA Web media](feedback_wa_web_for_media.md) · [BIG MOVE backup](reference_big_move_backup.md).
 
 ## Thesis / travel / misc projects
