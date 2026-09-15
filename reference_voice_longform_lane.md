@@ -22,6 +22,19 @@ and is stripped from content. Routes: vault Raw note / Tasks/inbox file / archiv
 Telegram report. Transcripts at box `voice-lane/transcripts/`. Whisper hallucinates dots on pure
 noise — a near-empty transcript of a pocket recording is legitimate, and the TG report says so.
 
+**NEVER force `language=` on a recording you have not sampled (2026-09-15).** Nocco's MEDICON talk
+was transcribed with `language='it'` because the event was in Italy and he is Italian: the talk was
+in ENGLISH, and faster-whisper `small` dutifully produced 5,000 words of fluent Italian nonsense
+("le muuture caratteristiche", "spada di effetti") that read like a bad transcript rather than a
+wrong-language one. Cost: a whole summary and a Telegram pitch built on invented content, then a
+re-run. Re-run with `language='en'` gave 8,034 words and the real argument, including his actual
+bottleneck (data entry + standardisation) which the Italian pass had lost entirely. Rule: let
+whisper auto-detect (it reports `info.language` + probability), or transcribe the first 60 s first
+and read it before committing to a language. Only force a language when a sample confirms it.
+Conference talks in Italy are routinely in English; the audience language is not the speaker's.
+Same run also confirmed: `vad_filter=False` + `+6 dB` is right for noisy halls (see INBIT), and an
+out-of-harness `nohup` notifier posting via Bot API `sendDocument` survives harness watcher pruning.
+
 --- retired laptop lane, kept for reference ---
 
 **`C:\Users\Alessandro\.claude\voice-lane\longform.ps1`**, scheduled task **`Voice-Longform`**
