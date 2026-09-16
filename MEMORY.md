@@ -75,6 +75,7 @@
 
 ## Thesis / travel / misc projects
 - 🎓 [THESIS CHECKPOINT 2026-09-04](project_thesis_checkpoint_2026_09.md) · [Seeling + cumulative ch8](feedback_thesis_seeling_and_cumulative_conclusion.md) · [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
+- 🧭 [Trippy box sources](reference_trippy_box_sources.md) — LeFrecce + gflights + FlixBus live from the VPS; Italo unpriceable; headless Chrome render check.
 - Travel: ✈️ [gflights engine](reference_gflights_engine.md) · [travel-search](reference_travel_search.md) · 📱 [Trippy on the BOX](reference_trippy_on_box.md) · 🧭 [Trippy naming](reference_trippy_naming.md) · [core](project_trippy_v2.md) · [metro](feedback_trippy_metro_airport_normalization.md) · [headless](feedback_trippy_headless_parallel.md) · [links](feedback_trippy_durable_links.md) · [two-pass](feedback_trippy_deep_dive.md) · [airline-direct](feedback_airline_direct_for_known_carrier.md) · [Italy travel](context_travel_patterns.md).
 - [RadioCLI](project_radiocli.md) · [Restore-CC](reference_restore_cc.md) · [Claude Setup Repo](project_claude_setup.md) · [Dynamic-HTML](reference_dynamic_html.md) · [static DEFAULT](feedback_dynamic_html_default.md).
 
