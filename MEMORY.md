@@ -18,6 +18,7 @@
 - [Track phased plans](feedback_track_phased_plans.md) — "later" = commitment · [Clipboard drafts: verify](feedback_clipboard_all_paste_drafts.md).
 
 ## Box (VPS), Telegram, savior
+- 🔁 [One-way TG lane → HE types `/mcp reconnect plugin:telegram:telegram`](feedback_telegram_one_way_lane_mcp_reconnect.md) — no restart, context intact, queue drains; savior answers via Bot API curl meanwhile.
 - 🩹 [Telegram bridge FIX LOG](../../task-land/_system/TELEGRAM-BRIDGE-LOG.md) — read before touching TG, append after every fix.
 - [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_v3_bot; BOX owns the savior lane; `claude -p` without `--strict-mcp-config` kills the poller · [tg-bridge](reference_tg_bridge.md) · [NEVER respawn savior](feedback_never_respawn_savior_session.md) — `restore-savior` / `vpsc`.
 - Telegram: [reply tool every turn](feedback_telegram_reply_tool_every_turn.md) · [reply_to inbound id](feedback_telegram_reply_to_threading.md) · [bare N = Nth-newest card](feedback_telegram_ordinal_message_reference.md) · [swipe-reply resolver](reference_tg_reply_resolver.md) · [channel msgs separate](feedback_channel_sequential_handling.md) · [React 👀 FIRST](feedback_react_eyes_before_working.md).
