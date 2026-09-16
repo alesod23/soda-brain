@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 8fb3a61a-b367-4d96-bd49-39a3cdbbb356
-  modified: 2026-08-30T02:48:52.396Z
+  modified: 2026-09-16T14:40:52.603Z
 ---
 
 **⚠️ MOVED TO THE VPS 2026-08-30 — the laptop lane below is RETIRED.** Long-form now runs on da-box:
@@ -21,6 +21,8 @@ order interchangeable, closer optional, fuzzy + Italian variants; instruction ro
 and is stripped from content. Routes: vault Raw note / Tasks/inbox file / archive-only + ALWAYS a
 Telegram report. Transcripts at box `voice-lane/transcripts/`. Whisper hallucinates dots on pure
 noise — a near-empty transcript of a pocket recording is legitimate, and the TG report says so.
+
+**The 240-min guard is not enough (2026-09-16).** He forgot to stop a recording: 3.7 h (13,345 s, AMR-NB, 24 MB), landed on the box at 16:31, and only the first 30 min mattered. At 222 min it sat UNDER `MAX_DURATION_MIN = 240`, so the lane would have transcribed all of it (hours of CPU, useless text). Caught by hand: appended the filename to `state["processed"]` in `/home/da/voice-lane/state.json` before the 5-min timer fired, then ran a 30-min job (`ffmpeg -t 1800`, `+6 dB`, faster-whisper `small`, `vad_filter=False`, **`language=None`** to auto-detect) with an out-of-harness notifier posting the txt via Bot API. Open design question for him: for any file over ~45 min, transcribe the first N minutes and ask, instead of all-or-nothing. Same family as the unanswered short-recording A/B/C.
 
 **NEVER force `language=` on a recording you have not sampled (2026-09-15).** Nocco's MEDICON talk
 was transcribed with `language='it'` because the event was in Italy and he is Italian: the talk was
