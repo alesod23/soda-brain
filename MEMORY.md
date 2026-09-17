@@ -7,6 +7,7 @@
 - 🖥️ [Startup opens NOTHING](feedback_laptop_startup_clean.md) · [power states](reference_laptop_power_states.md) · [16 GB, Windows sees 11.7](reference_laptop_memory_pressure.md).
 - ↩️ ["nvm" cancels previous message](feedback_nvm_cancels_previous_message.md).
 - 💾 [Tool mirrors = backups in task-land](reference_tool_mirrors.md) — `_system/laptop-tools/`, `_system/box-tools/` (git-sync step 0, secrets excluded); no new repos, never run from a mirror.
+- 🔀 [Sync can park for DAYS unnoticed](reference_task_land_sync_parked_conflict.md) — `git status -sb` on all 4 repos when box and laptop disagree; merge, not rebase (2026-09-17).
 - ✉️🔍 [EVERY email draft goes through the lane](feedback_every_email_draft_goes_through_the_lane.md) — gmail draft + sidecar + register.py, same turn; never stop at the draft · [lane details](reference_draft_review_lane.md) — draft → `_system/drafts/register.py` → hub card #N → `N dsend/no/change:`; Quick Claude Alt+Win+J then D; NEVER send.
 - ["Ping" = hub card](feedback_approvals_are_pings.md) — POST 127.0.0.1:4180/pending ONLY; never `tg-bridge/send-to-phone.js` · [Approval-hub](reference_approval_hub.md) — canonical y/n, card ≤58 lines.
 - ✅ [A COMMITTED batch IS the yes](feedback_commit_batch_is_the_yes.md) — never a card asking to confirm a commit; a card after commit only if something NEW happened (2026-09-16, card #15 Estonia).
