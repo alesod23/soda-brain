@@ -48,7 +48,7 @@
 
 ## Email / outreach voice
 - ✍️ [NO signature block, end 'Alessandro'](feedback_email_no_signature_block.md) — ask-first is DEFAULT · ✉️ [Remind, don't re-confirm](feedback_remind_dont_reconfirm.md).
-- Email ops: [to-do = find existing thread](feedback_email_todo_find_existing_thread.md) · [catch-up](feedback_email_catchup_consistency.md) · [not-findable](feedback_email_not_findable_tracking.md) · [shared inbox cutoff](feedback_shared_inbox_cutoff.md) · [draft = real Gmail draft](feedback_email_draft_must_be_real_not_clipboard.md).
+- Email ops: [REPLY IN THREAD IS THE DEFAULT; to-do = find existing thread](feedback_email_todo_find_existing_thread.md) · [catch-up](feedback_email_catchup_consistency.md) · [not-findable](feedback_email_not_findable_tracking.md) · [shared inbox cutoff](feedback_shared_inbox_cutoff.md) · [draft = real Gmail draft](feedback_email_draft_must_be_real_not_clipboard.md).
 - ⚠️ [Mixed threads leak internal comms](feedback_thread_reply_leaks_internal_comms.md) · [Read source thread first](feedback_read_source_thread_before_acting.md) · [Follow links not labels](feedback_follow_links_not_link_labels.md).
 - Style: [professor](feedback_professor_email_style.md) · [warm-intro](feedback_warm_intro_phrasing.md) · [Italian tu/Lei](feedback_italian_practitioner_followup_style.md) · [HTML multipart](feedback_gmail_html_rendering.md).
 - 🗣️ ["I understand it's X guidance to…" NOT "the website says"](feedback_cite_knowledge_not_the_website.md) — naming the source reads as AI.

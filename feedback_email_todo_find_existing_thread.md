@@ -15,3 +15,6 @@ Mistake 2026-07-23: the to-do "Email John" was about **John Heilbron** (he'd ema
 3. **Match the account to the context** (Tundra business → tundra account; CDTM → cdtm; personal → personal). A Tundra intro belongs on the tundra account.
 4. Only draft a brand-new email when no existing thread exists AND the recipient is unambiguous.
 See [[reference_tundra_stack]] for the accounts; tundra account = `gmail.py --account tundra`.
+
+
+**Extension 2026-09-17 (his words, Telegram): "the email should, of course, be a reply. As in most cases where we already have a conversation, that should be the default. Reply to our latest exchange ... I shouldn't have to specify this in the future."** How to apply: before ANY draft, search the account for a thread with that person; if one exists, `gmail.py draft --thread-id <thread>` (reply), never a new thread, and never ask whether to reply. New thread only when no conversation exists or he says so.
