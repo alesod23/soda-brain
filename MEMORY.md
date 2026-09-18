@@ -44,6 +44,7 @@
 - Decks: [Deck→PDF print snapshot](feedback_deck_pdf_needs_print_snapshot.md) · [Design source only](feedback_tundra_deck_workflow.md) · [bridged EN pinned](reference_tundra_bridged_deck_source.md) · [pull-before-write](feedback_designsync_pull_before_write.md) · [fingerprint+fitz](feedback_deck_source_fingerprint_and_render.md) · 🎨 [Claude Design asks every push](reference_claude_design_permissions.md) · [/design-lib](reference_design_lib.md).
 - 📝 [Edit a tundra Google Doc from the box](reference_google_doc_edit_path_from_box.md) — MCP creates, Docs API via drive-cdtm token edits after share; tundra tokens dead (2026-09-18).
 - Drive: [public share](reference_gdrive_public_share.md) · 🗂️ [VPS gdrive mounts](reference_vps_gdrive_mounts.md) · 📁 [drive.py CLI](reference_drive_cli.md).
+- 🔁 [TundraPage PR review loop](feedback_tundrapage_pr_review_loop.md) — after a PR, read the bot review threads: fix commit or resolve, never leave them (Caleb, 2026-09-18).
 - 🌐 [TundraPage repo](project_tundrapage_repo.md) — alesod23 read-only, PR to Caleb · [Git identity](reference_git_github_identity.md) · 🏔️ [Tundra commits NEED Claude trailer](feedback_tundra_commits_need_claude_trailer.md).
 - [Tundra Talents](project_tundra_talents.md) · [Langfuse pains](project_langfuse_pains.md) · [scoring](feedback_pain_corpus_scoring.md) · [CDTM kickoff TF](project_cdtm_kickoff_tf.md).
 
