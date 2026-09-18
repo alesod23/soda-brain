@@ -17,3 +17,6 @@ Bit three times on 2026-09-14, on the box, while managing background transcripti
 - Never `pkill -f` a pattern that could appear in an inline command; kill the pidfile's pid.
 
 Related: [[feedback_no_polling_on_background_tasks]], [[reference_phone_recordings_on_box]].
+
+
+**Bitten again 2026-09-18 21:05:** `OLD=$(pgrep -f "node .*travel-search/app/server.js" | head -1); kill $OLD` killed the Bash tool shell itself (exit 144), not the server. For a listening service take the pid from the socket: `ss -ltnp | grep :4126 | grep -oP "pid=\K[0-9]+"`. Never pgrep -f a pattern that appears in your own command line.
