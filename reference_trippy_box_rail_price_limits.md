@@ -1,6 +1,6 @@
 ---
 name: reference_trippy_box_rail_price_limits
-description: "Trippy on the box, audited 2026-09-18: French rail PRICES are unreachable from the VPS IP (sncf-connect, tgvinoui, maxjeune, Trainline API, Omio, Rail Europe all 403; Navitia = timetables only), Italo has no API, DB vendo API 403 (bahn.de HTML 200). Timetables via Trainline SEO pages work. gflights: 30 cells in 3.2 s with 8 workers, no throttling code yet. His discount cards (SNCF Avantage Jeune, BahnCard 25) only apply through the laptop browser profile."
+description: "Trippy on the box, audited 2026-09-18: French rail prices ARE reachable via Trainline GraphQL with his Avantage Jeune (see reference_trainline_graphql_box); everything else on the French side is blocked from the VPS IP (sncf-connect, tgvinoui, maxjeune, Trainline API, Omio, Rail Europe all 403; Navitia = timetables only), Italo has no API, DB vendo API 403 (bahn.de HTML 200). Timetables via Trainline SEO pages work. gflights: 30 cells in 3.2 s with 8 workers, no throttling code yet. His discount cards (SNCF Avantage Jeune, BahnCard 25) only apply through the laptop browser profile."
 metadata:
   type: reference
 ---
@@ -14,3 +14,5 @@ metadata:
 **His requirement (2026-09-18):** prices with his cards: SNCF Carte Avantage Jeune, DB BahnCard 25; Italo; heavy multi-stop Google Flights grids that may run for hours. Plan agreed in principle: box does flights/bus/Trenitalia and the board; a box→laptop request lane (laptop watcher `state/trippy-requests-watch.ps1` already exists, SNCF driver `paris_rail.py`, DB `bahn_probe.py` with Playwright) fills SNCF/Italo/DB prices from the logged-in Chrome profile where the cards apply. See `task-land/_system/HANDOFF-20260918-trippy-rail-price-lane.md`.
 
 Related: [[reference_trippy_box_sources]], [[reference_gflights_engine]], [[reference_trippy_on_box]], [[reference_travel_search]].
+
+**UPDATE same day (20:40):** Trainline's `/graphql` gateway (Relay persisted JourneySearchQuery) is NOT behind DataDome and prices with `discountCards=[{code:"urn:trainline:sncf:card:AvantageJeune"}]`: Paris→Agen 24/9 14:05 = 158.60 full / 85.00 with card, confirmed by `appliedDiscountCards`. Tool: `~/travel-search/trainline_render.py` (`locate`, `search --railcard`, Kombo fallback, block detection exit 3). Rendered results pages stay 403 (journey-search API behind DataDome). Details: [[reference_trainline_graphql_box]]. The laptop lane is still needed for Italo and for DB with BahnCard 25 until a BahnCard URN is found.

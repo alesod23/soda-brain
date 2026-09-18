@@ -13,4 +13,6 @@ Verified 2026-09-16 on the Rome→Milan board (`app/trips/rome-milan-2026-09`, g
 - **Render check without playwright**: `~/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell --headless --no-sandbox --virtual-time-budget=8000 --dump-dom <url>` then grep a card id / `rcard dead`.
 - Rome→Milan facts: no nonstop FCO→MXP/BGY, nothing from CIA; only ITA FCO→LIN (Sat night €115, Sunday €280+). Frecciarossa €75-86 is the default answer.
 
+- **French rail (SNCF/OUIGO/TER/Intercités) with Carte Avantage**: `trainline_render.py` (2026-09-18) via Trainline's /graphql, see [[reference_trainline_graphql_box]]. The rendered results page is DataDome-blocked from this IP; do not retry it.
+
 See [[reference_gflights_engine]] · [[reference_trippy_on_box]] · [[project_trippy_v2]].
