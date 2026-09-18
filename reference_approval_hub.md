@@ -111,3 +111,5 @@ ping. State now persists `failed_key` as a joined STRING. See [[feedback_ps51_co
 - **Numbering caveat**: resolving 'yes' EXECUTES the action — never "test-resolve" a card with a real action; superseding a card = resolve 'no' WITH feedback text (bare no now pings the user).
 
 Related: [[reference_voice_lane]] (voice fast-lane + correction linking), [[feedback_message_send_protocol]], [[feedback_no_headless_fuzzy_send]], [[reference_pixel_call_recording]].
+
+**Daily-page mirror line (his ruling, Telegram 2026-09-19 00:35).** `## Today` on the daily page carries a second fixed line under the CRM one: `- [ ] Hub cards still open (N) [review](http://100.85.52.84:4142/)`. N = `GET http://100.85.52.84:4142/api/open-count` (hub-review server on the box, Tailscale only, phone review page at `/`), 2 s timeout, `(offline)` when unreachable, auto-checked at 0. Rendered by `Format-HubLine` in `task-land/_system/daily-lib.ps1`, skipped by `daily-sync.ps1` via `$script:HubLineRe` (never a task). Box-side details: [[reference_hub_review_ui]].
