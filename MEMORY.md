@@ -22,6 +22,7 @@
 ## Box (VPS), Telegram, savior
 - 🔁 [One-way TG lane → HE types `/mcp reconnect plugin:telegram:telegram`](feedback_telegram_one_way_lane_mcp_reconnect.md) — no restart, context intact, queue drains; savior answers via Bot API curl meanwhile.
 - 🩹 [Telegram bridge FIX LOG](../../task-land/_system/TELEGRAM-BRIDGE-LOG.md) — read before touching TG, append after every fix.
+- 📋 [hub-review UI](reference_hub_review_ui.md) — http://100.85.52.84:4142/ (Tailscale): decide every open hub card on the phone, j/k a/s/x/c, ONE commit = the yes; a "hub-review commit ..." Telegram message from him = the savior executes the CHANGES lines and marks `/api/queue/done`.
 - [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_v3_bot; BOX owns the savior lane; `claude -p` without `--strict-mcp-config` kills the poller · [tg-bridge](reference_tg_bridge.md) · [NEVER respawn savior](feedback_never_respawn_savior_session.md) — `restore-savior` / `vpsc`.
 - Telegram: [reply tool every turn](feedback_telegram_reply_tool_every_turn.md) · [reply_to inbound id](feedback_telegram_reply_to_threading.md) · [bare N = Nth-newest card](feedback_telegram_ordinal_message_reference.md) · [swipe-reply resolver](reference_tg_reply_resolver.md) · [channel msgs separate](feedback_channel_sequential_handling.md) · [React 👀 FIRST](feedback_react_eyes_before_working.md).
 - [DA SYSTEM](project_da_system.md) — laptop-off Claude, approve/reject loop · 🚨 [Account migration PENDING](project_account_migration.md) — diff against `MIGRATION-account-switch.md`.
