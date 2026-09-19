@@ -83,6 +83,7 @@
 
 ## Thesis / travel / misc projects
 - 🎓 [THESIS CHECKPOINT 2026-09-04](project_thesis_checkpoint_2026_09.md) · [Seeling + cumulative ch8](feedback_thesis_seeling_and_cumulative_conclusion.md) · [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
+- 🚄 [Rail-price lane box->laptop LIVE](reference_trippy_rail_lane.md) — Drive request/result JSON, DB BahnCard by URL token, Italo via booking XHR, task Trippy-RailLane every 2 min (2026-09-19).
 - 🚫🚄 [Box cannot price SNCF/Italo/DB; cards need the laptop](reference_trippy_box_rail_price_limits.md) — 403 map + gflights throughput (2026-09-18).
 - 🧭 [Trippy box sources](reference_trippy_box_sources.md) — LeFrecce + gflights + FlixBus live from the VPS; Italo unpriceable; headless Chrome render check.
 - 🚄 [Trainline GraphQL from the box](reference_trainline_graphql_box.md) — `travel-search/trainline_render.py`: /graphql persisted query works (REST + rendered page are DataDome-403); Carte Avantage via discountCards URN; Kombo fallback.
