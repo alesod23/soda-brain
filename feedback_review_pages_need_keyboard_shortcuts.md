@@ -38,3 +38,5 @@ textarea), and guard `e.target.closest` since a synthetic event dispatched on `d
 `closest` and one TypeError there silently kills every shortcut.
 
 Related: [[reference_gtm_boards]], [[feedback_gtm_boards_open_via_script]].
+
+**Since 2026-09-19** the layout side of the same pages is ruled by [[feedback_review_page_design_system]] (`~/gtm-eng/DESIGN-SYSTEM.md`): one item per screen at 1568x773, fixed zones, ? hovers, one draft per channel.
