@@ -2,6 +2,7 @@
 
 ## Rules that bite first
 - 📌 ["Make this a rule" = write NOW](feedback_rule_requests_are_binding.md) — file + index line, same turn.
+- 🏠 [L'output va DENTRO il sistema che possiede quel lavoro](feedback_output_goes_into_the_owning_system.md) — viaggi in trippy, persone nel CRM, board in gtm-eng, decisioni nella hub; mai l'ennesima pagina usa-e-getta. Nel dubbio chiediglielo su TG PRIMA di costruire (2026-09-20).
 - ⌨️ [SHORTCUTS.md = master list](feedback_shortcuts_master_file.md) — update same turn for any hotkey/alias/skill.
 - 🧩 [Skills on BOTH machines](feedback_skills_install_on_both_machines.md) — laptop + `/home/da/.claude/skills/`.
 - 🖥️ [Startup opens NOTHING](feedback_laptop_startup_clean.md) · [power states](reference_laptop_power_states.md) · [16 GB, Windows sees 11.7](reference_laptop_memory_pressure.md).
