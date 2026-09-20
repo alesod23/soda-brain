@@ -89,6 +89,7 @@
 
 ## Thesis / travel / misc projects
 - 🎓 [THESIS CHECKPOINT 2026-09-04](project_thesis_checkpoint_2026_09.md) · [Seeling + cumulative ch8](feedback_thesis_seeling_and_cumulative_conclusion.md) · [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
+- 🛌 [Comfort = ora di uscita di casa, non del volo](feedback_travel_comfort_door_time.md) — sotto le 07:30 da Centrale e' scomodo (curva, non soglia); il piu' economico va SEMPRE affiancato al comodo col delta in euro (2026-09-20).
 - 💳 [SEMPRE le sue carte: Avantage Jeune, BahnCard 25, Megavolotea](reference_travel_discount_cards.md) — mai chiedergliele (2026-09-20); gflights NON vede i low cost (coppie aeroporto = 0 risultati).
 - 🚄 [Rail-price lane box->laptop LIVE](reference_trippy_rail_lane.md) — Drive request/result JSON, DB BahnCard by URL token, Italo via booking XHR, task Trippy-RailLane every 2 min (2026-09-19).
 - 🚫🚄 [Box cannot price SNCF/Italo/DB; cards need the laptop](reference_trippy_box_rail_price_limits.md) — 403 map + gflights throughput (2026-09-18).
