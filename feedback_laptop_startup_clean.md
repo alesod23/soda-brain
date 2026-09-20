@@ -56,3 +56,5 @@ say what it is and close it when done.
 
 Related: [[reference_ahk_autostart]], [[feedback_local_server_start_pattern]],
 [[feedback_no_polling_on_background_tasks]], [[feedback_rule_requests_are_binding]].
+
+**2026-09-20: never park anything in a SUBFOLDER of the Startup folder.** Windows launches every shell item in `...\Start Menu\Programs\Startup`, and a folder item is "launched" by opening it in Explorer: the `Startup\_disabled\` folder (granola-auto-watch.vbs, OpenWhispr.lnk) popped an Explorer window at every logon ("a disabled folder with open wispr is open on file location"). Parked startup items now live in the sibling `...\Programs\Startup-disabled\` (outside Startup); anything else to disable goes there, never into Startup itself.
