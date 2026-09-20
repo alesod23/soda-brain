@@ -17,6 +17,7 @@
 - [Message-send protocol](feedback_message_send_protocol.md) — "dsend"=now; "quotes"=verbatim; else hub card · [dsend includes attachment](feedback_dsend_includes_attachment.md).
 - Sending: [simple send = fast](feedback_simple_send_fast_no_diagnostics.md) · [check before nudging](feedback_pending_send_check_before_nudge.md) · [NEVER headless fuzzy send](feedback_no_headless_fuzzy_send.md).
 - [Plan compute not API keys](feedback_no_api_keys.md) · 🧳 [Parked MCPs: cc-with, never global](feedback_mcp_per_session_not_global.md) · [Allowlist widening needs OK](reference_permission_allowlist_gaps.md).
+- 📤 [Check SENT + calendar before saying "pending"](feedback_state_check_sent_and_calendar.md) — a hub card is a proposal, not state; 4/12 items were stale for this (2026-09-20). Review boards = visibility + proposal + a comment box, he decides.
 - 🧪 [Verify "not possible" claims](feedback_verify_agent_capability_claims.md) · 🔎 [Diagnose before naming a cause](feedback_diagnose_before_naming_root_cause.md) · [never fabricate fetched](feedback_never_fabricate_fetched_content.md) · 📊 [Figures need sources](feedback_deliverable_figures_need_sources.md).
 - [Track phased plans](feedback_track_phased_plans.md) — "later" = commitment · [Clipboard drafts: verify](feedback_clipboard_all_paste_drafts.md).
 
