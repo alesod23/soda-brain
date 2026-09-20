@@ -35,6 +35,7 @@
 - [Cloud routine alerts → Calendar popup](reference_cloud_routine_alert_delivery.md) · [Bare replies → notif-log](feedback_resolve_reply_from_notiflog.md).
 
 ## coattio / CRM / GTM
+- 🏥 [CRM check board :4143/crm-catchup.html](reference_crm_catchup_board.md) — person items + one item per targeted hospital (data/hospitals.json built on the laptop), s asks why, commit = one TG message the savior executes (2026-09-20).
 - 🎪 [Event contact workflow](project_event_contact_workflow.md) — capture -> one card -> coattio + Notion + 48 h task; `POST :4137/intake` exists since 2026-09-15 (it was the missing link).
 - 🧭 [coattio v2](project_coattio_v2.md) — contract `~/.medtech-crm/WORKPLAN-20260904-coattio-v2.md`; CRM OWNS every person follow-up (reversed 2026-09-19), daily page = COUNT LINE ONLY (per-person lines reversed 2026-09-19 evening, clutter).
 - 📱 [coattio on the box](reference_coattio_box_hosting.md) — phone http://100.85.52.84:4124 · [servers 4124+4137, NEVER run_in_background](reference_coattio_servers.md) · [Tailscale](reference_coattio_tailscale.md) · ⌥⇧M [Alt+Shift+M draft](reference_alt_shift_m_ai_draft.md) · [local server start = detached](feedback_local_server_start_pattern.md).
