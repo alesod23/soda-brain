@@ -30,6 +30,7 @@
 ## Box (VPS), Telegram, savior
 - 🔁 [One-way TG lane → HE types `/mcp reconnect plugin:telegram:telegram`](feedback_telegram_one_way_lane_mcp_reconnect.md) — no restart, context intact, queue drains; savior answers via Bot API curl meanwhile.
 - 🩹 [Telegram bridge FIX LOG](../../task-land/_system/TELEGRAM-BRIDGE-LOG.md) — read before touching TG, append after every fix.
+- 💀🔌 [Le 4 morti della lane erano COATTIO](reference_coattio_spawns_claude_kills_telegram.md) — i suoi server giravano senza TELEGRAM_STATE_DIR, ogni claude figlio rubava il poller; fix in `coattio/start-box.sh`, prova in `/proc/<pid>/environ` (2026-09-24).
 - ☠️ [NEVER run the `claude` CLI from the savior](feedback_never_run_claude_cli_from_savior.md) — `claude mcp list` alone killed the lane (2026-09-19); check health with `pgrep -a bun` + plugin logs.
 - 📋 [hub-review UI](reference_hub_review_ui.md) — http://100.85.52.84:4142/ (Tailscale): decide every open hub card on the phone, j/k a/s/x/c, ONE commit = the yes; a "hub-review commit ..." Telegram message from him = the savior executes the CHANGES lines and marks `/api/queue/done`.
 - [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_v3_bot; BOX owns the savior lane; `claude -p` without `--strict-mcp-config` kills the poller · [tg-bridge](reference_tg_bridge.md) · [NEVER respawn savior](feedback_never_respawn_savior_session.md) — `restore-savior` / `vpsc`.
