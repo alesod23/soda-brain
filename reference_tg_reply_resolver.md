@@ -40,3 +40,30 @@ the hook cannot currently express.
 - **Login codes die if pasted plainly in any chat** (Telegram anti-phishing) — during (re)login have him send the code SPLIT ("9 4 9 1 1"); strip non-digits. `login.py request --phone` / `confirm --code` are non-interactive for exactly this flow.
 - Session = `user.session` file next to the scripts; revocable from Telegram Settings→Devices; portable to a future VPS (DA SYSTEM phase 2) like the WA auth folder.
 - History is server-side → quotes resolve RETROACTIVELY after laptop-off gaps, better than the plugin's live-only view.
+
+## Searching the WHOLE bot history (added 2026-09-24)
+
+The resolver's session is also a full-text archive: use it when he asks "what was that thing I
+sent you?" and the local corpus has nothing. On the box, 4,115 messages scan in about 40 seconds.
+
+**Interpreter:** `/home/da/voice-lane/venv/bin/python`. **Telethon is NOT in the triage venv**, and
+the bare `python` fails with `ModuleNotFoundError: telethon`. Run from `/home/da/tg-reply-resolver`
+so the `user.session` file resolves.
+
+```python
+from telethon import TelegramClient
+from pathlib import Path
+env = {k.strip(): v.strip() for k, v in
+       (l.split("=", 1) for l in (Path.home()/".env"/"tg-user-api.env").read_text().splitlines()
+        if "=" in l and not l.strip().startswith("#"))}
+c = TelegramClient('user', int(env["TG_API_ID"]), env["TG_API_HASH"])
+# async for m in c.iter_messages('Claudio_al_TG_v3_bot', limit=6000): m.out is True when HE sent it
+```
+
+**What actually finds things:** he rarely uses the words you would search for. Searching
+"personal assistant" over the whole history returned only his own question. What worked was
+**listing every DOMAIN he ever sent**, excluding the noise (claude.ai, google, linkedin, t.me),
+and reading the message around the one that looked like a product. That is how Kortyx was found.
+Do the domain sweep first, the phrase search second.
+
+Related: [[project_da_system]].
