@@ -2,6 +2,7 @@
 
 ## Rules that bite first
 - 📌 ["Make this a rule" = write NOW](feedback_rule_requests_are_binding.md)
+- 🧠 [Design on merit, not his off-hand numbers](feedback_design_on_merit_not_his_offhand_numbers.md) — no arbitrary caps, Haiku never, Opus where it decides, read the reference he names (Kortyx) before designing; "smart, non-blocking, not sucky" (2026-09-24).
 - 🔁 ["Iterative" = one sentence on the spot, never a review pass](feedback_iterative_means_on_the_go_flag.md) — backlogs are separate, optional cleanup; never call them the iterative part (2026-09-24). — file + index line, same turn.
 - 🧹➡️ [Una regola vale anche sugli artefatti GIA' esistenti](feedback_standing_instruction_becomes_work_now.md) — "tutto da Tundra" (22 set) e tre draft sono rimasti in cdtm finche' non l'ha chiesto lui; e una domanda parcheggiata in una pagina non e' una domanda fatta (2026-09-23).
 - 🏠 [L'output va DENTRO il sistema che possiede quel lavoro](feedback_output_goes_into_the_owning_system.md) — viaggi in trippy, persone nel CRM, board in gtm-eng, decisioni nella hub; mai l'ennesima pagina usa-e-getta. Nel dubbio chiediglielo su TG PRIMA di costruire (2026-09-20).
