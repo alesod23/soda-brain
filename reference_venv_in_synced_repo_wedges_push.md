@@ -27,7 +27,13 @@ change is small, then `git reset --mixed origin/master`, re-commit only what bel
 local commits netted out to one `.gitignore` line. Nothing had reached the remote, so the laptop was
 never affected.
 
-**Prevention:** venvs live OUTSIDE every synced repo. The playwright one is now `~/.venv-playwright`
+**Prevention, now in code:** `guard_bigblobs` in `task-land/_system/vps/sync-guards.sh`, called from
+`repo-sync.sh` right after `git add -A` next to `guard_winnames`, so it covers all four synced repos.
+It unstages any staged file over **95 MB** (not 100: no headroom would let a file that grows between two
+runs slip through the first), logs it, alerts once, and lets the rest of the commit through. Tested with a
+120 MB file and a 94 MB file staged together — only the 120 came out, both untouched on disk.
+
+**Prevention, still on you:** venvs live OUTSIDE every synced repo. The playwright one is now `~/.venv-playwright`
 (see [[reference_gflights_engine]] for how `gflights_mc.py` uses it). `travel-search/.gitignore` now
 carries `.venv*/` and `venv/`, but the gitignore is the second line of defence, not the first — the
 first is not putting it there.
