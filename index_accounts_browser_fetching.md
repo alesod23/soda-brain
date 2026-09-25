@@ -1,0 +1,5 @@
+# Accounts / browser / fetching (sub-index, moved out of MEMORY.md 2026-09-25 to keep the index under the read limit; every line is a memory pointer)
+- 🚫 [NEVER bare account chooser](feedback_never_trigger_bare_account_chooser.md) · [resolve account BEFORE linking](feedback_resolve_account_before_linking.md) · [OAuth login_hint + verify](feedback_oauth_login_hint_and_verify.md) · 🔑 [open URLs with correct account](feedback_open_urls_with_correct_account.md).
+- 🚫🪐 [COMET ABANDONED, Chrome ONLY](feedback_browser_chrome_default.md) · [Output delivery CANONICAL](feedback_output_delivery_rules.md) — file:/// links; HTML auto-open; vault .md → Obsidian+clipboard.
+- Fetching: [YouTube transcripts](feedback_yt_transcripts.md) · [web-fetch-pw](reference_web_fetch_pw.md) · [Floom MCP](reference_floom_mcp.md) · [Calendar availability](reference_calendar_availability_link.md).
+- 🔎🚫 [WebSearch = 200/session, shared with subagents](reference_websearch_budget_and_fallbacks.md) · 🔗 [linkedin-mcp down? drive the scraper over stdio](reference_linkedin_scraper_direct_stdio.md).

@@ -42,6 +42,8 @@
 - [Cloud routine alerts → Calendar popup](reference_cloud_routine_alert_delivery.md) · [Bare replies → notif-log](feedback_resolve_reply_from_notiflog.md).
 
 ## coattio / CRM / GTM
+- 📬🔁 [DAILY CAMPAIGN (US): 30 a day on `boards/daily-<date>`, first 10 fire at 16:55 via campaign.py](reference_daily_campaign.md) — `gtm-eng/daily-campaign/`, task DailyCampaign-Fire, subject fixed, people not offices, one provider sentence; replaced the GTM line on the daily page (2026-09-25).
+- 🪟 ["Random terminal windows" = a console task run directly in his session; every scheduled console task goes through a .vbs](reference_interactive_console_tasks_open_windows.md) — GTM-Campaign-Tick did it, closing the window killed ticks (2026-09-25).
 - 🏥 [CRM check board :4143/crm-catchup.html](reference_crm_catchup_board.md) — person items + one item per targeted hospital (data/hospitals.json built on the laptop), s asks why, commit = one TG message the savior executes (2026-09-20).
 - 🎪 [Event contact workflow](project_event_contact_workflow.md) — capture -> one card -> coattio + Notion + 48 h task; `POST :4137/intake` exists since 2026-09-15 (it was the missing link).
 - 🧭 [coattio v2](project_coattio_v2.md) — contract `~/.medtech-crm/WORKPLAN-20260904-coattio-v2.md`; CRM OWNS every person follow-up (reversed 2026-09-19), daily page = COUNT LINE ONLY (per-person lines reversed 2026-09-19 evening, clutter).
@@ -53,16 +55,7 @@
 - [Tundra CRM taxonomy](reference_tundra_crm_taxonomy.md) · [NPD vs Tundra separate](feedback_npd_vs_tundra_separate.md) · [Lobbly](project_lobbly.md) · [Unclear-disclosure corpus](project_unclear_disclosure_corpus.md) · [Practitioner research](feedback_practitioner_research_methodology.md).
 
 ## Tundra / Notion / Granola / Drive
-- [Tundra stack](../../medtech-brain/_system/TUNDRA-STACK.md) — READ ALWAYS for Tundra · [deliverables → gsheet](feedback_tundra_deliverables_gdrive.md) · 💰 [Investor leads CDTM](reference_investor_leads_cdtm.md) · 📝 [Tundra Weekly doc](reference_tundra_weekly_meeting_doc.md).
-- 📥 [Notion Inbox](project_notion_signals.md) · 🧬 [Notion deliverables NATIVE](feedback_notion_deliverables_must_be_native.md) · [Tundra system](reference_notion_tundra_system.md) · [MCP scoped](reference_notion_mcp_access.md) · [writes need approval](feedback_notion_write_needs_approval.md) · [coattio→Notion sync](reference_coattio_notion_sync.md) · 📱➡️📅 [Notion meeting filer](reference_notion_meeting_filer.md).
-- Granola: [MPD folder](reference_mpd_granola_folder.md) · [granola-auto](reference_granola_auto.md) · [reminder timing](feedback_granola_reminder_next_day.md) · [Tundra Granola folder](reference_tundra_granola_folder.md) · [Tundra call-prep](reference_tundra_call_prep_flow.md) · [ICO prospect Renou](project_tundra_ico_renou.md).
-- Decks: [Deck→PDF print snapshot](feedback_deck_pdf_needs_print_snapshot.md) · [Design source only](feedback_tundra_deck_workflow.md) · [bridged EN pinned](reference_tundra_bridged_deck_source.md) · [pull-before-write](feedback_designsync_pull_before_write.md) · [fingerprint+fitz](feedback_deck_source_fingerprint_and_render.md) · 🎨 [Claude Design asks every push](reference_claude_design_permissions.md) · [/design-lib](reference_design_lib.md).
-- 👥 [Meeting doc with Caleb = share caleb@tundrahealth.ai AT CREATION](feedback_meeting_docs_always_share_caleb.md) — never leave the other participant off the access list (2026-09-19).
-- 📝 [Edit a tundra Google Doc from the box](reference_google_doc_edit_path_from_box.md) — MCP creates, Docs API via drive-cdtm token edits after share; tundra tokens dead (2026-09-18).
-- Drive: [public share](reference_gdrive_public_share.md) · 🗂️ [VPS gdrive mounts](reference_vps_gdrive_mounts.md) · 📁 [drive.py CLI](reference_drive_cli.md).
-- 🔁 [TundraPage PR review loop](feedback_tundrapage_pr_review_loop.md) — after a PR, read the bot review threads: fix commit or resolve, never leave them (Caleb, 2026-09-18).
-- 🌐 [TundraPage repo](project_tundrapage_repo.md) — alesod23 read-only, PR to Caleb · [Git identity](reference_git_github_identity.md) · 🏔️ [Tundra commits NEED Claude trailer](feedback_tundra_commits_need_claude_trailer.md).
-- [Tundra Talents](project_tundra_talents.md) · [Langfuse pains](project_langfuse_pains.md) · [scoring](feedback_pain_corpus_scoring.md) · [CDTM kickoff TF](project_cdtm_kickoff_tf.md).
+- 📂 [Sub-index: Tundra / Notion / Granola / Drive](index_tundra_notion_granola_drive.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Email / outreach voice
 - ✍️ [NO signature block, end 'Alessandro'](feedback_email_no_signature_block.md) — ask-first is DEFAULT · ✉️ [Remind, don't re-confirm](feedback_remind_dont_reconfirm.md).
@@ -78,36 +71,16 @@
 - HEC Outlook: [setup](project_hec_outlook_setup.md) · [COM, Classic only](reference_hec_outlook.md) · [Gmail Snippets ext](project_gmail_snippets_extension.md).
 
 ## Triage / WhatsApp / Slack
-- 📇 [Google contacts → CRM sync](reference_contacts_sync.md) — `triage/contacts_sync.py`, cron on the box; NEVER auto-files: each batch = ONE hub card (yes=all · no+"1 3"=those · no+none=skip), approved → coattio, Notion row is a session step (`review` → `mark-filed`); consent done 2026-09-14.
-- 📲🔑 [Re-auth Gmail from the PHONE](reference_gmail_phone_oauth.md) — `triage/phone_auth.py url` then `exchange`; personal mailbox = alessandrosodano23@gmail.com (token `sodano23`).
-- [Triage Gmail helper](reference_triage_gmail.md) · [Slack helper](reference_slack_helper.md) · [slack.cmd eats newlines](feedback_slack_cmd_newline_truncation.md) · plumbing: [v2 reply](reference_triage_v2_reply.md) · [operations](reference_triage_operations.md) · [v3 aliases](reference_triage_aliases_and_state.md).
-- Triage rules: [chips+24h](feedback_triage_askquestion_and_24h.md) · [24h cap](feedback_triage_24h_cap.md) · [actionable def](feedback_triage_actionable_definition.md) · [WA window-only](feedback_triage_wa_dm_window_only.md) · [--jid only](feedback_triage_wa_send_jid.md) · [unread-tail](feedback_triage_unread_tail_slicing.md) · [Slack cutoff](feedback_slack_cutoff_filter.md).
-- [WA Stack](reference_wa_sender.md) · [creds zeroed](reference_wa_daemon_creds_corruption.md) · [RE-LINK = QR ONLY](reference_wa_daemon_repair.md) · [health](reference_wa_daemon_health.md) · [flap lies](feedback_wa_daemon_flap_and_outgoing_gap.md) · [Web scrape](reference_wa_web_scrape.md) · [UTC-guard](reference_wa_scheduled_sends.md) · [recipient variants](feedback_wa_recipient_resolution.md) · [WA Web in default browser](feedback_open_wa_web_in_comet.md).
+- 📂 [Sub-index: Triage / WhatsApp / Slack](index_triage_wa_slack.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Accounts / browser / fetching
-- 🚫 [NEVER bare account chooser](feedback_never_trigger_bare_account_chooser.md) · [resolve account BEFORE linking](feedback_resolve_account_before_linking.md) · [OAuth login_hint + verify](feedback_oauth_login_hint_and_verify.md) · 🔑 [open URLs with correct account](feedback_open_urls_with_correct_account.md).
-- 🚫🪐 [COMET ABANDONED, Chrome ONLY](feedback_browser_chrome_default.md) · [Output delivery CANONICAL](feedback_output_delivery_rules.md) — file:/// links; HTML auto-open; vault .md → Obsidian+clipboard.
-- Fetching: [YouTube transcripts](feedback_yt_transcripts.md) · [web-fetch-pw](reference_web_fetch_pw.md) · [Floom MCP](reference_floom_mcp.md) · [Calendar availability](reference_calendar_availability_link.md).
-- 🔎🚫 [WebSearch = 200/session, shared with subagents](reference_websearch_budget_and_fallbacks.md) · 🔗 [linkedin-mcp down? drive the scraper over stdio](reference_linkedin_scraper_direct_stdio.md).
+- 📂 [Sub-index: Accounts / browser / fetching](index_accounts_browser_fetching.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Vault / daily / capture
-- [Vault task system](reference_vault.md) · /daily: [11-step](reference_daily_briefing.md) · [dedup](feedback_daily_dedup_today_page.md) · [full-section](feedback_daily_full_section_contract.md) · [deletion→Waiting](feedback_daily_deletion_parks_to_waiting.md) · [no rollover](feedback_daily_waiting_and_no_rollover.md) · [page = only edit surface](feedback_daily_is_interface_folders_are_plumbing.md) · [tag CSS](reference_daily_tag_css_split_fix.md).
-- Task fields: [surface_on vs due](feedback_future_due_to_inbox.md) · [/dump dated → inbox](feedback_dump_dated_followups_to_inbox.md) · [AskUserQuestion for prefs](feedback_ask_user_question_preference.md) · [Curriculum tracker](feedback_curriculum_tracker.md) · [weekly learnings](reference_weekly_learnings.md).
-- KB: [split needs bridge](feedback_kb_split_needs_bridge.md) · [drift guard](feedback_kb_systems_drift_guard.md) · [systems doc READ-FIRST](reference_kb_systems.md) · [KB vault](reference_kb_vault.md).
-- Obsidian: [sequential opens](feedback_obsidian_sequential_opens.md) · [obsidian:// preferred](reference_obsidian_app_path.md) · Capture: [paper notes → Raw](feedback_paper_notes_standalone_raw.md) · [Raw filename MM-DD](feedback_raw_note_filename_month_day.md) · [/audio-to-notes](reference_audio_to_notes.md) · 🎙️ [Call recording](reference_pixel_call_recording.md).
-- 🎙️📁 [Phone recordings on the box](reference_phone_recordings_on_box.md) — `gdrive/From phone/`; FUSE hides same-name files (use `rclone lsl`); WA store starts 2026-08-23; transcribe with voice-lane venv faster-whisper `small`.
-- [Transcript artifact format](feedback_transcript_artifact_format.md) · [sodaOS](project_sodaos.md) · [Phone→desktop](project_phone_to_desktop.md) · [WA Web media](feedback_wa_web_for_media.md) · [BIG MOVE backup](reference_big_move_backup.md).
+- 📂 [Sub-index: Vault / daily / capture](index_vault_daily_capture.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Thesis / travel / misc projects
-- 🎓 [THESIS CHECKPOINT 2026-09-04](project_thesis_checkpoint_2026_09.md) · [Seeling + cumulative ch8](feedback_thesis_seeling_and_cumulative_conclusion.md) · [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
-- 🛌 [Comfort = ora di uscita di casa, non del volo](feedback_travel_comfort_door_time.md) — sotto le 07:30 da Centrale e' scomodo (curva, non soglia); il piu' economico va SEMPRE affiancato al comodo col delta in euro (2026-09-20).
-- 💳 [SEMPRE le sue carte: Avantage Jeune, BahnCard 25, Megavolotea](reference_travel_discount_cards.md) — mai chiedergliele (2026-09-20); gflights NON vede i low cost (coppie aeroporto = 0 risultati).
-- 🚄 [Rail-price lane box->laptop LIVE](reference_trippy_rail_lane.md) — Drive request/result JSON, DB BahnCard by URL token, Italo via booking XHR, task Trippy-RailLane every 2 min (2026-09-19).
-- 🚫🚄 [Box cannot price SNCF/Italo/DB; cards need the laptop](reference_trippy_box_rail_price_limits.md) — 403 map + gflights throughput (2026-09-18).
-- 🧭 [Trippy box sources](reference_trippy_box_sources.md) — LeFrecce + gflights + FlixBus live from the VPS; Italo unpriceable; headless Chrome render check.
-- 🚄 [Trainline GraphQL from the box](reference_trainline_graphql_box.md) — `travel-search/trainline_render.py`: /graphql persisted query works (REST + rendered page are DataDome-403); Carte Avantage via discountCards URN; Kombo fallback.
-- Travel: ✈️ [gflights engine](reference_gflights_engine.md) · [travel-search](reference_travel_search.md) · 📱 [Trippy on the BOX](reference_trippy_on_box.md) · 🧭 [Trippy naming](reference_trippy_naming.md) · [core](project_trippy_v2.md) · [metro](feedback_trippy_metro_airport_normalization.md) · [headless](feedback_trippy_headless_parallel.md) · [links](feedback_trippy_durable_links.md) · [two-pass](feedback_trippy_deep_dive.md) · [airline-direct](feedback_airline_direct_for_known_carrier.md) · [Italy travel](context_travel_patterns.md).
-- [RadioCLI](project_radiocli.md) · [Restore-CC](reference_restore_cc.md) · [Claude Setup Repo](project_claude_setup.md) · [Dynamic-HTML](reference_dynamic_html.md) · [static DEFAULT](feedback_dynamic_html_default.md).
+- 📂 [Sub-index: Thesis / travel / misc projects](index_thesis_travel_misc.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Machine / tools / gotchas
 - 🧰 [Laptop tools, Windows/PS gotchas, 2026-09-08 sweep](index_laptop_and_misc.md) — sub-index (AHK, claude-bar, statusline, markless, tail -f locks, .ps1 ASCII, schtasks VBS, file:/// paths, lemlist, Lobbly KB).
