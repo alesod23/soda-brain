@@ -35,11 +35,24 @@ Gotcha worth remembering for any trip: **a one-way transatlantic is a trap.**
 MUC->SFO 2026-09-30 priced OW nonstop EUR 1613, but the SAME nonstop as a round
 trip (back Oct 14) was EUR 653 total. Always price the RT before quoting a OW.
 
-**Multi-city / open-jaw does NOT work from the box (2026-09-25).** A hand-built multi-leg `tfs`
-(e.g. MUC->MCO 13 Oct + EWR->FRA 12 Nov) fetches fine but Google does NOT server-render the results:
-the page comes back with 3 `aria-label`s and zero itineraries, so `parse()` returns []. One-ways and
-round trips still render normally. Consequence: an open-jaw price can only come from the laptop.
-Workaround that carries real information: price the two halves as separate one-ways and compare.
-On the US tour that gave 820 + 352 = 1172 against an open jaw of 546, which is what made the decision.
-The laptop has a `gflights_mc.py` in unpushed commit 3ed5482; once that lands here, re-test before
-repeating the limitation above.
+**Multi-city / open-jaw: the plain HTTP engine cannot do it, `gflights_mc.py` on the box CAN (2026-09-25).**
+A multi-leg `tfs` fetches fine over plain HTTP but Google does NOT server-render multi-city results: the page
+comes back with 3 `aria-label`s and zero itineraries, so `gflights.parse()` returns []. One-ways and round trips
+still render normally over HTTP.
+
+`travel-search/gflights_mc.py` (from the laptop, landed on the box 2026-09-25 in the merge `0de4f2e`) solves it
+by rendering the same URL in headless Chromium and reading the leg-1 list: on a multi-city search every leg-1
+price is the cheapest TOTAL for the whole itinerary starting with that flight, i.e. the open-jaw ticket price.
+
+**To run it on the box** (its `CHROME` constant is a Windows path, override it):
+
+    CHROME_BIN=$HOME/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome \
+      /home/da/travel-search/.venv-pw/bin/python -c '...'   # set mc.CHROME = that path
+
+`.venv-pw` is a venv holding only `playwright` (1.63.0), made because no python on the box had it; the browser
+binaries were already cached in `~/.cache/ms-playwright/`. Do NOT drive the cached chrome with `--dump-dom`
+directly: it has no cookies, so Google serves the consent wall and you get a 660 KB page with zero prices.
+Playwright works because `gflights_mc` injects the CONSENT/SOCS cookies.
+
+Verified on the US tour: MUC->MCO 13 Oct + EWR->FRA 12 Nov returned 8 options, cheapest 546 EUR (American,
+1 stop, 09:10->16:31), matching the laptop to the euro. Same query priced as two one-ways: 820 + 352 = 1172.
