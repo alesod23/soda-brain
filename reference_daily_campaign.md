@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-25T00:01:04.932Z
+  modified: 2026-09-25T10:23:12.535Z
 ---
 
 **Daily campaign (US), built 2026-09-25 on his order** ("finding emails of people to contact, giving them to
@@ -20,6 +20,18 @@ workplan `~/gtm-eng/WORKPLAN-20260925-daily-campaign.md`.
   `research.py` (2 hidden Sonnet workers x 60 min, exclusions = CRM + Notion snapshot + every board + pool)
   -> `pool.json` -> `build.py --open` for the next business day (Opus emails via `draft.js`, drafting skill
   inlined, observer hits in `rule-hits.jsonl` path daily-campaign). Weekends: research only.
+- Research is a SCHEDULED task, never a session shell: `DailyCampaign-Research` every 20 min (17:00-24:00 for
+  the next day, 08:00-16:20 for today) runs `supervise.py` = one round of 2 hidden Sonnet workers x 80 min
+  while the day is short of 30 (`daily-state.json`), then `review.py`, then the board; IgnoreNew + the next
+  trigger = the "safety mechanism that brings it back up" he asked for after Claude Code's memory guard
+  killed the first run (2026-09-25 02:00, 2.4 GB free).
+- Who fires (`pick.py`, his rulings 2026-09-25): his "a" pins; then 6 clinical engineering + 2 IT + 1
+  procurement + 1 executive by rank; one hospital per day and 2 days between two people of one hospital;
+  max 2 mailboxes; no age penalty in the rank.
+- TRIMEDX review ("TriMatics" in his transcript): after each round, current affiliation = hospital swapped
+  out, past = signal kept; rows in `competition.json` and the Notion database **Competition > TRIMEDX-
+  affiliated hospitals** (page 3e6b30c6-d57e-8135-a67c-e81651d01d73, data source
+  2cdbc0d0-de27-4681-9132-b9e0ec8a6be6, created 2026-09-25 as a private draft). Every card has a TRIMEDX bullet.
 - His rules in code: subject exactly "Quick question on clinical engineering in your hospital (<name>)"
   (email rule H65); one sentence naming the reader's CMMS/OEM (Caleb's Nova/waveware move), GE HealthCare
   as the example when nothing is known; people not offices (mailbox max 4/30 researched, 2/10 sent);
