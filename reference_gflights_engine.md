@@ -47,9 +47,9 @@ price is the cheapest TOTAL for the whole itinerary starting with that flight, i
 **To run it on the box** (its `CHROME` constant is a Windows path, override it):
 
     CHROME_BIN=$HOME/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome \
-      /home/da/travel-search/.venv-pw/bin/python -c '...'   # set mc.CHROME = that path
+      /home/da/.venv-playwright/bin/python -c '...'   # set mc.CHROME = that path
 
-`.venv-pw` is a venv holding only `playwright` (1.63.0), made because no python on the box had it; the browser
+`~/.venv-playwright` is a venv holding only `playwright` (1.63.0), made because no python on the box had it; the browser
 binaries were already cached in `~/.cache/ms-playwright/`. Do NOT drive the cached chrome with `--dump-dom`
 directly: it has no cookies, so Google serves the consent wall and you get a 660 KB page with zero prices.
 Playwright works because `gflights_mc` injects the CONSENT/SOCS cookies.
