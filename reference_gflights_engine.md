@@ -34,3 +34,12 @@ missing browser, so installing headless Chrome here would NOT have fixed it).
 Gotcha worth remembering for any trip: **a one-way transatlantic is a trap.**
 MUC->SFO 2026-09-30 priced OW nonstop EUR 1613, but the SAME nonstop as a round
 trip (back Oct 14) was EUR 653 total. Always price the RT before quoting a OW.
+
+**Multi-city / open-jaw does NOT work from the box (2026-09-25).** A hand-built multi-leg `tfs`
+(e.g. MUC->MCO 13 Oct + EWR->FRA 12 Nov) fetches fine but Google does NOT server-render the results:
+the page comes back with 3 `aria-label`s and zero itineraries, so `parse()` returns []. One-ways and
+round trips still render normally. Consequence: an open-jaw price can only come from the laptop.
+Workaround that carries real information: price the two halves as separate one-ways and compare.
+On the US tour that gave 820 + 352 = 1172 against an open jaw of 546, which is what made the decision.
+The laptop has a `gflights_mc.py` in unpushed commit 3ed5482; once that lands here, re-test before
+repeating the limitation above.
