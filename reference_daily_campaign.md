@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-25T10:23:12.535Z
+  modified: 2026-09-25T11:58:11.485Z
 ---
 
 **Daily campaign (US), built 2026-09-25 on his order** ("finding emails of people to contact, giving them to
@@ -32,6 +32,11 @@ workplan `~/gtm-eng/WORKPLAN-20260925-daily-campaign.md`.
   out, past = signal kept; rows in `competition.json` and the Notion database **Competition > TRIMEDX-
   affiliated hospitals** (page 3e6b30c6-d57e-8135-a67c-e81651d01d73, data source
   2cdbc0d0-de27-4681-9132-b9e0ec8a6be6, created 2026-09-25 as a private draft). Every card has a TRIMEDX bullet.
+- Sequence (2026-09-25 14:00, campaign.py, now owned by whichever session is live; backup .bak-h74-20260925):
+  email -> plain invite -> intro DM on accept -> H74 DM after 24 h silence -> bump at +4 business days as a
+  thread reply, A/B by person id; note-first: invite -> email +2 d unless accepted -> H74 DM. Reply cancels all.
+- Hand-off (H27): the engine writes `campaigns[]` (tool-agnostic trace, lemlist-ready) + `campaign_state`
+  pointer + activity lines on the CRM row; reader.js skips campaign-owned people; sequence over = `campaigned`.
 - His rules in code: subject exactly "Quick question on clinical engineering in your hospital (<name>)"
   (email rule H65); one sentence naming the reader's CMMS/OEM (Caleb's Nova/waveware move), GE HealthCare
   as the example when nothing is known; people not offices (mailbox max 4/30 researched, 2/10 sent);

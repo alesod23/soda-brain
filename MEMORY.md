@@ -13,6 +13,7 @@
 - ↩️ ["nvm" cancels previous message](feedback_nvm_cancels_previous_message.md).
 - 💾 [Tool mirrors = backups in task-land](reference_tool_mirrors.md) — `_system/laptop-tools/`, `_system/box-tools/` (git-sync step 0, secrets excluded); no new repos, never run from a mirror.
 - 🔀 [Sync can park for DAYS unnoticed](reference_task_land_sync_parked_conflict.md) — `git status -sb` on all 4 repos when box and laptop disagree; merge, not rebase (2026-09-17).
+- 🔀🚫 [travel-search sync stuck since Sep 6: box commits ':' filenames Windows can't check out](reference_travel_search_sync_colon_filenames.md) — laptop commit 3ed5482 unpushed (2026-09-25).
 - ☠️🔀 [`--autostash` pop failure exits 0](reference_git_sync_autostash_pop_silent_corruption.md) — committed conflict markers into a draft sidecar and ate a queue.jsonl line (2026-09-22); guards live in `_system/vps/sync-guards.sh`.
 - ✉️🔍 [EVERY email draft goes through the lane](feedback_every_email_draft_goes_through_the_lane.md) — gmail draft + sidecar + register.py, same turn; never stop at the draft · [lane details](reference_draft_review_lane.md) · ⚠️ [register.py from ~/task-land, check the card line](feedback_register_py_run_from_task_land_and_check_card_line.md) — draft → `_system/drafts/register.py` → hub card #N → `N dsend/no/change:`; Quick Claude Alt+Win+J then D; NEVER send.
 - 📱 [23:00 digest -> hub-review page, not "N yes" replies](feedback_hub_digest_replaced_by_review_page.md)
