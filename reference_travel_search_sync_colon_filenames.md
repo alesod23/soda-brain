@@ -39,3 +39,11 @@ preferences rule); real conflicts expected in `app/server.js` and `preferences.j
 
 Lesson that generalises: the box reported sync success the whole time. A sync that only checks its own
 side is not a sync check — [[reference_task_land_sync_parked_conflict]].
+
+**RESOLVED 2026-09-25 20:50.** The box renamed the three files (`-05-00` / `-10-00`, commit af7867e); the laptop merged
+origin/master (conflicts in `app/server.js`, one hunk, both sides kept; `preferences.json` resolved as a UNION of rules by
+id, box version 2 + laptop `multi-city-book-anchors-only`, 20 rules) and pushed: master = origin/master = 0de4f2e.
+There was NO LeFrecce writer to fix: the ':' names were typed by hand in that trip's build. Recurrence guard on the box:
+`guard_winnames` in `task-land/_system/vps/sync-guards.sh`, non-blocking (unstages Windows-illegal names, alerts once),
+wired after `git add -A` in `repo-sync.sh` for all four synced repos. Merge lesson: `git show :2:/:3:/:1:` the JSON and
+union by id in Python instead of hand-editing three interleaved hunks.
