@@ -52,3 +52,5 @@ workplan `~/gtm-eng/WORKPLAN-20260925-daily-campaign.md`.
 **How to apply:** never a third send engine; a new campaign is a board + `campaign.py plan`. Any scheduled
 console task goes through a `.vbs` (see [[reference_interactive_console_tasks_open_windows]]). Related:
 [[reference_gtm_boards]], [[reference_rule_loop]], [[feedback_cold_email_operator_ask_for_advice]].
+
+**2026-09-25 evening.** Every campaign email thread gets the Gmail label `Campaign/<slug>` (`Campaign/daily` for all daily boards, never a date) at send time (email H77, `campaign.py label_campaign`). An automatic reply is NOT a reply (CRM H30): `gmail_replied` excludes auto-reply subjects; before that an out-of-office would have paused the whole hospital with a ❓ card. `campaign.py plan --dry` writes `plan.dry.json`, never `plan.json` (a dry plan of parallel-news leaked into the live tick that day). ICP rubric in `ICP.md`, presync gate, `postmortem.py` (task DailyCampaign-Postmortem, card on the 1st) are live since the same day.
