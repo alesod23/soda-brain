@@ -35,3 +35,11 @@ each tab's hover title is `Draft: <subject> -> <to> (<account>)` (scripting perm
 next poll (sent or binned inside the tab), no wait for the box reconciler. Reload at chrome://extensions after any
 change (only he can). `reconcile.py` is safe on the laptop and was run there that day: the group had 20 genuinely
 unsent drafts from 15-25 Sep, which is what it is for.
+
+**Gmail links (2026-09-26 evening, HARD FACT):** a hex id in the Gmail URL hash is DEAD (`#drafts?compose=<hex>`,
+`#drafts/<hex>`, `#all/<hex>` all land on the folder list). The working link is `#drafts/<token>` with
+`token = gmail_url_token(thread_id or message_id)` (gmail.py / handoff.py / intake gmailUrlToken): base64("f:<decimal>")
+re-spelled in Gmail's 40-consonant alphabet, the exact reverse of `gmail_thread_id`. A reply draft needs the THREAD id
+(opens the thread, draft inline, subject as title); a fresh draft its message id (opens the compose window). gmail.py's
+`Open:` line, handoff.py, register.py and the intake queue all emit this form; drafts-tabs 1.6 tracks tabs by the tab it
+opened (`tabOf`), because Gmail rewrites the URL into its own tokens on load.
