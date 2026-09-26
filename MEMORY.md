@@ -45,6 +45,7 @@
 - [Cloud routine alerts → Calendar popup](reference_cloud_routine_alert_delivery.md) · [Bare replies → notif-log](feedback_resolve_reply_from_notiflog.md).
 
 ## coattio / CRM / GTM
+- 🎛️🧭 [CRM vision 2026-09-26 + the Today REVIEW MODE (j/k board, a/s/r/c, ← why pane, corpus hypotheses)](project_crm_review_loop_vision.md) — `review-api.js`, `/review/*`, `review.js`; every sentence on a card becomes a rule; commit = the yes; nightly proposed-vs-sent.
 - 📬🔁 [DAILY CAMPAIGN (US): 30 a day on `boards/daily-<date>`, first 10 fire at 16:55 via campaign.py](reference_daily_campaign.md) — `gtm-eng/daily-campaign/`, task DailyCampaign-Fire, subject fixed, people not offices, one provider sentence; replaced the GTM line on the daily page (2026-09-25).
 - 🪟 ["Random terminal windows" = a console task run directly in his session; every scheduled console task goes through a .vbs](reference_interactive_console_tasks_open_windows.md) — GTM-Campaign-Tick did it, closing the window killed ticks (2026-09-25).
 - 🏥 [CRM check board :4143/crm-catchup.html](reference_crm_catchup_board.md) — person items + one item per targeted hospital (data/hospitals.json built on the laptop), s asks why, commit = one TG message the savior executes (2026-09-20).
