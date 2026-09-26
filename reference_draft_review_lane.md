@@ -27,3 +27,11 @@ metadata:
 **Gotcha (2026-09-08):** `claude --mcp-config` is variadic (a list of paths). A positional prompt AFTER it is read as another config file ("MCP config file not found: ...\Read HANDOFF.md"). Put the prompt before `--strict-mcp-config --mcp-config`.
 
 **How to apply:** never send; never call Telegram `getUpdates`; any `claude -p` gets `--strict-mcp-config`; keep the queue append-only per machine (git-synced file). See [[reference_approval_hub]], [[reference_quick_claude]], [[feedback_email_no_signature_block]], [[feedback_message_send_protocol]].
+
+
+**drafts-tabs 1.5 (2026-09-26, his three asks):** ONE Drafts group in the whole browser (oldest wins, tabs move windows);
+each tab's hover title is `Draft: <subject> -> <to> (<account>)` (scripting permission, pinned against Gmail's rewrites;
+`to` in the queue entry, intake enriches old ones from the sidecar); a tab whose URL lost its `compose=` id closes on the
+next poll (sent or binned inside the tab), no wait for the box reconciler. Reload at chrome://extensions after any
+change (only he can). `reconcile.py` is safe on the laptop and was run there that day: the group had 20 genuinely
+unsent drafts from 15-25 Sep, which is what it is for.
