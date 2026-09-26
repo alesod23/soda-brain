@@ -1,5 +1,6 @@
 # Thesis / travel / misc projects (sub-index, moved out of MEMORY.md 2026-09-25 to keep the index under the read limit; every line is a memory pointer)
 - 🎓 [THESIS CHECKPOINT 2026-09-04](project_thesis_checkpoint_2026_09.md) · [Seeling + cumulative ch8](feedback_thesis_seeling_and_cumulative_conclusion.md) · [Thesis system](project_thesis_system.md) · [Artifacts → Raw/](feedback_thesis_artifacts_to_vault.md).
+- 📝 [THESIS FINAL REVIEW 2026-09-27: 27 Word comments -> tracked changes in a new docx](project_thesis_final_review_2026_09_27.md) — workplan `thesis-attempt/WORKPLAN-20260927-final-review-comments.md`; his files in OneDrive `THESIS TUM`, never edited in place · [TTT trip + Notion tracker](project_thesis_ttt_trip.md)
 - 🛌 [Comfort = ora di uscita di casa, non del volo](feedback_travel_comfort_door_time.md) — sotto le 07:30 da Centrale e' scomodo (curva, non soglia); il piu' economico va SEMPRE affiancato al comodo col delta in euro (2026-09-20).
 - 💳 [SEMPRE le sue carte: Avantage Jeune, BahnCard 25, Megavolotea](reference_travel_discount_cards.md) — mai chiedergliele (2026-09-20); gflights NON vede i low cost (coppie aeroporto = 0 risultati).
 - 🚄 [Rail-price lane box->laptop LIVE](reference_trippy_rail_lane.md) — Drive request/result JSON, DB BahnCard by URL token, Italo via booking XHR, task Trippy-RailLane every 2 min (2026-09-19).
