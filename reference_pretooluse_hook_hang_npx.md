@@ -43,3 +43,12 @@ Sessions load hooks at start: every open session keeps the old hooks until it is
 
 **If a session is frozen right now:** stop the orphans, the session continues at once:
 `Get-CimInstance Win32_Process | ? { ($_.Name -eq 'jq.exe' -and $_.CommandLine -match 'tool_input') -or ($_.Name -eq 'bash.exe' -and $_.CommandLine -match '\.claude.hooks') } | % { Stop-Process -Id $_.ProcessId -Force }`
+
+**20:10 the same day, final state.** A session opened BEFORE the fix froze again for 3 h 19 min (it kept the old
+hooks): a session loads its hooks when it starts. After that: ALL PreToolUse checks are ONE native script,
+`~/.claude/hooks/pretooluse.js` (same patterns as the eight .sh files, which stay on disk unused), about 0.2 s per
+call instead of 3 to 8 s, hard exit after 8 s, no shell started. settings.json PreToolUse = that script + the
+DesignSync gate; SessionStart, Notification, Stop and PostToolUse hooks run through `run-hook.js`; the
+UserPromptSubmit python hook is left as it is. Backups: `settings.json.bak-20260927-hookwrap`, `.bak-20260927-onehook`.
+Tests: `~/hubrev-work/test-pretooluse.js` (15 cases). Rule: never add a bash hook to PreToolUse again; add the check
+to pretooluse.js.
