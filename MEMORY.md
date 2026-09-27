@@ -1,6 +1,7 @@
 # Memory Index
 
 ## Rules that bite first
+- 🛑 [Unattended run: NEVER end the turn waiting on agents](feedback_unattended_run_never_wait_on_agents.md) — do the work in the main thread, check agent liveness by transcript mtime after 10 min, keep a self-wake heartbeat; cost him 10 idle hours on the thesis (2026-09-27).
 - 📌 ["Make this a rule" = write NOW](feedback_rule_requests_are_binding.md)
 - 🔄 [THE RULE LOOP: ledgers, compiled skills, observers, decisions.jsonl, system check](reference_rule_loop.md) — canonical `task-land/_system/RULE-LOOP.md`; his only inputs are five sentences; add rules with addrule.py the same turn (2026-09-24).
 - 🧠 [Design on merit, not his off-hand numbers](feedback_design_on_merit_not_his_offhand_numbers.md) — no arbitrary caps, Haiku never, Opus where it decides, read the reference he names (Kortyx) before designing; "smart, non-blocking, not sucky" (2026-09-24).
