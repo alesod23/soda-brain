@@ -16,6 +16,7 @@
 - 💾 [Tool mirrors = backups in task-land](reference_tool_mirrors.md) — `_system/laptop-tools/`, `_system/box-tools/` (git-sync step 0, secrets excluded); no new repos, never run from a mirror.
 - 🔀 [Sync can park for DAYS unnoticed](reference_task_land_sync_parked_conflict.md) — `git status -sb` on all 4 repos when box and laptop disagree; merge, not rebase (2026-09-17).
 - 🎟️ [Trippy: event trip = read the event schedule first; every ground step its own priced line](feedback_trippy_event_anchor_and_explicit_ground.md) (2026-09-25).
+- 👥 [Trippy: a companion copies the user's whole chain until plans split](feedback_trippy_companion_mirrors_until_split.md) — Caleb = same Orlando/MD Expo/hotel/flight to SF, only his way home differs (2026-09-27).
 - 🔀✅ [travel-search sync: the Sep 6-25 stall (box committed ":" filenames) and how it was unstuck](reference_travel_search_sync_colon_filenames.md) — resolved 2026-09-25, guard_winnames on the box; JSON conflicts = union by id.
 - 🐍💥 [MAI un venv dentro un repo sincronizzato](reference_venv_in_synced_repo_wedges_push.md) — il cron committa gli 831 file e un binario da 120 MB blocca OGNI push finche' non resetti il commit fuori dalla history; venv sempre fuori dai repo (2026-09-25).
 - ☠️🔀 [`--autostash` pop failure exits 0](reference_git_sync_autostash_pop_silent_corruption.md) — committed conflict markers into a draft sidecar and ate a queue.jsonl line (2026-09-22); guards live in `_system/vps/sync-guards.sh`.
