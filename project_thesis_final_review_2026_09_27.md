@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-26T23:42:48.080Z
+  modified: 2026-09-27T11:56:20.412Z
 ---
 
 On 2026-09-27 Alessandro asked to execute the 27 Word comments he left in the thesis (most prefixed
@@ -24,6 +24,8 @@ every change himself.
 (per-comment plan, scrutiny protocol, standing rules, resources) and
 `thesis-attempt\FINAL-REVIEW-comments.json` (each comment with its anchored text). Snapshots of his
 two files are in `thesis-attempt\final-review\ORIGINAL-*.docx`.
+
+**STATE 2026-09-27 13:55: DELIVERED.** `doc2-FINAL-REVIEW-claude-2026-09-27.docx` is in the OneDrive folder (649 tracked changes by "Claude", 26 replies, original untouched), with `FINAL-REVIEW-CHANGELOG.md/.html` and `PINPOINTS-REMOVED.md`. Email to Sebastian = hub card #1, not sent. The run lost 10 hours to frozen agents, see [[feedback_unattended_run_never_wait_on_agents]]. Tooling to rebuild: `thesis-attempt\final-review\` (`build_final.py` + `edits_*.py`, `tc_engine.py`, `audit.py`, `word_check.ps1`, `make_replies.py`, `make_changelog.py`). Open for him: Ann 2018 / Ullrich 2020 / Fromer 2009 unread; size classes of the roster; leftovers listed in changelog section 4 (markers, draft notes, Appendix D residue, reference list gaps); Notion progress rows for 3.1.4 and 8.1 need renumbering (needs his yes). Word gotcha: never pipe the COM script into `Select-Object -First`, it kills the script and leaves a hidden Word holding the file and the user name set to "Claude".
 
 **Why:** he wants loop-target / overnight level scrutiny and a reviewable diff, not silent edits.
 **How to apply:** read the workplan first; draft, verify with an independent agent, then apply;
