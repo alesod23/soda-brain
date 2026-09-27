@@ -45,3 +45,10 @@ re-spelled in Gmail's 40-consonant alphabet, the exact reverse of `gmail_thread_
 opened (`tabOf`), because Gmail rewrites the URL into its own tokens on load.
 
 **Existing-draft check + in-place update (2026-09-27, email ledger H78):** `gmail.py draft` refuses with exit 5 and `EXISTING DRAFT` when a draft to the same recipient on the same thread or subject (Re:/Fwd: ignored) exists in ANY account with a mail token; flags `--replaces <draft_id>` (register.py's critic rewrite passes it) and `--allow-duplicate` (the CRM drawer's send vehicle). `gmail.py find-draft --to --subject [--thread-id]` = the check alone; `gmail.py update-draft --draft-id --body-file [--subject]` rewrites the written text in place (same draft id, thread, headers, attachments, quote kept); `gmail.py recent --days N` = mail as events. Both copies patched (laptop `~/triage/gmail.py`, box `/home/da/triage/gmail.py`; they differ, patch each). reconcile.py lets go of a draft whose card was closed as done/outdated (sidecar `abandoned`), and never deletes the Gmail draft.
+
+**Reset + 10-tab cap (2026-09-27, his rule "never more than 10 drafts, this experimental phase"):** queue.jsonl was cut to
+the newest 3 (older 13 in `drafts/queue-archive-20260927-reset.jsonl`; sidecars and hub cards untouched). drafts-tabs 1.7
+serves only the newest `MAX_TABS = 10` entries to the group; an older one drops out and its tab closes like a finished
+one (never an abandon). Root cause of "one couldn't open": a reply draft queued without `thread_id` fell back to its
+message id, which Gmail changes on every save; register.py now asks Gmail for the thread id when the sidecar lacks one.
+"One was just a sent message": a tab of an already-sent mail (Stefano Severi, sent 17 Sep) that was never in the queue.
