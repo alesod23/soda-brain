@@ -49,6 +49,7 @@
 
 ## coattio / CRM / GTM
 - 🤖📋 [TO-DO PIPELINE (2026-09-27): created / in progress / ready for review / finished, `pipeline.py`, the daily page links to the exact hub card, calls go to the CRM Call page, `/todo`](reference_todo_pipeline.md) — never write `stage:` by hand; the unattended worker is NOT built, his decision. Brief: `task-land/_system/HANDOFF-20260927-todo-agi-and-hub-review.md`, workplan `WORKPLAN-20260927-todo-pipeline-and-hub.md`.
+- 📡🎙️ [EVENT LOOP + VOICE REVIEW + Ctrl+Alt+S feedback + phone https links (2026-09-27)](reference_event_loop_voice_feedback.md) — every event leaves a ledger line; Events view is optional; never `tailscale serve` on :4137 itself.
 - 🎛️🧭 [CRM vision 2026-09-26 + the Today REVIEW MODE (j/k board, a/s/r/c, ← why pane, corpus hypotheses)](project_crm_review_loop_vision.md) — `review-api.js`, `/review/*`, `review.js`; every sentence on a card becomes a rule; commit = the yes; nightly proposed-vs-sent.
 - 📬🔁 [DAILY CAMPAIGN (US): 30 a day on `boards/daily-<date>`, first 10 fire at 16:55 via campaign.py](reference_daily_campaign.md) — `gtm-eng/daily-campaign/`, task DailyCampaign-Fire, subject fixed, people not offices, one provider sentence; replaced the GTM line on the daily page (2026-09-25).
 - 🪟 ["Random terminal windows" = a console task run directly in his session; every scheduled console task goes through a .vbs](reference_interactive_console_tasks_open_windows.md) — GTM-Campaign-Tick did it, closing the window killed ticks (2026-09-25).
