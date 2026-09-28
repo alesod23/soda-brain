@@ -29,3 +29,5 @@ asking is a system agent more than a GTM. whose goal is for GTM to be running an
 - **Judge it:** `runs.jsonl`, `incidents.jsonl`, `python gtm_agent.py status|incidents|missed "..."`.
 
 Related: [[reference-linkedin-launcher-reaper]], [[reference-daily-campaign]], [[reference-hub-lives-on-the-box]].
+
+Brief it was built from: `task-land/_system/HANDOFF-20260928-gtm-agent.md`.
