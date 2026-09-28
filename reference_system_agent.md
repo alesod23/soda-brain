@@ -31,3 +31,10 @@ asking is a system agent more than a GTM. whose goal is for GTM to be running an
 Related: [[reference-linkedin-launcher-reaper]], [[reference-daily-campaign]], [[reference-hub-lives-on-the-box]].
 
 Brief it was built from: `task-land/_system/HANDOFF-20260928-gtm-agent.md`.
+
+**System feedback (added 2026-09-28):** a sentence he types in a review field about the system ("why did you not see
+it", "system problem", the "change the system" pill) used to be filed only as a rule of that surface (his Amos
+comment became H80), which nobody builds from. `check_feedback` lifts it into
+`task-land/_system/gtm-agent/system-feedback.jsonl` (status open) and every update lists the open ones. A session
+that fixes one sets its line to `"status": "done"` with `"changed": "..."`. A card he commented on shows
+"commented · waiting" and sorts last in the CRM review.
