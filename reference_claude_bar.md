@@ -1,6 +1,6 @@
 ---
 name: reference_claude_bar
-description: claude-bar — CodexBar-style Windows tray app showing Claude Code plan usage (5h/weekly %) from the OAuth usage endpoint; autostarts at logon.
+description: claude-bar — CodexBar-style Windows tray app showing Claude Code plan usage (5h/weekly %) from the OAuth usage endpoint; ClaudeBar task relaunches it every 5 min + logon + unlock (self-healing since 2026-09-28).
 metadata: 
   node_type: memory
   type: reference
@@ -16,3 +16,9 @@ metadata:
 - Poll: 5 min timer + on-menu-open refresh if stale >2 min. Log: `claude-bar.log` in the same folder.
 
 **Why it vanished, and how to relaunch (2026-09-18):** the bar died on 2026-09-15 17:39, right after a session restarted it with `Start-Process powershell ... -File claude-bar.ps1` from a tool shell: processes spawned from a tool shell are reaped when that shell ends (same class as feedback_local_server_start_pattern). It stayed dead for three days because nothing relaunches it between logons. Fix: scheduled task **ClaudeBar** (logon trigger, runs `wscript claude-bar.vbs`, no time limit, battery allowed). A session relaunches it with `Start-ScheduledTask ClaudeBar` (detached, survives the shell), never with Start-Process. The Startup-folder vbs still exists; the mutex `Local\ClaudeBarTray` makes the second copy exit, so a double start at logon is harmless. Alive check: `Get-CimInstance Win32_Process | ? CommandLine -match claude-bar.ps1` and a "claude-bar started" line in claude-bar.log.
+
+**Self-healing since 2026-09-28 (his ask: "ensure it doesn't reoccur"):** it died AGAIN on 2026-09-23 17:40 (killed hard: no
+"exited"/"fatal" log line) and stayed dead 5 days, because the logon trigger only fires at a real logon and he mostly
+sleeps/wakes. The ClaudeBar task now has three triggers: logon, every 5 min indefinitely, and session unlock;
+MultipleInstances IgnoreNew, StartWhenAvailable. A launch while it runs exits at once on the mutex (verified: 1 process
+after a second start). So a dead bar comes back within 5 min with no session involved. Never remove the repeat trigger.
