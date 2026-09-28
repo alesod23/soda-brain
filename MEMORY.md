@@ -51,6 +51,7 @@
 
 ## coattio / CRM / GTM
 - 🤖📋 [TO-DO PIPELINE (2026-09-27): created / in progress / ready for review / finished, `pipeline.py`, the daily page links to the exact hub card, calls go to the CRM Call page, `/todo`](reference_todo_pipeline.md) — never write `stage:` by hand; the unattended worker is NOT built, his decision. Brief: `task-land/_system/HANDOFF-20260927-todo-agi-and-hub-review.md`, workplan `WORKPLAN-20260927-todo-pipeline-and-hub.md`.
+- [HANDOFF 2026-09-28: the GTM AGENT (campaigns going, follow-ups current, hub items not waiting, tools usable, 2 pings a day)](../../task-land/_system/HANDOFF-20260928-gtm-agent.md) - read it first when he pastes that prompt; campaign.py now stops a CHANNEL not the board and retries transient failures.
 - 📡🎙️ [EVENT LOOP + VOICE REVIEW + Ctrl+Alt+S feedback + phone https links (2026-09-27)](reference_event_loop_voice_feedback.md) — every event leaves a ledger line; Events view is optional; never `tailscale serve` on :4137 itself.
 - 🎛️🧭 [CRM vision 2026-09-26 + the Today REVIEW MODE (j/k board, a/s/r/c, ← why pane, corpus hypotheses)](project_crm_review_loop_vision.md) — `review-api.js`, `/review/*`, `review.js`; every sentence on a card becomes a rule; commit = the yes; nightly proposed-vs-sent.
 - 📬🔁 [DAILY CAMPAIGN (US): 30 a day on `boards/daily-<date>`, first 10 fire at 16:55 via campaign.py](reference_daily_campaign.md) — `gtm-eng/daily-campaign/`, task DailyCampaign-Fire, subject fixed, people not offices, one provider sentence; replaced the GTM line on the daily page (2026-09-25).
