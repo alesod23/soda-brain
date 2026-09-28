@@ -65,3 +65,10 @@ Separate, not fixed: the `sodano23` Gmail token is dead (AUTH REQUIRED), so draf
 **Tab closed after a send = `sent`, not `abandoned` (2026-09-28):** tabgesture.abandon now asks Gmail first; if the draft
 is gone and in Sent it records `sent`. `common.get_draft` keeps gmail.py's `sent` flag on exit 4. The Benoist/Costa
 drafts that "never reached the Drafts tabs" were the box sync park, not the lane (see reference_task_land_sync_parked_conflict).
+**"Draft gone" is decided from the THREAD, with a grace period (2026-09-28, his "those went out, you missed it"):**
+the Alexandre Benoist email he sent at 18:23 was closed "draft gone, not sent" (a NO in decisions.jsonl) at 18:25,
+because reconcile.py asked Gmail SEARCH, which lags a fresh send by minutes. Now, for a vanished draft:
+`C.sent_in_thread(account, [thread_id, message_id, ...], since_ms)` (reads the thread, SENT newer than the card) ->
+search -> `sent_to_since` (he sent ANOTHER version to the same person: `superseded_by_his_send`, e.g. box card #4 vs his
+own #20) -> otherwise wait `GONE_GRACE_MIN = 30` (sidecar `gone_seen_at`) before `draft_gone_unsent`. Wrong ledger lines
+are corrected by APPENDING a line for the same item (done for #20 yes, #4 superseded), never by editing history.
