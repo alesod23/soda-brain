@@ -25,3 +25,15 @@ until `/mcp` reconnect. Testing LinkedIn = `python ~/gtm-eng/agent/li_probe.py` 
 while a send runs. Login when the session itself expired stays his (CRM Repair button).
 
 Related: [[reference-linkedin-mcp]], [[reference-system-agent]].
+
+## LinkedIn "logged out" = restore first, his login last (2026-09-28)
+
+His rule: "i want repair to AUTOMATICALLY go whenever down ... only then ping me if you DO NOT KNOW WHAT TO DO
+ANYMORE." When the linkedin-mcp server decides the session is invalid it moves the whole logged-in profile, with
+cookies.json and source-state.json, into `~/.linkedin-mcp/invalid-state-<time>/`. On 28 Sep that happened at the
+first invite after the laptop woke (15:47, most likely no network yet); the session cookie inside was valid until
+2027. `~/gtm-eng/agent/li_restore.py` copies the newest good quarantine back, runs `linkedin-mcp-server --status`,
+rebuilds the poller clone (`clone-profile.ps1`), log `~/.linkedin-mcp/restore.log`. Exit 0 restored, 2 LinkedIn
+really ended the session (only then he is asked), 3 a send is running. The system agent calls it by itself
+(`li_repair`) and then releases the stopped LinkedIn channels. `campaign.py` skips a tick when there is no network.
+The box cannot repair it: the session lives in the laptop's browser profile.

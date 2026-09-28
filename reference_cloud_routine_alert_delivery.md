@@ -33,3 +33,10 @@ and should not hold credentials, so weigh that before putting a bot token there.
 channel and say so explicitly in the prompt, including an instruction never to let a draft stand in
 for a failed push. Test it by checking `list_events` for the event, not by trusting the run's green
 status. Related: [[reference_floom_mcp]], [[project_da_system]], [[reference_sodanotif]].
+
+**SUPERSEDED for the DA SYSTEM dead-man switch (his ruling 2026-09-28, "only a cal event i never have to see. ever"):**
+routine `trig_01FswXruXg36WdLqMCmhmeNa` now writes ONE event to the "VPS Bridge" calendar
+(`c_ca9d47aac4b424264494f00e99230bb58b69fa125cba95bc0badcdb55eaa7418@group.calendar.google.com`, email notifications off,
+made by the savior for system alarms), NO reminders, and NO draft: the Gmail connector was removed from the routine, so
+it cannot draft even if the prompt drifts. 24 old "DA SYSTEM:" self-drafts were deleted from the tundra account. Never
+reintroduce a draft "as a searchable record", and never a popup, for any system alarm routine.

@@ -16,3 +16,18 @@ metadata:
 Related: [[reference_tool_mirrors]], [[reference_draft_review_lane]].
 
 **Again, 2026-09-25 01:39 to 2026-09-27 15:50 (laptop side this time):** `git pull --rebase` hit conflicts in the two append-only logs both machines write (`_system/decisions.jsonl`, `_system/rule-hits.jsonl`); the laptop parked on `conflict-laptop` every minute for 2.5 days, 1347 commits ahead and 929 behind, and nobody saw it (found only because an scp looked odd). Fixed with `~/hubrev-work/merge_sync.ps1 -Mode apply` (holds the `Global\TaskLandGitSync` mutex, `git merge --no-commit origin/main`, jsonl = union by line ordered by ts, scripts = ours, sidecars by most advanced state; tag `pre-merge-20260927`). Both machines had numbered a new CRM rule H27: the box's became H32. STILL MISSING: a merge driver (`merge=union` in .gitattributes for the append-only logs) and an alarm when `ahead/behind` are both large.
+
+**Third time, 2026-09-28 14:36 to 18:25 (box side), and the structural fix:** parked on `_system/rule-hits.jsonl` again,
+right as the box registered the two Snitem drafts (Benoist, Costa): they never reached the laptop's Drafts tabs, and the
+dead-man switch fired "VPS DOWN" (a true signal: health-vps.json could not sync). Fixed for good: `.gitattributes` has
+`*.jsonl merge=union`, and BOTH sync scripts (`_system/git-sync.ps1`, `_system/vps/git-sync.sh`) now MERGE origin/main
+instead of `pull --rebase --autostash`: a rebase replayed 100+ local commits and re-raised the already-resolved sidecar
+conflicts on every replay, which is why hand fixes kept falling back to "parked". Manual merge recipe: hold the lock
+(`flock /tmp/da-git-sync.lock`), make sure `.git/MERGE_HEAD` exists before committing (a sync tick between two steps
+silently undid a merge once), sidecar conflicts = the side with the more advanced status. Backups `*.bak-20260928`.
+Same evening: the merge itself then parked on draft SIDECARS both machines had written (Benoist's). Both sync scripts
+now call `_system/drafts/resolve_sidecar_conflicts.py` after a failed merge: for `_system/drafts/*.md` only, the side
+with the more advanced status wins (finished > edited > registered > stub), tie = longer file; anything else still
+conflicting = abort + park as before. Verified live: "MERGED with sidecar auto-resolve" in git-sync.log 18:44.
+Gotcha while editing git-sync.ps1 from a Python heredoc: `'\r'` in `drafts\resolve` became a carriage return and split
+the line; use forward slashes in Join-Path strings.

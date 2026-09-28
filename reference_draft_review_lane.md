@@ -52,3 +52,16 @@ serves only the newest `MAX_TABS = 10` entries to the group; an older one drops 
 one (never an abandon). Root cause of "one couldn't open": a reply draft queued without `thread_id` fell back to its
 message id, which Gmail changes on every save; register.py now asks Gmail for the thread id when the sidecar lacks one.
 "One was just a sent message": a tab of an already-sent mail (Stefano Severi, sent 17 Sep) that was never in the queue.
+
+**Sent-detection holes closed (2026-09-28, his "clearly sent, the system failed"):** (1) Gmail `drafts.get` keeps
+answering for a draft he SENT, returning the sent message (label SENT, no DRAFT), so get-draft said "open" and the
+reconciler never saw it go (TruAsset, 3 days). `gmail.py get-draft` now exits 4 `{missing, sent}` when the message has no
+DRAFT label; patched on BOTH machines (box: run it with `triage/venv/bin/python`). (2) He answered Martina Andellini
+himself, and the lane drafted a reply to the SAME inbound message six hours later; the draft never left Gmail, so it
+looked open forever. `common.answered_elsewhere(account, thread_id, in_reply_to)` = a SENT message after the inbound the
+draft replies to (a nudge replying to his own mail is not matched). reconcile.py marks such a draft `answered_elsewhere`
+(DONE, card closed silently, queue entry dropped); register.py refuses it with exit 6 `ALREADY ANSWERED`.
+Separate, not fixed: the `sodano23` Gmail token is dead (AUTH REQUIRED), so drafts on that account cannot be reconciled.
+**Tab closed after a send = `sent`, not `abandoned` (2026-09-28):** tabgesture.abandon now asks Gmail first; if the draft
+is gone and in Sent it records `sent`. `common.get_draft` keeps gmail.py's `sent` flag on exit 4. The Benoist/Costa
+drafts that "never reached the Drafts tabs" were the box sync park, not the lane (see reference_task_land_sync_parked_conflict).

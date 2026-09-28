@@ -67,6 +67,7 @@
 - 📂 [Sub-index: Tundra / Notion / Granola / Drive](index_tundra_notion_granola_drive.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Email / outreach voice
+- 🖋️ [TUNDRA mail ALWAYS carries the Tundra signature: gmail.py adds it by itself, never a connector draft](feedback_tundra_signature_always.md) (2026-09-28).
 - ✍️ [NO signature block, end 'Alessandro'](feedback_email_no_signature_block.md) — ask-first is DEFAULT · ✉️ [Remind, don't re-confirm](feedback_remind_dont_reconfirm.md).
 - Email ops: [REPLY IN THREAD IS THE DEFAULT; to-do = find existing thread](feedback_email_todo_find_existing_thread.md) · [catch-up](feedback_email_catchup_consistency.md) · [not-findable](feedback_email_not_findable_tracking.md) · [shared inbox cutoff](feedback_shared_inbox_cutoff.md) · [draft = real Gmail draft](feedback_email_draft_must_be_real_not_clipboard.md).
 - ⚠️ [Mixed threads leak internal comms](feedback_thread_reply_leaks_internal_comms.md) · [Read source thread first](feedback_read_source_thread_before_acting.md) · [Follow links not labels](feedback_follow_links_not_link_labels.md).
