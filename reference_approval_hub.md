@@ -113,3 +113,31 @@ ping. State now persists `failed_key` as a joined STRING. See [[feedback_ps51_co
 Related: [[reference_voice_lane]] (voice fast-lane + correction linking), [[feedback_message_send_protocol]], [[feedback_no_headless_fuzzy_send]], [[reference_pixel_call_recording]].
 
 **Daily-page mirror line (his ruling, Telegram 2026-09-19 00:35).** `## Today` on the daily page carries a second fixed line under the CRM one: `- [ ] Hub cards still open (N) [review](http://100.85.52.84:4142/)`. N = `GET http://100.85.52.84:4142/api/open-count` (hub-review server on the box, Tailscale only, phone review page at `/`), 2 s timeout, `(offline)` when unreachable, auto-checked at 0. Rendered by `Format-HubLine` in `task-land/_system/daily-lib.ps1`, skipped by `daily-sync.ps1` via `$script:HubLineRe` (never a task). Box-side details: [[reference_hub_review_ui]].
+
+## hub_outdated: il giudice non chiude quando non ha letto la posta (2026-09-30)
+
+`_system/hub_outdated.py` (cron box, 10 min) giudica le card decisionali contro gli eventi.
+Gli eventi NON vengono da un ledger sincronizzato: li costruisce dal vivo a ogni giro con
+`gmail.py recent` per account, lo store WhatsApp e crm.json. Quindi non c'e' nessun file che
+possa "congelarsi", e un contatore che oscilla di due fra un giro e l'altro e' normale, la
+finestra scorre. (Io lo avevo dato per congelato da quattro letture uguali: troppo poche.)
+
+**Il difetto vero.** Quando un account Gmail non si legge (visti: 403 e read timeout, sempre
+`tundra`) il codice logga una riga e **proseguiva a giudicare**, chiudendo card contro una
+casella che non aveva letto. La sua posta di lavoro parte da tundra, quindi il buco cadeva
+esattamente dove contava.
+
+**La guardia.** `mail_events` torna `(ev, failed)`; se `failed` non e' vuoto il giro logga
+`DEGRADATO: posta non letta per <account>` e **non chiude niente** quel giro, continua a
+giudicare e a tenere. Asimmetria voluta: tenere una card che andava chiusa costa un'occhiata,
+chiuderne una che andava tenuta perde la cosa.
+
+**Come verificare che la guardia sia ancora viva** (serve: il file e' stato modificato sulle
+due macchine la stessa notte e mergiato a mano, e la sua assenza e' invisibile perche' un giro
+degradato senza guardia sembra un giro normale):
+
+    grep -c mail_failed ~/task-land/_system/hub_outdated.py     # deve essere >= 4
+    grep DEGRADATO ~/.local/state/hub-outdated/run.log | tail   # compare quando un account fallisce
+
+Da valutare, non fatto: chiama Gmail per ogni account ogni 10 minuti, ed e' quasi certamente
+quello che si guadagna i 403. Vedi [[reference_sodanotif]] per l'altra superficie di notifica.
