@@ -79,3 +79,29 @@ Console entrypoints live at `…\venv\Scripts\linkedin-mcp-server.exe` (also `--
 ## Re-block write tools (if ever needed)
 
 Edit `launcher.py`: `DENIED_TOOLS = {"send_message", "connect_with_person"}`. That single line is the chokepoint — tools never reach `tools/list` when listed there.
+
+## Due scheduler sullo stesso profilo = profilo in quarantena (2026-09-29)
+
+**Sintomo:** la campagna US si ferma a meta' giro con `error: Session expired. A login browser
+window has been opened` e il server mette il profilo in quarantena in `~/.linkedin-mcp`. Nei log:
+`Browser warm-up failed`, `Page.goto: Timeout`. Successo due giorni di fila, **sempre alle 18:05**.
+
+**Causa trovata dalla sessione laptop:** due task partivano su LinkedIn **nello stesso minuto**,
+`Peer60-AcceptCheck-1800` e `US-Campaign-Daily`, entrambi alle 18:00, e le cartelle di quarantena
+portano lo stesso timbro 18:05 in entrambi i giorni. Non era una sessione scaduta: era una
+collisione fra due processi sullo stesso profilo browser, letta come logout. Fix: `US-Campaign-Daily`
+spostato alle 18:15. **Prova attesa il 30 set: nessuna nuova cartella invalid-state dopo le 18:15.**
+
+**La lezione che vale oltre LinkedIn:** un orario tondo in due scheduler diversi e' una collisione
+in attesa. Quando un errore di sessione si ripete allo STESSO MINUTO in giorni diversi, la prima
+ipotesi non e' la sessione, e' chi altro parte in quel minuto. (Io avevo proposto la pressione di
+memoria, [[reference_laptop_memory_pressure]]: resta un secondo candidato, non era la causa.)
+
+**Riparazione automatica, dal 2026-09-29:** `li_restore.py` ripara senza login in ~40 secondi;
+exit 2 solo se LinkedIn rifiuta due volte, altrimenti exit 4 e si riprova. L'agente GTM e il
+runner della campagna US chiamano ora lo stesso `li_restore.py`. Il box fa da rete di sicurezza
+con `task-land/_system/gtm-agent/box_linkedin_watch.py` (cron 10 min): legge il blocco `linkedin`
+di `~/.local/state/gtm-agent/heartbeat.json` e posta UNA card solo se `down_since` supera i 60
+minuti mentre l'heartbeat e' fresco. Heartbeat vecchio = laptop spento = nessuna card.
+Regola di fondo: NOTIF-CONTRACT.md H5, un'anomalia che una macchina puo' riparare non
+diventa mai una card per lui.
