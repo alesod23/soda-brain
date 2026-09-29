@@ -72,3 +72,10 @@ because reconcile.py asked Gmail SEARCH, which lags a fresh send by minutes. Now
 search -> `sent_to_since` (he sent ANOTHER version to the same person: `superseded_by_his_send`, e.g. box card #4 vs his
 own #20) -> otherwise wait `GONE_GRACE_MIN = 30` (sidecar `gone_seen_at`) before `draft_gone_unsent`. Wrong ledger lines
 are corrected by APPENDING a line for the same item (done for #20 yes, #4 superseded), never by editing history.
+
+**🛑 DRAFTS TAB GROUP RETIRED (his ruling 2026-09-30: "the draft tab system sucks ... too hard to maintain ... unreliable
+... no more need for a draft tab group").** The approval hub is the ONE surface: hub-review (:4142) has a Messages
+filter (`m`), a colour chip per channel and an Open link (`o`, `/open/<hub id>`, resolves the Gmail draft at click time
+by THREAD id). register.py no longer writes queue.jsonl (`DRAFTS_TAB_GROUP = False`); never re-add tabs, never debug
+the drafts-tabs extension again; he can remove it at chrome://extensions. Email first, then LinkedIn/WhatsApp links.
+The lane itself (gmail draft + sidecar + register.py + hub card) is unchanged. See [[reference_hub_review_ui]].

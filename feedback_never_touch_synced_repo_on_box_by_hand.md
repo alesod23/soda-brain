@@ -18,3 +18,5 @@ Restored from git (`git show <commit>:<path>`), 75 minutes later.
 
 **How to apply:** box code that lives in task-land is edited on the laptop only. If a file is missing after a sync,
 `git log --diff-filter=D -- <path>` names the commit. See [[reference-task-land-sync-parked-conflict]].
+
+**Exception agreed with the savior (2026-09-30, 01:00):** box-run code inside task-land (`_system/hub_outdated.py`, `_system/gtm-agent/box_*.py`, `_system/vps/*`) may be edited on the box when it cannot wait, provided the savior names the file and the commit in a message the same time, so the laptop merge is expected (merge, never rebase; keep both sides). Everything else in a synced repo is still changed on the laptop only. First case: `hub_outdated.py`, box commit 11671050a on top of laptop 782f89ae4; laptop H17 change in `main` section 1b/2, box change in `mail_events` + the moot branch of `main` section 2: both must survive the merge.

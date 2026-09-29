@@ -21,3 +21,9 @@ metadata:
 Related: [[reference_approval_hub]], [[feedback_review_pages_need_keyboard_shortcuts]], [[feedback_commit_batch_is_the_yes]], [[reference_draft_review_lane]], [[feedback_pgrep_self_match_use_script_files]].
 
 **2026-09-27 rebuild (his asks of that day, all live on the box):** the card's text is EDITABLE (draft body + subject, or the single message of a Slack/WhatsApp card; `e` focuses it) and a yes on an edited card sends HIS version: the server runs `task-land/_system/drafts/hubedit.py` first (Gmail draft rewritten in place with `gmail.py update-draft`, sidecar `edited_in_hub`, hub `/revise`, before/after in `_system/hub-edits.jsonl`), then `/resolve`; if the edit fails nothing is sent. a/s/x/d open a one-line verdict box (Enter = verdict, sentence + Enter = verdict with comment, Esc = nothing). New verdict `done` (`d`) = hub `/close`, nothing executed. Comments travel in the commit message under `COMMENTS:` and are queued `kind: comment`. Header: "last reload HH:MM:SS" + "live, checked N s ago"; the page polls `/api/cards` every 10 s and redraws only on a new `rev`, never while a field has focus. Cards with `meta.outdated` come first with the evidence. One card by link: `/#c<id>`. The type chip used to carry the class `card` (35 chips styled as cards): now `t-<type>`. Backups `*.bak-20260927`.
+
+**2026-09-30: Messages filter + open the message (replaces the Drafts tab group):** cards carry `channel` + `open_url`;
+`All | Messages` filter (`m`), chip colour per channel (email blue, LinkedIn violet, WhatsApp green, Slack plum; chip
+only), Open button + clickable subject (`o`). `GET /open/<hub id>` -> 302 to `#drafts/<token(threadId)>` with
+authuser (thread id ALWAYS: the message id opened a blank pane). Tally and commit use `ALLC` (all cards), never the
+filtered `CARDS`. Next: open_url for LinkedIn / WhatsApp cards. README section "2026-09-30".
