@@ -103,3 +103,4 @@
 - 📒 [Send ledger: a past plan never sent takes no room; US daily.py carries failed days over](reference_send_ledger_past_plans.md) (2026-09-29).
 - 📞 [MEETING LOOP: a finished call (Notion notes) = CRM event + one hub card with the next step within 15 min, task DA-MeetingLoop](reference_meeting_loop.md) (CRM H41, 2026-09-29).
 - 🔁🔧 [His review comment = a fix: sorter, shared queue, live session first, unattended safety (task DA-FeedbackWorker)](reference_feedback_loop_fix.md) (2026-09-29).
+- 📞➡️✉️ [After a call: the follow-up is PREPARED (draft + invite), a call with no notes still gets a card](feedback_after_a_call_prepare_the_followup.md) (2026-09-29).
