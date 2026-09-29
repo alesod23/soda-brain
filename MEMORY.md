@@ -101,3 +101,4 @@
 - 🪤 [pgrep -f matches its own shell](feedback_pgrep_self_match_use_script_files.md) — background jobs from script files + pidfiles; wait with kill -0, never pkill -f a pattern.
 - 🧷 [Notion update_content: fetch first](feedback_notion_update_content_fetch_first.md) — anchors must match Notion's re-render (`_x_`→`*x*`); one bad anchor rejects the whole call.
 - 📒 [Send ledger: a past plan never sent takes no room; US daily.py carries failed days over](reference_send_ledger_past_plans.md) (2026-09-29).
+- 📞 [MEETING LOOP: a finished call (Notion notes) = CRM event + one hub card with the next step within 15 min, task DA-MeetingLoop](reference_meeting_loop.md) (CRM H41, 2026-09-29).
