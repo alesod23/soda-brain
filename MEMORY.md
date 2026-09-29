@@ -104,3 +104,4 @@
 - 📞 [MEETING LOOP: a finished call (Notion notes) = CRM event + one hub card with the next step within 15 min, task DA-MeetingLoop](reference_meeting_loop.md) (CRM H41, 2026-09-29).
 - 🔁🔧 [His review comment = a fix: sorter, shared queue, live session first, unattended safety (task DA-FeedbackWorker)](reference_feedback_loop_fix.md) (2026-09-29).
 - 📞➡️✉️ [After a call: the follow-up is PREPARED (draft + invite), a call with no notes still gets a card](feedback_after_a_call_prepare_the_followup.md) (2026-09-29).
+- 📄🤝 [What we owe a person: open task-land to-dos naming them go into the CRM reader + review prompts (crm-app/owed.js, H87)](reference_owed_todos_in_crm_prompts.md) (2026-09-29).
