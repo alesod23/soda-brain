@@ -10,3 +10,4 @@
 - 🌐 [TundraPage repo](project_tundrapage_repo.md) — alesod23 read-only, PR to Caleb · [Git identity](reference_git_github_identity.md) · 🏔️ [Tundra commits NEED Claude trailer](feedback_tundra_commits_need_claude_trailer.md).
 - [Tundra Talents](project_tundra_talents.md) · [Langfuse pains](project_langfuse_pains.md) · [scoring](feedback_pain_corpus_scoring.md) · [CDTM kickoff TF](project_cdtm_kickoff_tf.md).
 - 🏥 [UPMC living brief HTML: update it every relevant UPMC iteration](project_upmc_demo_brief.md) — medtech-brain/_system/BRIEF-upmc-demo-2026-09-29.html (2026-09-28).
+- 🇺🇸 [US hospital English: reviewer loop until a pass returns nothing](feedback_us_hospital_english_review_loop.md) — PoC->pilot, PHI, use error, supply chain, biomed, US dates (2026-09-29).
