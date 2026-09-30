@@ -107,4 +107,5 @@
 - 🔁🔧 [His review comment = a fix: sorter, shared queue, live session first, unattended safety (task DA-FeedbackWorker)](reference_feedback_loop_fix.md) (2026-09-29).
 - 📞➡️✉️ [After a call: the follow-up is PREPARED (draft + invite), a call with no notes still gets a card](feedback_after_a_call_prepare_the_followup.md) (2026-09-29).
 - 📄🤝 [What we owe a person: open task-land to-dos naming them go into the CRM reader + review prompts (crm-app/owed.js, H87)](reference_owed_todos_in_crm_prompts.md) (2026-09-29).
+- 🧪🌍 [SIMULATION HARNESS (~/sim): sandbox copy + fake world + WORLD/ME/JUDGE agents + score page; budget guard; what it found](reference_simulation_harness.md) (2026-09-30).
 - 👀 [Visual check = I open it myself with Claude in Chrome, never "open the page to check"](feedback_verify_visually_myself_in_chrome.md) — also: a file "in Notion" = uploaded to Drive Research Docs and LINKED, not embedded (2026-09-30).
