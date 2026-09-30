@@ -13,8 +13,7 @@ metadata:
 `last-rejected.json` are there too. Routes: `GET/POST /pending`, `POST /resolve {id, verdict, device, feedback}`
 (a yes runs `executeAction`: gmail-send-draft by draft id only, never edited text), `POST /revise {id, text?,
 meta?, action?, ping?}` (in place, same #N, edits the Telegram message; ignores `context`), `POST /close {id,
-reason, verdict?, notify?}` (resolves WITHOUT executing; since 2026-10-05 no verdict given = verdict null in state
-and decisions.jsonl, never a default yes: a hand close of #4 had logged a yes he never gave), `GET /item/<id>`,
+reason, verdict?, notify?}` (resolves WITHOUT executing, verdict defaults to yes), `GET /item/<id>`,
 `GET /unresolved-ids`, `GET /resolved/<id>`. Every resolve/close appends to `task-land/_system/decisions.jsonl`;
 the guard in POST /pending appends to `rule-hits.jsonl`. Resolved items are pruned 24 h after resolution; open
 cards are never pruned (60 open on 2026-09-27).
