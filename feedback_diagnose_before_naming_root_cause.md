@@ -17,3 +17,23 @@ On 2026-08-06 a WhatsApp send failed while he was at MGH Boston. I told him the 
 - Prefer the cheapest discriminating test first: is the file valid, is the port reachable, did the process actually run, what does the log literally say.
 - Read the artefact rather than reasoning about it. The log said `connected as` was never printed; that alone disproved every network theory.
 - When two hypotheses die, stop guessing and go read the code/state. See [[feedback_windows_tail_locks_logfile]] for the related habit of verifying against the real system.
+
+**2026-09-30: the same rule applies to the alerts I WRITE, not just to what I say.** The GTM
+agent probed two Google calendars, both probes failed, and it posted two cards saying "its
+authorisation expired ... he needs to renew it". He read one on his phone and asked me to put
+him through a Google consent flow. Nothing was expired: the laptop's token answered fine twenty
+minutes later, and so did the box's the whole time.
+
+What gave it away was the clock, before any file was opened: the two cards were created
+15:11:43.417Z and 15:11:43.484Z, **67 milliseconds apart, for two independent refresh tokens**.
+Credentials issued at different times, for different accounts, do not expire in the same
+second. Correlated failures across independent things mean the one thing they share broke — here
+the probe, not the credentials. That test costs one look at two timestamps and it beats reading
+code.
+
+The defect underneath: the calendar branch asserted `needs_him=True` and the word "expired" for
+ANY non-zero exit, while the Gmail branch three lines above already did it properly (regex the
+real output to decide whether the credential is dead, quote the actual error otherwise, require
+the failure to repeat before it reaches him). **An alert may only name a cause its check can
+actually distinguish.** Everything else is quoted output. See the notification contract's H5,
+`task-land/_system/NOTIF-CONTRACT.md`, and [[reference_system_agent]].
