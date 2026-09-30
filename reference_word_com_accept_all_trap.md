@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 6d6a4161-826b-4016-90da-5f2d7a0d8e7e
-  modified: 2026-09-30T13:28:18.094Z
+  modified: 2026-09-30T21:25:20.700Z
 ---
 
 Word automation traps met on the thesis file (2026-09-30), all in the document he had open:
@@ -16,6 +16,7 @@ Word automation traps met on the thesis file (2026-09-30), all in the document h
 - A file opened from OneDrive/SharePoint with AutoSave signs tracked changes and comments with the Office account ("Alessandro SODANO"), whatever `Application.UserName` says. My changes then carry his name; filter by time stamp, never by author.
 - `Range.Information(3)` page numbers differ from the pages of an export without markup; export a block with `$range.ExportAsFixedFormat($pdf, 17, $false, 0, $false, 0)` instead of page numbers.
 - A table is copied without the clipboard with `$dest.FormattedText = $table.Range.FormattedText`.
+- A `.ps1` with a non-ASCII literal ("über") is read by `powershell -File` in the ANSI code page and writes "Ã¼" into the document (Bartenbach entry, 2026-09-30 23:47). Every text with special characters goes into a JSON read with `-Encoding UTF8`; the script stays ASCII.
 - Before any multi-step edit of his open document, copy `live.xml` (the `Content.WordOpenXML` dump) to a dated snapshot file.
 
 Related: [[project_thesis_final_review_2026_09_27]], [[feedback_thesis_no_search_voice_real_summaries]].
