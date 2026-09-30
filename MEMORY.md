@@ -99,6 +99,7 @@
 - Agents: [long-running](feedback_agent_long_running.md) · ⏳ [output files are INTERIM](feedback_agent_output_file_is_interim.md) · [no polling bg tasks](feedback_no_polling_on_background_tasks.md).
 - [User Background](user_background.md) · [User Life Context](context_user_life.md) — APPEND.
 
+- ⏰⚠️ [Z timestamps parsed with time.mktime = +2h on this box](reference_box_utc_timestamps_mktime_trap.md) — tre false card durante una call: LinkedIn era giu' da 2 minuti, il codice leggeva 122; usa calendar.timegm o fromisoformat (2026-09-30).
 - 🪤 [pgrep -f matches its own shell](feedback_pgrep_self_match_use_script_files.md) — background jobs from script files + pidfiles; wait with kill -0, never pkill -f a pattern.
 - 🧷 [Notion update_content: fetch first](feedback_notion_update_content_fetch_first.md) — anchors must match Notion's re-render (`_x_`→`*x*`); one bad anchor rejects the whole call.
 - 📒 [Send ledger: a past plan never sent takes no room; US daily.py carries failed days over](reference_send_ledger_past_plans.md) (2026-09-29).
