@@ -27,3 +27,7 @@ Related: [[reference_approval_hub]], [[feedback_review_pages_need_keyboard_short
 only), Open button + clickable subject (`o`). `GET /open/<hub id>` -> 302 to `#drafts/<token(threadId)>` with
 authuser (thread id ALWAYS: the message id opened a blank pane). Tally and commit use `ALLC` (all cards), never the
 filtered `CARDS`. Next: open_url for LinkedIn / WhatsApp cards. README section "2026-09-30".
+Same day, his correction ("more visual ... same colors we use on tg chat ... a nice logo"): channel = SOLID badge with
+the real brand mark (Simple Icons paths in `CHANNEL_LOGO`), colours of the Telegram dots (Gmail red #d93025, LinkedIn
+blue #0a66c2, WhatsApp green #128c4a, Slack purple #611f69), plus one outlined filter button per channel present.
+Lesson: for channels he wants logo + the TG colour everywhere, never a pale text chip. Filed as a hub rule (addrule).
