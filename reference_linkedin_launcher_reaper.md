@@ -37,3 +37,5 @@ rebuilds the poller clone (`clone-profile.ps1`), log `~/.linkedin-mcp/restore.lo
 really ended the session (only then he is asked), 3 a send is running. The system agent calls it by itself
 (`li_repair`) and then releases the stopped LinkedIn channels. `campaign.py` skips a tick when there is no network.
 The box cannot repair it: the session lives in the laptop's browser profile.
+
+**30 Sep 2026, a send that took 7 minutes:** never use the session's `mcp__linkedin-mcp__*` tools AND the engine (`run-commit.py`) in the same hour: the session's server keeps the profile open, the engine's server then fails with WinError 145 and sets the session aside. `li_restore.py` is single-instance since then (`restore.lock`) and tries older `invalid-state-*` copies when the newest is refused: "LinkedIn refuses the session" after a damaged copy is NOT a real logout.
