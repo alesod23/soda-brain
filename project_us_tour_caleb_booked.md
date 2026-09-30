@@ -1,0 +1,24 @@
+---
+name: project-us-tour-caleb-booked
+description: "us-tour-2026-10: Caleb BOOKED his flights on 2026-09-28; the board now only plans Alessandro's flights and marks where he is on Caleb's day (yellow) or flight (green); Caleb's exact flights are still not recorded"
+metadata:
+  node_type: memory
+  type: project
+  originSessionId: 2b505a93-c80e-47bd-81f5-c7b174f73267
+  modified: 2026-09-30T14:08:41.292Z
+---
+
+Caleb booked his US flights on 2026-09-28 (WhatsApp 18:53-18:56 UTC, "Ok booking now then" / "last check" image /
+Alessandro "Yup. Good for me."); Alessandro confirmed "officially booked" on 2026-09-30. About EUR 800 total.
+What is known in TEXT: Orlando -> San Francisco on **Fri Oct 16** (from MCO). His way into Florida (first proposal:
+land Miami Oct 11 18:50) and his flight home from SF (around Oct 25-26, Frankfurt) changed several times and the
+final version exists only in WhatsApp images, which no tool can read (the wa-daemon stores `[image]`, no media).
+
+**Why:** from now on the trip board is only about Alessandro's own, longer trip; Caleb needs no more option cards.
+**How to apply:** Caleb's flights live in `travel-search/v2/app/trips/us-tour-2026-10/caleb_booked.json` (null = not
+known). `build_us_tour_board.py` reads it: every scenario uses Caleb's Orlando->SF day, rows get `comp`
+(day = yellow, flight = green), cards get `compMatch`, `meta.booked` feeds the multi-select chips on the results
+page (shared `app/server.js`, works for any trip with `meta.booked`). When Alessandro gives the booking photo or the
+flight numbers: fill date / dep (24h) / carrier / from / to in that JSON, rebuild, run `state/qa_us_tour.py`.
+Never guess his flights from the chat: I once believed a photo showed them and it was board card #115.
+Related: [[feedback-trippy-companion-mirrors-until-split]].
