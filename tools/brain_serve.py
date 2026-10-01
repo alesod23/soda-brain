@@ -72,9 +72,7 @@ def jsonable(v: Any) -> Any:
 # ----------------------------------------------------------------- brain logic
 
 def query_embedding(text: str) -> list[float] | None:
-    if ARGS is not None and ARGS.no_model and brain_index._EMBEDDER is None:
-        # lazy: first recall loads the model
-        pass
+    """With --no-model the first call loads the model (get_embedder caches it)."""
     try:
         return brain_index.embed_query(text)
     except Exception as e:  # model missing: full-text leg only
@@ -454,6 +452,8 @@ def main(argv: list[str] | None = None) -> int:
     brain_index.load_env()
     logging.basicConfig(level=ARGS.log_level.upper(), stream=sys.stderr,
                         format="%(asctime)s %(name)s %(levelname)s %(message)s")
+    for noisy in ("httpx", "httpcore", "huggingface_hub", "urllib3", "sentence_transformers", "transformers"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)   # one line per HEAD request otherwise
 
     if ARGS.stdio:
         open_pool()

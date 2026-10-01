@@ -130,13 +130,20 @@ def service(schema):
     assert _port_free(PORT), f"port {PORT} is in use on {HOST}; set SODA_TEST_PORT"
     env = dict(os.environ, SODA_DB_DSN=schema, SODA_TOKEN="test-token-" + secrets.token_hex(4),
                PYTHONDONTWRITEBYTECODE="1", HF_HUB_DISABLE_PROGRESS_BARS="1")
-    proc = subprocess.Popen([PY, str(TOOLS / "brain_serve.py"), "--host", HOST, "--port", str(PORT)],
-                            cwd=str(TOOLS), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, **NO_WINDOW)
+    import tempfile
+    logf = tempfile.NamedTemporaryFile(prefix="soda-serve-", suffix=".log", delete=False)   # never a pipe: a pipe
+    proc = subprocess.Popen([PY, str(TOOLS / "brain_serve.py"), "--host", HOST, "--port", str(PORT)],  # nobody reads blocks
+                            cwd=str(TOOLS), env=env, stdout=logf, stderr=logf, **NO_WINDOW)
+
+    def tail() -> str:
+        logf.flush()
+        return Path(logf.name).read_text(encoding="utf-8", errors="replace")[-3000:]
+
     import httpx
     base = f"http://{HOST}:{PORT}"
     for _ in range(120):
         if proc.poll() is not None:
-            raise RuntimeError("service died:\n" + proc.stderr.read().decode(errors="replace")[-3000:])
+            raise RuntimeError("service died:\n" + tail())
         try:
             r = httpx.get(base + "/health", timeout=2)
             if r.status_code == 200 and r.json().get("db"):
@@ -146,7 +153,7 @@ def service(schema):
         time.sleep(1)
     else:
         proc.kill()
-        raise RuntimeError("service did not come up")
+        raise RuntimeError("service did not come up:\n" + tail())
     try:
         yield base, env["SODA_TOKEN"]
     finally:
@@ -155,6 +162,8 @@ def service(schema):
             proc.wait(10)
         except subprocess.TimeoutExpired:
             proc.kill()
+        logf.close()
+        os.unlink(logf.name)
 
 
 def test_health_and_recall(service):
