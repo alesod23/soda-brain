@@ -84,8 +84,9 @@ sudo -u $DA_USER "$VENV/bin/pip" install -q --upgrade pip
 sudo -u $DA_USER "$VENV/bin/pip" install -q -r "$TOOLS/requirements.txt"
 log "venv ready: $("$VENV/bin/python" --version), $("$VENV/bin/python" -c 'import torch,sentence_transformers,mcp,psycopg;print("torch",torch.__version__)')"
 # the model is downloaded once (~470 MB into ~/.cache/huggingface) so the first timer run stays short
-sudo -u $DA_USER -H HF_HUB_DISABLE_PROGRESS_BARS=1 "$VENV/bin/python" -c \
-    "from sentence_transformers import SentenceTransformer as S; S('intfloat/multilingual-e5-small', device='cpu')" 2>/dev/null
+# `sudo -u da VAR=x cmd` is refused by sudoers (env_reset), and 2>/dev/null hid it on the first run (2 Oct): use env
+sudo -u $DA_USER -H env HF_HUB_DISABLE_PROGRESS_BARS=1 "$VENV/bin/python" -c \
+    "from sentence_transformers import SentenceTransformer as S; S('intfloat/multilingual-e5-small', device='cpu')" 2>&1 | grep -v Warning || true
 log "embedding model cached"
 
 # --- 6. units ------------------------------------------------------------------------------------
