@@ -38,3 +38,8 @@ ledger first-line drop (fixed live), the reader blind to inbound email bodies, W
 reader spending 84% of its reads on the campaign's own sends (F1 patch in `harness/patches/`), the uncached
 prefix of every headless call (F2), two bugs the fake mail reproduces (reply detection without `--enrich` in
 campaign.py:581 / daily.py:180; `send --thread-id` writes no In-Reply-To).
+
+**Agents share his standing rules from one place (1 Oct):** `simenv.SIGNATURE_RULE` (H94: the Tundra signature under
+'Alessandro' is required, never a fault) is injected into the JUDGE, LEARNER and ME prompts. A judge without it filed
+false "critic lets the signature block through" items (Lff045c4c, E0040). When a sim item contradicts a live ledger
+rule, fix the agent prompt here, not the live system.
