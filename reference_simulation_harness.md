@@ -43,3 +43,11 @@ campaign.py:581 / daily.py:180; `send --thread-id` writes no In-Reply-To).
 'Alessandro' is required, never a fault) is injected into the JUDGE, LEARNER and ME prompts. A judge without it filed
 false "critic lets the signature block through" items (Lff045c4c, E0040). When a sim item contradicts a live ledger
 rule, fix the agent prompt here, not the live system.
+
+**Outcome of the first night (1 Oct 2026, 12 simulated days, 170 events):** score 56 (as it was) -> 61 (fixes) -> 60
+uncapped; uncapped (DA_DEPTH=full) cost +86% for no gain: the misses are in the artifact layer (drafts, cards, hub
+hygiene: surface score 32), not in reading. Worst kinds: LinkedIn in, what he sees on the hub, accepts, bookings,
+meeting notes. The morning report is the MORNING REPORT section of the workplan. Lesson for the harness: an
+unattended full-permission worker inside the sandbox escapes (ssh); never again; the live worker took sim items once
+their claim went stale, so the learner files them `needs_him`. Fake data lives in `~/sim/world` and `~/sim/home`
+until he says delete.
