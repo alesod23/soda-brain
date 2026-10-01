@@ -112,3 +112,4 @@
 - 🧪🌍 [SIMULATION HARNESS (~/sim): sandbox copy + fake world + WORLD/ME/JUDGE agents + score page; budget guard; what it found](reference_simulation_harness.md) (2026-09-30).
 - 📝⏸️ [While he types in a Word file: no live COM edits or dumps, batch JSON applied when he says](feedback_word_batch_edits_while_he_works.md) — thesis, 2026-09-30 20:35, "too slow".
 - 👀 [Visual check = I open it myself with Claude in Chrome, never "open the page to check"](feedback_verify_visually_myself_in_chrome.md) — also: a file "in Notion" = uploaded to Drive Research Docs and LINKED, not embedded (2026-09-30).
+- 📅🛑 [Slots vs his calendar: every slot offered to/by him is checked with its duration (~/triage/slots.py) in inbound_asks, register.py (every draft, critic or not) and the CRM reader](reference_slot_calendar_check.md) (sim E0039, built 2026-10-01).
