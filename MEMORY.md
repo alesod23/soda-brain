@@ -51,6 +51,7 @@
 - 🔎📇 [A step and no channel = a SEARCH (CRM H36): channel-search.js, found details shown on the review card, Approve confirms; review mode full screen (H35)](reference_channel_search.md) (2026-09-28).
 - 📬🔁 [DAILY CAMPAIGN (US): 30 a day on `boards/daily-<date>`, first 10 fire at 16:55 via campaign.py](reference_daily_campaign.md) — `gtm-eng/daily-campaign/`, task DailyCampaign-Fire, subject fixed, people not offices, one provider sentence; replaced the GTM line on the daily page (2026-09-25).
 - 🪟 [GTM boards open ONLY via open-board.ps1](feedback_gtm_boards_open_via_script.md) — never `navigate`.
+- 🎨📦 [Un deck uscito in una mail E' lavoro finito e sta nel repo: leggilo da li', mai chiedergli uno zip](feedback_design_files_live_in_the_repo_not_in_his_export.md) — e una frase di capacita' in un doc ha una data: "Claude Design non e' leggibile" era vero il 30 ago, non il 1 ott (2026-10-01).
 - 🔄🎨 [Claude Design <-> GitHub sync with Caleb: extension mirror, :4190 server, /design-sync, setup.py onboarding, the injection strip](reference_design_sync.md) (2026-09-30).
 
 ## Tundra / Notion / Granola / Drive
