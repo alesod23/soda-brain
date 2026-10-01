@@ -8,7 +8,7 @@ Sources (kind=glob), default:
 Override with BRAIN_SOURCES="kind=glob,kind=glob"; repo root with BRAIN_REPO (default: parent of tools/).
 
 A contract file yields one page per rule row (`| H1 | **rule** | source |`) plus one page for its prose.
-Chunks: ~600 words, 60 overlap, split by heading first. Embeddings: intfloat/multilingual-e5-small
+Chunks: ~400 estimated tokens (~180 words), 50 overlap, split by heading first (fits the model's 512). Embeddings: intfloat/multilingual-e5-small
 ("passage: " / "query: " prefixes), batches of 64, CPU. Fast paths: a page whose sha is unchanged is
 skipped entirely; a chunk whose (title, text) is unchanged keeps its stored embedding.
 
@@ -32,8 +32,12 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 MODEL_NAME = os.environ.get("BRAIN_MODEL", "intfloat/multilingual-e5-small")
-CHUNK_WORDS = 600
-CHUNK_OVERLAP = 60
+# Chunk budget in ESTIMATED model tokens (1 + len(word)//4 per word, calibrated on the memory corpus:
+# est/real = 0.94). multilingual-e5-small sees 512 tokens; 400 + the "passage: <title>" prefix fits
+# (measured on the memory corpus: median 390 real tokens, p90 480). With 600 words (the first draft)
+# the model cut 68% of the chunks short; with 440 still 13%.
+CHUNK_TOKENS = int(os.environ.get("BRAIN_CHUNK_TOKENS", "400"))
+CHUNK_OVERLAP = int(os.environ.get("BRAIN_CHUNK_OVERLAP", "50"))
 EMBED_BATCH = 64
 KINDS = ("memory", "system", "handoff", "rule", "hint", "other")
 BOX_TASKLAND = "/home/da/task-land"
@@ -190,27 +194,53 @@ def _join_tokens(tokens: list[str]) -> str:
     return "".join(out).strip()
 
 
-def _window(tokens: list[str], size: int, overlap: int) -> list[list[str]]:
-    """Split a token list (words and newline runs) into windows of `size` words with `overlap`."""
-    word_idx = [i for i, t in enumerate(tokens) if not t.startswith("\n")]
-    n = len(word_idx)
-    if n <= size:
-        return [tokens]
-    out = []
-    start = 0
-    step = max(size - overlap, 1)
-    while start < n:
-        end = min(start + size, n)
-        out.append(tokens[word_idx[start]:word_idx[end - 1] + 1])
-        if end == n:
+def _cost(tok: str) -> int:
+    """Estimated model tokens for one whitespace-delimited word (0 for a newline run)."""
+    return 0 if tok.startswith("\n") else 1 + len(tok) // 4
+
+
+def _cost_of(tokens: list[str]) -> int:
+    return sum(_cost(t) for t in tokens)
+
+
+def _tail(tokens: list[str], budget: int) -> list[str]:
+    """The trailing tokens worth about `budget` cost (the overlap carried into the next chunk)."""
+    out: list[str] = []
+    c = 0
+    for t in reversed(tokens):
+        if c >= budget:
             break
-        start += step
+        out.append(t)
+        c += _cost(t)
+    return list(reversed(out))
+
+
+def _window(tokens: list[str], size: int, overlap: int) -> list[list[str]]:
+    """Split a token list (words and newline runs) into windows of about `size` cost with `overlap`."""
+    if _cost_of(tokens) <= size:
+        return [tokens]
+    out: list[list[str]] = []
+    cur: list[str] = []
+    c = 0
+    for t in tokens:
+        if c + _cost(t) > size and cur:
+            out.append(cur)
+            cur = _tail(cur, overlap) if overlap else []
+            c = _cost_of(cur)
+        cur.append(t)
+        c += _cost(t)
+    if cur and _cost_of(cur) > (_cost_of(_tail(out[-1], overlap)) if out else 0):
+        out.append(cur)
     return out
 
 
-def chunk_text(body: str, size: int = CHUNK_WORDS, overlap: int = CHUNK_OVERLAP) -> list[str]:
+def chunk_text(body: str, size: int | None = None, overlap: int | None = None) -> list[str]:
     """Headings first: sections are packed into chunks of about `size` words; a section longer
-    than `size` is windowed with `overlap`; consecutive chunks share `overlap` words."""
+    than `size` is windowed with `overlap`; consecutive chunks share `overlap` words.
+    `size` / `overlap` are estimated tokens (see _cost). Defaults CHUNK_TOKENS / CHUNK_OVERLAP
+    (env BRAIN_CHUNK_TOKENS / BRAIN_CHUNK_OVERLAP)."""
+    size = size or CHUNK_TOKENS
+    overlap = CHUNK_OVERLAP if overlap is None else overlap
     sections: list[list[str]] = []
     cur: list[str] = []
     for line in body.splitlines():
@@ -225,8 +255,7 @@ def chunk_text(body: str, size: int = CHUNK_WORDS, overlap: int = CHUNK_OVERLAP)
     acc: list[str] = []
     acc_words = 0
 
-    def words(tokens: list[str]) -> int:
-        return sum(1 for t in tokens if not t.startswith("\n"))
+    words = _cost_of
 
     def flush() -> None:
         nonlocal acc, acc_words
@@ -246,11 +275,8 @@ def chunk_text(body: str, size: int = CHUNK_WORDS, overlap: int = CHUNK_OVERLAP)
         if acc_words and acc_words + w > size:
             flush()
         if not acc and chunks and overlap:
-            tail = chunks[-1]
-            tail_words = [i for i, t in enumerate(tail) if not t.startswith("\n")]
-            if len(tail_words) > overlap:
-                acc = list(tail[tail_words[-overlap]:]) + ["\n"]
-                acc_words = overlap
+            acc = _tail(chunks[-1], overlap) + ["\n"]
+            acc_words = _cost_of(acc)
         acc = acc + (["\n"] if acc else []) + tokens
         acc_words += w
     flush()
@@ -468,11 +494,11 @@ def write_page(conn, page: Page, vectors: list) -> None:
 
 
 def soft_delete(conn, paths: list[str]) -> int:
+    """Marks pages gone from disk. Their chunks stay (search filters deleted_at; a page that comes
+    back reuses its embeddings)."""
     if not paths:
         return 0
     with conn.transaction():
-        conn.execute(
-            "DELETE FROM brain.chunks WHERE page_id IN (SELECT id FROM brain.pages WHERE path = ANY(%s))", [paths])
         cur = conn.execute(
             "UPDATE brain.pages SET deleted_at = now() WHERE path = ANY(%s) AND deleted_at IS NULL", [paths])
         return cur.rowcount
@@ -493,7 +519,8 @@ def stats(conn) -> dict:
     out["pages_total"] = sum(out["pages"].values())
     out["pages_deleted"] = conn.execute("SELECT count(*) FROM brain.pages WHERE deleted_at IS NOT NULL").fetchone()[0]
     out["chunks"], out["embedded"] = conn.execute(
-        "SELECT count(*), count(embedding) FROM brain.chunks").fetchone()
+        "SELECT count(*), count(c.embedding) FROM brain.chunks c JOIN brain.pages p ON p.id = c.page_id "
+        "WHERE p.deleted_at IS NULL").fetchone()
     row = conn.execute("SELECT v FROM brain.meta WHERE k = 'last_index_at'").fetchone()
     out["last_index_at"] = row[0] if row else None
     return out

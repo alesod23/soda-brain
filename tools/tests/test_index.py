@@ -63,29 +63,41 @@ def _words(s: str) -> int:
     return len(s.split())
 
 
+def _w(i: int) -> str:
+    """A unique 3-letter word: cost 1 estimated token, so word counts == cost in these tests."""
+    return chr(97 + i % 26) + chr(97 + (i // 26) % 26) + chr(97 + (i // 676) % 26)
+
+
+def test_cost_estimator():
+    assert bi._cost("abc") == 1 and bi._cost("abcd") == 2 and bi._cost("x" * 40) == 11 and bi._cost("\n\n") == 0
+    assert bi.CHUNK_TOKENS == 400 and bi.CHUNK_OVERLAP == 50
+
+
 def test_chunk_short_text_is_one_chunk():
     assert bi.chunk_text("# T\n\nhello world") == ["# T\n\nhello world"]
 
 
 def test_chunk_long_section_windows_with_overlap():
-    body = " ".join(f"w{i}" for i in range(1500))
+    body = " ".join(_w(i) for i in range(1500))
     chunks = bi.chunk_text(body, size=600, overlap=60)
     assert [_words(c) for c in chunks] == [600, 600, 420]
     # overlap: last 60 words of chunk 0 == first 60 words of chunk 1
     assert chunks[0].split()[-60:] == chunks[1].split()[:60]
-    assert chunks[-1].split()[-1] == "w1499"
+    assert chunks[-1].split()[-1] == _w(1499)
+    # the default budget on the same text: every chunk within the budget, nothing lost
+    d = bi.chunk_text(body)
+    assert all(_words(c) <= bi.CHUNK_TOKENS for c in d) and d[-1].split()[-1] == _w(1499)
 
 
 def test_chunk_splits_by_heading_first_and_packs_small_sections():
-    secs = [f"## h{i}\n" + " ".join(f"s{i}w{j}" for j in range(250)) for i in range(5)]
+    secs = [f"## h{i}\n" + " ".join(_w(i * 250 + j) for j in range(250)) for i in range(5)]
     chunks = bi.chunk_text("\n".join(secs), size=600, overlap=60)
-    # 5 sections of 251 words: packed 2 per chunk (502 + 60 overlap carried) -> never cut mid-section
+    # 5 sections of 250 words (+ heading, cost 2): packed 2 per chunk -> never cut mid-section
     for c in chunks:
         assert _words(c) <= 600
-    assert all(c.lstrip().startswith(("## h", "s")) for c in chunks)
     assert chunks[0].startswith("## h0")
     assert "## h2" in chunks[1] and "## h4" in chunks[-1]
-    assert chunks[1].split()[:60] == chunks[0].split()[-60:]   # 60-word overlap between packed chunks
+    assert chunks[1].split()[:60] == chunks[0].split()[-60:]   # 60-token overlap between packed chunks
 
 
 def test_chunk_keeps_newlines():

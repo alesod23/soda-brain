@@ -122,7 +122,8 @@ def health() -> dict:
     out = {"ok": True, "db": False, "pages": None, "chunks": None, "people": None, "last_index_at": None}
     try:
         r = one("SELECT (SELECT count(*) FROM brain.pages WHERE deleted_at IS NULL) AS pages,"
-                " (SELECT count(*) FROM brain.chunks) AS chunks,"
+                " (SELECT count(*) FROM brain.chunks c JOIN brain.pages p ON p.id = c.page_id"
+                "   WHERE p.deleted_at IS NULL) AS chunks,"
                 " (SELECT count(*) FROM crm.people WHERE deleted_at IS NULL) AS people,"
                 " (SELECT v FROM brain.meta WHERE k = 'last_index_at') AS last_index_at")
         out.update(db=True, pages=r["pages"], chunks=r["chunks"], people=r["people"],
