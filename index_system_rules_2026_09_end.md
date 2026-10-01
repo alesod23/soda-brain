@@ -1,0 +1,15 @@
+# System rules and references added 29 Sept to 1 Oct 2026 (sub-index, moved out of MEMORY.md 2026-10-01; every line is a memory pointer)
+- 🧷 [Notion update_content: fetch first](feedback_notion_update_content_fetch_first.md) — anchors must match Notion's re-render (`_x_`→`*x*`); one bad anchor rejects the whole call.
+- 📒 [Send ledger: a past plan never sent takes no room; US daily.py carries failed days over](reference_send_ledger_past_plans.md) (2026-09-29).
+- 📞 [MEETING LOOP: a finished call (Notion notes) = CRM event + one hub card with the next step within 15 min, task DA-MeetingLoop](reference_meeting_loop.md) (CRM H41, 2026-09-29).
+- 🔁🔧 [His review comment = a fix: sorter, shared queue, live session first, unattended safety (task DA-FeedbackWorker)](reference_feedback_loop_fix.md) (2026-09-29).
+- 📞➡️✉️ [After a call: the follow-up is PREPARED (draft + invite), a call with no notes still gets a card](feedback_after_a_call_prepare_the_followup.md) (2026-09-29).
+- 📄🤝 [What we owe a person: open task-land to-dos naming them go into the CRM reader + review prompts (crm-app/owed.js, H87)](reference_owed_todos_in_crm_prompts.md) (2026-09-29).
+- 🧠💡 [PERFORMANCE HINTS block in every system prompt, self-grown by the learner](feedback_performance_hints_in_every_prompt.md) (his ask, Aug + 1 Oct 2026).
+- 🔗🆕 [LinkedIn event about someone not in the CRM: his message opens the row, li_request_sent + wait step, accept -> first-message card](reference_linkedin_ingest_new_people.md) (sim 2026-10-07, built 2026-10-01).
+- 🧪🌍 [SIMULATION HARNESS (~/sim): sandbox copy + fake world + WORLD/ME/JUDGE agents + score page; budget guard; what it found](reference_simulation_harness.md) (2026-09-30).
+- 📝⏸️ [While he types in a Word file: no live COM edits or dumps, batch JSON applied when he says](feedback_word_batch_edits_while_he_works.md) — thesis, 2026-09-30 20:35, "too slow".
+- 👀 [Visual check = I open it myself with Claude in Chrome, never "open the page to check"](feedback_verify_visually_myself_in_chrome.md) — also: a file "in Notion" = uploaded to Drive Research Docs and LINKED, not embedded (2026-09-30).
+- 📅🛑 [Slots vs his calendar: every slot offered to/by him is checked with its duration (~/triage/slots.py) in inbound_asks, register.py (every draft, critic or not) and the CRM reader](reference_slot_calendar_check.md) (sim E0039, built 2026-10-01).
+- 📅✋ [A call somebody BOOKS (website link / their invite) = CRM row + keep/move/decline card + stale slot cards closed; register.py exit 7 on slot offers to a booked person](reference_booked_call_loop.md) (sim E0040, built 2026-10-01).
+- 🌐🚪 Connectivity gate for the system agent (promised to the savior 2026-10-01, not built): one non-Google probe at the top of each run, one finding "laptop has no network" needs_him=False, skip every external probe for that pass; threshold as a CFG value until he answers; laptop copy of the `triage/gcal.py` refresh fix (TransportError = network, RefreshError = auth) from `task-land/_system/box-tools/triage/`.

@@ -37,20 +37,8 @@
 - [Track phased plans](feedback_track_phased_plans.md) — "later" = commitment · [Clipboard drafts: verify](feedback_clipboard_all_paste_drafts.md).
 
 ## Box (VPS), Telegram, savior
-- 🔁 [One-way TG lane → HE types `/mcp reconnect plugin:telegram:telegram`](feedback_telegram_one_way_lane_mcp_reconnect.md) — no restart, context intact, queue drains; savior answers via Bot API curl meanwhile.
-- 🩹 [Telegram bridge FIX LOG](../../task-land/_system/TELEGRAM-BRIDGE-LOG.md) — read before touching TG, append after every fix.
-- 💀🔌 [Le 4 morti della lane erano COATTIO](reference_coattio_spawns_claude_kills_telegram.md) — i suoi server giravano senza TELEGRAM_STATE_DIR, ogni claude figlio rubava il poller; fix in `coattio/start-box.sh`, prova in `/proc/<pid>/environ` (2026-09-24).
-- ☠️ [NEVER run the `claude` CLI from the savior](feedback_never_run_claude_cli_from_savior.md) — `claude mcp list` alone killed the lane (2026-09-19); check health with `pgrep -a bun` + plugin logs.
-- 📦 [The live hub is ON THE BOX (`/home/da/approval-hub`, systemd da-hub); the laptop copy is dead, laptop :4180 is a TCP forward](reference_hub_lives_on_the_box.md) — edit hub code over ssh only (2026-09-27).
-- 📋 [hub-review UI](reference_hub_review_ui.md) — http://100.85.52.84:4142/ (Tailscale): decide every open hub card on the phone, j/k a/s/x/c, ONE commit = the yes; a "hub-review commit ..." Telegram message from him = the savior executes the CHANGES lines and marks `/api/queue/done`.
-- [Telegram plugin](reference_telegram_channel_plugin.md) — @Claudio_al_TG_v3_bot; BOX owns the savior lane; `claude -p` without `--strict-mcp-config` kills the poller · [tg-bridge](reference_tg_bridge.md) · [NEVER respawn savior](feedback_never_respawn_savior_session.md) — `restore-savior` / `vpsc`.
-- Telegram: [reply tool every turn](feedback_telegram_reply_tool_every_turn.md) · [reply_to inbound id](feedback_telegram_reply_to_threading.md) · [bare N = Nth-newest card](feedback_telegram_ordinal_message_reference.md) · [swipe-reply resolver](reference_tg_reply_resolver.md) · [channel msgs separate](feedback_channel_sequential_handling.md) · [React 👀 FIRST](feedback_react_eyes_before_working.md).
-- 💬🚫 [Su Telegram NIENTE markdown](feedback_telegram_no_markdown_asterisks.md) — il tool manda testo grezzo se non passi `format`, quindi `**grassetto**` arriva con gli asterischi in chiaro; struttura le frasi invece (2026-09-28).
-- [DA SYSTEM](project_da_system.md) — laptop-off Claude, approve/reject loop · 🚨 [Account migration PENDING](project_account_migration.md) — diff against `MIGRATION-account-switch.md`.
-- 🧭 [Kortyx = il riferimento di design di DA SYSTEM](reference_kortyx_design_reference.md) — kortyx.co, mandato il 2026-08-14: monitora, memoria organizzata, task proattivi, approvazione su TG. E' lui che ha scritto la specifica della ping hub.
-- Voice: [long-form on VPS](reference_voice_longform_lane.md) · [fast lane](reference_voice_lane.md) · [Quick Claude](reference_quick_claude.md) — Alt+Win+J then J/K/D.
-- 🔴🟣 [Gmail + Slack LIVE on VPS](reference_sodanotif_live_gmail_slack.md) · [lby DEAD](reference_lby_dead.md) · SODANOtif: [core](reference_sodanotif.md) · [card format](feedback_sodanotif_card_format.md) · [battery](feedback_sodanotif_battery_power_task_setting.md) · [stale-Gmail filter](reference_sodanotif_recap_stale_gmail_fix.md) · [noreply never](feedback_noreply_never_in_notifications.md) · 🎓🚫 [CDTM group mail never on TG unless an event](feedback_no_cdtm_community_mail_on_telegram.md) · 🔇 [never-surface groups](feedback_sodanotif_never_surface_groups.md).
-- [Cloud routine alerts → Calendar popup](reference_cloud_routine_alert_delivery.md) · [Bare replies → notif-log](feedback_resolve_reply_from_notiflog.md).
+- 📂 [Sub-index: Box / Telegram / savior](index_box_telegram_savior.md) — TG lane reconnect, bridge fix log, hub on the box, hub-review UI, Telegram plugin rules, SODANOtif, voice lanes, DA SYSTEM, Kortyx, UTC/mktime trap, pgrep self-match; open it whenever the task touches these topics.
+- 🚨 [Account migration PENDING](project_account_migration.md) — diff against `MIGRATION-account-switch.md`.
 
 ## coattio / CRM / GTM
 - 📂 [Sub-index: coattio / CRM / GTM](index_coattio_crm_gtm.md) — every other pointer of this section (event loop, review mode, boards, servers, design system, outreach screens) lives there.
@@ -69,18 +57,7 @@
 - 📂 [Sub-index: Tundra / Notion / Granola / Drive](index_tundra_notion_granola_drive.md) — all the pointers of this section live there; open it whenever the task touches these topics.
 
 ## Email / outreach voice
-- 🖋️ [TUNDRA mail ALWAYS carries the Tundra signature: gmail.py adds it by itself, never a connector draft](feedback_tundra_signature_always.md) (2026-09-28).
-- ✍️ [NO signature block, end 'Alessandro'](feedback_email_no_signature_block.md) — ask-first is DEFAULT · ✉️ [Remind, don't re-confirm](feedback_remind_dont_reconfirm.md).
-- Email ops: [REPLY IN THREAD IS THE DEFAULT; to-do = find existing thread](feedback_email_todo_find_existing_thread.md) · [catch-up](feedback_email_catchup_consistency.md) · [not-findable](feedback_email_not_findable_tracking.md) · [shared inbox cutoff](feedback_shared_inbox_cutoff.md) · [draft = real Gmail draft](feedback_email_draft_must_be_real_not_clipboard.md).
-- ⚠️ [Mixed threads leak internal comms](feedback_thread_reply_leaks_internal_comms.md) · [Read source thread first](feedback_read_source_thread_before_acting.md) · [Follow links not labels](feedback_follow_links_not_link_labels.md).
-- Style: [professor](feedback_professor_email_style.md) · [warm-intro](feedback_warm_intro_phrasing.md) · [Italian tu/Lei](feedback_italian_practitioner_followup_style.md) · [HTML multipart](feedback_gmail_html_rendering.md).
-- 🗣️ ["I understand it's X guidance to…" NOT "the website says"](feedback_cite_knowledge_not_the_website.md) — naming the source reads as AI.
-- 🚫 [No "You are listed as…" role recall, no "xx rather than yy"](feedback_email_no_role_recall_no_rather_than.md) — fold the role into the ask; say the one thing (CMIA drafts, 2026-09-17).
-- ✉️ [Cold email to operator = ask to learn](feedback_cold_email_operator_ask_for_advice.md) · 🎯 [Outreach: ASK FIRST, peer voice](feedback_outreach_ask_first_peer_voice.md) · [Lovable pattern](feedback_cold_email_lovable_pattern.md) · [template mining](feedback_outreach_template_mining.md) · [ONE cible/tpl](feedback_template_cible_single_persona.md) · [OUTREACH-SYSTEM.md read+UPDATE](reference_outreach_system.md).
-- 🕵️ [LinkedIn people search = mio punto cieco](feedback_linkedin_people_search_is_a_blind_spot.md) — WebSearch non vede l'indice membri: di' "non ci arrivo, provala tu loggato", mai "non esiste" (San Raffaele, 2026-09-21).
-- 🔎 [getedge people-search: removed](reference_getedge_people_search_skill.md) — found nothing a plain search did not (2026-09-18); the recipe that works: procurement PDFs, AIIC programmes, native-language queries, stale-name check.
-- [MCP-first routing](feedback_mcp_over_pw.md) · [linkedin-mcp](reference_linkedin_mcp.md) · 🔎 ["Connections of" works](reference_linkedin_connections_of_filter.md) · 🔵 [LinkedIn poll lane](reference_linkedin_poll.md).
-- HEC Outlook: [setup](project_hec_outlook_setup.md) · [COM, Classic only](reference_hec_outlook.md) · [Gmail Snippets ext](project_gmail_snippets_extension.md).
+- 📂 [Sub-index: Email / outreach voice](index_email_outreach_voice.md) — Tundra signature, no signature block, reply in thread, thread leaks, styles, cold-email patterns, LinkedIn blind spot, MCP-first routing, HEC Outlook; open it before writing any email or outreach.
 
 ## Triage / WhatsApp / Slack
 - 📂 [Sub-index: Triage / WhatsApp / Slack](index_triage_wa_slack.md) — all the pointers of this section live there; open it whenever the task touches these topics.
@@ -100,18 +77,4 @@
 - [User Background](user_background.md) · [User Life Context](context_user_life.md) — APPEND.
 
 - 🕰️ [Get-Date before ANY written time; never carry a time forward from the thread](feedback_check_clock_before_timestamps.md) — told a peer "00:30" at 12:06 the next day (2026-10-01).
-- ⏰⚠️ [Z timestamps parsed with time.mktime = +2h on this box](reference_box_utc_timestamps_mktime_trap.md) — tre false card durante una call: LinkedIn era giu' da 2 minuti, il codice leggeva 122; usa calendar.timegm o fromisoformat (2026-09-30).
-- 🪤 [pgrep -f matches its own shell](feedback_pgrep_self_match_use_script_files.md) — background jobs from script files + pidfiles; wait with kill -0, never pkill -f a pattern.
-- 🧷 [Notion update_content: fetch first](feedback_notion_update_content_fetch_first.md) — anchors must match Notion's re-render (`_x_`→`*x*`); one bad anchor rejects the whole call.
-- 📒 [Send ledger: a past plan never sent takes no room; US daily.py carries failed days over](reference_send_ledger_past_plans.md) (2026-09-29).
-- 📞 [MEETING LOOP: a finished call (Notion notes) = CRM event + one hub card with the next step within 15 min, task DA-MeetingLoop](reference_meeting_loop.md) (CRM H41, 2026-09-29).
-- 🔁🔧 [His review comment = a fix: sorter, shared queue, live session first, unattended safety (task DA-FeedbackWorker)](reference_feedback_loop_fix.md) (2026-09-29).
-- 📞➡️✉️ [After a call: the follow-up is PREPARED (draft + invite), a call with no notes still gets a card](feedback_after_a_call_prepare_the_followup.md) (2026-09-29).
-- 📄🤝 [What we owe a person: open task-land to-dos naming them go into the CRM reader + review prompts (crm-app/owed.js, H87)](reference_owed_todos_in_crm_prompts.md) (2026-09-29).
-- 🧠💡 [PERFORMANCE HINTS block in every system prompt, self-grown by the learner](feedback_performance_hints_in_every_prompt.md) (his ask, Aug + 1 Oct 2026).
-- 🔗🆕 [LinkedIn event about someone not in the CRM: his message opens the row, li_request_sent + wait step, accept -> first-message card](reference_linkedin_ingest_new_people.md) (sim 2026-10-07, built 2026-10-01).
-- 🧪🌍 [SIMULATION HARNESS (~/sim): sandbox copy + fake world + WORLD/ME/JUDGE agents + score page; budget guard; what it found](reference_simulation_harness.md) (2026-09-30).
-- 📝⏸️ [While he types in a Word file: no live COM edits or dumps, batch JSON applied when he says](feedback_word_batch_edits_while_he_works.md) — thesis, 2026-09-30 20:35, "too slow".
-- 👀 [Visual check = I open it myself with Claude in Chrome, never "open the page to check"](feedback_verify_visually_myself_in_chrome.md) — also: a file "in Notion" = uploaded to Drive Research Docs and LINKED, not embedded (2026-09-30).
-- 📅🛑 [Slots vs his calendar: every slot offered to/by him is checked with its duration (~/triage/slots.py) in inbound_asks, register.py (every draft, critic or not) and the CRM reader](reference_slot_calendar_check.md) (sim E0039, built 2026-10-01).
-- 📅✋ [A call somebody BOOKS (website link / their invite) = CRM row + keep/move/decline card + stale slot cards closed; register.py exit 7 on slot offers to a booked person](reference_booked_call_loop.md) (sim E0040, built 2026-10-01).
+- 📂 [Sub-index: system rules 29 Sept to 1 Oct 2026](index_system_rules_2026_09_end.md) — meeting loop, feedback worker, owed to-dos, performance hints, LinkedIn ingest, simulation harness, Word batch edits, visual check, slot/calendar check, booked-call loop, Notion fetch-first, send ledger, the promised connectivity gate.
