@@ -9,8 +9,12 @@ metadata:
 ---
 
 He asked twice (2026-08-0x and 2026-10-01 01:50) to "memorize learnings from the 'Performance Hints' paper: give it to
-a model summarized and it does better performance". No verified paper by that name is known to me; the principle is
-applied as a practice: **every headless prompt of the system (CRM reader, inbound asks, meeting loop, due today,
+a model summarized and it does better performance". **The paper is https://abseil.io/fast/hints.html ("Performance
+Hints", Google/abseil: estimate, measure, bulk APIs, fast paths, avoid unnecessary work, precompute, specialise, reduce
+allocations, no logging on hot paths)**, named by him on 2026-10-01 19:10 for the soda-brain build: "this is about to
+be a long-running build, so make sure to apply what is said here about agent work and long running tasks". The
+translation to agent work is `task-land/_system/hints/agent-work.md` (12 lines), inlined in every agent brief of a
+long build. The principle is applied as a practice: **every headless prompt of the system (CRM reader, inbound asks, meeting loop, due today,
 critic, world/judge of the simulation) ends with a PERFORMANCE HINTS block**: what matters most for this task, the
 pitfalls already seen, how a good answer looks, 5 to 12 lines, task-specific, not generic.
 
