@@ -163,7 +163,10 @@ def service(schema):
         except subprocess.TimeoutExpired:
             proc.kill()
         logf.close()
-        os.unlink(logf.name)
+        try:
+            os.unlink(logf.name)
+        except OSError:
+            pass   # Windows may still hold the handle for a moment; it is a temp file
 
 
 def test_health_and_recall(service):
@@ -227,14 +230,14 @@ def test_crm_put_and_reads(service):
 
     person = httpx.get(base + f"/crm/person/{pid}").json()
     assert person["id"] == pid and person["data"]["notes"].endswith("[integration-test]") and person["company"]
-    print("[http] /crm/person", pid, "->", person["name"], "@", person["company"])
+    print("[http] /crm/person", pid, "->", ascii(person["name"]), "@", ascii(person["company"]))
     comp = httpx.get(base + f"/crm/company/{person['company_id']}").json()
     assert comp["id"] == person["company_id"] and any(p["id"] == pid for p in comp["people"])
 
     q = (person["name"] or "").split()[0]
     people = httpx.get(base + "/crm/people", params={"q": q, "limit": 10}).json()
     assert any(p["id"] == pid for p in people) and len(people) <= 10
-    print(f"[http] /crm/people?q={q} -> {len(people)} rows")
+    print(f"[http] /crm/people?q={ascii(q)} -> {len(people)} rows")
     assert len(httpx.get(base + "/crm/people", params={"stage": "nope-stage"}).json()) == 0
     due = httpx.get(base + "/crm/people", params={"due_before": "2030-01-01", "limit": 500}).json()
     assert all(p["next_step_date"] for p in due)
@@ -263,6 +266,17 @@ def test_mcp_door(service):
     from mcp.client.streamable_http import streamable_http_client
     from mcp.shared._httpx_utils import create_mcp_http_client
 
+    def result(res):
+        """A list return arrives as one text block per item (and structured under 'result')."""
+        assert not res.is_error, res.content
+        sc = res.structured_content
+        if isinstance(sc, dict) and set(sc) == {"result"}:
+            return sc["result"]
+        if sc is not None:
+            return sc
+        items = [json.loads(c.text) for c in res.content]
+        return items[0] if len(items) == 1 else items
+
     async def go():
         client = create_mcp_http_client(headers={"X-Soda-Token": token})
         async with streamable_http_client(base + "/mcp", http_client=client) as (r, w):
@@ -270,16 +284,18 @@ def test_mcp_door(service):
                 await s.initialize()
                 tools = sorted(t.name for t in (await s.list_tools()).tools)
                 assert tools == ["crm_person", "crm_search", "page", "recall", "what_is_true"]
-                res = await s.call_tool("recall", {"query": "how are hub cards sent", "k": 3})
-                hits = json.loads(res.content[0].text) if res.content else res.structured_content
-                if isinstance(hits, dict) and "result" in hits:
-                    hits = hits["result"]
+                hits = result(await s.call_tool("recall", {"query": "how are hub cards sent", "k": 3}))
                 assert len(hits) == 3 and "path" in hits[0]
-                res = await s.call_tool("what_is_true", {"topic": "hub cards"})
-                out = res.structured_content or json.loads(res.content[0].text)
+                out = result(await s.call_tool("what_is_true", {"topic": "hub cards"}))
                 assert out["pages"] and out["current"]["path"]
-                res = await s.call_tool("crm_search", {"q": "a", "limit": 2})
-                print("\n[mcp] tools", tools, "| recall", hits[0]["path"], "| what_is_true", out["current"]["path"])
+                pg = result(await s.call_tool("page", {"path": hits[0]["path"]}))
+                assert pg["body"]
+                people = result(await s.call_tool("crm_search", {"q": "a", "limit": 2}))
+                assert len(people) == 2 and "id" in people[0]
+                one = result(await s.call_tool("crm_person", {"id": people[0]["id"]}))
+                assert one["id"] == people[0]["id"]
+                print("\n[mcp] tools", tools, "| recall", hits[0]["path"], "| what_is_true", out["current"]["path"],
+                      "| crm_search", ascii(people[0]["name"]))
                 return tools
 
     anyio.run(go)
