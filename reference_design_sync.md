@@ -17,4 +17,17 @@ System lives in `~/tundra-design/sync/` (repo alesod23/tundra-design, Caleb = Co
 - Git on this laptop can stall for an hour (task-land push 2026-09-30 00:17); all dsync git calls have a 120 s timeout and GIT_TERMINAL_PROMPT=0.
 - His Tundra Pitch Deck project = f56e8ca4; Caleb's decks were stacked into its `caleb/` folder on 2026-09-28 as a one-off copy (not live). Humanitas deck: `Humanitas pitch.dc.html`, generator in the session scratchpad; he edits it in the web UI too, so always rebase on the mirror before pushing.
 
+- **The BOX can read the mirror since 2026-10-01.** Clone at `/home/da/tundra-design`, read-only deploy
+  key `~/.ssh/tundra_design_ed25519` behind SSH host `github-tundradesign` (he installed the public key
+  himself; fingerprint `SHA256:oh8nh7VX02q+jkAFC80abPh+NT6PFDt2xOIs6U579i4`). Pull to refresh; never
+  push, the mirror has exactly one writer and it is the Chrome extension on his laptop. Before this the
+  box was blind to every deck, and a session repeated a month-old "Claude Design cannot be read by any
+  tool" at him: see [[feedback_design_files_live_in_the_repo_not_in_his_export]].
+- **The decks are bilingual in one file.** `Humanitas pitch.dc.html` carries every string twice, as
+  `<span lang="it">` and `<span lang="en">`, with a React language toggle. So de-branding one file fixes
+  the Italian and the English at once. The client name lives in THREE places, not two: the cover eyebrow,
+  the PoC footer (both in each language), and the localStorage key `tundra-humanitas-lang` used by the
+  toggle. The third is invisible in the PDF, which is why cosmetic work on an exported PDF is the wrong
+  layer.
+
 Related: [[reference_design_lib]], [[feedback_designsync_pull_before_write]], [[reference_window_watch]].
