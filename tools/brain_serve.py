@@ -336,19 +336,30 @@ class TokenAuth:
             return
         await self.app(scope, receive, send)
 
+    # routes a READ-ONLY token (SODA_TOKEN_RO, the public door through Tailscale Funnel) may use: every GET, recall,
+    # and the MCP endpoint (its tools only read); never /crm/put, /crm/events, /brain/reindex
+    RO_POST = {"/brain/recall", "/mcp", "/mcp/"}
+
     @staticmethod
     def allowed(scope) -> bool:
-        if scope.get("path") == "/health" and scope.get("method") == "GET":
+        path, method = scope.get("path") or "", scope.get("method") or ""
+        if path == "/health" and method == "GET":
             return True
+        headers = {k: v for k, v in (scope.get("headers") or [])}
         client = scope.get("client")
-        if client and client[0] in LOOPBACK:
+        # loopback is exempt only when nothing was proxied to it (2 Oct: Funnel/serve hand the request over locally and
+        # carry the real client in X-Forwarded-For; such a request is public and needs a token)
+        if client and client[0] in LOOPBACK and b"x-forwarded-for" not in headers and b"tailscale-user-login" not in headers:
             return True
-        expected = os.environ.get("SODA_TOKEN")
-        if not expected:
+        given = headers.get(b"x-soda-token", b"").decode("latin-1")
+        if not given:
             return False
-        for k, v in scope.get("headers") or []:
-            if k == b"x-soda-token":
-                return v.decode("latin-1") == expected
+        expected = os.environ.get("SODA_TOKEN")
+        if expected and given == expected:
+            return True
+        ro = os.environ.get("SODA_TOKEN_RO")
+        if ro and given == ro:
+            return method in ("GET", "HEAD") or (method == "POST" and path in TokenAuth.RO_POST)
         return False
 
 
