@@ -10,7 +10,7 @@ metadata:
 
 Caleb booked his US flights on 2026-09-28 (WhatsApp 18:53-18:56 UTC, "Ok booking now then" / "last check" image /
 Alessandro "Yup. Good for me."); Alessandro confirmed "officially booked" on 2026-09-30. About EUR 800 total.
-What is known in TEXT: Orlando -> San Francisco on **Fri Oct 16** (from MCO). His way into Florida (first proposal:
+Orlando -> San Francisco: **Delta DL504+DL2267, Fri Oct 16, MCO 09:50 -> SFO 15:54, 1 stop, Main Basic** (his booking screenshot, sent 2026-10-01). Google's normal list omits that flight: `state/booked_flight_sweep.py` finds it with the airline filter (tfs leg field 6 = 'DL'), EUR 338 on Oct 1. His way into Florida (first proposal:
 land Miami Oct 11 18:50) and his flight home from SF (around Oct 25-26, Frankfurt) changed several times and the
 final version exists only in WhatsApp images, which no tool can read (the wa-daemon stores `[image]`, no media).
 
@@ -20,5 +20,5 @@ known). `build_us_tour_board.py` reads it: every scenario uses Caleb's Orlando->
 (day = yellow, flight = green), cards get `compMatch`, `meta.booked` feeds the multi-select chips on the results
 page (shared `app/server.js`, works for any trip with `meta.booked`). When Alessandro gives the booking photo or the
 flight numbers: fill date / dep (24h) / carrier / from / to in that JSON, rebuild, run `state/qa_us_tour.py`.
-Never guess his flights from the chat: I once believed a photo showed them and it was board card #115.
+Each whole trip has a 'Fly with Caleb from here' switch (build precomputes `compSwap`, page stores `swaps.json`); the picker writes `booked-pick.json` and re-runs the build. Never guess his flights from the chat: I once believed a photo showed them and it was board card #115.
 Related: [[feedback-trippy-companion-mirrors-until-split]].
