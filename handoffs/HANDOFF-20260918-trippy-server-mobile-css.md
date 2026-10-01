@@ -1,0 +1,3 @@
+# Handoff (box -> laptop): merge the phone stylesheet into the canonical travel-search/v2/app/server.js
+
+On 2026-09-18 21:05 the box copy of `travel-search/app/server.js` got (a) a `<meta name="viewport">` at the start of STYLE and (b) a `@media (max-width:760px)` block before `</style>` (one card per row, 16 px text, 46 px full-width buttons, why-text always visible, results rows wrap, sticky refresh bar). His complaint: "il formato non va per niente bene per il telefono... troppo piccoli". Diff: `HANDOFF-20260918-trippy-server-mobile-css.diff` (same folder). The laptop is the writer of server.js (it arrives on the box by the tar push), so apply the same diff there or the next push reverts the phone layout. Box backup: `server.js.bak-20260918-mobile`.

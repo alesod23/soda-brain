@@ -1,0 +1,9 @@
+# Handoff (box -> DA SYSTEM laptop/cloud session): evaluate the getedgehq "people-search" Agent Skill
+
+His instruction (Telegram 18 Sept 19:15): "Can we send this capability to the system cloud session and then have it review it and see where it can complement some of our tools (whether as a backup or some other thing around it)? Just in case, install it and test it out. Let's understand if we want to implement it in some of our workflows and it should then use its UI to ask me questions on it. Make sure it actually asks me the question on the UI of Claude Code. And I get notified for it."
+
+Link he sent (LinkedIn safety redirect to): http://getedge.cc/skills/people-search/ · repo https://github.com/getedgehq/skills (23 Agent Skills, Apache-2.0, 2 stars). Install per README: `npx skills add getedgehq/skills --skill people-search` (or copy the folder to ~/.claude/skills/). Claim: "ranks candidates against briefs using public sources; no LinkedIn access required"; landing page adds "an authenticated search session or a connected provider" and optional anonymous analytics.
+
+Steps: (1) read SKILL.md + all files first, list network calls, credentials, analytics, browser/LinkedIn use; (2) install laptop-side (skills sync to the box hourly), test on 2-3 real briefs (Lombardy clinical engineering directors from Raw/09-21 AIIC convegno note; Bay Area HTM directors; Estonian hospital CTOs) and compare with GTM board research agents and coattio; (3) decide complement: candidate generation for a board, ranking pass over board.json, fallback when LinkedIn blocks the box (HTTP 999), recruiting, or none; (4) AskUserQuestion to him for the decisions, after notifying him; (5) report + memory reference_getedge_people_search_skill; if adopted install on both machines.
+
+Sent as a SendMessage to the DA SYSTEM session too.

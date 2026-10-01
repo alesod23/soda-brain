@@ -64,7 +64,8 @@ if [[ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='soda'"
     log "role soda created"
 fi
 # the env file is the source of truth for the password (safe to re-run after a rotation)
-sudo -u postgres psql -qv pw="$DB_PW" -c "ALTER ROLE soda PASSWORD :'pw'"
+# psql interpolates :'var' only in scripts, never in -c (first run, 2 Oct: "syntax error at or near :"), so feed it on stdin
+printf "ALTER ROLE soda PASSWORD :'pw';\n" | sudo -u postgres psql -q -v pw="$DB_PW" -f -
 if [[ $(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='soda'") != "1" ]]; then
     sudo -u postgres psql -qc "CREATE DATABASE soda OWNER soda"
     log "database soda created"

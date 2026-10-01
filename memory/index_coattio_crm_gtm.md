@@ -7,7 +7,7 @@ metadata:
 
 # coattio / CRM / GTM (sub-index, moved out of MEMORY.md 2026-09-28)
 
-- [HANDOFF 2026-09-28: the GTM AGENT (campaigns going, follow-ups current, hub items not waiting, tools usable, 2 pings a day)](../../task-land/_system/HANDOFF-20260928-gtm-agent.md) - read it first when he pastes that prompt; campaign.py now stops a CHANNEL not the board and retries transient failures.
+- [HANDOFF 2026-09-28: the GTM AGENT (campaigns going, follow-ups current, hub items not waiting, tools usable, 2 pings a day)](../handoffs/HANDOFF-20260928-gtm-agent.md) - read it first when he pastes that prompt; campaign.py now stops a CHANNEL not the board and retries transient failures.
 - 📡🎙️ [EVENT LOOP + VOICE REVIEW + Ctrl+Alt+S feedback + phone https links (2026-09-27)](reference_event_loop_voice_feedback.md) — every event leaves a ledger line; Events view is optional; never `tailscale serve` on :4137 itself.
 - 🎛️🧭 [CRM vision 2026-09-26 + the Today REVIEW MODE (j/k board, a/s/r/c, ← why pane, corpus hypotheses)](project_crm_review_loop_vision.md) — `review-api.js`, `/review/*`, `review.js`; every sentence on a card becomes a rule; commit = the yes; nightly proposed-vs-sent.
 - 🪟 ["Random terminal windows" = a console task run directly in his session; every scheduled console task goes through a .vbs](reference_interactive_console_tasks_open_windows.md) — GTM-Campaign-Tick did it, closing the window killed ticks (2026-09-25).

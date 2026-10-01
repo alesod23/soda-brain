@@ -31,3 +31,11 @@ Same day, his correction ("more visual ... same colors we use on tg chat ... a n
 the real brand mark (Simple Icons paths in `CHANNEL_LOGO`), colours of the Telegram dots (Gmail red #d93025, LinkedIn
 blue #0a66c2, WhatsApp green #128c4a, Slack purple #611f69), plus one outlined filter button per channel present.
 Lesson: for channels he wants logo + the TG colour everywhere, never a pale text chip. Filed as a hub rule (addrule).
+
+**2026-10-02: one card = one screen + the brief (hub H22).** His words: "not able to see fully the card when I click j or
+k ... fix forever" and "approvals that arrive pre-chewed: what, who, why, my recommendation". Every card is a flex column
+capped at `100dvh - --head-h - --bar-h - 20px` (`.chead` fixed / `.cmid` scrolls / `.cfoot` = verdict buttons + boxes,
+fixed); verified on all 38 cards at a 701 px window. `briefOf()` in server.js gives every card `brief {what, who, why,
+rec}`: a producer's `meta.brief` wins, otherwise derived (sidecar "Chi e'" / instruction sections, critic suggestion,
+"Who:" / "Suggested:" lines). New producers SHOULD send meta.brief. Test gotcha: Claude-in-Chrome tabs are `document.hidden`,
+so smooth scrollIntoView never runs; measure with behavior:'auto' instead of trusting screenshots.
