@@ -22,3 +22,10 @@ metadata:
 sleeps/wakes. The ClaudeBar task now has three triggers: logon, every 5 min indefinitely, and session unlock;
 MultipleInstances IgnoreNew, StartWhenAvailable. A launch while it runs exits at once on the mutex (verified: 1 process
 after a second start). So a dead bar comes back within 5 min with no session involved. Never remove the repeat trigger.
+
+**The ".NET Framework: Unhandled exception ... Cannot process argument transformation on parameter 't'. Cannot convert
+null to type System.DateTime" dialog = claude-bar (fixed 2026-10-02).** `Fmt-Countdown([datetime]$t)` converted its
+argument before the null guard ran; resets_at is null right after a usage window resets, and the throw came from the
+5-min timer handler (unguarded), which WinForms turns into that modal dialog. Now: untyped param, `Fmt-At` for the menu
+times, and every refresh goes through `Refresh-Safe` (try/catch -> `refresh error:` in claude-bar.log). Rule for any
+WinForms .ps1: never type a param that can be null, never call a handler body without try/catch.
