@@ -39,3 +39,11 @@ fixed); verified on all 38 cards at a 701 px window. `briefOf()` in server.js gi
 rec}`: a producer's `meta.brief` wins, otherwise derived (sidecar "Chi e'" / instruction sections, critic suggestion,
 "Who:" / "Suggested:" lines). New producers SHOULD send meta.brief. Test gotcha: Claude-in-Chrome tabs are `document.hidden`,
 so smooth scrollIntoView never runs; measure with behavior:'auto' instead of trusting screenshots.
+
+**2026-10-02: every message card is editable (his "why can i not edit the text there before sending???").** Root cause:
+`gtm-eng/agent/inbound_asks.py chat_card` attached the `wa-send` action only when the draft had no questions for him,
+and built the jid as `<key>@s.whatsapp.net` although these chats are `<lid>@lid` (a send would have gone nowhere).
+Now: `chat_jid(key)` reads the real chatJid from the WA store and every WhatsApp reply carries its send; the 9 open
+wa-drafts were backfilled via hub `/revise` (action with the @lid jid). hub-review `editableOf` falls back to meta.body
+for wa-draft/slack-draft, and `hubedit.py` writes his text into meta.body when a card has no action. Verified: all 17
+open message cards editable. Not verified: a live WhatsApp send to an @lid jid through the hub (daemon send.js accepts @lid).
