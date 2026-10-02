@@ -57,8 +57,12 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   through the Notion MCP (`claude -p --strict-mcp-config`), reads the FULL transcript, interrogates it with
   `MEETING-CONTRACT.md` (next steps, who owes what, people and addresses, dates, deliverables) plus the hints
   (`hints/meeting-loop.md`); writes the step and the origin `notion:<page>` to the CRM; posts cards for owed artifacts.
-- Known weakness (simulation, 1 Oct): keeps one step and drops other dated items; the planned fix is every dated item
-  as an open loop and a card per owed artifact.
+- Since 2 Oct 2026: the reader returns `dated_items` (every commitment: who owes, due, quote, artifact) and
+  `write_loops` records them as `relationship_state.open_loops` with `due` and `origin notion:<page>`; a call clears
+  `reply_owed`; a step the reader or he set after the call is kept (`step_kept`), his own sentence always wins; a
+  booking card closed without an explicit no keeps the call; a call with no email on the row gets a WhatsApp
+  follow-up card. Measured latency live: the card lands 2 minutes after Notion stops editing the note (the note
+  settles 22 to 49 minutes after the call starts).
 
 ## 4. The draft lane (every message to a person)
 
