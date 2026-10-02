@@ -37,6 +37,13 @@ own connectors for Notion, WhatsApp, the Tundra Gmail and Calendar; we help with
 reads soda-brain, task-land and coattio on GitHub with training opted out; it proposes rules by writing a file in
 `rules/inbox/` (`tools/rules_inbox.py`, box cron every 5 min: one hub card, his yes files it with addrule.py).
 
+**2 Oct morning builds (all live, logged in the workplan):** meeting loop records every dated commitment as open
+loops; new people get rows (LinkedIn first touch, proposed rows from WhatsApp and introductions, a `team` list);
+hub hygiene rules in `hub_outdated.py` and a Today that separates what they owe; the start-of-day lane
+(`due_today.py`, task `DA-DueToday` 08:30) with critic blocks for placeholders and attachment claims; instinct's
+WhatsApp proposals read into lane cards (`instinct_inbox.py`, task `DA-InstinctInbox`); `push_again.py` (the
+"push again" ranking); the campaign `bounce_gate` (CRM H43). The NEXT STEPS section of the workplan is the queue.
+
 **Lessons from the build.** `psql -c` does not interpolate `:'var'` (feed it on stdin); `sudo -u da VAR=x cmd` is
 refused by sudoers (use `env`); `2>/dev/null` on an install step hides the reason it died; the vault sync commits an
 agent's files while it works (review = the last commits); Windows Application Control blocks psycopg's binary wheel on
