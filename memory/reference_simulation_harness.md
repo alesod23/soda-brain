@@ -44,6 +44,13 @@ campaign.py:581 / daily.py:180; `send --thread-id` writes no In-Reply-To).
 false "critic lets the signature block through" items (Lff045c4c, E0040). When a sim item contradicts a live ledger
 rule, fix the agent prompt here, not the live system.
 
+**Second night (2 Oct 2026, run `meetings-night`, 4 days, 85 events, balanced mix with 3-4 Notion notes a day via
+`SIM_MIX`):** days 2-4 average 64.6 (72.2, 60.5, 61.5; day 1 was an artifact: a restart left the sandbox meeting
+loop's `listed_at` in the future, fixed by `sim_day.rewind_state`). Harness lesson: a world that keeps earlier truth
+needs delivery keyed by (id, day), or a new run delivers nothing. Live fixes it produced: full inbound mail text to
+the reader (`gmail.py recent --with-body`), WhatsApp follow-ups from meeting notes. Report: MORNING REPORT in
+`task-land/_system/WORKPLAN-20261001-soda-brain.md`.
+
 **Outcome of the first night (1 Oct 2026, 12 simulated days, 170 events):** score 56 (as it was) -> 61 (fixes) -> 60
 uncapped; uncapped (DA_DEPTH=full) cost +86% for no gain: the misses are in the artifact layer (drafts, cards, hub
 hygiene: surface score 32), not in reading. Worst kinds: LinkedIn in, what he sees on the hub, accepts, bookings,

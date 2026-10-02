@@ -158,6 +158,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 ## Known gaps and open questions
 
+- Measured 2 Oct 2026 (simulation `meetings-night`, 4 days, 85 events, days 2-4 average 64.6/100): meeting notes 62
+  (accurate cards, 61 to 202 minutes after the call against the 30 the rule wants), bookings 37, LinkedIn inbound 33,
+  hub surface 33, note-only promises 42. New people met in a note or on WhatsApp often get no CRM row. The learner's
+  71 items are in `~/sim/runs/current/learn.jsonl`; the night's report is in
+  `task-land/_system/WORKPLAN-20261001-soda-brain.md` (MORNING REPORT).
+- Fixed the same night: the reader now receives the full inbound mail text (`gmail.py recent --with-body`, 4,000
+  chars) instead of the Gmail snippet; a call with no email on the row gets a WhatsApp follow-up card.
 - `due_today.py` is not scheduled; the meeting loop's open-loops change is designed, not built.
 - Hub hygiene scored 32/100 in the simulation: cards stay open after he did the thing or the event passed.
 - The LinkedIn accept tick and `li_restore.py` "needs you" cards: the sign-in window must be opened by the system first.

@@ -2,7 +2,9 @@
 
 The system keeps its state in a few hundred files spread over two machines, one Google Drive folder and a handful of cloud services; there is no database yet. Most state is JSON or JSONL inside the task-land repo (synced by git), the CRM is one 5.7 MB JSON file on the laptop with a read replica on the box, the memory is a git repo both machines write, and the message stores (WhatsApp, LinkedIn, Sent mail) are JSONL files that travel through the Drive `DA/` folder or do not travel at all. This document lists each domain as a table, then says for each kind of fact which copy is the truth, then lists the stores with no backup, then the planned Postgres on the box.
 
-Last verified: 2026-10-01 (from the inventories of that day)
+Last verified: 2026-10-01 (from the inventories of that day); 2026-10-02: the CRM activity lines of inbound mail now
+carry `full` (the mail text, 4,000 chars) next to `detail`, and `crm.json` is mirrored into Postgres `soda.crm` on the
+box on every save (versions in `crm.doc_versions`).
 
 Conventions: laptop paths start with `C:/Users/Alessandro/`, box paths with `/home/da/`. "mirror" = the robocopy or rsync copy that the git-sync scripts keep under `task-land/_system/laptop-tools/<name>/` or `_system/box-tools/<name>/` (secrets excluded; never run from a mirror). Sizes are from 2026-10-01. "Personal data" = names, emails, phones or message texts of third parties.
 
