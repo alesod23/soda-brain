@@ -116,7 +116,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   (card), auto-replies are not replies, "remove me" suppresses for 12 months.
 - The daily US campaign: 30 researched a day on `boards/daily-<date>`, the first 10 fire at 16:55 (task
   DailyCampaign-Fire) within the caps of `_system/outreach/ledger.json`; subject fixed, one provider sentence, named
-  people not offices; SMTP check before any draft.
+  people not offices; SMTP check before any draft. The research round (task DailyCampaign-Research, `supervise.py`,
+  one Opus worker x 80 min) is the most expensive job on the plan (2 Oct: 659 calls, 185 M cached tokens, ~3% of
+  the week per day); PAUSED by his word until 2026-10-07 through `daily-campaign/research-pause.json`, boards
+  meanwhile built from the pool backlog (361 people, all drafted on 2 Oct).
 - LinkedIn session: `agent/li_restore.py` (exit 2 = he must sign in; the sign-in window must be opened by the system
   before any "needs you" card), `linkedin-poll/poll.py` (inbox every 15 min), the accept tick in monitor.js.
 
