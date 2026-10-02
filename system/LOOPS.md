@@ -73,6 +73,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - His verdict: `N dsend` sends now, `N no` plus a sentence rewrites, `N change: ...` edits; Quick Claude Alt+Win+J
   then D on the laptop; the hub-review page on the phone. Attachments are his to add in Gmail.
 - A draft is never deleted by the system; a message he sent himself closes the card (reconcile sees Sent).
+- **Attachments survive a critic rewrite (box, 2026-10-01).** A rewrite builds a NEW Gmail draft from the critic's
+  body and deletes the old one, so anything attached was silently lost and the mail still promised it: the Galbiati
+  mail reached the card saying "in allegato trova una breve presentazione" with nothing attached. They are declared in
+  the sidecar now, `attachments: [_system/drafts/attachments/<file>]`, re-attached by `register.py` on every rewrite,
+  and a declared file that is missing stops the rewrite instead of shipping the promise. The line above, "attachments
+  are his to add in Gmail", is no longer the whole truth: the lane attaches too, and `gmail.py update-draft` is the
+  way to change a body WITHOUT losing one.
+- **`answered_elsewhere` has an event floor (box, 2026-10-01).** It used to call a draft answered when ANY later
+  message of his existed on the thread, so a post-call follow-up written three days after his own scheduling reply was
+  killed before it ever reached a card. When the sidecar names a source event (`source: ... (YYYY-MM-DD)`) only a
+  message sent after THAT counts. The Martina case it was built for is unaffected: no event, no floor.
 
 ## 5. The approval hub and the review page
 
@@ -84,6 +95,16 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - Hygiene: `task-land/_system/hub_outdated.py` (box cron every 10 min) closes cards made moot by later events; the
   23:00 digest (`triage/eod_sweep.py`) lists every open card; the 22:12 pre-sweep (savior) closes what he already did.
 - Rule H15 (hub): he ticked the line himself = the card closes.
+- **The review page, three fixes of 2026-10-01, all client side in `page.html` (backups beside it).** A card he
+  committed a CHANGE on was frozen (`ST.queued`) and had every button hidden, so (a) a second thought had nowhere to
+  go and ended up in the next commit's free-text SYSTEM box, detached from its card; (b) the freeze never lifted when
+  the revision came back, which left two finished mails undecidable for five hours; (c) a text he had rewritten on the
+  page was transmitted only with a YES, so a session asked for a change worked on the old body while he assumed his
+  version had been seen. Now: a queued card keeps the CHANGE button only, the freeze lifts by comparing a snapshot of
+  the card content taken at commit, and his edit rides on a change as `his_body` in the queue entry with a line in the
+  Telegram message saying the base is his version. Filed as H20 and H21 in `HUB-CARD-CONTRACT.md`.
+- **Still open (H21):** the system-wide feedback box takes no images, and he reviews on a phone where a screenshot is
+  the fastest way to show what is wrong.
 
 ## 6. Campaigns and boards (GTM engine)
 
