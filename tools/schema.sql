@@ -295,7 +295,8 @@ CREATE INDEX IF NOT EXISTS hub_card_chunks_embedding_hnsw ON hub.card_chunks USI
 -- items (ranked by the same score, status says so): "did I already do this?".
 CREATE OR REPLACE FUNCTION brain.match_event(q text, q_emb vector(384), k int DEFAULT 8, include_done boolean DEFAULT false)
 RETURNS TABLE (
-    kind text, id text, parent_id text, title text, text text, status text, due date, score double precision
+    kind text, id text, parent_id text, title text, text text, status text, due date, score double precision,
+    sim double precision   -- cosine similarity of the vector leg (NULL without a query vector): the "strong hit" gauge
 )
 LANGUAGE sql STABLE AS $$
 WITH params AS (
@@ -334,10 +335,11 @@ fused AS (
 ),
 ranked AS (                    -- k per kind: 641 people never crowd the to-dos out of the answer
     SELECT c.kind, c.id, c.parent_id, c.title, c.text, c.status, c.due, f.score::double precision AS score,
+           CASE WHEN q_emb IS NULL OR c.embedding IS NULL THEN NULL ELSE (1 - (c.embedding <=> q_emb))::double precision END AS sim,
            row_number() OVER (PARTITION BY c.kind ORDER BY f.score DESC, c.id) AS rk
     FROM fused f JOIN cand c ON c.kind = f.kind AND c.cid = f.cid
 )
-SELECT kind, id, parent_id, title, text, status, due, score
+SELECT kind, id, parent_id, title, text, status, due, score, sim
 FROM ranked WHERE rk <= (SELECT k FROM params)
 ORDER BY kind DESC, score DESC;   -- 'todo' rows first, then 'person'
 $$;

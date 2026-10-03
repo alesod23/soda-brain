@@ -130,6 +130,10 @@ def close_card(cid: str, source: str, quote: str, why: str, dry: bool) -> dict:
         return {"applied": False, "error": str(e)[:160]}
 
 
+def apply_verdict(verdict: dict, source: str, dry: bool) -> dict:
+    return apply(verdict, source, dry)
+
+
 def apply(verdict: dict, source: str, dry: bool) -> dict:
     """done -> pipeline.py tick <id> --evidence; moved -> pipeline.py redate; a hub card -> /close with the evidence.
     Nothing else writes a task file."""
@@ -149,6 +153,38 @@ def apply(verdict: dict, source: str, dry: bool) -> dict:
         return {"applied": False, "error": (r.stderr or r.stdout)[-200:]}
 
 
+STRONG = float(os.environ.get("MATCH_STRONG", "0.84"))      # cosine similarity (e5-small) a hit needs before the judge runs
+TICK_TODOS = os.name == "nt" or os.environ.get("TODO_TICK") == "1"   # task files are the laptop's; the box only closes cards
+
+
+def on_event(text: str, source: str, apply: bool = True, k: int = 6, dry: bool = False, model: str = "opus") -> dict:
+    """The one hook every loop calls on an incoming event: lookup first (no model); the judge only on a strong hit;
+    a to-do ticked through pipeline.py (laptop) and a hub card closed through /close with the evidence (no verdict,
+    nothing executed). Returns what happened; every outcome is a line in todo-match.jsonl."""
+    text = (text or "").strip()
+    if len(text) < 20:
+        return {"skipped": "too short"}
+    hits = match(text, k)
+    strong = [h for h in hits if h.get("kind") in ("todo", "card") and h.get("status") == "open" and (h.get("sim") or 0) >= STRONG]
+    top = max((h.get("sim") or 0) for h in hits) if hits else 0
+    if not strong:
+        log_line(event="lookup", source=source, hits=len(hits), top_sim=round(top, 3), judged=False)
+        return {"hits": len(hits), "top_sim": top, "judged": False}
+    try:
+        verdicts = judge(text, source, strong, model)
+    except Exception as e:
+        log_line(event="judge-failed", source=source, error=str(e)[:200]); return {"error": str(e)[:200]}
+    out = []
+    for v in verdicts:
+        if v.get("kind") == "todo" and v.get("verdict") in ("done", "moved") and not TICK_TODOS:
+            res = {"applied": False, "proposed": "tick on the laptop"}
+        else:
+            res = apply_verdict(v, source, dry or not apply) if v.get("verdict") != "none" else {"applied": False}
+        log_line(event="judged", source=source, id=v["id"], kind=v.get("kind"), verdict=v.get("verdict"), due=v.get("due"), quote=v.get("quote"), why=v.get("why"), **{kk: res[kk] for kk in res if kk != "ok"})
+        out.append(dict(v, **res))
+    return {"hits": len(hits), "top_sim": top, "judged": True, "verdicts": out}
+
+
 def log_line(**e):
     e = dict(at=datetime.now(timezone.utc).isoformat(timespec="seconds"), **e)
     try:
@@ -166,7 +202,12 @@ def main(argv=None) -> int:
     j = sub.add_parser("judge"); j.add_argument("--text", required=True); j.add_argument("--source", default="manual")
     j.add_argument("--k", type=int, default=8); j.add_argument("--apply", action="store_true"); j.add_argument("--dry", action="store_true")
     j.add_argument("--model", default="opus")
+    e = sub.add_parser("event", help="the loop hook: lookup, judge on a strong hit, apply"); e.add_argument("--text", required=True); e.add_argument("--source", default="manual")
+    e.add_argument("--text-file", help="read the event text from a file instead"); e.add_argument("--dry", action="store_true"); e.add_argument("--model", default="opus")
     a = ap.parse_args(argv)
+    if a.cmd == "event":
+        txt = Path(a.text_file).read_text(encoding="utf-8", errors="replace") if a.text_file else a.text
+        print(json.dumps(on_event(txt, a.source, apply=True, dry=a.dry, model=a.model), ensure_ascii=False)); return 0
     try:
         sys.stdout.reconfigure(encoding="utf-8")   # card heads carry emoji; the laptop console is cp1252
     except Exception:
