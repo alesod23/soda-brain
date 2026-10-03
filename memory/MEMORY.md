@@ -10,6 +10,7 @@
 - 🪟🚫 [NO console window ever in front of him: tasks through run-hidden.vbs, CREATE_NO_WINDOW, window_lint.py after every new task](reference_window_watch.md) — the recorder names who opened each window (2026-09-28).
 - 📦✋ [Never scp/rm/edit a file inside a synced repo on the box by hand](feedback_never_touch_synced_repo_on_box_by_hand.md) — the box sync committed my deletion on both machines (2026-09-28).
 - 📌 ["Make this a rule" = write NOW](feedback_rule_requests_are_binding.md)
+- ✉️⚰️ [Un hard bounce e' definitivo: indirizzo morto, mai un altro invio](feedback_hard_bounce_is_final_never_resend.md) — 3 avvisi del Mail Delivery Subsystem = UN invio che Gmail ritenta per 48h; H96, e nessuno in gtm-eng legge ancora i bounce (2026-10-03).
 - 🔄 [THE RULE LOOP: ledgers, compiled skills, observers, decisions.jsonl, system check](reference_rule_loop.md) — canonical `task-land/_system/RULE-LOOP.md`; his only inputs are five sentences; add rules with addrule.py the same turn (2026-09-24).
 - 🧠 [Design on merit, not his off-hand numbers](feedback_design_on_merit_not_his_offhand_numbers.md) — no arbitrary caps, Haiku never, Opus where it decides, read the reference he names (Kortyx) before designing; "smart, non-blocking, not sucky" (2026-09-24).
 - 🔁 ["Iterative" = one sentence on the spot, never a review pass](feedback_iterative_means_on_the_go_flag.md) — backlogs are separate, optional cleanup; never call them the iterative part (2026-09-24). — file + index line, same turn.
