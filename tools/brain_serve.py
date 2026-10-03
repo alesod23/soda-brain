@@ -87,6 +87,15 @@ def recall(query: str, k: int = 8) -> list[dict]:
     return jsonable(res)
 
 
+def match_event(text: str, k: int = 8, include_done: bool = False) -> list[dict]:
+    """S10: the nearest open to-dos and CRM people for an event text (brain.match_event, RRF over todo.chunks and
+    crm.people_chunks). include_done also returns done to-dos, status says so."""
+    k = max(1, min(int(k or 8), 50))
+    emb = query_embedding(text)
+    res = rows("SELECT * FROM brain.match_event(%s, %s::vector, %s, %s)", [text, emb, k, bool(include_done)])
+    return jsonable(res)
+
+
 def page(path: str) -> dict | None:
     r = one("SELECT path, kind, title, description, type, since, superseded_by, checked_last, sha, body, "
             "updated_at, deleted_at FROM brain.pages WHERE path = %s", [path])
@@ -304,6 +313,12 @@ def build_mcp():
     def _what_is_true(topic: str) -> dict:
         return what_is_true(topic)
 
+    @srv.tool(name="match_event", description="An event text (a mail, a calendar change, a meeting note, a proposed "
+              "step) -> the nearest OPEN to-dos (task-land tasks and sub-items, kind 'todo') and CRM people (kind "
+              "'person'), with scores. Use before proposing a step: it may already be on his to-do.")
+    def _match_event(text: str, k: int = 8, include_done: bool = False) -> list[dict]:
+        return match_event(text, k, include_done)
+
     @srv.tool(name="page", description="A whole brain page by path (e.g. memory/feedback_approvals_are_pings.md).")
     def _page(path: str) -> dict:
         return page(path) or {"error": "not found", "path": path}
@@ -338,7 +353,7 @@ class TokenAuth:
 
     # routes a READ-ONLY token (SODA_TOKEN_RO, the public door through Tailscale Funnel) may use: every GET, recall,
     # and the MCP endpoint (its tools only read); never /crm/put, /crm/events, /brain/reindex
-    RO_POST = {"/brain/recall", "/mcp", "/mcp/"}
+    RO_POST = {"/brain/recall", "/brain/match", "/mcp", "/mcp/"}
 
     @staticmethod
     def allowed(scope) -> bool:
@@ -392,6 +407,12 @@ def build_app(host: str, no_model: bool):
         if not body.get("query"):
             raise HTTPException(400, "query required")
         return recall(body["query"], body.get("k", 8))
+
+    @app.post("/brain/match")
+    def _match(body: dict):
+        if not body.get("text"):
+            raise HTTPException(400, "text required")
+        return match_event(body["text"], body.get("k", 8), body.get("include_done", False))
 
     @app.get("/brain/page")
     def _page(path: str = Query(...)):
