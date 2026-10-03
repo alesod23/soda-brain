@@ -2,6 +2,7 @@
 
 - 🧠🚪 [THE SODA BRAIN (2 Oct 2026): this repo, the system map in `system/`, the Postgres+pgvector door on the box (:4150, Funnel), the CRM mirrored, instinct as orchestrator](reference_soda_brain.md) — update `system/` in the same turn as any service, port, job, store or rule changes; tokens in `~/.env/soda.env`, never printed.
 
+- 💸🛑 [A cap he gives is the number to USE, never a line to stop a point before](feedback_cap_means_use_it.md) — "cap 92" and I stopped at 91: "No. No. Fuck." Check budget.py between steps, stop only at the cap (2026-10-03).
 - 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
 
 ## Rules that bite first
