@@ -132,7 +132,9 @@ cd C:/Users/Alessandro/soda-brain/tools
 C:/Users/Alessandro/.venvs/brain/Scripts/python -m pytest -p no:cacheprovider -q tests
 ```
 
-`tests/test_index.py` and `tests/test_crm_diff.py` need no database. `tests/test_integration.py` needs one:
+`tests/test_index.py`, `tests/test_crm_diff.py` and `tests/test_monitor.py` need no database.
+`tests/test_monitor_pg.py` runs the monitor layer's migration (`migrations/001_brain_events.sql`, SKELETON, not
+applied on the box) and `monitor.store.PgStore` against `SODA_TEST_DSN` or `pgserver`; design in `docs/MONITOR-LAYER.md`. `tests/test_integration.py` needs one:
 `SODA_TEST_DSN`, else Docker Desktop (`pgvector/pgvector:pg16` on 55432, removed afterwards), else the
 `pgserver` package (embedded Postgres 16 with pgvector, test-only, not in `requirements.txt`), else it skips.
 It indexes `memory/` with the real model, starts the service on 127.0.0.1:4150, pushes the laptop's real
