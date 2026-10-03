@@ -173,9 +173,19 @@ def crm_put(source: str, at: str | None, sha: str | None, doc: dict) -> dict:
             existing = conn.execute("SELECT id FROM crm.doc_versions WHERE sha = %s", [sha]).fetchone()
             if existing:
                 return {"ok": True, "version": existing["id"], "unchanged": True}
-            version = conn.execute(
-                "INSERT INTO crm.doc_versions (sha, source, received_at, doc) VALUES (%s, %s, coalesce(%s, now()), %s) "
-                "RETURNING id", [sha, source or "unknown", at, Jsonb(doc)]).fetchone()["id"]
+            # Retention (4 Oct 2026, docs/RETENTION.md): the whole 6 MB document is kept ONCE A DAY (the day's first
+            # distinct save); every save still updates the per-record tables below, which hold the real history.
+            # Before this, 1,334 whole documents (2.26 GB) accumulated in three days.
+            today = conn.execute("SELECT id FROM crm.doc_versions WHERE received_at::date = (coalesce(%s::timestamptz, now()))::date "
+                                 "ORDER BY received_at DESC LIMIT 1", [at]).fetchone()
+            if today:
+                version = today["id"]
+                conn.execute("UPDATE crm.doc_versions SET sha = %s, source = %s, received_at = coalesce(%s::timestamptz, now()), doc = %s WHERE id = %s",
+                             [sha, source or "unknown", at, Jsonb(doc), version])    # the day's snapshot = the newest save of the day
+            else:
+                version = conn.execute(
+                    "INSERT INTO crm.doc_versions (sha, source, received_at, doc) VALUES (%s, %s, coalesce(%s, now()), %s) "
+                    "RETURNING id", [sha, source or "unknown", at, Jsonb(doc)]).fetchone()["id"]
 
             split = crm_diff.split_doc(doc)
             changed_n: dict[str, int] = {}
