@@ -14,6 +14,7 @@
 - 🧹➡️ [Una regola vale anche sugli artefatti GIA' esistenti](feedback_standing_instruction_becomes_work_now.md) — "tutto da Tundra" (22 set) e tre draft sono rimasti in cdtm finche' non l'ha chiesto lui; e una domanda parcheggiata in una pagina non e' una domanda fatta (2026-09-23).
 - 🏠 [L'output va DENTRO il sistema che possiede quel lavoro](feedback_output_goes_into_the_owning_system.md) — viaggi in trippy, persone nel CRM, board in gtm-eng, decisioni nella hub; mai l'ennesima pagina usa-e-getta. Nel dubbio chiediglielo su TG PRIMA di costruire (2026-09-20).
 - ⌨️ [SHORTCUTS.md = master list](feedback_shortcuts_master_file.md) — update same turn for any hotkey/alias/skill.
+- 🧩🔎 [Edge MCP + prompt nudge, box e laptop dal 2026-10-03](reference_edge_mcp.md) — prima di un NUOVO tipo di task chiedi a Edge se esiste una skill da usare come base, poi confrontala con le locali; wired in `/home/da/.mcp.json` perche' il savior non puo' lanciare la CLI claude; trovare un candidato e' gratis, adottarlo richiede ancora il test che nel 2026-09-18 la loro people-search ha perso.
 - 🧩 [Skills on BOTH machines](feedback_skills_install_on_both_machines.md) — laptop + `/home/da/.claude/skills/`.
 - 🖥️ [Startup opens NOTHING](feedback_laptop_startup_clean.md) · [power states](reference_laptop_power_states.md) · [16 GB, Windows sees 11.7](reference_laptop_memory_pressure.md).
 - ↩️ ["nvm" cancels previous message](feedback_nvm_cancels_previous_message.md).
