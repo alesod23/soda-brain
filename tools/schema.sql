@@ -293,6 +293,7 @@ CREATE INDEX IF NOT EXISTS hub_card_chunks_embedding_hnsw ON hub.card_chunks USI
 -- An event (a mail, a calendar change, a Notion note, a verdict) finds the nearest open to-dos and CRM people:
 -- the same RRF as brain.search over todo.chunks and crm.people_chunks. include_done = true also returns done
 -- items (ranked by the same score, status says so): "did I already do this?".
+DROP FUNCTION IF EXISTS brain.match_event(text, vector, int, boolean);   -- the row type grew (sim, 3 Oct): a plain REPLACE refuses
 CREATE OR REPLACE FUNCTION brain.match_event(q text, q_emb vector(384), k int DEFAULT 8, include_done boolean DEFAULT false)
 RETURNS TABLE (
     kind text, id text, parent_id text, title text, text text, status text, due date, score double precision,
