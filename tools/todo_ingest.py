@@ -1,0 +1,311 @@
+#!/usr/bin/env python3
+"""todo_ingest.py: the to-dos become rows of the brain (S10 phase 1, the mirror; his word 3 Oct 2026: "it's going
+to be my brain"). task-land `Tasks/{active,inbox,waiting,archive}/*.md` -> todo.items (+ a row per sub-checkbox as
+<slug>#<n>), todo.history on every change, todo.links (person, hub card, parent), todo.chunks embedded with the
+index model; crm.people -> crm.people_chunks (one embedded chunk per person). Runs at the end of brain_index.run_index
+on the da-brain-index timer (same process, the model already loaded), or by hand:
+
+    todo_ingest.py [--dry-run] [--stats] [--tasks DIR]
+
+Idempotent: a file whose sha is unchanged touches nothing. Done is a state with evidence, never a delete: a file that
+vanished from task-land gets deleted_at (history says so) and comes back when the file does. Nothing here writes a
+task file: phase 2 turns the direction around.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Callable
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import brain_index as bi  # noqa: E402
+
+DIRS = ("active", "inbox", "waiting", "archive")
+SUB_RE = re.compile(r"^\s*- \[( |x|X)\]\s*(.*?)\s*$")
+STATUSES = ("open", "done", "cancelled", "parked")
+FIELDS = ("parent_id", "title", "body", "project", "bucket", "status", "stage", "due", "surface_on", "contact_id",
+          "hub_card", "source", "origin_path", "sha", "created_at", "done_at", "done_evidence", "data")
+DATA_KEYS = ("tags", "hub_cards", "stage_note", "picked_at", "picked_by", "picked_auto", "ready_at", "migrated_to_crm",
+             "crm_url", "parent", "call_step", "flush_done", "completed", "dir")
+
+
+def tasks_root() -> Path:
+    env = os.environ.get("TASKLAND")
+    if env:
+        return Path(env)
+    return Path(bi.BOX_TASKLAND) if os.name != "nt" else Path.home() / "task-land"
+
+
+def _sha(s: str) -> str:
+    return hashlib.sha1(s.encode("utf-8")).hexdigest()
+
+
+def _dt(v):
+    """A frontmatter date or datetime -> aware datetime (midnight UTC for a bare date), else None."""
+    if not v:
+        return None
+    s = str(v).strip().strip('"').strip("'")
+    try:
+        d = datetime.fromisoformat(s.replace("Z", "+00:00"))
+        return d if d.tzinfo else d.replace(tzinfo=timezone.utc)
+    except ValueError:
+        d = bi._as_date(s)
+        return datetime(d.year, d.month, d.day, tzinfo=timezone.utc) if d else None
+
+
+def rows_of(file: Path, root: Path) -> list[dict]:
+    """One task file -> the item row followed by its sub-item rows."""
+    text = file.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
+    meta, body = bi.parse_frontmatter(text)
+    slug = file.stem
+    status = str(meta.get("status") or "open").strip().lower()
+    if status not in STATUSES:
+        status = "open"
+    notes, subs = [], []
+    for ln in body.split("\n"):
+        m = SUB_RE.match(ln)
+        if m:
+            subs.append((m.group(1).lower() == "x", m.group(2)))
+        elif not subs:            # notes sit before the sub-checklist
+            notes.append(ln)
+    notes_txt = "\n".join(notes).strip()[:4000]
+    data = {k: meta[k] for k in DATA_KEYS if meta.get(k) not in (None, "", {})}
+    data["dir"] = file.parent.name
+    done_at = _dt(meta.get("completed")) if status in ("done", "cancelled") else None
+    item = {
+        "id": slug, "parent_id": None, "title": str(meta.get("title") or slug).strip(), "body": notes_txt,
+        "project": meta.get("project") or None, "bucket": meta.get("bucket") or None, "status": status,
+        "stage": meta.get("stage") or None, "due": bi._as_date(meta.get("due")), "surface_on": bi._as_date(meta.get("surface_on")),
+        "contact_id": (meta.get("contact") or None), "hub_card": (str(meta.get("hub_card")) if meta.get("hub_card") else None),
+        "source": meta.get("source") or None, "origin_path": str(file.relative_to(root)).replace("\\", "/"), "sha": _sha(text),
+        "created_at": _dt(meta.get("created")), "done_at": done_at,
+        "done_evidence": ({"by": "task-file", "source": "frontmatter status", "at": done_at.isoformat()} if done_at else None),
+        "data": data,
+        "chunks": [item_chunk(str(meta.get("title") or slug), notes_txt, [t for _, t in subs])],
+    }
+    out = [item]
+    for n, (done, t) in enumerate(subs, 1):
+        sub_status = "done" if done else ("cancelled" if status == "cancelled" else "open")
+        out.append({
+            "id": f"{slug}#{n}", "parent_id": slug, "title": t[:500], "body": None, "project": item["project"], "bucket": item["bucket"],
+            "status": sub_status, "stage": None, "due": item["due"], "surface_on": None, "contact_id": None, "hub_card": None,
+            "source": item["source"], "origin_path": item["origin_path"], "sha": _sha(("x" if done else " ") + t),
+            "created_at": item["created_at"], "done_at": None, "done_evidence": None, "data": {"n": n},
+            "chunks": [f"{item['title']}: {t}"],
+        })
+    return out
+
+
+def item_chunk(title: str, notes: str, subs: list[str]) -> str:
+    parts = [title]
+    if notes:
+        parts.append(notes[:1500])
+    if subs:
+        parts.append("\n".join("- " + s for s in subs))
+    return "\n".join(parts)
+
+
+def collect(root: Path) -> list[dict]:
+    out = []
+    for d in DIRS:
+        for f in sorted((root / "Tasks" / d).glob("*.md")):
+            try:
+                out.extend(rows_of(f, root))
+            except (OSError, ValueError) as e:
+                print(f"todo_ingest: skipped {f.name}: {e}", file=sys.stderr)
+    return out
+
+
+def _jsonable(v):
+    if isinstance(v, datetime):
+        return v.isoformat()
+    if hasattr(v, "isoformat"):
+        return v.isoformat()
+    return v
+
+
+def _diff(old: dict | None, new: dict) -> dict:
+    """The fields that changed (old -> new), for the history row; a new row lists every set field."""
+    ch = {}
+    for k in FIELDS:
+        if k in ("sha",):
+            continue
+        a = old.get(k) if old else None
+        b = new.get(k)
+        if _jsonable(a) != _jsonable(b):
+            ch[k] = {"from": _jsonable(a), "to": _jsonable(b)} if old else _jsonable(b)
+    return ch
+
+
+def upsert_items(conn, rows: list[dict], embed: Callable[[list[str]], list[list[float]]], log=print) -> dict:
+    from psycopg.types.json import Jsonb
+    now = datetime.now(timezone.utc)
+    existing = {r[0]: dict(zip(("sha", "status", "due", "stage", "title", "parent_id", "body", "project", "bucket",
+                                "surface_on", "contact_id", "hub_card", "source", "origin_path", "created_at", "done_at",
+                                "done_evidence", "data", "deleted_at"), r[1:]))
+                for r in conn.execute("SELECT id, sha, status, due, stage, title, parent_id, body, project, bucket, surface_on, "
+                                      "contact_id, hub_card, source, origin_path, created_at, done_at, done_evidence, data, deleted_at "
+                                      "FROM todo.items").fetchall()}
+    changed, inserted, revived = [], 0, 0
+    seen = set()
+    for r in rows:                      # parents come first in rows_of, so the FK holds
+        seen.add(r["id"])
+        old = existing.get(r["id"])
+        if old and old["sha"] == r["sha"] and old["deleted_at"] is None:
+            continue
+        ch = _diff(old, r)
+        if old and old["deleted_at"] is not None:
+            ch["deleted"] = {"from": True, "to": False}; revived += 1
+        done_at = r["done_at"]
+        if r["status"] in ("done", "cancelled") and not done_at:
+            done_at = old["done_at"] if old and old.get("done_at") else now
+        if r["status"] == "open":
+            done_at = None
+        conn.execute(
+            "INSERT INTO todo.items (id, parent_id, title, body, project, bucket, status, stage, due, surface_on, contact_id, hub_card, "
+            "source, origin_path, sha, created_at, updated_at, done_at, done_evidence, data, deleted_at) "
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NULL) "
+            "ON CONFLICT (id) DO UPDATE SET parent_id=EXCLUDED.parent_id, title=EXCLUDED.title, body=EXCLUDED.body, project=EXCLUDED.project, "
+            "bucket=EXCLUDED.bucket, status=EXCLUDED.status, stage=EXCLUDED.stage, due=EXCLUDED.due, surface_on=EXCLUDED.surface_on, "
+            "contact_id=EXCLUDED.contact_id, hub_card=EXCLUDED.hub_card, source=EXCLUDED.source, origin_path=EXCLUDED.origin_path, "
+            "sha=EXCLUDED.sha, created_at=COALESCE(todo.items.created_at, EXCLUDED.created_at), updated_at=EXCLUDED.updated_at, "
+            "done_at=EXCLUDED.done_at, done_evidence=COALESCE(EXCLUDED.done_evidence, todo.items.done_evidence), data=EXCLUDED.data, deleted_at=NULL",
+            [r["id"], r["parent_id"], r["title"], r["body"], r["project"], r["bucket"], r["status"], r["stage"], r["due"], r["surface_on"],
+             r["contact_id"], r["hub_card"], r["source"], r["origin_path"], r["sha"], r["created_at"], now, done_at,
+             Jsonb(r["done_evidence"] or (({"by": "task-file", "source": "frontmatter status", "at": now.isoformat()}) if done_at and not (old and old.get("done_evidence")) else None)),
+             Jsonb(r["data"])])
+        if ch:
+            conn.execute("INSERT INTO todo.history (item_id, at, by, change, evidence) VALUES (%s,%s,%s,%s,%s)",
+                         [r["id"], now, "ingest", Jsonb(ch), Jsonb({"path": r["origin_path"], "sha": r["sha"]})])
+        for kind, ref in (("person", r["contact_id"]), ("hub_card", r["hub_card"]), ("parent", r["parent_id"])):
+            if ref:
+                conn.execute("INSERT INTO todo.links (item_id, kind, ref, at) VALUES (%s,%s,%s,%s) ON CONFLICT (item_id, kind, ref) DO NOTHING",
+                             [r["id"], kind, str(ref), now])
+        changed.append(r)
+        if not old:
+            inserted += 1
+    # files that vanished: the row stays, deleted_at says when, history says so
+    gone = [i for i, o in existing.items() if i not in seen and o["deleted_at"] is None]
+    for i in gone:
+        conn.execute("UPDATE todo.items SET deleted_at = %s, updated_at = %s WHERE id = %s", [now, now, i])
+        conn.execute("INSERT INTO todo.history (item_id, at, by, change, evidence) VALUES (%s,%s,%s,%s,%s)",
+                     [i, now, "ingest", Jsonb({"deleted": {"from": False, "to": True}}), Jsonb({"reason": "file not in task-land"})])
+    # chunks of what changed
+    todo_texts = [(r["id"], ci, t) for r in changed for ci, t in enumerate(r["chunks"])]
+    if todo_texts:
+        vecs = []
+        for start in range(0, len(todo_texts), bi.EMBED_BATCH):
+            batch = todo_texts[start:start + bi.EMBED_BATCH]
+            vecs.extend(embed([bi.passage_text("to-do", t) for _, _, t in batch]))
+        for r in changed:
+            conn.execute("DELETE FROM todo.chunks WHERE item_id = %s", [r["id"]])
+        for (iid, ci, t), v in zip(todo_texts, vecs):
+            conn.execute("INSERT INTO todo.chunks (item_id, ord, text, embedding) VALUES (%s,%s,%s,%s)", [iid, ci, t, v])
+    conn.commit()
+    return {"files": len({r["origin_path"] for r in rows}), "items": len(rows), "changed": len(changed), "new": inserted,
+            "revived": revived, "deleted": len(gone), "embedded": len(todo_texts)}
+
+
+def person_text(p: dict, company: str | None) -> str:
+    d = p.get("data") or {}
+    rs = d.get("relationship_state") or {}
+    loops = [l.get("what") for l in (rs.get("open_loops") or []) if isinstance(l, dict) and l.get("what")]
+    facts = [str(x) for x in (d.get("context_facts") or rs.get("context_facts") or []) if x][:8]
+    ns = d.get("next_step") or {}
+    parts = [p.get("name") or p.get("id"), company or (d.get("company") or ""), d.get("role") or d.get("title") or "",
+             f"stage {p.get('stage')}" if p.get("stage") else "",
+             ("next step: " + (ns.get("text") if isinstance(ns, dict) else str(ns))) if ns else (("next step: " + p["next_step_text"]) if p.get("next_step_text") else ""),
+             ("open loops: " + "; ".join(loops[:6])) if loops else "", ("facts: " + "; ".join(facts)) if facts else "",
+             (rs.get("summary") or "")[:400]]
+    return "\n".join(x for x in parts if x)
+
+
+def upsert_people_chunks(conn, embed: Callable[[list[str]], list[list[float]]]) -> dict:
+    companies = {r[0]: r[1] for r in conn.execute("SELECT id, name FROM crm.companies").fetchall()}
+    people = conn.execute("SELECT id, name, company_id, stage, next_step_text, data FROM crm.people WHERE deleted_at IS NULL").fetchall()
+    have = {r[0]: r[1] for r in conn.execute("SELECT person_id, sha FROM crm.people_chunks WHERE ord = 0").fetchall()}
+    todo = []
+    for pid, name, cid, stage, nst, data in people:
+        t = person_text({"id": pid, "name": name, "stage": stage, "next_step_text": nst, "data": data}, companies.get(cid))
+        sha = _sha(t)
+        if have.get(pid) != sha:
+            todo.append((pid, sha, t))
+    for start in range(0, len(todo), bi.EMBED_BATCH):
+        batch = todo[start:start + bi.EMBED_BATCH]
+        for (pid, sha, t), v in zip(batch, embed([bi.passage_text("person", t) for _, _, t in batch])):
+            conn.execute("DELETE FROM crm.people_chunks WHERE person_id = %s", [pid])
+            conn.execute("INSERT INTO crm.people_chunks (person_id, ord, sha, text, embedding) VALUES (%s,0,%s,%s,%s)", [pid, sha, t, v])
+    gone = [pid for pid in have if pid not in {p[0] for p in people}]
+    for pid in gone:
+        conn.execute("DELETE FROM crm.people_chunks WHERE person_id = %s", [pid])
+    conn.commit()
+    return {"people": len(people), "embedded": len(todo), "removed": len(gone)}
+
+
+def run(conn=None, embed: Callable | None = None, root: Path | None = None, log=print) -> dict:
+    t0 = time.time()
+    root = root or tasks_root()
+    rows = collect(root)
+    own = conn is None
+    conn = conn or bi.connect()
+    try:
+        enc = embed or (lambda texts: bi.get_embedder()(texts))
+        s = upsert_items(conn, rows, enc, log)
+        s["people_chunks"] = upsert_people_chunks(conn, enc)
+    finally:
+        if own:
+            conn.close()
+    s["seconds"] = round(time.time() - t0, 1)
+    log("todo_ingest " + json.dumps(s, default=str))
+    return s
+
+
+def stats(conn) -> dict:
+    return {
+        "items": conn.execute("SELECT count(*) FROM todo.items WHERE deleted_at IS NULL").fetchone()[0],
+        "open": conn.execute("SELECT count(*) FROM todo.items WHERE deleted_at IS NULL AND status = 'open'").fetchone()[0],
+        "sub_items": conn.execute("SELECT count(*) FROM todo.items WHERE parent_id IS NOT NULL AND deleted_at IS NULL").fetchone()[0],
+        "history": conn.execute("SELECT count(*) FROM todo.history").fetchone()[0],
+        "chunks": conn.execute("SELECT count(*) FROM todo.chunks").fetchone()[0],
+        "people_chunks": conn.execute("SELECT count(*) FROM crm.people_chunks").fetchone()[0],
+    }
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--dry-run", action="store_true", help="parse the files, print counts, touch nothing")
+    ap.add_argument("--stats", action="store_true")
+    ap.add_argument("--tasks", help="task-land root (default TASKLAND, the box path, or ~/task-land)")
+    a = ap.parse_args(argv)
+    bi.load_env()
+    root = Path(a.tasks) if a.tasks else tasks_root()
+    if a.dry_run:
+        rows = collect(root)
+        by = {}
+        for r in rows:
+            k = ("sub " if r["parent_id"] else "") + r["status"]
+            by[k] = by.get(k, 0) + 1
+        print(json.dumps({"root": str(root), "files": len({r["origin_path"] for r in rows}), "rows": len(rows), "by_status": by,
+                          "sample": [r["id"] for r in rows[:5]]}, indent=1))
+        return 0
+    conn = bi.connect()
+    try:
+        if a.stats:
+            print(json.dumps(stats(conn), indent=1)); return 0
+    finally:
+        if a.stats:
+            conn.close()
+    run(conn, root=root)
+    conn.close()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

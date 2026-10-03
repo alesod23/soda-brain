@@ -575,6 +575,15 @@ def run_index(dsn: str | None = None, sources: list[tuple[str, str]] | None = No
             "seconds": round(time.time() - t0, 1), "at": now,
         }
         set_meta(conn, "last_index", summary)
+        # S10 (2026-10-03): the to-dos and the CRM people become rows + vectors in the same pass (the model is
+        # loaded once); a failure there never undoes the page index above.
+        if os.environ.get("BRAIN_TODO", "1") != "0":
+            try:
+                import todo_ingest
+                summary["todo"] = todo_ingest.run(conn, embed or (lambda texts: get_embedder()(texts)), log=lambda s: None)
+            except Exception as e:
+                conn.rollback()
+                summary["todo_error"] = f"{type(e).__name__}: {str(e)[:200]}"
     finally:
         conn.close()
     log(json.dumps(summary))
