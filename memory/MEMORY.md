@@ -2,6 +2,8 @@
 
 - 🧠🚪 [THE SODA BRAIN (2 Oct 2026): this repo, the system map in `system/`, the Postgres+pgvector door on the box (:4150, Funnel), the CRM mirrored, instinct as orchestrator](reference_soda_brain.md) — update `system/` in the same turn as any service, port, job, store or rule changes; tokens in `~/.env/soda.env`, never printed.
 
+- 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
+
 ## Rules that bite first
 - 🛑 [Unattended run: NEVER end the turn waiting on agents](feedback_unattended_run_never_wait_on_agents.md) — do the work in the main thread, check agent liveness by transcript mtime after 10 min, keep a self-wake heartbeat; cost him 10 idle hours on the thesis (2026-09-27).
 - 🧊 [Session frozen on "running PreToolUse hooks N/6" = a hook that never returned](reference_pretooluse_hook_hang_npx.md) — post-compaction-recall.sh ran `npx` on every tool call; fixed 2026-09-27, recipe inside.
