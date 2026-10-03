@@ -106,6 +106,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   reverse or a "wrong" comment; a weekly spot check of 3 random successes in the Cleaning tab; path A (event push)
   vs path B (sweep) attribution with overlap and time-to-find; a failure raises the threshold of its path and adds
   a (producer, person) exception without asking him; `cleaning_eval.py report` per path and surface.
+  Since 4 Oct 2026: Slack (cdtm, xplore) is an event source for the forward and reverse passes (`slack_events`, the
+  helper `slack.py` on both machines, non-fatal when a workspace fails). Retention (docs/RETENTION.md): the to-do
+  history is append-only (RESTRICT + trigger), one CRM document snapshot a day, nightly `pg_dump` to the Drive mount.
 - Since 3 Oct 2026 (his currency rule): every hub card is a row of the brain (`hub.cards`, embedded, filled from the
   hub's state on every index pass; a resolved or pruned card keeps its row), `brain.match_event` returns open cards
   as kind `card`, and `todo_match.py` can close a card whose outcome an event proves (`POST /close`, evidence in the
