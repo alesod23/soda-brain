@@ -291,8 +291,12 @@ fused AS (
     FROM (SELECT kind, cid, r FROM vec UNION ALL SELECT kind, cid, r FROM ts) u
     GROUP BY kind, cid
 )
-SELECT c.kind, c.id, c.parent_id, c.title, c.text, c.status, c.due, f.score::double precision
-FROM fused f JOIN cand c ON c.kind = f.kind AND c.cid = f.cid
-ORDER BY f.score DESC, c.kind, c.id
-LIMIT (SELECT k FROM params);
+ranked AS (                    -- k per kind: 641 people never crowd the to-dos out of the answer
+    SELECT c.kind, c.id, c.parent_id, c.title, c.text, c.status, c.due, f.score::double precision AS score,
+           row_number() OVER (PARTITION BY c.kind ORDER BY f.score DESC, c.id) AS rk
+    FROM fused f JOIN cand c ON c.kind = f.kind AND c.cid = f.cid
+)
+SELECT kind, id, parent_id, title, text, status, due, score
+FROM ranked WHERE rk <= (SELECT k FROM params)
+ORDER BY kind DESC, score DESC;   -- 'todo' rows first, then 'person'
 $$;
