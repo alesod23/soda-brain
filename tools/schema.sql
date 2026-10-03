@@ -229,6 +229,29 @@ CREATE TABLE IF NOT EXISTS todo.chunks (
     UNIQUE (item_id, ord)
 );
 
+-- Never-delete (4 Oct 2026, docs/RETENTION.md): a cascade would wipe an item's history with the item. RESTRICT on
+-- every reference to todo.items, and todo.history is append-only: UPDATE, DELETE and TRUNCATE are refused.
+ALTER TABLE todo.history DROP CONSTRAINT IF EXISTS history_item_id_fkey;
+ALTER TABLE todo.history ADD CONSTRAINT history_item_id_fkey FOREIGN KEY (item_id) REFERENCES todo.items(id) ON DELETE RESTRICT;
+ALTER TABLE todo.links DROP CONSTRAINT IF EXISTS links_item_id_fkey;
+ALTER TABLE todo.links ADD CONSTRAINT links_item_id_fkey FOREIGN KEY (item_id) REFERENCES todo.items(id) ON DELETE RESTRICT;
+ALTER TABLE todo.items DROP CONSTRAINT IF EXISTS items_parent_id_fkey;
+ALTER TABLE todo.items ADD CONSTRAINT items_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES todo.items(id) ON DELETE RESTRICT;
+CREATE OR REPLACE FUNCTION todo.history_immutable() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+    RAISE EXCEPTION 'todo.history is append-only (never-delete rule, 2026-10-04): % refused', TG_OP;
+END $$;
+DROP TRIGGER IF EXISTS history_no_update_delete ON todo.history;
+CREATE TRIGGER history_no_update_delete BEFORE UPDATE OR DELETE ON todo.history FOR EACH ROW EXECUTE FUNCTION todo.history_immutable();
+DROP TRIGGER IF EXISTS history_no_truncate ON todo.history;
+CREATE TRIGGER history_no_truncate BEFORE TRUNCATE ON todo.history FOR EACH STATEMENT EXECUTE FUNCTION todo.history_immutable();
+
+-- the embedding model is stored next to every vector (a model change = re-embed what differs, never a silent mix)
+ALTER TABLE brain.chunks      ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+ALTER TABLE todo.chunks       ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+ALTER TABLE crm.people_chunks ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+ALTER TABLE hub.card_chunks   ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+
 CREATE INDEX IF NOT EXISTS todo_items_status_idx  ON todo.items (status) WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS todo_items_due_idx     ON todo.items (due);
 CREATE INDEX IF NOT EXISTS todo_items_contact_idx ON todo.items (contact_id);
@@ -305,15 +328,19 @@ WITH params AS (
            CASE WHEN coalesce(q, '') = '' THEN NULL ELSE websearch_to_tsquery('english', q) END AS tsq
 ),
 cand AS (
-    SELECT 'todo'::text AS kind, c.id AS cid, i.id, i.parent_id, i.title, c.text, i.status, i.due, c.embedding, c.tsv
+    -- `w` ranks old and done things down at query time (RETENTION.md, 4 Oct): done/resolved 0.6, older than 90 days 0.85
+    SELECT 'todo'::text AS kind, c.id AS cid, i.id, i.parent_id, i.title, c.text, i.status, i.due, c.embedding, c.tsv,
+           (CASE WHEN i.status = 'open' THEN 1.0 ELSE 0.6 END) * (CASE WHEN coalesce(i.updated_at, now()) < now() - interval '90 days' THEN 0.85 ELSE 1.0 END) AS w
     FROM todo.chunks c JOIN todo.items i ON i.id = c.item_id
     WHERE i.deleted_at IS NULL AND (include_done OR i.status = 'open')
     UNION ALL
-    SELECT 'person'::text, c.id, p.id, NULL::text, p.name, c.text, p.stage, p.next_step_date, c.embedding, c.tsv
+    SELECT 'person'::text, c.id, p.id, NULL::text, p.name, c.text, p.stage, p.next_step_date, c.embedding, c.tsv,
+           (CASE WHEN coalesce(p.updated_at, now()) < now() - interval '90 days' THEN 0.85 ELSE 1.0 END)
     FROM crm.people_chunks c JOIN crm.people p ON p.id = c.person_id
     WHERE p.deleted_at IS NULL
     UNION ALL
-    SELECT 'card'::text, c.id, h.id, h.origin, left(h.text, 200), c.text, h.status, h.day, c.embedding, c.tsv
+    SELECT 'card'::text, c.id, h.id, h.origin, left(h.text, 200), c.text, h.status, h.day, c.embedding, c.tsv,
+           (CASE WHEN h.status = 'open' THEN 1.0 ELSE 0.6 END) * (CASE WHEN coalesce(h.created_at, now()) < now() - interval '90 days' THEN 0.85 ELSE 1.0 END)
     FROM hub.card_chunks c JOIN hub.cards h ON h.id = c.card_id
     WHERE include_done OR h.status = 'open'
 ),
@@ -335,9 +362,9 @@ fused AS (
     GROUP BY kind, cid
 ),
 ranked AS (                    -- k per kind: 641 people never crowd the to-dos out of the answer
-    SELECT c.kind, c.id, c.parent_id, c.title, c.text, c.status, c.due, f.score::double precision AS score,
+    SELECT c.kind, c.id, c.parent_id, c.title, c.text, c.status, c.due, (f.score * c.w)::double precision AS score,
            CASE WHEN q_emb IS NULL OR c.embedding IS NULL THEN NULL ELSE (1 - (c.embedding <=> q_emb))::double precision END AS sim,
-           row_number() OVER (PARTITION BY c.kind ORDER BY f.score DESC, c.id) AS rk
+           row_number() OVER (PARTITION BY c.kind ORDER BY f.score * c.w DESC, c.id) AS rk
     FROM fused f JOIN cand c ON c.kind = f.kind AND c.cid = f.cid
 )
 SELECT kind, id, parent_id, title, text, status, due, score, sim
