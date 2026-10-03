@@ -290,7 +290,7 @@ fused AS (
     SELECT kind, cid, SUM(1.0 / (60 + r)) AS score
     FROM (SELECT kind, cid, r FROM vec UNION ALL SELECT kind, cid, r FROM ts) u
     GROUP BY kind, cid
-)
+),
 ranked AS (                    -- k per kind: 641 people never crowd the to-dos out of the answer
     SELECT c.kind, c.id, c.parent_id, c.title, c.text, c.status, c.due, f.score::double precision AS score,
            row_number() OVER (PARTITION BY c.kind ORDER BY f.score DESC, c.id) AS rk
