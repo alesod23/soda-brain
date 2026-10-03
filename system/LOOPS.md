@@ -98,6 +98,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `/close` with no verdict; log `_system/todo-match.jsonl`. The review page's fourth tab, CLEANING (key 4), lists
   every automatic closure or tick of the last 72 h with its evidence, takes his judgement per row (c, goes out with
   the commit) and reverses one row on request (`/api/cleaning/reverse`: a card re-posted, a to-do reverse queued).
+  The reverse pass (same cron, 3 Oct 23:45): every open card looks for its own outcome in the events about its person
+  (mail, WhatsApp, CRM, LinkedIn in and out; his own messages up to 10 days before the card count), judged only when
+  something new arrived (`card_marks`), verdicts in `todo-match.jsonl` as `event: reverse`.
 - Since 3 Oct 2026 (his currency rule): every hub card is a row of the brain (`hub.cards`, embedded, filled from the
   hub's state on every index pass; a resolved or pruned card keeps its row), `brain.match_event` returns open cards
   as kind `card`, and `todo_match.py` can close a card whose outcome an event proves (`POST /close`, evidence in the
