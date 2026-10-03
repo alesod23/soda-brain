@@ -29,7 +29,8 @@ ENV = Path.home() / ".env" / "soda.env"
 TASKLAND = Path(os.environ.get("TASKLAND") or (Path.home() / "task-land"))
 LOG = TASKLAND / "_system" / "todo-match.jsonl"
 PIPELINE = TASKLAND / "_system" / "pipeline.py"
-CLAUDE = str(Path.home() / ".local" / "bin" / ("claude.exe" if os.name == "nt" else "claude"))
+import shutil
+CLAUDE = os.environ.get("CLAUDE_BIN") or shutil.which("claude") or str(Path.home() / ".local" / "bin" / ("claude.exe" if os.name == "nt" else "claude"))
 NOWIN = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 
 
