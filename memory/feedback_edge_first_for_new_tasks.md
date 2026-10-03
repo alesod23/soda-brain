@@ -29,4 +29,8 @@ baseline to measure our loops against.
   on 2026-09-18 Edge's `people-search` lost head-to-head to plain WebSearch and he had it removed
   ([[reference_getedge_people_search_skill]]). So the question is "does it beat what we do", on a task with a
   number: the daily campaign research (people found per round, address proof rate) and the critic's hit rate.
+  State the Edge version with every result: laptop 0.6.1 and box 0.6.13 are not the same product (30 releases exist,
+  0.6.13 carries an activation regex dated "plan C, 2026-10-02"); a score at one version says nothing about the other.
+- Sync gap: the box commits every 5 min, the laptop every 10; a file "missing from the repo" is only missing after one
+  full cycle has passed (3 Oct: each side reported the other's file absent inside that window).
   See [[reference_simulation_harness]], [[reference_daily_campaign]].
