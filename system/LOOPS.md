@@ -92,6 +92,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 ## 5. The approval hub and the review page
 
+- Since 3 Oct 2026 23:20, THE CONNECTION: every new mail, WhatsApp and CRM event (hub_outdated.py on the box, every
+  10 min) and every finished call (meeting_loop.py) goes through `todo_match.on_event`: lookup in the brain, one
+  judgement only on a strong hit (sim >= 0.84), a to-do ticked with the quote (laptop) or a card closed through
+  `/close` with no verdict; log `_system/todo-match.jsonl`.
 - Since 3 Oct 2026 (his currency rule): every hub card is a row of the brain (`hub.cards`, embedded, filled from the
   hub's state on every index pass; a resolved or pruned card keeps its row), `brain.match_event` returns open cards
   as kind `card`, and `todo_match.py` can close a card whose outcome an event proves (`POST /close`, evidence in the
