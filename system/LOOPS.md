@@ -92,6 +92,12 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 ## 5. The approval hub and the review page
 
+- Since 3 Oct 2026 (his currency rule): every hub card is a row of the brain (`hub.cards`, embedded, filled from the
+  hub's state on every index pass; a resolved or pruned card keeps its row), `brain.match_event` returns open cards
+  as kind `card`, and `todo_match.py` can close a card whose outcome an event proves (`POST /close`, evidence in the
+  reason, never a verdict). The hub supersedes an open twin at post time by producer + person + action (patch
+  prepared, his run); the ALERT rule in `hub_outdated.py` matches only the head of a card and never a routine report.
+
 - Code: `/home/da/approval-hub/server.js` (systemd `da-hub`, :4180 on the box; the laptop's 127.0.0.1:4180 is a
   forward over Tailscale), `/home/da/hub-review/server.js` (:4142, the phone page: j/k, a/s/x/c, one commit = the yes).
 - A card: `POST /pending {text, context, notify:true}`; the decision in `text`, the artifact in `context`; it pings

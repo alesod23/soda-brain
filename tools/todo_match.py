@@ -167,6 +167,10 @@ def main(argv=None) -> int:
     j.add_argument("--k", type=int, default=8); j.add_argument("--apply", action="store_true"); j.add_argument("--dry", action="store_true")
     j.add_argument("--model", default="opus")
     a = ap.parse_args(argv)
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")   # card heads carry emoji; the laptop console is cp1252
+    except Exception:
+        pass
     if a.cmd == "lookup":
         hits = match(a.text, a.k, a.done)
         for h in hits:
