@@ -249,6 +249,65 @@ def upsert_people_chunks(conn, embed: Callable[[list[str]], list[list[float]]]) 
     return {"people": len(people), "embedded": len(todo), "removed": len(gone)}
 
 
+HUB_STATE = Path(os.environ.get("HUB_STATE") or "/home/da/approval-hub/state.json")
+
+
+def card_person(c: dict) -> str | None:
+    m = c.get("meta") or {}
+    a = c.get("action") or {}
+    for k in ("pid", "crm_pid", "person", "jid", "to"):
+        v = m.get(k) or (a.get(k) if isinstance(a, dict) else None)
+        if v:
+            return str(v)[:200]
+    return None
+
+
+def upsert_cards(conn, embed: Callable[[list[str]], list[list[float]]]) -> dict:
+    """Hub cards -> hub.cards (+ one embedded chunk each). A card gone from the hub's pending map keeps its row,
+    status resolved (the hub prunes resolved cards after 24 h; decisions.jsonl is the durable record of the verdict)."""
+    from psycopg.types.json import Jsonb
+    if not HUB_STATE.exists():
+        return {"skipped": "no hub state here"}
+    try:
+        st = json.loads(HUB_STATE.read_text(encoding="utf-8"))
+    except Exception as e:
+        return {"error": str(e)[:120]}
+    pending = st.get("pending") or {}
+    have = {r[0]: (r[1], r[2]) for r in conn.execute("SELECT id, sha, status FROM hub.cards").fetchall()}
+    now = datetime.now(timezone.utc)
+    changed = []
+    for cid, c in pending.items():
+        meta = c.get("meta") or {}
+        status = "resolved" if c.get("resolved") else "open"
+        text = str(c.get("text") or "")
+        sha = _sha(json.dumps([text, c.get("context"), status, c.get("verdict"), c.get("resolved_by")], ensure_ascii=False))
+        if have.get(cid) == (sha, status):
+            continue
+        chunk = (text + ("\n" + str(c.get("context") or "")[:1500] if c.get("context") else ""))[:2000]
+        conn.execute(
+            "INSERT INTO hub.cards (id, seq, day, text, context, kind, type, action, meta, origin, person, status, verdict, resolved_by, created_at, resolved_at, sha, updated_at) "
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (id) DO UPDATE SET text=EXCLUDED.text, context=EXCLUDED.context, kind=EXCLUDED.kind, "
+            "type=EXCLUDED.type, action=EXCLUDED.action, meta=EXCLUDED.meta, origin=EXCLUDED.origin, person=EXCLUDED.person, status=EXCLUDED.status, verdict=EXCLUDED.verdict, "
+            "resolved_by=EXCLUDED.resolved_by, resolved_at=EXCLUDED.resolved_at, sha=EXCLUDED.sha, updated_at=EXCLUDED.updated_at",
+            [cid, c.get("seq"), _dt(str(c.get("created_at") or "")[:10]), text, c.get("context"), c.get("kind"), c.get("type"), Jsonb(c.get("action")) if c.get("action") else None,
+             Jsonb(meta) if meta else None, (meta.get("origin") or meta.get("source") or None), card_person(c), status, c.get("verdict"), c.get("resolved_by"),
+             _dt(c.get("created_at")), _dt(c.get("resolved_at")), sha, now])
+        changed.append((cid, chunk))
+    gone = [cid for cid, (sha, status) in have.items() if cid not in pending and status == "open"]
+    for cid in gone:
+        conn.execute("UPDATE hub.cards SET status = 'resolved', resolved_at = COALESCE(resolved_at, %s), resolved_by = COALESCE(resolved_by, 'pruned from the hub'), updated_at = %s WHERE id = %s", [now, now, cid])
+    if changed:
+        vecs = []
+        for start in range(0, len(changed), bi.EMBED_BATCH):
+            batch = changed[start:start + bi.EMBED_BATCH]
+            vecs.extend(embed([bi.passage_text("hub card", t) for _, t in batch]))
+        for (cid, t), v in zip(changed, vecs):
+            conn.execute("DELETE FROM hub.card_chunks WHERE card_id = %s", [cid])
+            conn.execute("INSERT INTO hub.card_chunks (card_id, ord, text, embedding) VALUES (%s,0,%s,%s)", [cid, t, v])
+    conn.commit()
+    return {"cards": len(pending), "changed": len(changed), "resolved_gone": len(gone)}
+
+
 def run(conn=None, embed: Callable | None = None, root: Path | None = None, log=print) -> dict:
     t0 = time.time()
     root = root or tasks_root()
@@ -259,6 +318,7 @@ def run(conn=None, embed: Callable | None = None, root: Path | None = None, log=
         enc = embed or (lambda texts: bi.get_embedder()(texts))
         s = upsert_items(conn, rows, enc, log)
         s["people_chunks"] = upsert_people_chunks(conn, enc)
+        s["cards"] = upsert_cards(conn, enc)
     finally:
         if own:
             conn.close()

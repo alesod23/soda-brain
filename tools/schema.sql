@@ -253,6 +253,43 @@ CREATE TABLE IF NOT EXISTS crm.people_chunks (
 CREATE INDEX IF NOT EXISTS people_chunks_tsv_gin ON crm.people_chunks USING gin (tsv);
 CREATE INDEX IF NOT EXISTS people_chunks_embedding_hnsw ON crm.people_chunks USING hnsw (embedding vector_cosine_ops);
 
+-- Hub cards are rows too (3 Oct 2026, his currency rule): open and resolved, embedded, so an event can find the
+-- card it settles and a card can look for its own outcome. Filled by todo_ingest.upsert_cards from the hub's state.
+CREATE SCHEMA IF NOT EXISTS hub;
+CREATE TABLE IF NOT EXISTS hub.cards (
+    id          text        PRIMARY KEY,
+    seq         int,
+    day         date,
+    text        text        NOT NULL,
+    context     text,
+    kind        text,
+    type        text,
+    action      jsonb,
+    meta        jsonb,
+    origin      text,
+    person      text,
+    status      text        NOT NULL DEFAULT 'open' CHECK (status IN ('open','resolved')),
+    verdict     text,
+    resolved_by text,
+    created_at  timestamptz,
+    resolved_at timestamptz,
+    sha         text        NOT NULL,
+    updated_at  timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS hub.card_chunks (
+    id        bigserial PRIMARY KEY,
+    card_id   text      NOT NULL REFERENCES hub.cards(id) ON DELETE CASCADE,
+    ord       int       NOT NULL,
+    text      text      NOT NULL,
+    tsv       tsvector  GENERATED ALWAYS AS (to_tsvector('english', text)) STORED,
+    embedding vector(384),
+    UNIQUE (card_id, ord)
+);
+CREATE INDEX IF NOT EXISTS hub_cards_status_idx ON hub.cards (status);
+CREATE INDEX IF NOT EXISTS hub_cards_person_idx ON hub.cards (person);
+CREATE INDEX IF NOT EXISTS hub_card_chunks_tsv_gin ON hub.card_chunks USING gin (tsv);
+CREATE INDEX IF NOT EXISTS hub_card_chunks_embedding_hnsw ON hub.card_chunks USING hnsw (embedding vector_cosine_ops);
+
 -- An event (a mail, a calendar change, a Notion note, a verdict) finds the nearest open to-dos and CRM people:
 -- the same RRF as brain.search over todo.chunks and crm.people_chunks. include_done = true also returns done
 -- items (ranked by the same score, status says so): "did I already do this?".
@@ -273,6 +310,10 @@ cand AS (
     SELECT 'person'::text, c.id, p.id, NULL::text, p.name, c.text, p.stage, p.next_step_date, c.embedding, c.tsv
     FROM crm.people_chunks c JOIN crm.people p ON p.id = c.person_id
     WHERE p.deleted_at IS NULL
+    UNION ALL
+    SELECT 'card'::text, c.id, h.id, h.origin, left(h.text, 200), c.text, h.status, h.day, c.embedding, c.tsv
+    FROM hub.card_chunks c JOIN hub.cards h ON h.id = c.card_id
+    WHERE include_done OR h.status = 'open'
 ),
 vec AS (
     SELECT kind, cid, row_number() OVER (ORDER BY embedding <=> q_emb) AS r

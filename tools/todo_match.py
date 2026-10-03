@@ -96,10 +96,11 @@ Candidates you leave out count as "none"."""
 
 
 def judge(event: str, source: str, hits: list[dict], model: str = "opus", timeout: int = 240) -> list[dict]:
-    cands = open_todos(hits)
+    cands = open_todos(hits) + [h for h in hits if h.get("kind") == "card" and h.get("status") == "open"]
     if not cands:
         return []
-    cl = "\n".join(f"- {h['id']}" + (f" (due {h['due']})" if h.get("due") else "") + f": {str(h.get('title') or '')[:200]}" for h in cands)
+    cl = "\n".join(f"- {h['id']}" + (" (hub card: done = the thing it asks about already happened; its action is never executed)" if h.get("kind") == "card" else "")
+                   + (f" (due {h['due']})" if h.get("due") and h.get("kind") != "card" else "") + f": {str(h.get('title') or '')[:200]}" for h in cands)
     prompt = JUDGE_PROMPT.replace("__SOURCE__", source).replace("__EVENT__", event[:5000]).replace("__CANDS__", cl)
     r = subprocess.run([CLAUDE, "-p", prompt, "--model", model, "--output-format", "text", "--max-turns", "1"],
                        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout, creationflags=NOWIN)
@@ -109,11 +110,31 @@ def judge(event: str, source: str, hits: list[dict], model: str = "opus", timeou
         raise RuntimeError("judge gave no JSON: " + (r.stderr or txt)[-200:])
     out = json.loads(txt[i:j + 1])
     byid = {h["id"]: h for h in cands}
-    return [dict(v, title=byid[v["id"]].get("title")) for v in out if isinstance(v, dict) and v.get("id") in byid]
+    return [dict(v, title=byid[v["id"]].get("title"), kind=byid[v["id"]].get("kind")) for v in out if isinstance(v, dict) and v.get("id") in byid]
+
+
+HUB_CLOSE = os.environ.get("HUB_CLOSE", "http://100.85.52.84:4180/close")
+
+
+def close_card(cid: str, source: str, quote: str, why: str, dry: bool) -> dict:
+    """A card whose outcome an event proves: closed with the evidence, NO verdict (never a yes), nothing executed."""
+    reason = f"done, seen in {source}: \"{quote[:160]}\" {why[:120]}".strip()
+    if dry:
+        return {"applied": False, "dry": "close " + cid + ": " + reason}
+    import urllib.request
+    req = urllib.request.Request(HUB_CLOSE, data=json.dumps({"id": cid, "reason": reason, "notify": False}).encode("utf-8"),
+                                 headers={"Content-Type": "application/json"}, method="POST")
+    try:
+        return dict(json.loads(urllib.request.urlopen(req, timeout=20).read().decode("utf-8") or "{}"), applied=True)
+    except Exception as e:
+        return {"applied": False, "error": str(e)[:160]}
 
 
 def apply(verdict: dict, source: str, dry: bool) -> dict:
-    """done -> pipeline.py tick <id> --evidence; moved -> pipeline.py redate. Nothing else writes a task file."""
+    """done -> pipeline.py tick <id> --evidence; moved -> pipeline.py redate; a hub card -> /close with the evidence.
+    Nothing else writes a task file."""
+    if verdict.get("kind") == "card":
+        return close_card(verdict["id"], source, verdict.get("quote") or "", verdict.get("why") or "", dry) if verdict.get("verdict") == "done" else {"applied": False}
     if verdict.get("verdict") not in ("done", "moved"):
         return {"applied": False}
     ev = json.dumps({"by": "brain", "source": source, "quote": verdict.get("quote") or "", "why": verdict.get("why") or ""}, ensure_ascii=False)
