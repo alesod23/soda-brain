@@ -21,4 +21,5 @@ known). `build_us_tour_board.py` reads it: every scenario uses Caleb's Orlando->
 page (shared `app/server.js`, works for any trip with `meta.booked`). When Alessandro gives the booking photo or the
 flight numbers: fill date / dep (24h) / carrier / from / to in that JSON, rebuild, run `state/qa_us_tour.py`.
 Each whole trip has a 'Fly with Caleb from here' switch (build precomputes `compSwap`, page stores `swaps.json`); the picker writes `booked-pick.json` and re-runs the build. Never guess his flights from the chat: I once believed a photo showed them and it was board card #115.
+**Alessandro BOUGHT the same Delta 09:50 MCO->SFO on 2026-10-03 for EUR 320**: recorded in `app/trips/us-tour-2026-10/my_booked.json`; the build makes a bought flight the only option for its leg in every whole trip, at the paid price, never re-checked (no `_v`, not a TICKET row). Add any future purchase there.
 Related: [[feedback-trippy-companion-mirrors-until-split]].
