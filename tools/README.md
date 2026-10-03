@@ -65,6 +65,7 @@ is refused.
 |---|---|
 | `GET /health` | `{ok, db, pages, chunks, people, last_index_at}` |
 | `POST /brain/recall {query, k=8}` | hybrid search: `[{path, title, ord, text, score, kind, since, superseded_by}]` |
+| `POST /brain/match {text, k=8, include_done=false}` | S10: the nearest to-dos (`kind todo`, task-land rows and sub-items `<slug>#<n>`) and CRM people (`kind person`) for an event or a proposed step, k per kind, to-dos first: `[{kind, id, parent_id, title, text, status, due, score}]`; read-only token allowed; MCP tool `match_event` |
 | `GET /brain/page?path=memory/x.md` | the page body and fields |
 | `POST /brain/reindex` | runs the indexer in a background thread, `{started}` (`{started:false, running:true}` while one runs) |
 | `POST /crm/put {source, at, sha, doc}` | stores the doc version (same sha -> `{ok, version, unchanged:true}`), diffs per record, upserts changed, soft-deletes missing, writes meta; `{ok, version, changed:{companies,people,templates,signals}, deleted:{...}}` |

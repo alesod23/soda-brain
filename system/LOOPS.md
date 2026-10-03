@@ -63,6 +63,11 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   booking card closed without an explicit no keeps the call; a call with no email on the row gets a WhatsApp
   follow-up card. Measured latency live: the card lands 2 minutes after Notion stops editing the note (the note
   settles 22 to 49 minutes after the call starts).
+- Since 3 Oct 2026 (S10, the producer check): the reader has a second MCP tool, `match_event` on the brain door
+  (`~/.claude/scripts/meeting-reader.mcp.json`, token `${SODA_TOKEN_RO}`), calls it for every commitment it is about
+  to propose, and returns `already_covered` + `next_step.covered_by`; the card then says "Already on your to-do (id):
+  no new step" instead of proposing it again. Verified on Sophie Tollmann's note: the Pietro intro was found as the
+  open sub-item `healthcare-ecosystem-push#3`.
 
 ## 4. The draft lane (every message to a person)
 
@@ -179,6 +184,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   with pgvector every 5 min and serves `recall`, `what_is_true`, `page`, `crm_person`, `crm_search` over HTTP and MCP;
   the CRM document is mirrored into Postgres on every save (phase 3a); phase 3b makes Postgres the source and the box
   and the laptop read the same rows; phase 3c gives the orchestrator a propose route gated by the hub.
+- The to-dos are rows of the brain since 3 Oct 2026 (S10 phase 1, the mirror): schema `todo` (items, sub-items as
+  `<slug>#<n>`, links, append-only history, embedded chunks) filled by `tools/todo_ingest.py` from task-land
+  `Tasks/**` at the end of every index pass (310 rows on day one), plus `crm.people_chunks` (641 people embedded);
+  `brain.match_event` = RRF over both, k per kind; served as `POST /brain/match` (read-only token) and the MCP tool
+  `match_event`; `tools/todo_match.py` does the lookup, one Opus judgement (done / moved / none with the quote) and
+  the tick through `pipeline.py tick|redate --evidence` (log `_system/todo-match.jsonl`). Done is a state with
+  evidence, never a delete. Phase 2 (writers go through the door, task files written from the rows) is next.
 - The orchestrator (instinct, from 2 Oct 2026): uses its own connectors for Notion, WhatsApp, the Tundra Gmail and
   Calendar; reads this repo, task-land and coattio on GitHub; gets the CDTM account and LinkedIn through the door;
   proposes, never holds a send scope (his decision 2 Oct, to be relaxed rule by rule for what he never reviews); puts

@@ -44,6 +44,18 @@ hub hygiene rules in `hub_outdated.py` and a Today that separates what they owe;
 WhatsApp proposals read into lane cards (`instinct_inbox.py`, task `DA-InstinctInbox`); `push_again.py` (the
 "push again" ranking); the campaign `bounce_gate` (CRM H43). The NEXT STEPS section of the workplan is the queue.
 
+**3 Oct 2026, S10 phase 1: the to-dos are rows of the brain.** Schema `todo` (items, sub-items `<slug>#<n>`, links,
+append-only history, embedded chunks) + `crm.people_chunks`, filled by `tools/todo_ingest.py` at the end of every
+index pass (task-land `Tasks/**`, 310 rows, 641 people; 292 s first pass, 0.2 s unchanged). `brain.match_event` /
+`POST /brain/match` / MCP `match_event`: an event or a proposed step finds the nearest open to-dos and people, k per
+kind. `tools/todo_match.py`: lookup, one Opus judgement, tick through `pipeline.py tick|redate --evidence`
+(`_system/todo-match.jsonl`). The meeting reader carries `match_event` as a second MCP tool
+(`~/.claude/scripts/meeting-reader.mcp.json`, `${SODA_TOKEN_RO}`) and marks `already_covered`: verified on Sophie
+Tollmann's note (the Pietro intro = open sub-item `healthcare-ecosystem-push#3`). Decisions S1-S10 and the build log:
+`task-land/_system/WORKPLAN-20261001-soda-brain.md`. Gotchas: a UNION'd vector search needs k per kind or the 641
+people crowd out the to-dos; `pkill -f brain_serve.py` over ssh kills the ssh shell itself (use `[b]rain_serve`);
+the door listens on the Tailscale address only.
+
 **Lessons from the build.** `psql -c` does not interpolate `:'var'` (feed it on stdin); `sudo -u da VAR=x cmd` is
 refused by sudoers (use `env`); `2>/dev/null` on an install step hides the reason it died; the vault sync commits an
 agent's files while it works (review = the last commits); Windows Application Control blocks psycopg's binary wheel on
