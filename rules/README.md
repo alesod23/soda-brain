@@ -14,6 +14,7 @@ code bases read them by path. This file is the pointer and the description.
 | `CRM-CONTRACT.md` | CRM writes, Today, the reader | 42 | `~/.claude/skills/crm/SKILL.md` | `crm-app/observer.js`; `crm-app/reader.js` loads the ledger whole |
 | `MEETING-CONTRACT.md` | Notion meeting notes to steps | 8 | read whole by `gtm-eng/agent/meeting_loop.py` | the meeting loop |
 | `NOTIF-CONTRACT.md` | what reaches his phone | 5 | sodanotif routing prompt | sodanotif |
+| `PROACTIVE-CONTRACT.md` | what the system picks up from his to-do on its own, and how (from 2026-10-03) | 3 | read whole by sessions running `PIPELINE-WORKER.md` | `pipeline.py` (`--auto`, pause gate) |
 
 Canonical description: `task-land/_system/RULE-LOOP.md` (v3). Evidence: `task-land/_system/rule-hits.jsonl` (one line
 per observer decision, `{ts,surface,rule,action,item,...}`; `action:"ok"` lines are the denominator) and
@@ -24,7 +25,7 @@ the simulation's learner and by sessions, read whole by the callers.
 ## How a rule is born, compiled, checked, demoted
 
 1. He says one sentence: "this sucks because ...", "I like this", "this again", or asks for a change. The same turn:
-   `python task-land/_system/drafts/addrule.py --contract email|hub|crm|notif|meeting --rule "..." --quote "his words"
+   `python task-land/_system/drafts/addrule.py --contract email|hub|crm|notif|meeting|proactive --rule "..." --quote "his words"
    [--soft] [--like] [--item <id>]`. A change request becomes a build item in that surface's workplan instead.
 2. Compile: `python task-land/_system/drafts/compile_skill.py --contract <surface> --install` rewrites the skill from
    the ledger (rules "in front" by hit counts, the rest "assumed"); the skill is never edited by hand.
