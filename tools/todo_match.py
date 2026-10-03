@@ -154,8 +154,30 @@ def apply(verdict: dict, source: str, dry: bool) -> dict:
         return {"applied": False, "error": (r.stderr or r.stdout)[-200:]}
 
 
-STRONG = float(os.environ.get("MATCH_STRONG", "0.84"))      # cosine similarity (e5-small) a hit needs before the judge runs
 TICK_TODOS = os.name == "nt" or os.environ.get("TODO_TICK") == "1"   # task files are the laptop's; the box only closes cards
+
+
+def _eval():
+    """The learning layer (task-land/_system/cleaning_eval.py); None when absent or off. Never raises."""
+    try:
+        sys.path.insert(0, str(TASKLAND / "_system"))
+        import cleaning_eval
+        return cleaning_eval if cleaning_eval.enabled() else None
+    except Exception:
+        return None
+
+
+def strong_threshold() -> float:
+    ev = _eval()
+    if ev:
+        try:
+            return float(ev.params().get("match_strong") or 0.84)   # auto-adjusted on failures
+        except Exception:
+            pass
+    return float(os.environ.get("MATCH_STRONG", "0.84"))
+
+
+STRONG = strong_threshold()      # cosine similarity (e5-small) a hit needs before the judge runs
 
 
 def on_event(text: str, source: str, apply: bool = True, k: int = 6, dry: bool = False, model: str = "opus") -> dict:
@@ -176,12 +198,21 @@ def on_event(text: str, source: str, apply: bool = True, k: int = 6, dry: bool =
     except Exception as e:
         log_line(event="judge-failed", source=source, error=str(e)[:200]); return {"error": str(e)[:200]}
     out = []
+    ev = _eval()
     for v in verdicts:
-        if v.get("kind") == "todo" and v.get("verdict") in ("done", "moved") and not TICK_TODOS:
+        if ev:
+            ev.record_judge("A", "hub" if v.get("kind") == "card" else "todo", v["id"], str(v.get("verdict")), None, model, len(strong), len(text), str(v.get("why") or ""))
+        exc = ev.is_excepted(None, None, str(v.get("title") or "")) if ev else None
+        if exc and v.get("verdict") in ("done", "moved"):
+            res = {"applied": False, "excepted": exc.get("why")}
+        elif v.get("kind") == "todo" and v.get("verdict") in ("done", "moved") and not TICK_TODOS:
             res = {"applied": False, "proposed": "tick on the laptop"}
         else:
             res = apply_verdict(v, source, dry or not apply) if v.get("verdict") != "none" else {"applied": False}
         log_line(event="judged", source=source, id=v["id"], kind=v.get("kind"), verdict=v.get("verdict"), due=v.get("due"), quote=v.get("quote"), why=v.get("why"), **{kk: res[kk] for kk in res if kk != "ok"})
+        if ev and res.get("applied"):
+            res["aid"] = ev.record_action("hub" if v.get("kind") == "card" else "todo", v["id"], "A", "brain", str(v.get("why") or ""), str(v.get("quote") or ""),
+                                          None, source, None, "", str(v.get("title") or "")[:80], would_also="B-likely (the sweep sees the same event)")
         out.append(dict(v, **res))
     return {"hits": len(hits), "top_sim": top, "judged": True, "verdicts": out}
 
