@@ -623,7 +623,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   breakaway from the task job, output to `due-today-task.log`) so 25 drafts never hit the 40 min task limit. Log
   `push-again.jsonl`. Test `gtm-eng/agent/tests/test_push_again_apply.py` (stub decisions, stub runner that feeds the
   argv to due_today.main: dry yes = exactly the 4 pids with --dry, no = nothing, repeat = nothing, numbers = those).
-  Before G148 a session ran the command by hand. Test `gtm-eng/agent/tests/test_due_today.py`
+  Before G148 a session ran the command by hand. Two due_today processes at once (08:30 run + a push-again launch) are
+  safe since G153: every state write is a locked read-merge-write (`due-today-state.json.lock`, bounded 60 s wait, temp
+  file + os.replace; test `tests/test_state_lock.py`). Test `gtm-eng/agent/tests/test_due_today.py`
   case 10 (stubbed: a dry run with two pids calls the model for exactly those two, no Gmail / card / CRM write; the lane
   run drafts exactly those two; the one who answered is skipped).
 - **The feedback session (hub; built, armed, LIVE since 4 Oct 2026 17:06; this heading read "OFF until the cut-over").** `task-land/_system/feedback_session.py`, box
