@@ -77,6 +77,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   on Linux; coattio 67ad780 falls back to `os.homedir()` in every box-required module; box check in
   `_system/box-steps-20261004-goal.sh` block G10.)
   and the laptop task is disabled the same minute (one worker, one writer).
+  (4 Oct 19:48, goal run G111: path A's backlog of 8619 on the box had two causes. The ledger cursor lived in
+  `crm-outdated-state.json`, which git tracks, so the box read the LAPTOP's byte offset against its own ledger; and the
+  ledger repeats ids (laptop: 16073 lines, 1997 distinct ids, one corpus id 372 times). Now `scanLedger`: the cursor is
+  machine-local in `.crm-outdated-ledger-cursor` (untracked, `.*-cursor`) with `seen` ids kept 14 days; a pass spends
+  its 80 on DISTINCT unseen events oldest first and the offset stops before the first one it had no room for (deferred,
+  never skipped); events older than 14 days are path B's. Metrics A gain `backlog`, `dup_lines`, `stale`; `report` gains
+  `backlog` {distinct_unseen, repeated_lines, passes_to_drain} for THIS machine, read-only. coattio ae4783a; tests in
+  `tests/crm-outdated.test.js` (3 new); box check block G111 in `_system/box-steps-20261004-goal.sh`.)
 - Since 4 Oct 2026 (same build): the reader asks the brain before it writes a step (`crm-app/brain.js` -> `POST
   :4150/brain/match` with the person and the step, token `SODA_TOKEN_RO` from `~/.env/soda.env`); a strong open to-do or
   hub card (sim >= 0.84) is named in the origin's why in words ("already open in the brain: to-do ..."), the whole match
@@ -512,6 +520,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `surface-sweep.ps1`, `crm-bridge.ps1` (a to-do naming a person becomes that person's CRM step).
 - The daily page (Obsidian, `Daily/<date>.md`) is the edit surface: ((prompt)) directives, retitle = rename, overwrite
   = replace, done items stay until the next day, three mirror lines (CRM count, hub count, daily campaign).
+- **`((rule: ...))` on any line (G102, 4 Oct 2026)**: a rule for the system, not an instruction for the task. daily-sync
+  collects it, `task-land/_system/rule_directive.py` files it (ledger_verdict picks the ledger it is about, addrule writes
+  his words verbatim), the line's task is untouched, a rule-only line creates no task; `directive: rule` in daily-sync.log.
 
 ## 10. Notifications and voice
 
