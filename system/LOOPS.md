@@ -576,6 +576,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `jobs.py whitelist` / `jobs.py add`. `system-feedback.jsonl` stays (CRM digest, simulation learner, savior claims).
 - `due_today.py` (built 1 Oct, laptop task DA-DueToday): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
+  **`--pids` (G90, 4 Oct 2026 23:50): the push-again drafting path.** `due_today.py run --pids <pid,pid,...> [--dry]` drafts
+  a push-again follow-up for exactly those people (his yes / numbers on the push-again card, `push_again.py` meta.pids),
+  in his order, whatever their step date, through the same lane (email = Gmail draft + sidecar `source: push again` +
+  register.py; WhatsApp / LinkedIn = the CRM card). Instruction = "push again" on his last message (date and detail from
+  push_again's own out / in types) plus the row's step when he owes one. Kept guards: dead / suppressed / not_target, a
+  running campaign sequence, carded or deferred today, a draft already in the lane, "they answered after your last
+  message" (skip, logged). Dropped on purpose: the due date, "done outside" (his outbound is why they are on the list),
+  the one-day live-exchange silence. `--max` defaults to the number of pids. Nothing consumes the push-again yes yet:
+  a session (or a later hub action) runs this command with the card's pids. Test `gtm-eng/agent/tests/test_due_today.py`
+  case 10 (stubbed: a dry run with two pids calls the model for exactly those two, no Gmail / card / CRM write; the lane
+  run drafts exactly those two; the one who answered is skipped).
 - **The feedback session (hub; built, armed, LIVE since 4 Oct 2026 17:06; this heading read "OFF until the cut-over").** `task-land/_system/feedback_session.py`, box
   cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent (LIVE since 4 Oct 2026 17:06: the switch exists and the laptop's DA-FeedbackWorker is disabled). One resumed Opus session reads the
   open hub-review `queue.jsonl` entries, splits every entry into RULES (addrule.py now) and WORK (a job, below); "big
@@ -860,6 +871,28 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   card for a call with somebody outside, the reader's `todo-proposal` card for an internal call (Caleb, the team). Deduped
   against that card's step, `already_covered`, the counterpart's CRM row, the brain, other open proactive cards and the
   same meeting twice (`notion:<page>`). Test `_system/test_proactive_meeting.py`.
+
+- **The call is ONE status on two views; sub-items become child tasks (G46 = soda-brain plan S5 + S6, 4 Oct 2026 23:59).**
+  S5: `pipeline.py call` keeps the task (`contact:` + `call_step: true`); `crm-bridge.ps1` hands its step to the CRM and
+  does NOT archive it (`crm_step_at` = first hand-over, `crm_step_sig` = due + title hash, unchanged = not posted again);
+  an ordinary `contact:` task is still archived as before. `pipeline.py sync` (step (f)) reads the CRM row as a second
+  source: a `cold_call` / `step_done_outside` / manual `call_done` / `met` after the hand-over, or the handed step
+  closed on the CRM, finishes the task (notes say where); he ticks the task = the CRM step closes (model.js closeStep
+  shape, read-apply-PUT through :4124/api/data, `crm_step_closed`, once). The CRM Call page has a To-do column:
+  `crm-app/todos.js` (GET `/api/todos`, answered by the machine's own task-land before the proxy, read-only, 30 s cache)
+  gives the pipeline stage of the task whose `contact:` is the person; without one, model.js `callTodoStatus` uses the
+  CRM step (open = created, last step done = finished); ready for review links the hub card. S6: `pipeline.py child
+  <slug>#<n> [--pickup]` (and `pickup <slug>#<n>`) moves sub-item n, with what is nested under it, out of the parent's
+  checklist into a new task `child_of: <parent>` (same bucket, project; its nested lines = its own sub-checklist). The
+  daily page renders a child one level under its parent (after the parent's sub-items, own orange marker + card, stage
+  line one level deeper, no category bullet) when both sit in the same section; otherwise top-level. Absorb: a nested
+  `[[slug|...]]` line under a parent is a child entry only when that task says `child_of:` that parent, so it never
+  becomes a sub-item; tick / retitle / section move work on it, its sub-checklist is never absorbed from the page;
+  deleting it parks it to Waiting (shown there top-level); replace-pairing skips children; a renamed parent repoints
+  `child_of:`. `pipeline.py sync` ticks the parent when all its non-cancelled children are done (archive counted) and
+  none of its own sub-items is open. Tests `task-land/_system/test_todo_calls_children.py` (temp vault, stubbed CRM,
+  intake recorder: 23 checks, including a full no-edit pass leaving every task file byte-identical) and
+  `.medtech-crm/tests/call-todo.test.js` (todos.js, callTodoStatus, the Call page cell lifted from app.js).
 
 ## 10. Notifications and voice
 
