@@ -102,6 +102,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `.crm-outdated-replay-cursor`; `report` gains `replay`. Real pass 22:22 from the laptop against the box writer: 17
   distinct events, 2 items checked, 0 changes. Box dry run of the new rules on the 186 open items: 0 changes. coattio
   d725f6f, ac9eb87; `tests/crm-outdated-g14.test.js` 4/4.)
+  **G157 (5 Oct 2026 01:00): the normal pass replays.** The box cron calls only the normal pass, so the box never
+  replayed (its report: 109 distinct not yet, runs 0). `pass()` = `run()` then `replay({limit: MAX_REPLAY = 80})`: at
+  most 80 not-yet-replayed events a pass, oldest gap first, through path A and this machine's
+  `/review/updates/apply` (the box is the writer; `CRM_REPLAY_WRITER` names another), Undo kept; done ids in the replay
+  cursor, a drained gap goes to its `gaps_done` and then the pass skips the ledger read; a replay where the brain
+  answered no match marks nothing done; a replay failure never fails the pass. 109 = 2 passes (80 + 29). No new cron
+  line. coattio ba46389, `tests/crm-outdated-g157.test.js` 2/2; box block "G156 + G157".
 - Since 4 Oct 2026 (same build): the reader asks the brain before it writes a step (`crm-app/brain.js` -> `POST
   :4150/brain/match` with the person and the step, token `SODA_TOKEN_RO` from `~/.env/soda.env`); a strong open to-do or
   hub card (sim >= 0.84) is named in the origin's why in words ("already open in the brain: to-do ..."), the whole match
@@ -245,8 +252,15 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   risk ("DO NOT SEND AS IS" on a hard gate). Env: `CRM_LANE_CHECK_OFF=1`, `CRM_LANE_LLM=0`. Test
   `node --test tests/crm-lane.test.js` (stub CRM, stub models, stub `~/triage/slots.py` in a temp home). coattio
   7675c50 + 5aa02c9.
+  **G156 (5 Oct 2026 01:00):** the hit line's file is `$TASKLAND/_system/rule-hits.jsonl`, else
+  `$HOME/task-land/_system/rule-hits.jsonl`, on both machines (`drafts/common.py` `TASKLAND`/`HITS`). It was a fixed
+  `/home/da/...` path on Linux, so the box's crm-lane test (temp HOME) failed 1 test and wrote 12 `crm:zz-lane-*` test
+  hits into the real ledger (00:53, still there). task-land f28dba999.
 
 ## 4b. Producers attach to the CRM item, not a card (THE PLAN 10(c), built 4 Oct 2026 04:50)
+
+(5 Oct 2026 01:00) The lane line of an attached version writes its rule hits to `$TASKLAND` or `$HOME/task-land` (G156,
+section 4); the hygiene worker's normal pass now drains the G14 replay itself (G157, section 1).
 
 - A producer's draft for a person with a CRM row goes onto that person's Today review item and posts NO hub card.
   Route `POST :4137/review/artifact {pid, draft_id, sidecar, critic_line, compose_url, card:{text, context}, channel,
