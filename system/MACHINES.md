@@ -63,9 +63,9 @@ Why this split: the laptop is the writer for anything that needs Chrome, Windows
 | 4137 | loopback + Tailscale | `coattio/intake-server.js` (box copy) | tmux `coattio` + `coattio-sync.sh` |
 | 4141 | nothing | gtm-board-server dead since 2026-09-19 | nothing starts it |
 | 4142 | 100.85.52.84 | `hub-review/server.js` (phone review page; reads the hub's `state.json` from disk, writes only through hub HTTP routes; loopback refuses by design) | cron `hub-review-supervise.sh` (@reboot and every 5 min) |
-| 4143 | unverified | `research-page` static `http.server` (event companion pages) | nothing (orphaned claude shell parent) |
-| 4144 | unverified | `research-page/event_server.py` | nothing |
-| 4145 | unverified | `research-page/snitem_server.py` | nothing |
+| 4143 | 100.85.52.84 | `research-page` static `http.server` (event companion pages) | `da-research-page@4143` (template unit `task-land/_system/vps/da-research-page@.service`, Restart=always; written 4 Oct 2026 by fix M6, live once he installs it) |
+| 4144 | 100.85.52.84 | `research-page/event_server.py` | `da-research-page@4144` (same template, M6) |
+| 4145 | 100.85.52.84 | `research-page/snitem_server.py` | `da-research-page@4145` (same template, M6) |
 | 4180 | 0.0.0.0 | `approval-hub/server.js` (the live hub; `HUB_HOST=0.0.0.0`) | `da-hub.service` (`Restart=always`) |
 | 4150 | 100.85.52.84 | PLANNED `da-brain` (see section 9) | PLANNED systemd |
 
@@ -157,7 +157,7 @@ Unit sources live in `task-land/_system/vps/*.service|timer`; `units.list` is th
 
 `units.list` names 13 units and does not include `da-sync.timer` or `da-health.timer`, both of which the inventory saw running (FINDINGS, cross-source).
 
-tmux sessions (not units): `savior` since 2026-09-19 (`claude --name "savior box (19-09)" --remote-control --channels plugin:telegram`, child `bun ... telegram server.ts`; never kill or respawn it, only Alessandro runs `restore-savior`), `workbench` since 2026-09-08 (`claude --remote-control`), `coattio` (the two CRM servers with `COATTIO_BOX=1`, `TELEGRAM_STATE_DIR=telegram-null`, `CLAUDE_BIN=/usr/bin/claude`, `CRM_GMAIL=triage/gmail.py`). Unsupervised processes whose parent is an orphaned claude shell (a reboot drops them): trippy :4126 (cron tries), hub-review :4142 (cron), research-page :4143, :4144, :4145 (nothing).
+tmux sessions (not units): `savior` since 2026-09-19 (`claude --name "savior box (19-09)" --remote-control --channels plugin:telegram`, child `bun ... telegram server.ts`; never kill or respawn it, only Alessandro runs `restore-savior`), `workbench` since 2026-09-08 (`claude --remote-control`), `coattio` (the two CRM servers with `COATTIO_BOX=1`, `TELEGRAM_STATE_DIR=telegram-null`, `CLAUDE_BIN=/usr/bin/claude`, `CRM_GMAIL=triage/gmail.py`). Unsupervised processes whose parent is an orphaned claude shell (a reboot drops them): trippy :4126 (cron tries), hub-review :4142 (cron). research-page :4143, :4144, :4145 died with the 4 Oct 02:55 reboot; from M6 (4 Oct 2026) they are `da-research-page@<port>` units.
 
 ## 7. Sync mechanisms
 
@@ -178,7 +178,7 @@ tmux sessions (not units): `savior` since 2026-09-19 (`claude --name "savior box
 
 ## 8. What runs unsupervised, and where the logs are
 
-Unsupervised (no unit, no watchdog, a reboot or a closed shell kills it): box research-page servers :4143, :4144, :4145; the box `gtm-eng` copy (nothing starts :4141). Cron-supervised only (restart within 5 min, no crash detection between ticks): trippy :4126, hub-review :4142. Everything else on the box is a systemd unit with `Restart=always` or a timer; everything on the laptop is a schtasks task with a watchdog, except travel-search commits (by hand).
+Unsupervised (no unit, no watchdog, a reboot or a closed shell kills it): the box `gtm-eng` copy (nothing starts :4141). Cron-supervised only (restart within 5 min, no crash detection between ticks): trippy :4126, hub-review :4142. Everything else on the box is a systemd unit with `Restart=always` or a timer; everything on the laptop is a schtasks task with a watchdog, except travel-search commits (by hand).
 
 Logs:
 
@@ -213,7 +213,7 @@ Not built as of the inventories; described here so the map does not go stale on 
 - Cadences of DA-HubForward, DA-FeedbackWorker, DA-InboundAsks, DA-MeetingLoop, LinkedIn-Poll, SentCorpus-Harvest, Notion-MeetingFiler, DailyCampaign-AB-Reminder, US-Campaign-Daily, Archive-Screenshots, Curriculum-* are not in the sources; `schtasks /query` would settle them.
 - Whether Push-Lane-Watchdog, Approval-Hub-Watchdog and Voice-Lane-Watch still exist after the hub moved to the box (the laptop popups were deactivated).
 - Root crontab on the box is unknown (sudo needs a password).
-- Bind addresses of :4143 to :4145 were not recorded.
+- Bind addresses of :4143 to :4145: 100.85.52.84 (event_server.py, snitem_server.py hardcode it; the unit binds :4143 there too, 4 Oct 2026).
 - Conflict branch names used by `repo-sync.sh` for vault_kb and medtech-brain.
 - The box `gtm-eng` dir: is it still needed now that :4141 is laptop-only?
 - `da-brain-index.timer` cadence and whether the `crm` schema becomes the writer (replacing `crm.json`) or a versioned copy first.
