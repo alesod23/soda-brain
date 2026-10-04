@@ -103,8 +103,10 @@ def judge(event: str, source: str, hits: list[dict], model: str = "opus", timeou
     cl = "\n".join(f"- {h['id']}" + (" (hub card: done = the thing it asks about already happened; its action is never executed)" if h.get("kind") == "card" else "")
                    + (f" (due {h['due']})" if h.get("due") and h.get("kind") != "card" else "") + f": {str(h.get('title') or '')[:200]}" for h in cands)
     prompt = JUDGE_PROMPT.replace("__SOURCE__", source).replace("__EVENT__", event[:5000]).replace("__CANDS__", cl)
-    r = subprocess.run([CLAUDE, "-p", prompt, "--model", model, "--output-format", "text", "--max-turns", "1"],
-                       capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout, creationflags=NOWIN)
+    # The prompt travels on stdin, never as an argument: a .cmd stand-in for claude (CLAUDE_BIN in the sandbox) drops
+    # everything after the first newline of an argument, and the Windows command line is capped at 32k characters.
+    r = subprocess.run([CLAUDE, "-p", "--model", model, "--output-format", "text", "--max-turns", "1"],
+                       input=prompt, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout, creationflags=NOWIN)
     txt = r.stdout or ""
     i, j = txt.find("["), txt.rfind("]")
     if i < 0 or j < i:
