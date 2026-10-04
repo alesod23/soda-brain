@@ -391,6 +391,33 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   Not covered: how Telegram itself draws a card (Telegram Web needs his one-time login in the walker's profile; PARKED,
   not asked).
 
+- **The daily System Update and the Judge (goal run G74, G94, G95; 4 Oct 2026 19:40).**
+  `task-land/_system/system-agent/system_update.py run --cron`, BOX cron `0 6,7,8 * * *` (goes on only in the 08:00
+  hour of Rome and once a day, so it is right under UTC or Rome and across DST; the box runs with the laptop asleep; no
+  laptop task). It reads the last 24 h and 7 days: the ledger `soda-brain/system/nodes.json` (node states), the System
+  Agent's `runs.jsonl` (ticks, failing checks) and `incidents.jsonl` (plus the GTM agent's history while it exists),
+  the registry `broken.jsonl` (opened, closed, open by owner, open over 60 min), `decisions.jsonl` (his verdicts, the
+  system's closes), `rule-hits.jsonl`, the new rules (rows of the `*-CONTRACT.md` ledgers whose id was not in git at
+  the window start), `goal-run/integration.jsonl`, `goal-run/ui-walk/<date>/last.json`, `health-vps.json`, the hub's
+  open count, and the fix sessions (`sessions.jsonl`, or the `sessions` lists on registry lines until it exists). It
+  writes ONE page `system-agent/updates/YYYY-MM-DD.html` (light, 390 px, long lists folded) and ONE hub card kind
+  `update` (head on line one, summary in `context`, page path in meta; series "system update", so hub_outdated closes
+  yesterday's), plus `updates.jsonl` (the once-a-day guard). ALERT rules on rolling 24 h windows: the last window's
+  fix-session count or points above the 7-window mean + 1 sd AND the window before too; or one node with a session in
+  each of the last 3 windows. The ALERT rides on the card's first line, so its SodaPing is that card's one ping (H5,
+  H7). `--no-post` writes the page and `YYYY-MM-DD.card.json` only; `--root DIR` runs on a fixture tree.
+  THE JUDGE (`system-agent/judge.py`), WEEKLY on Sunday (scope change 19:17) inside that day's update, other days the
+  line "next Judge: <date>": one Opus pass (claude CLI, `--model opus`, no tools, CREATE_NO_WINDOW, the hub_outdated.py
+  shell-out) over the 7-day bundle (`system_update.week_evidence`: registry, sessions and the trend, incidents per day,
+  integration runs, UI walk, sim scores `~/sim/runs/night.jsonl`, hub verdicts and closes per day, rule hits, nodes, box
+  health, hub open). Verdict "no system-wide problem" or "SYSTEM-WIDE: <line>" with evidence and an action; every
+  verdict a line in `judge.jsonl` (id `J-YYYYMMDD`, `held: null`), the next week's run appends `held` true/false with
+  why; a SYSTEM-WIDE verdict becomes registry line `J-SW-YYYYMMDD` through `registry.put` (maintenance / fix_session,
+  or his_command / him). First real verdict J-20261004: "no system-wide problem". Test
+  `system-agent/tests/test_system_update.py` (fixture: both ALERTs, a stub hub on a temp port gets exactly one card, a
+  stub claude, `held` filled the next Sunday). Gaps: `goal-run/ui-walk/` is gitignored, so the box run sees no UI walk;
+  the update node is not yet in `nodes.json` (the System Agent build owns the ledger).
+
 ## 8. The rule loop
 
 - His five sentences: "this sucks because", "I like this", "this again", a change request, "slower/faster".

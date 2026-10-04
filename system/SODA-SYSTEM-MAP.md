@@ -4,7 +4,7 @@ The visual map is `SODA-SYSTEM-MAP.html` in this folder (open it in Chrome; it w
 This page is its narrative and its index, so the brain can recall it. Same rules as the rest of `system/`: updated in
 the same turn as a service, port, job, store or rule changes; dated; no secrets; no person records.
 
-Last verified: 2026-10-04 04:10 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
+Last verified: 2026-10-04 19:43 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
 log of 3-4 Oct, not re-checked on the box that night). 2026-10-04 19:15: Granola retired (his ruling); node w_granola
 is drawn retired (task Granola-Auto-Sweep disabled), the Notion meeting note is written by Notion's meeting AI.
 
@@ -66,6 +66,16 @@ laptop), `gate_tg` (through the hub ledger's Telegram message ids). It writes fa
 (`broken.jsonl`, items `UI-<surface>-<width>`), which map-sync draws on those gate nodes. Wires: w_uiwalk -> gate_review,
 gate_crm, gate_tg (reads); w_uiwalk -> the registry (writes). Not yet drawn in the HTML (the System Agent build owns
 the NODES rebuild and its review loop); details in `LOOPS.md` section 7.
+
+## New node 4 Oct 2026 19:40: the daily System Update and the Judge (`b_sysupdate`, box, script)
+
+`task-land/_system/system-agent/system_update.py`, box cron at 08:00 Rome (`0 6,7,8 * * *`, self-gated): one page
+`system-agent/updates/YYYY-MM-DD.html` and one hub `update` card a day (how it went, mistakes and good things, new rules,
+the maintenance of the whole core, fix sessions per day for 7 days with the ALERT rules). On Sunday it calls THE JUDGE
+(`judge.py`, Opus, weekly): one verdict over 7 days into the page and `judge.jsonl`; a SYSTEM-WIDE verdict becomes a
+registry line. Wires: b_sysupdate reads the registry, nodes.json, decisions.jsonl, the ledgers, integration and UI walk
+runs, health-vps.json; writes the hub (one card) and the registry (the Judge). Not yet drawn in the HTML or in
+`nodes.json` (the System Agent build owns both); details in `LOOPS.md` section 7.
 
 ## How to keep it
 
