@@ -11,7 +11,7 @@
    "reads": "Gmail: cdtm, tundra (sodano23 token on the box expired)",
    "writes": "",
    "note": "Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box.",
-   "status": "broken",
+   "status": "live",
    "checks": {
     "box:gmail-sodano23": {
      "probe": {
@@ -42,9 +42,7 @@
      },
      "his_command": true
     }
-   },
-   "status_before_broken": "live",
-   "broken": "H1 26 Sep 02:00 · him · the check passes once the box receiver has the token"
+   }
   },
   {
    "id": "ev_wa",
@@ -955,7 +953,7 @@
    "writes": "mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "tasks": [
     "TaskLand-GitSync"
    ],
@@ -979,7 +977,9 @@
      "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
      "escalate": "fix session (G116); a box-side park is a for_him terminal command"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "A-gitsync-task-land-10050044 05 Oct 00:14 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "w_vaultsync",
