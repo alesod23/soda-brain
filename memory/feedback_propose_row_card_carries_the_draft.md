@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: c187d271-3593-4bb6-8043-3c5ba319d8a1
-  modified: 2026-10-04T02:13:25.260Z
+  modified: 2026-10-04T02:32:07.789Z
 ---
 
 A card that proposes opening a CRM row for someone the system means to write to SHOWS THE DRAFT, already written, so he
@@ -29,5 +29,8 @@ Also: instinct HAD saved a draft to Vittoria on 2 Oct, but `draft_already` searc
 `register_existing`, register.py `--no-apply`, never replaced or deleted; ours: `REVISE` with his words, then
 `handle_proposal(pid=...)` through the lane). With a row, an unsent instinct draft with no sidecar is registered, not
 skipped. Name matching: `is_person` (surname inside the squashed address). Tests: `python
-gtm-eng/agent/tests/test_instinct_inbox.py` cases [5], [8]. Hints in `_system/hints/instinct-inbox.md`. Rule: HUB H39.
+gtm-eng/agent/tests/test_instinct_inbox.py` cases [5], [8], [9].
+Row EXISTS and instinct gave no text (hub #39, Andellini, 4 Oct: "You should have drafted the message too."): `write_text`
+drafts it (H34), the old `ask_text_card` is deleted; `scheduled_already` first skips when a message to the person already
+sits in Gmail's Scheduled folder (Martina's follow-up was scheduled for 5 Oct 06:00Z, so nothing was drafted). Hints in `_system/hints/instinct-inbox.md`. Rule: HUB H39.
 See [[reference_approval_hub]], [[reference_soda_brain]], [[feedback_every_email_draft_goes_through_the_lane]].
