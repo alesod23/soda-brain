@@ -867,6 +867,22 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   writes their skill cell `n/a: direct read: meeting_loop.py reads MEETING-CONTRACT.md on every call` and `n/a: direct
   read: trip_chat_worker.py (the trip worker) reads TRIPPY-CONTRACT.md + preferences.json on every call`, each proven by a
   grep of the reading line, so the cell goes red if the read is removed.
+- **The maps and the simulation report are loops too (goal run G109 + G150, 5 Oct 2026 00:50).** Box: the system map
+  and the simulation map carry `<script src="feedback-box.js" data-surface="system-map|simulation-map">` before
+  `</body>`, put there by the BUILDER (`soda-brain/tools/build_map.py`, `FEEDBACK_PAGES`: `render()` adds it to the
+  system map on every render, including the System Agent's `map_sync`; a plain `build_map.py` run adds it to the
+  hand-written simulation map; `--check` fails on a page without it), so no rebuild drops it. The simulation report he
+  reads is the score page (`~/sim/harness/judge.py page` -> `~/sim/score.html`, rebuilt every judged day): the same
+  box INLINED (the page sits away from `feedback-box.js`), surface `simulation`. Route: kind feedback ->
+  `ledger_verdict.SURFACE_LEDGER` (system-map, simulation-map, simulation -> proactive by default; the model moves a
+  sentence to the ledger it is about). The maps' rule is now a ledger row: PROACTIVE H25 (his 4 Oct 04:05 words on the
+  first map, "Continue until loop until you have all those minor details fixed", filed from the memory where it had
+  stayed); `review_map.py` is its observer (one hit line per run, H25 ok on CLEAN, flag with the finding counts;
+  `--hits`, `--no-hits`). Brain: the maps' `.md` narratives are indexed (`system/*.md`); the `.html` is a view, not
+  indexed; the nights' results live in `SODA-SIMULATION-MAP.md`. Honest cells left: the report's decider `judge.py`
+  reads no ledger (red, on purpose while the acceptance run is compared with night 3), the report's observer is n/a (a
+  measurement, not an artifact made by rules), the maps' skill is n/a (no decider: the builder has no model). Tests:
+  `python -m pytest soda-brain/tools/tests/test_map_feedback_box.py`, `python ~/sim/harness/tests/test_g150_score_feedback_box.py`.
 
 ## 9. Tasks and the daily page
 
