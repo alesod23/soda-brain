@@ -287,6 +287,36 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   (09:10) writes the weekly check when the decision window is full; the box posts it. Canonical: `task-land/_system/RULE-LOOP.md`.
 - Phase 2 of the brain: ledgers and hits move into `soda-brain/rules/`, every rule gets `since`, `checked_last`,
   `superseded_by`; `brain check` demotes by the number.
+- **The fifth ledger, the WHITELIST (his rule of 4 Oct 2026 17:00, HUB H43).** *"if it's very clear what I want, and it
+  doesn't really conflict much with what we've put already out there, and it doesn't need further approval ... I don't
+  need an approval card. I need it to be treated more as a whitelist fix."* A system change he asks for (a hub comment,
+  the hub's system box, a CRM review sentence of scope `system`) goes through ONE classifier,
+  `task-land/_system/drafts/whitelist_judge.py judge`: the never list in CODE first (secret, env file, permission, send,
+  deletion, login, a synced repo on the box by hand = approval card, no model call), then ONE Opus call whose prompt is the
+  compiled skill `~/.claude/skills/whitelist/SKILL.md` + the HARD rules of the ledgers the request touches + his sentence;
+  it answers `{whitelist, why, risk_flags[], one_line}`; any failure = approval card.
+  - Entry: `jobs.py whitelist --words ... --card ... --touches ... --run-now` (the CRM path: `review-api.js addWhitelist`
+    from `digest()`; the hub path: `feedback_session.py`'s session runs the same command). Whitelist = a job of kind
+    `whitelist`, started at once in its own lane (`job_runner.py`, mutex `runner-wl.lock`, wall 45 min, acceptEdits with an
+    allowlist and a denylist, no MCP, no Agent); not whitelist = the job held as `needs_him` + ONE approval card
+    (`meta.section: "whitelist-request"`); the runner reads that card on every run: yes = queued, no = failed.
+  - Proof: the session commits naming his sentence and names its check; the runner verifies the commit and its message,
+    re-checks the files against `FORBIDDEN_PATH` (a hit on an unapproved job is reverted and becomes an approval card),
+    then `jobs.whitelist_done` posts ONE card `kind: update`, `meta.section: "whitelist"`, text `whitelist fix: <one line>`,
+    context = his words verbatim, files + commit, proof, undo. The GTM agent's own fixes that held (restarts, releases,
+    re-hide) post the same card, silent (`gtm_agent.whitelist_card`).
+  - The section: hub-review tab **Whitelist** (key 5, `currency/patch-hub-review-whitelist-20261004.py`, live 4 Oct
+    17:20): one line per fix, click / c = the verdict box. Telegram reads `whitelist: ...` for these and `done: ...` for any
+    other inform (approval-hub `updPrefix`).
+  - The loop: his verdict on a line ("this needed approval", "this was fine", "never touch X on your own") is queued as
+    `whitelist-verdict` and routed IN CODE by `feedback_session.whitelist_verdicts` (also any comment on a card whose
+    `meta.section` is whitelist) to `whitelist_judge.file_verdict`: a like (maps to H1), a confirmation of an existing rule
+    (`rule-confirmations.jsonl`), or a new row (`addrule.py --contract whitelist`); the skill recompiles at once and the next
+    classifier call reads it. Ledger `task-land/_system/WHITELIST-CONTRACT.md`, map `drafts/skill-map-whitelist.json`.
+  - Limits: a fix to a file outside git (the box's `hub-review/`, `approval-hub/`) cannot carry its proof, so it is never a
+    whitelist fix; a job created on the box runs on the box (`run_on`), the laptop leaves it 15 min.
+  - Tests: `python task-land/_system/test_whitelist.py` (6 classifier fixtures, the job end to end in a temp JOBS_DIR, the
+    revert, the routing; `WL_LIVE=1` adds one live Opus call), `node --test tests/whitelist-path.test.js` in `.medtech-crm`.
 
 ## 9. Tasks and the daily page
 
