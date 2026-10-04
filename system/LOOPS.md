@@ -204,6 +204,29 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   Telegram message saying the base is his version. Filed as H20 and H21 in `HUB-CARD-CONTRACT.md`.
 - **Still open (H21):** the system-wide feedback box takes no images, and he reviews on a phone where a screenshot is
   the fastest way to show what is wrong.
+- **THE ITERATION LOG (HUB H40 / CRM H55, his rule of 4 Oct 2026 16:13, built 16:35).** A card that came back to him
+  after a CHANGE shows, on its face, every earlier input of his, verbatim and dated, with the version it produced, so
+  he decides from the record and not from memory. One shape on both surfaces:
+  `iterations: [{n, at, by, kind: change|comment|edit, his_words (verbatim, never trimmed), his_text? (his own version
+  of the message), produced: {version, at, label} | null (= not yet applied), outcome? (the handler's note when the
+  card text did not change), source}]` plus `version` (v1 as created, +1 per revision that changed what he reads:
+  text, body, subject, context, action; a flag-only revise from hub_outdated or pipeline is not a version).
+  Hub: the field lives ON the card. `POST /iterate {id, add | set, version}` (add one input; `set` = the backfill,
+  keeps live entries it does not know); `POST /revise` links every open iteration to the version it produced and
+  takes `iteration` (his words or text that caused this revision). Writers: hub-review COMMIT (a CHANGE, or a skip
+  with a comment, appends his words), `reconcile.py` (his Gmail edit = its own version), `register.py` /
+  `send_card.py --his-words "..." [--his-by telegram]` (a session revising after his Telegram "N change: ..."),
+  `iterations.py add --card <id> --words "..."` for anything else; jobs.py and the feedback session need nothing,
+  their `/revise` links the open entries. Derivation from the older records (hub-review `queue.jsonl` change and
+  comment lines, `hub-edits.jsonl`, the sidecar's `## His edit (Gmail)`, `decisions.jsonl` feedback that is not
+  `[observer]`) and the backfill: `task-land/_system/iterations.py derive|backfill [--apply]|add`. Telegram carries
+  ONE line ("Your N earlier comments are on the card (now vN): <hub-review link>"); hub-review shows the block
+  "Your earlier comments on this card" under the draft (under the text on other cards) and a "vN · N earlier
+  comments" chip in the card head that scrolls to it. CRM: `review-api.js items()` exposes the same `iterations`,
+  `current_version`, `current_after` from the dossier's versions (`comment`, `rewrite_of`) and the crm-review
+  feedback lines; `review.js` shows the same block on the item's face. Box patches:
+  `task-land/_system/currency/patch-hub-iterations-20261004.py` (hub) and
+  `patch-hub-review-iterations-20261004.py` (page + server). Tests: `task-land/_system/test_iterations.py`.
 
 ## 6. Campaigns and boards (GTM engine)
 
