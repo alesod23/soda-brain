@@ -23,4 +23,11 @@ had been filed as rules but no code read them; the reader re-set "answer Guido" 
 No phone-call source exists yet (WhatsApp calls not captured by wa-daemon, cellular invisible): "you talked since" only sees
 calendar / Notion meetings and logged call_done. Test: `node --test tests/not-target.test.js`.
 
+**Before any row exists (added 4 Oct 2026, Nick's second sentence):** `inbound_asks.py saved_name(key)` reads the name he
+saved the WhatsApp chat under (`~/.claude/wa-daemon/lid-overrides.json`, `aliases.json`, `contacts.json`; e.g. "Nick CDTM S26")
+and the judge prompt gets it; the judge returns `personal: true` for a cohort/family-tagged saved name + casual chat with no work
+ask, and handle_chat / handle return "personal" (log event `personal`, no row, no step, no card). Test:
+`python tests/test_personal_chat.py` in ~/gtm-eng/agent. `inbound-asks.jsonl` event=personal lists every skip (check it if a real
+ask from a CDTM peer goes missing).
+
 Related: [[reference-reply-check-before-draft]], [[project-crm-review-loop-vision]].
