@@ -628,6 +628,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   Night 3 (4 Oct, brain arm B, 17 days, 14 scored): event score 71.3, hub surface 53 falling as stale Today rows pile
   up, the brain closed 0 cards and ticked 1 to-do; arm A on the same two days scored the same.
 - Nothing fake ever enters the real CRM, mail, Notion, memory or tasks; the fake world is deleted on his word.
+- Goal run, 4 Oct 2026 20:40 (G84 to G86): the sandbox exercises the CRM review surface (every `/review/*` route runs
+  the sandbox copy of `review-api.js` through `fakes/review_twin.js`; producers attach, the hub mirror and
+  `crm-outdated.js` tick, the simulated him approves / skips / comments on the board and commits); the three night-3
+  harness bugs are fixed with `tests/test_g85_harness_bugs.py`; `compare.py goal --root <root>` prints goal
+  condition 3 per day (sends without his yes, stale Today, hub open trend, failures) and PASS/FAIL (exit 0 = PASS).
+  The acceptance run: `powershell -NoProfile -File ~/sim/harness/accept.ps1 -Root C:/Users/Alessandro/sim/accept
+  -Base 4400 -Name accept-B -Days 1-7 -Setup -Launch` (night 3's world copied, arm B, hidden).
 
 ## 13. The brain (this repo) and the door
 
