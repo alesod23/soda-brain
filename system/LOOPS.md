@@ -252,7 +252,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   posts "laptop silent". `feedback_worker.py` (task DA-FeedbackWorker) takes system feedback items
   (`_system/gtm-agent/system-feedback.jsonl`, filed by `feedback_queue.py` from his sentences and by the simulation's
   learner) and fixes what is in its whitelist; items it cannot take are `needs_him`.
-- `due_today.py` (built 1 Oct, not scheduled): a promise he made ("reach back in two weeks") comes back prepared on
+- `due_today.py` (built 1 Oct, laptop task DA-DueToday): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
 - **The feedback session (hub; built, armed, OFF until the cut-over).** `task-land/_system/feedback_session.py`, box
   cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent. One resumed Opus session reads the
@@ -350,7 +350,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `task-land/_system/WORKPLAN-20261001-soda-brain.md` (MORNING REPORT).
 - Fixed the same night: the reader now receives the full inbound mail text (`gmail.py recent --with-body`, 4,000
   chars) instead of the Gmail snippet; a call with no email on the row gets a WhatsApp follow-up card.
-- `due_today.py` is not scheduled; the meeting loop's open-loops change is designed, not built.
+- `due_today.py` runs as the laptop task DA-DueToday; the meeting loop's open-loops change is designed, not built.
 - Hub hygiene scored 32/100 in the simulation: cards stay open after he did the thing or the event passed.
 - The LinkedIn accept tick and `li_restore.py` "needs you" cards: the sign-in window must be opened by the system first.
 - The box's contacts sync and the sodano23 Gmail token are expired (FINDINGS-20261001.md); the 23:00 digest's Telegram

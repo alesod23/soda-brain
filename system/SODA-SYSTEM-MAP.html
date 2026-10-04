@@ -292,7 +292,7 @@ footer p{max-width:90ch}
   <h2>Built but off, armed, paused, planned, broken</h2>
   <div class="cols2">
     <div class="card"><h3><i class="dot armed"></i>Armed or built, off</h3><ul>
-      <li><b>feedback_session.py</b> (box, cron every 5 min): inert until <code>/home/da/hub-review/no-telegram</code> exists; the cut-over waits for "commits processed"</li>
+      <li><b>feedback_session.py</b> (box, cron every 5 min): live since 4 Oct 17:06 (the switch file /home/da/hub-review/no-telegram exists; the laptop DA-FeedbackWorker is disabled)</li>
       <li><b>cleaning_eval.py</b>: traces, 72 h success, spot check, auto-adjust; off until <code>_system/cleaning-eval.on</code>, after the Tuesday reset; the box lacks the Langfuse SDK and keys</li>
       <li><b>pipeline.py pickup --auto</b>: paused until Tue 6 Oct 20:20 (<code>AUTO_PAUSED_UNTIL</code>), then only the task types that got a yes on the 8 trial cards</li>
       <li><b>DailyCampaign-AB-Reminder</b>: one shot, 9 Oct 10:00</li>
@@ -311,7 +311,7 @@ footer p{max-width:90ch}
       <li>The simulation re-run with the brain in the readers and the Edge variant</li>
     </ul></div>
     <div class="card"><h3><i class="dot broken"></i>Known broken or stale</h3><ul>
-      <li>box <code>contacts_sync.py</code> failing since 21 Sep (token); the sodano23 Gmail token on the box expired</li>
+      <li>box <code>contacts_sync.py</code> works again (4 Oct 16:30: 7 new/changed, 1 card); the sodano23 Gmail token on the box is still expired (his sign-in, H1)</li>
       <li>the 23:00 digest's Telegram send fails with HTTP 400</li>
       <li>research-page servers :4143 to :4145 unsupervised; the box <code>gtm-eng</code> copy dead since 19 Sep; trippy supervise logs EADDRINUSE noise</li>
       <li>the hub-review feedback box takes no images (H21)</li>
@@ -369,7 +369,7 @@ rd_supervisor:{label:"DA supervisor",kind:"script",machine:"laptop",cadence:"eve
 // brain + stores
 st_pg:{label:"Postgres soda (box)",kind:"store",machine:"box",cadence:"index every 5 min (da-brain-index.timer)",code:"soda-brain/tools/schema.sql, brain_index.py, todo_ingest.py",reads:"soda-brain md, the contracts and hints, task-land Tasks/**, the hub's state.json, crm.people",writes:"brain.pages/chunks (e5-small, 384-d), crm.doc_versions (one a day) + companies, people, people_chunks (641), events; todo.items (310), links, history (append-only, RESTRICT + trigger), chunks; hub.cards + card_chunks",llm:"none (local embeddings on CPU)",gate:"",status:"live",note:"The repos and the task files stay the truth; the DB is the index plus the CRM versions. Nightly pg_dump 03:30 to the Drive mount, 14 days. pgvector 0.6.0 (0.8 is his sudo step)."},
 st_door:{label:"the door :4150",kind:"service",machine:"box",cadence:"always (da-brain.service)",code:"soda-brain/tools/brain_serve.py",reads:"Postgres soda",writes:"serves recall, what_is_true, page, crm_person, crm_search, match_event over HTTP and MCP (/mcp); POST /crm/put stores versions; POST /brain/match with the read-only token",llm:"none",gate:"",status:"live",note:"Tailscale address only (loopback gives 000); Funnel at da-box.taile93f00.ts.net. Tokens in ~/.env/soda.env, never printed."},
-st_crm:{label:"crm.json (laptop)",kind:"store",machine:"laptop",cadence:"",code:".medtech-crm/crm.json, 5.7 MB",reads:"",writes:"ONE writer: crm-app/server.js PUT /api/data (through it: intake :4137, the monitor, peer.js, run-commit, the Notion sync)",status:"live",note:"The box copy is a pull replica and is in conflict tonight (647 vs 645 people, card #10): the merge per record is plan item 1; one writer is item 2."},
+st_crm:{label:"crm.json (laptop)",kind:"store",machine:"laptop",cadence:"",code:".medtech-crm/crm.json, 5.7 MB",reads:"",writes:"ONE writer: crm-app/server.js PUT /api/data (through it: intake :4137, the monitor, peer.js, run-commit, the Notion sync)",status:"live",note:"The box copy is a pull replica and is merged per record on 4 Oct 04:07 (647 people, cards #10 closed); one writer: the flip to the box is being cut over on 4 Oct (COATTIO_WRITER=box on the box, the laptop becomes the replica)."},
 st_tasks:{label:"task files",kind:"store",machine:"laptop",cadence:"git both ways: 15 min laptop, 60 s box",code:"task-land/Tasks/{inbox,active,waiting,archive}",reads:"",writes:"daily-sync.ps1, capture.py, pipeline.py (sole writer of stage, tick, redate), surface-sweep.ps1, crm-bridge.ps1",status:"live"},
 st_hub:{label:"hub state.json",kind:"store",machine:"box",cadence:"",code:"/home/da/approval-hub/state.json (52 open), hub-rules.json; hub-review/queue.jsonl",reads:"",writes:"approval-hub/server.js only (POST /pending, /resolve, /revise, /close); supersede-at-post by producer + person + action since 3 Oct",status:"live",note:"Resolved cards are pruned after 24 h; counts come from decisions.jsonl. Mirrored into task-land/_system/box-tools/ every minute; queue.jsonl has no backup."},
 st_ledgers:{label:"the rule ledgers",kind:"store",machine:"laptop",cadence:"",code:"task-land/_system/{CRM,EMAIL-REVIEW,HUB-CARD,MEETING,NOTIF,PROACTIVE}-CONTRACT.md",reads:"",writes:"addrule.py only; compile_skill.py --install builds the skills crm, drafting, hub, proactive",status:"live",note:"Compiled skills reach the box by scp, by hand (gap S4)."},
@@ -497,7 +497,7 @@ const MACH = {
     m_wa:{label:"wa-daemon + send :4119",kind:"exec",sub:"da-wa.service"},
     m_notif:{label:"sodanotif + pollers",kind:"reader",sub:"Gmail, Slack every 60 s"},
     m_cron:{label:"cron and timers",kind:"script",sub:"sweep 10 min, reconcile 5, sync 60 s, dump 03:30"},
-    m_coattio_b:{label:"coattio replica :4124 / :4137",kind:"service",sub:"pull only (in conflict tonight)"},
+    m_coattio_b:{label:"coattio replica :4124 / :4137",kind:"service",sub:"pull replica; becoming the writer (flip, 4 Oct)"},
     m_mounts:{label:"rclone mounts",kind:"store",sub:"/home/da/gdrive, tundra-drive"},
     m_tg:{label:"Telegram",kind:"gate",sub:"cards and verdicts"},
     m_page:{label:"hub-review page",kind:"surface",sub:"100.85.52.84:4142 over Tailscale"},
