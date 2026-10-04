@@ -333,6 +333,20 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   "artifact ready: <link>", the work comment resolved, the item back to review (an artifact is never a message version,
   so it cannot be approved into a send). A person off today's board gets the one hub update card instead. Test
   `.medtech-crm/tests/work-job.test.js`.
+- **The integration check (goal run, 4 Oct 2026; performance hint 18).** `task-land/_system/goal-run/integration_check.py`:
+  randomized, read-only end-to-end checks across the surfaces, run by the goal orchestrator after every landed build and
+  by laptop task `DA-IntegrationCheck` every 2 h from 21:00 (run-hidden.vbs, window_lint clean). Each run picks 5 of 10
+  checks (seed printed; `--all`, `--seed N`, `--only a,b`, `--list`): `crm-health` (laptop :4124 proxy, box writer),
+  `crm-board` (#today in headless Chrome at 1568 and 390, own user-data-dir under `~/.cache/integration-check`, every
+  write answered locally), `crm-review` (calls `.medtech-crm/tools/review_board_check.py`), `hub-pending` (GET :4180),
+  `hub-review-count` (box :4142), `brain-recall` (a random ledger rule's own chunk in the door's top 8), `event-dry-run`
+  (a synthetic event built from a random open to-do through `todo_match.py lookup` + `event --dry`, TASKLAND = a temp
+  dir, a stub judge, the real todo-match.jsonl must not grow), `window-lint`, `health-lines` (health.json,
+  health-vps.json, door /health), `maps-fresh` (map "Last verified" not older than the newest LOOPS.md change once
+  that change is 60 min old). A FAIL becomes a registry item `IC-<check>` (key `integration:<check>`, maintenance,
+  owner agent) through `system-agent/registry.py put`: a repeat appends a newer state of the same id (fails+1), two
+  passes close it (`registry_close_after_passes`). Runs: `goal-run/integration.jsonl`. Test flags `--inject-fail
+  <check>` and `--registry <temp file>` (tests never write the real registry).
 
 ## 8. The rule loop
 

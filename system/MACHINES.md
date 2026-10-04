@@ -11,6 +11,8 @@ hourly, DA-HubForward 5 min keep-alive, Voice-Lane-Watch enabled every minute; t
 hub-era tasks (Approval-Hub-Watchdog, Push-Lane-Watchdog, WA-Daemon-*, TG-*, SODANOtif-Daemon-*) are Disabled.
 `da-brain.service` and `da-brain-index.timer` (section 9) are live since 2 Oct. Section 3: the daily pg_dump at
 03:30 writes to the Drive mount.
+2026-10-04 19:20: laptop task DA-IntegrationCheck added (every 2 h from 21:00, wscript + run-hidden.vbs, python
+`task-land/_system/goal-run/integration_check.py`; LOOPS.md section 7).
 
 ## 1. The three devices
 
