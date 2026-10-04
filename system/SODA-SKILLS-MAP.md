@@ -1,10 +1,10 @@
 # SODA SKILLS MAP: every skill, as it is tonight
 
 The visual page is [SODA-SKILLS-MAP.html](file:///C:/Users/Alessandro/soda-brain/system/SODA-SKILLS-MAP.html); this file is the same content as Markdown links,
-for Obsidian or any viewer. Built 4 Oct 2026 23:02 from the live files. See also [SODA-SYSTEM-MAP.md](file:///C:/Users/Alessandro/soda-brain/system/SODA-SYSTEM-MAP.md).
+for Obsidian or any viewer. Built 5 Oct 2026 01:21 from the live files. See also [SODA-SYSTEM-MAP.md](file:///C:/Users/Alessandro/soda-brain/system/SODA-SYSTEM-MAP.md).
 
 8 compiled skills, 2 ledgers read without a compiled skill, 24 hand-written skills.
-Coverage (rule_loop_check.py --md): G green 76, A amber 15, R red 11 of 102 cells (+ 6 n/a: no such part by nature, reason in the cell).
+Coverage (rule_loop_check.py --md): G green 83, A amber 14, R red 3 of 100 cells (+ 8 n/a: no such part by nature, reason in the cell).
 
 ## Read this first
 
@@ -12,7 +12,7 @@ Coverage (rule_loop_check.py --md): G green 76, A amber 15, R red 11 of 102 cell
 2. **Say what is wrong.** One sentence where you see the thing it made (the "your input" line of each surface), or on Telegram. It is filed into the right ledger the same turn; you never edit a skill or a ledger.
 3. **See which rule produced a line.** Every rule in a compiled skill ends with a tag like `[ledger H12]`: row H12 of its ledger, your sentence, dated and verbatim.
 
-The file links open on the laptop only; on claude.ai they do not open.
+The skill texts are embedded below each card of the HTML page and open everywhere, claude.ai included; the file links (here and on the page) open on the laptop only.
 
 ## The rule loop
 
@@ -41,7 +41,7 @@ READ THIS BEFORE WRITING ANY MESSAGE TO A PERSON - email, WhatsApp, LinkedIn DM,
 - Skill: [drafting/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/drafting/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/drafting/SKILL.md) · box `/home/da/.claude/skills/drafting/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 89 ledger rules; 25 [ledger H..] tags; 6 ledger rows newer than this compile, not in the skill yet
 - Map: [skill-map-email.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-email.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract email --install`
 - Loaded by: every session before it writes a message to a person (email, WhatsApp, LinkedIn); the draft critic reads the ledger itself; the event-page Confirmed worker reads it too
-- Observer: 741 lines, 314 of them a hit (not "ok"); last line 4 Oct 19:37
+- Observer: 756 lines, 325 of them a hit (not "ok"); last line 5 Oct 00:53
 - R1 as it reads in the skill: "Top down: greeting, one line of warmth (or, in a cold mail, a minimal intro: who I am plus one line of what we do), then the ask, then why, in the same paragraph. The subject is the ask too, and a cold subject opens with the sender framing ("AI founder curious to learn ...", "Student-founder ..." `[ledger H18,H47,H49,H59,H61 +like H57,H58; memory feedback_outreach_ask_first_peer_voice]`
 - Coverage (email (drafts)): ledger G, skill G, box G, route G, observer G, brain G
 - Your input: On the CRM review, a / s / c on the message (the reason box), or one sentence on Telegram or in a session: filed into this ledger the same turn.
@@ -54,7 +54,7 @@ READ THIS BEFORE WRITING TO THE CRM (a person, a next step, a note) and, for the
 - Skill: [crm/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/crm/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/crm/SKILL.md) · box `/home/da/.claude/skills/crm/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 57 ledger rules; 53 [ledger H..] tags
 - Map: [skill-map-crm.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-crm.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract crm --install`
 - Loaded by: review-api.js (the CRM reader, before it decides a next step) and every session before it writes to the CRM; the event-page Confirmed worker
-- Observer: 11,722 lines, 5,347 of them a hit (not "ok"); last line 4 Oct 22:29
+- Observer: 14,259 lines, 6,185 of them a hit (not "ok"); last line 5 Oct 00:15
 - R1 as it reads in the skill: "A draft produced from the person panel (ask box) is a real Gmail draft, never only text in the panel's Draft tab; if the person has a thread, the draft is a reply in that thread. "this clealry doesnt work btw, i dont have that email drafted.... it should be a response, too."" `[ledger H25]`
 - Coverage (CRM review + Ask box): ledger G, skill G, box G, route G, observer G, brain G
 - Your input: On the CRM row, a / s / r / c or the Ask box; or say it on Telegram: filed the same turn.
@@ -67,7 +67,7 @@ READ THIS BEFORE POSTING ANY CARD to the Ping hub (POST 127.0.0.1:4180/pending) 
 - Skill: [hub/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/hub/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/hub/SKILL.md) · box `/home/da/.claude/skills/hub/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 57 ledger rules; 45 [ledger H..] tags; 2 ledger rows newer than this compile, not in the skill yet
 - Map: [skill-map-hub.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-hub.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract hub --install`
 - Loaded by: every session before it posts a card to the hub (127.0.0.1:4180); the hub guard checks hub-rules.json
-- Observer: 627 lines, 256 of them a hit (not "ok"); last line 4 Oct 23:00
+- Observer: 632 lines, 256 of them a hit (not "ok"); last line 5 Oct 01:05
 - R1 as it reads in the skill: "Every new event (a message or email he sent, a reply that arrived, a meeting that happened) is checked against the open cards: a card whose proposal that event makes moot is closed or marked outdated the same run, never left open. "the moment that new event went out (the moment I sent that ..." `[ledger H15]`
 - Coverage (hub cards): ledger G, skill G, box G, route G, observer G, brain G
 - Your input: The comment box under any verdict on hub-review, or a reply to the card: filed the same turn.
@@ -76,11 +76,11 @@ READ THIS BEFORE POSTING ANY CARD to the Ping hub (POST 127.0.0.1:4180/pending) 
 
 READ THIS BEFORE PICKING UP A TO-DO ON YOUR OWN (pipeline.py pickup --auto), while doing it, and before handing it back (pipeline.py ready --auto). Compiled from PROACTIVE-CONTRACT.md.
 
-- Ledger: [PROACTIVE-CONTRACT.md](file:///C:/Users/Alessandro/task-land/_system/PROACTIVE-CONTRACT.md) · 24 rules · newest row H24, 2026-10-04
-- Skill: [proactive/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/proactive/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/proactive/SKILL.md) · box `/home/da/.claude/skills/proactive/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 24 ledger rules; 21 [ledger H..] tags
+- Ledger: [PROACTIVE-CONTRACT.md](file:///C:/Users/Alessandro/task-land/_system/PROACTIVE-CONTRACT.md) · 25 rules · newest row H25, 2026-10-04
+- Skill: [proactive/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/proactive/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/proactive/SKILL.md) · box `/home/da/.claude/skills/proactive/SKILL.md` · compiled 2026-10-05 (skill_v 2026-10-05a); 15 rules in front, compiled from 25 ledger rules; 22 [ledger H..] tags
 - Map: [skill-map-proactive.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-proactive.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract proactive --install`
 - Loaded by: pipeline.py (pickup --auto / ready --auto), proactive_todo.decide on every call, and the daily page decider (Resolve-TaskDirective)
-- Observer: 3 lines, 2 of them a hit (not "ok"); last line 4 Oct 21:09
+- Observer: 4 lines, 2 of them a hit (not "ok"); last line 5 Oct 00:15
 - R1 as it reads in the skill: "Proactive pickups are live: the 3 Oct pause until the Tuesday reset (H1) was lifted on 4 Oct 20:48 (H24), so on every to-do the system can do it does the work on its own, unattended, on a schedule, until it is ready for his review. The gate is still AUTO_PAUSED_UNTIL in pipeline.py: pickup ..." `[ledger H1,H24]`
 - Coverage (proactive (to-do pickup)): ledger G, skill G, box A, route A, observer G, brain G
 - Coverage (proactive-todo (to-dos from an ask he accepted, G118)): ledger G, skill G, box G, route G, observer A, brain G
@@ -149,7 +149,7 @@ Meeting notes (the Notion meeting AI page) turned into steps: what the meeting l
 - Skill: none, the decider reads the ledger itself
 - Map: none (nothing is compiled for this surface)
 - Loaded by: gtm-eng/agent/meeting_loop.py reads the ledger itself on every run (no compiled skill)
-- Observer: 8 lines, 0 of them a hit (not "ok"); last line 4 Oct 19:56
+- Observer: 16 lines, 0 of them a hit (not "ok"); last line 4 Oct 23:44
 - Coverage (meeting notes): ledger G, skill n/a:, box A, route A, observer G, brain G
 - Your input: A comment on the hub card the meeting loop produces, or one sentence on Telegram: filed the same turn.
 
@@ -194,4 +194,4 @@ No ledger behind them: a session loads one when your ask matches its first line.
 - **people-search** (box only, not installed on the laptop): [box copy mirrored in task-land](file:///C:/Users/Alessandro/task-land/_system/box-tools/skills/people-search/SKILL.md) · box `/home/da/.claude/skills/people-search/SKILL.md`. Find and rank professional people for recruiting, partnerships, sales, or research from user-provided data, public web sources, an authenticated search session, or a connected provider. Use for people discovery, LinkedIn or Sales Navigator search design, ...
 - **tundra-poc-deck** (box only, not installed on the laptop): [box copy mirrored in task-land](file:///C:/Users/Alessandro/task-land/_system/box-tools/skills/tundra-poc-deck/SKILL.md) · box `/home/da/.claude/skills/tundra-poc-deck/SKILL.md`. Rebuild the generic hospital PoC proposal PDF from a Claude Design export of the Tundra pitch deck, and version that export in the Tundra Shared Drive. Use when Alessandro supplies a new "Tundra Pitch Deck" .zip exported from Claude Design, or asks to ...
 
-Box copies last checked over ssh at 22:20 on 4 Oct (byte-identical then); the drafting, crm and notif recompiles of 23:00 reach the box with box step G137 (box-steps-20261004-goal.sh).
+Box copies checked over ssh at 22:20 on 4 Oct: the eight compiled skills on the box are byte-identical (md5) to the laptop's and the mirror's; the box also has people-search and tundra-poc-deck, which the laptop does not. Embedded skill and ledger texts are the files as read at build time.
