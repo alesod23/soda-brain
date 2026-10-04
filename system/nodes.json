@@ -965,7 +965,7 @@
      "probe": {
       "type": "finding"
      },
-     "healthy_when": "task-land: 0 behind origin/main after a fetch, no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
+     "healthy_when": "task-land: no origin/main commit older than 15 min unmerged after a fetch (A-gitsync-task-land-10050044: both sides commit every minute), no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
      "if_fails": "a fix session: merge origin/main into the branch (merge, NEVER rebase, both sides kept; JSON/jsonl conflicts = union by id), push, then the box pulls (memory reference_task_land_sync_parked_conflict); a parked conflict-* branch is merged into main the same way",
      "known_fixes": [],
      "files": [
@@ -1005,7 +1005,7 @@
      "probe": {
       "type": "finding"
      },
-     "healthy_when": "soda-brain: 0 behind origin/main after a fetch, no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
+     "healthy_when": "soda-brain: no origin/main commit older than 15 min unmerged after a fetch (A-gitsync-task-land-10050044: both sides commit every minute), no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
      "if_fails": "a fix session: merge origin/main into the branch (merge, NEVER rebase, both sides kept; JSON/jsonl conflicts = union by id), push, then the box pulls (memory reference_task_land_sync_parked_conflict); a parked conflict-* branch is merged into main the same way",
      "known_fixes": [],
      "files": [
@@ -1021,7 +1021,7 @@
      "probe": {
       "type": "finding"
      },
-     "healthy_when": "coattio (~/.medtech-crm): 0 behind origin/main after a fetch, no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
+     "healthy_when": "coattio (~/.medtech-crm): no origin/main commit older than 15 min unmerged after a fetch (A-gitsync-task-land-10050044: both sides commit every minute), no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
      "if_fails": "a fix session: merge origin/main into the branch (merge, NEVER rebase, both sides kept; JSON/jsonl conflicts = union by id), push, then the box pulls (memory reference_task_land_sync_parked_conflict); a parked conflict-* branch is merged into main the same way",
      "known_fixes": [],
      "files": [
