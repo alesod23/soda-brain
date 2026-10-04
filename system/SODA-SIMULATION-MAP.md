@@ -88,6 +88,13 @@ over the items shown), hub open cards at the end of the day (`runs/current/surfa
 CRM board open items; PASS needs arm B, at least 5 scored days, an event average of at least 71.3, 0 sends without
 his yes, stale Today at most 20%, a hub-open slope of at most 0.5 cards a day, 0 harness failures (days that raised or
 ended without a judge line). Smoke day: `-Root C:/Users/Alessandro/sim/smoke -Base 4500 -Name smoke-B -Days 1-1`.
+Smoke day run 4 Oct 20:37 to 21:39 (62 min wall, day 1 = 12 Oct, 15 events): score 56.9 (night 3 B on the same
+day: 55.4), fatal 2 (both the meeting loop's invite after a confirmed meeting card: the open question G87), the board
+in the loop (9 drafts generated, 3 commits, the commit's sends counted as his yes), 0 harness failures; week 45 to 52%
+over that hour, other builders included. G127 (4 Oct 21:40): `run_night.py` tears down every fake it starts (a
+Windows job object with kill-on-close, finally + atexit, `runs/<night>/pids.json`, `run_night.py reap [<night>]`
+that checks each pid's command line is a harness fake); proof `tests/test_g127_teardown.py` (STOP, an injected day
+failure, a hard kill).
 
 ## How to keep it
 

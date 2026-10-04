@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-10-04T17:58:48.928Z
+  modified: 2026-10-04T19:36:38.792Z
 ---
 
 Split on 4 Oct 2026 (design `soda-brain/handoffs/DESIGN-20261004-system-agent.md`, his words: "a maintainer for the
@@ -26,6 +26,10 @@ section 7.
   it; a never-list cause = `stuck` at once. The guard hook fails OPEN if it crashes (Claude Code), hence the preflight.
 - **STUCK card** only after a fix session said stuck, or for a check the ledger marks his_command. His yes runs through
   `unstuck.py`: auth (account pre-selected), terminal (pre-typed, `his-yes` in window-watch via expected.jsonl), run.
+- **Past the whitelist NEVER a card (HUB H54/H55/H56, 4 Oct 21:19-21:23, his "never again"):** a timing failure
+  (memory, port, timeout, sync) waits for its condition and the agent re-runs the work itself; anything else = the fix
+  session; he hears only from a session that returned stuck, in the H54 shape (what broke, what it means, what I did,
+  what happens next, the one thing). Both agents (shared `agentlib.Engine`).
 - **GTM agent** (`gtm-eng/agent/gtm_agent.py`, task GTM-Agent): campaigns only; non-campaign faults -> `inbox.jsonl`;
   reads `blockers.json`; `gtm_agent.py section --json` is its part of the ONE combined report (09:00, 18:15, posted by
   the System Agent, which also pushes the heartbeat `box_watch.py` reads).

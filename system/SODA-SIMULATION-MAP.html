@@ -583,7 +583,7 @@ const RESULTS = {
 
 const REG = [
  ["sim_day.py","runner","sets a run up (cast, plan, CRM seed, board, to-dos) and runs one simulated day end to end","the real system's 24 hours","per root","harness/sim_day.py"],
- ["run_night.py","runner","days one after another under the cap; GO and STOP files; night.jsonl and the PROGRESS line","none","hidden, via run-hidden.vbs","harness/run_night.py"],
+ ["run_night.py","runner","days one after another under the cap; GO and STOP files; night.jsonl and the PROGRESS line (only that day's judge line, G85); tears down every fake it starts: job object, finally, runs/&lt;night&gt;/pids.json, <code>run_night.py reap</code> (G127)","none","hidden, via run-hidden.vbs","harness/run_night.py"],
  ["go.ps1","launcher","rebuilds both roots, pre-flight, starts both runners hidden","none","by hand","harness/go.ps1"],
  ["runner.py","runner","clock jumps, delivery, ticks, seeding, fake servers up and down","the schedulers (schtasks, cron)","per root","harness/runner.py"],
  ["build_sandbox.py","guard G5","copies the live code, rewrites addresses and ports, lays the fakes on top, leak scan","the live repos","before every day","harness/build_sandbox.py"],
