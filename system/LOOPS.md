@@ -187,7 +187,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   prepared, his run); the ALERT rule in `hub_outdated.py` matches only the head of a card and never a routine report.
 
 - Code: `/home/da/approval-hub/server.js` (systemd `da-hub`, :4180 on the box; the laptop's 127.0.0.1:4180 is a
-  forward over Tailscale), `/home/da/hub-review/server.js` (:4142, the phone page: j/k, a/s/x/c, one commit = the yes).
+  forward over Tailscale), `/home/da/hub-review/server.js` (:4142, the phone page: j/k, a/s/x/c, one commit = the yes; since 4 Oct 2026 18:14 its CRM tab reads the box
+  CRM first, `127.0.0.1:4137/review/items`, and links to `http://100.85.52.84:4124`, the box being the CRM writer).
 - A card: `POST /pending {text, context, notify:true}`; the decision in `text`, the artifact in `context`; it pings
   once on Telegram; resolved cards are pruned after 24 h from `state.json`, so counts come from `decisions.jsonl`.
 - The guard (`hub-rules.json`) downgrades cards that break `HUB-CARD-CONTRACT.md` (kind update, never refuses).
@@ -300,7 +301,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 - `/home/da/sodanotif/` (systemd `da-sodanotif`, pollers every 60 s): Gmail, Slack, WhatsApp taps and the LinkedIn
   store, classified by `routing-prompt.md` and `NOTIF-CONTRACT.md`, pushed as Telegram cards; CDTM group mail never,
-  noreply never, groups never.
+  noreply never, groups never. WhatsApp tap (`sources/wa.js`, 4 Oct 2026): each message id is emitted once (the store can
+  hold copies; the box CRM monitor self-appended its tail until coattio f0dc584), and a message is dropped when he
+  wrote later in that chat (already answered).
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
 
