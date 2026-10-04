@@ -720,7 +720,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-crm-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-crm-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today`"
+   "broken": "UI-crm-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-crm-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598"
   },
   {
    "id": "gate_page",
@@ -2033,8 +2033,8 @@
     "map:stale-notes": {
      "probe": {
       "type": "file_absent",
-      "file": "~/soda-brain/system/SODA-SYSTEM-MAP.html",
-      "pattern": "Failing since 21 Sep \\(token\\)|in conflict tonight|Plan items 1 and 2: merge per record|Unsupervised; a reboot kills them"
+      "file": "~/soda-brain/system/nodes.json",
+      "pattern": "Failing since 21 Se[p] \\(token\\)|in conflict tonigh[t]|Plan items 1 and [2]: merge per record|Unsupervised; a reboot kills the[m]"
      },
      "if_fails": "edit the notes",
      "known_fixes": [],
@@ -2043,7 +2043,7 @@
      ],
      "rollback": "git revert",
      "escalate": "none",
-     "healthy_when": "the four stale notes are gone from NODES"
+     "healthy_when": "the four stale notes are gone from the ledger nodes (the map renders from it)"
     }
    }
   },

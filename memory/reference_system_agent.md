@@ -1,42 +1,36 @@
 ---
 name: reference-system-agent
-description: "The system agent (task GTM-Agent, gtm-eng/agent/gtm_agent.py) - checks every 10 min that GTM is running, fixes from a whitelist, two hub updates a day, box fallback"
+description: "THE SYSTEM AGENT (task DA-SystemAgent, task-land/_system/system-agent/system_agent.py, built 4 Oct 2026): maintainer of the whole SODA SYSTEM; the ledger nodes.json is its manual; registry broken.jsonl, fix sessions, STUCK cards; the GTM agent keeps only the campaigns"
 metadata:
   node_type: memory
   type: reference
   originSessionId: da99606c-b308-443c-a768-d5a8aa2c0833
-  modified: 2026-09-28T12:25:14.238Z
+  modified: 2026-10-04T17:58:48.928Z
 ---
 
-Built 2026-09-28 on his ask: "a GTM agent, obsessed with ensuring a push in gtm is present everyday", then "what im
-asking is a system agent more than a GTM. whose goal is for GTM to be running and running well".
+Split on 4 Oct 2026 (design `soda-brain/handoffs/DESIGN-20261004-system-agent.md`, his words: "a maintainer for the
+whole SODA SYSTEM ... all the ones that are about maintenance get fixed"). Full description: `soda-brain/system/LOOPS.md`
+section 7.
 
-- **Where:** `~/gtm-eng/agent/` (`gtm_agent.py`, `config.json`, `li_probe.py`, `README.md`, `tests/`). Task
-  `GTM-Agent` every 10 min through `gtm-agent-hidden.vbs`. Workplan `~/gtm-eng/WORKPLAN-20260928-gtm-agent.md`.
-- **Checks:** campaigns (stopped board or channel, steps due and not going, engine crash, no push by noon, daily
-  board and fire), CRM Today, contacts to find ([[reference-channel-search]]), hub cards current and waiting
-  (decision 24 h, draft 48 h), servers, scheduled tasks, Gmail, LinkedIn, sync, console windows
-  ([[reference-window-watch]]).
-- **Fixes alone (whitelist, capped):** release_channel (only after a dropped connection AND the tool tested working),
-  start_task, start_servers, li_repair, hide_task. Anything else: Opus reads the evidence, ONE card, which closes by
-  itself when the problem is gone. It never sends, never logs in.
-- **Updates:** 09:00 and 18:15 Rome, hub cards kind update, head "GTM agent: pushing today, YES/NO". A report must
-  carry no alert word (failed, down, error...) or `hub_outdated.py` never ages it: `calm()` rewrites them.
-- **Box:** `task-land/_system/gtm-agent/box_watch.py`, cron */10, reads `~/.local/state/gtm-agent/heartbeat.json`
-  pushed by the laptop over ssh. Laptop silent 60 min in business hours with sends due = one card a day.
-- **After a wake** nothing is judged late for 30 min (`settle_min`): on the first day the agent nearly raised a false
-  alarm for steps that were only waiting for the first tick after the lid opened.
-- **Judge it:** `runs.jsonl`, `incidents.jsonl`, `python gtm_agent.py status|incidents|missed "..."`.
+- **System Agent:** `task-land/_system/system-agent/` (`system_agent.py`, `registry.py`, `agentlib.py` the shared incident
+  engine, `unstuck.py`, `fix_guard.py`, `config.json`, `tests/`). Task `DA-SystemAgent` every 10 min, `DA-Unstuck`
+  every 1 min, both through run-hidden.vbs (`register-tasks.ps1`).
+- **Its manual = THE LEDGER `soda-brain/system/nodes.json`** (his word 19:13): per node the checks (probe, healthy_when,
+  if_fails, known_fixes, his_command, for_him), ports, tasks, paths. The map's NODES are RENDERED from it
+  (`soda-brain/tools/build_map.py`): edit the ledger, never the HTML block. Drift (task missing, path missing, port up
+  on a node marked off) = `stale-ledger` + a fix-session line.
+- **Registry** `broken.jsonl` (newest line per id wins): maintenance / his_command / his_decision. Closes only when the
+  check passes twice in its own ticks (or once after a fix session's own pass).
+- **Fix session** = job kind `fix` (`jobs.add_fix`, `job_runner.run_fix`): Opus, 30 min soft, 45 hard, 1 week point,
+  once to 2 after a reproduction, 3 a day, never at 5h >= 80%, kill switch `system-agent/OFF`. The box is READ-ONLY for
+  it; a never-list cause = `stuck` at once. The guard hook fails OPEN if it crashes (Claude Code), hence the preflight.
+- **STUCK card** only after a fix session said stuck, or for a check the ledger marks his_command. His yes runs through
+  `unstuck.py`: auth (account pre-selected), terminal (pre-typed, `his-yes` in window-watch via expected.jsonl), run.
+- **GTM agent** (`gtm-eng/agent/gtm_agent.py`, task GTM-Agent): campaigns only; non-campaign faults -> `inbox.jsonl`;
+  reads `blockers.json`; `gtm_agent.py section --json` is its part of the ONE combined report (09:00, 18:15, posted by
+  the System Agent, which also pushes the heartbeat `box_watch.py` reads).
+- **Judge it:** `system_agent.py status | incidents | registry [--all] | brief <id> | check --only <key>`.
 
-Related: [[reference-linkedin-launcher-reaper]], [[reference-daily-campaign]], [[reference-hub-lives-on-the-box]].
-
-Brief it was built from: `task-land/_system/HANDOFF-20260928-gtm-agent.md`.
-
-**System feedback (added 2026-09-28):** a sentence he types in a review field about the system ("why did you not see
-it", "system problem", the "change the system" pill) used to be filed only as a rule of that surface (his Amos
-comment became H80), which nobody builds from. `check_feedback` lifts it into
-`task-land/_system/gtm-agent/system-feedback.jsonl` (status open) and every update lists the open ones. A session
-that fixes one sets its line to `"status": "done"` with `"changed": "..."`. A card he commented on shows
-"commented · waiting" and sorts last in the CRM review.
-
-**AUDIT check (2026-09-29, his ask after 16 stale alerts and 3 drafts closed without a word were found by hand):** `check_audit` runs at every agent pass and looks at what the system DID: its own alert cards open about problems that are gone or posted twice (closed by itself, fix `close_own_cards`), the same card open twice, draft cards closed as a no by a closed tab with no word of his while the draft is still unsent in Gmail (verified with `gmail.py get-draft`, via the sidecar's `hub_card_id`), people named by an automatic reply and not written to after 24 h, sends booked for a past day that never went out, the meeting loop not reading Notion. Everything lands in the report's section AUDIT, where he comments line by line in the GTM agent tab of the hub review. Run it alone: `python gtm-eng/agent/tests/run_audit_live.py`. A new class of "found by hand" = a new block in `check_audit`, same turn.
+Gotchas learned building it: a quoted heredoc in the Bash tool still turns `\\n` / `\\b` inside python string
+literals into real control characters: write code with the Write/Edit tools. A text-mode stdin to ssh on Windows sends
+`\r\n` (bash reads `3\r`): send bytes.
