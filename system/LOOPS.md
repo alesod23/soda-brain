@@ -348,7 +348,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   45 s for the last keystroke); the box feedback session classifies it with `ledger_verdict.py` (board ledger by
   default, email when it is about the wording) and recompiles. Live on :4141 from the server's next restart (the node
   process keeps the code it loaded; `rule_loop_check.py` shows the route amber until then). Test
-  `task-land/_system/test_board_loop.py`. No observer yet.
+  `task-land/_system/test_board_loop.py`. Observer `gtm-eng/board-observer.js`: hit lines (surface board) into `_system/rule-hits.jsonl` on every board page render (H1 keys, H2 j back / k fwd, H3 nothing he must read folded; once per board, rule, day, outcome) and every commit (H4 no confirmation card); `node board-observer.js <slug>` renders a real board read-only.
 
 ## 7. The system agent and the feedback worker
 
