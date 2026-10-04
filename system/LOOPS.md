@@ -492,6 +492,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   refuses a non-UTF-8 body, `crm-app/utf8-body.js`; `tools/repair-fffd-from-backup.py` restores fields byte-exact from
   the 6 Sep backup), the Capture + Enrich badge floating over Open/Ask (docked in the sidebar footer), and hub-review
   `.ag-sec h2` URLs overflowing at 390 (`currency/patch-hub-review-h2wrap-20261004.py`).
+  Two more encoding gates from the same walk (G122, G125): `tools/repair-fffd-from-backup.py --all` restores every damaged
+  string that matches the 06 Sep backup byte-exact (1661 of 2074; the write waits for him), and every python child coattio
+  spawns carries PYTHONIOENCODING utf-8 (`tests/py-child-utf8.test.js`: on a Windows writer a bare child wrote cp1252 on the
+  pipe, the 25 Sep 'München' U+FFFD).
   Not covered: how Telegram itself draws a card (Telegram Web needs his one-time login in the walker's profile; PARKED,
   not asked).
 
