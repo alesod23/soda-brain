@@ -144,6 +144,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   overwrite). No backfill: the notes carded before G96 get no Raw file; the first real write is the next Tundra note
   the scheduled loop finishes. Backup `meeting_loop.py.bak-20261004-raw` (gtm-eng is not a git repo; the task-land
   mirror `_system/laptop-tools/gtm-eng/` picks it up on git-sync).
+- Since 4 Oct 2026 (G103, the meeting OBSERVER): `gtm-eng/agent/meeting_observer.py`, called by `meeting_loop.py` after the
+  card text is built (run, also `--dry`) and in `read <url>`. One hit line per HARD row of `MEETING-CONTRACT.md` into
+  `task-land/_system/rule-hits.jsonl`, surface `meeting`: `ok` when his question was put to the transcript (an
+  interrogation answer `from: H<n>`) and the code check of that rule held (H1 a step with a real date and who owes it,
+  H2 the register quoted and a Lei call's Italian follow-up without tu, H3 every address used went through the SMTP
+  check, H4 every dated item a real date), else `flag` with what failed. Never blocks, never edits. First real hits: 8 ok
+  on the GSD call (`read`, 19:56). Test: `python task-land/_system/test_meeting_observer.py` (6 stored readings + a
+  doctored one flagging H1 H2 H3 H4 H6; temp hits file).
 
 ## 4. The draft lane (every message to a person)
 
@@ -471,6 +479,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   (09:10) writes the weekly check when the decision window is full; the box posts it. Canonical: `task-land/_system/RULE-LOOP.md`.
 - Phase 2 of the brain: ledgers and hits move into `soda-brain/rules/`, every rule gets `since`, `checked_last`,
   `superseded_by`; `brain check` demotes by the number.
+- **Observers on every ledger (goal-run G101 G103 G108, 4 Oct 2026 19:45 to 20:05).** Hit lines now come from the
+  notif observer (box `sodanotif/notif-observer.js`: H1 each card line names who wrote, H2 a chat he already answered is
+  not presented; patch `currency/patch-sodanotif-observer-20261004.py`, applied by the box 19:44), the meeting observer
+  (`gtm-eng/agent/meeting_observer.py`, section 3), the whitelist observer (`whitelist_judge.observe` on every `judge()`:
+  H2 block|ok, H1 ok|downgrade; `observe_commit` from `job_runner.run_whitelist`: H2 on the commit's real files, H3) and
+  the proactive one (`pipeline.py pickup|ready --auto`; while paused the H1 gate's `block` is the hit). Tests:
+  `test_notif_observer.py` (patch on a temp copy, the patched daemon under node), `test_meeting_observer.py`,
+  `test_whitelist.py` (observer test added; hits to a temp file).
 - **The fifth ledger, the WHITELIST (his rule of 4 Oct 2026 17:00, HUB H43).** *"if it's very clear what I want, and it
   doesn't really conflict much with what we've put already out there, and it doesn't need further approval ... I don't
   need an approval card. I need it to be treated more as a whitelist fix."* A system change he asks for (a hub comment,
@@ -525,12 +541,18 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - **`((rule: ...))` on any line (G102, 4 Oct 2026)**: a rule for the system, not an instruction for the task. daily-sync
   collects it, `task-land/_system/rule_directive.py` files it (ledger_verdict picks the ledger it is about, addrule writes
   his words verbatim), the line's task is untouched, a rule-only line creates no task; `directive: rule` in daily-sync.log.
+- **Quick Claude `rule:` (G104, 4 Oct 2026)**: a Quick Claude message starting `rule:` is filed the same way
+  (`--surface quick-claude`): in code by `~/.claude/quick-claude/run.ps1` (the dictated runner, also what the voice lane
+  spawns), by the panel's workspace CLAUDE.md in an interactive window.
 
 ## 10. Notifications and voice
 
 - `/home/da/sodanotif/` (systemd `da-sodanotif`, pollers every 60 s): Gmail, Slack, WhatsApp taps and the LinkedIn
   store, classified by `routing-prompt.md` and `NOTIF-CONTRACT.md`, pushed as Telegram cards; CDTM group mail never,
   noreply never, groups never.
+- Observer (G101, 4 Oct 2026): `notif-observer.js` writes `rule-hits.jsonl` lines, surface `notif`, on every rendered card
+  (H1 sender on every line, H2 per WhatsApp card) and on every batch the answered() filter thins (H2 `block`). Hits reach
+  the laptop through the task-land sync.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
 
