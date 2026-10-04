@@ -133,9 +133,23 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   subject, text, when_why, questions, source}` (`.medtech-crm/review-artifact.js`): appends a version
   (`source: hub:<producer>`, `draft_id`, `step_text` = the current step, so CRM H48 serves it as the step's draft);
   idempotent on `draft_id` (same text = unchanged, a revised text for the same id = updated in place); a new version
-  clears a held approve of the old text. Refuses: 400 unknown pid or a channel the row cannot use (`channelFor`),
-  409 not on today's review or already dealt with today, 503 the answering server is not the writer (the box in
-  local mode). On any refusal the producer posts its card as before: a draft is never lost.
+  clears a held approve of the old text. Refuses: 400 unknown pid, a channel the row cannot use (`channelFor`) or a
+  row marked not a target (the producer posts a "REFUSED by the CRM" card); 409 already dealt with today or he holds a
+  verdict on that version (NO card: the item is on the board, `crm_or_card` answers route crm + held); 503 the
+  answering server is not the writer (FAILED card). A draft is never lost.
+- **The waiting kind (CRM H56 / HUB H41, 4 Oct 2026 19:05).** ANY known person takes the draft, whatever the step
+  date: "not on today's review" is gone. The board's kinds are reply, due, WAITING, coming, done (in that order).
+  `waiting` = "waiting for your verdict": a person whose live version (written for this step, H48) or job artifact is
+  newer than his last decision on the item (sent, a committed skip, dealt with; a committed approve not yet sent keeps
+  it) is on the board whatever the step date (`review-api.js waitingFor`); the card has its own heading inside "to
+  review", the badge "draft ready" / "artifact ready" and the line "here: draft from the lane (card #19), attached
+  4 Oct 18:15" or "here: artifact from the job <id>, attached ...". A person with NO step gets the H2 default step
+  ("decide next step", +2 working days) before the version is written, origin `set_by lane|job`, source
+  `draft:<id>|job:<id>` ("set by the lane on <day> from the draft <id>"). A job artifact answers `on_review: true`
+  for every row except one marked not a target. crm-outdated sweeps waiting items like the others; the hub mirror no
+  longer needs `allow_coming`. Tests: `node --test tests/waiting-kind.test.js`, `python tests/waiting_board_test.py`
+  (headless 1568 / 390, light; review.js and styles.css from the working tree, the live list plus two synthetic
+  waiting items, read-only).
 - Callers: `task-land/_system/drafts/crm_artifact.py` (`attach`, `match_pid` by email, LinkedIn, unique name),
   used by the lane `send_card.py` (every email draft registered through `register.py`: due_today, inbound_asks,
   meeting_loop, instinct_inbox) and by the chat cards of `due_today.py`, `inbound_asks.py` (WhatsApp, LinkedIn) and
