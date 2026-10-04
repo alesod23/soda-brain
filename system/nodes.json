@@ -675,7 +675,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`"
+   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · box step G113 in _system/box-steps-20261004-goal.sh (python3 - < patch-hub-review-h2wrap-20261004.py), then two clean walks close it | UI-hub-review-1568 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`"
   },
   {
    "id": "gate_board",
@@ -719,7 +719,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-review 04 Oct 21:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 246017 --target both | UI-laptop-today-1568 04 Oct 21:10 · agent · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-today-390 04 Oct 21:10 · agent · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today`"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · laptop intake :4137 /review/items 502 and slow (the replica proxy to the box); fix that, then two clean walks close it | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-review 04 Oct 21:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 246017 --target both"
   },
   {
    "id": "gate_page",
@@ -955,7 +955,7 @@
    "writes": "mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "tasks": [
     "TaskLand-GitSync"
    ],
@@ -979,9 +979,7 @@
      "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
      "escalate": "fix session (G116); a box-side park is a for_him terminal command"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "A-gitsync-task-land-10042115 04 Oct 20:53 · fix_session · a fix session (reproduce, fix, prove)"
+   }
   },
   {
    "id": "w_vaultsync",
@@ -2123,6 +2121,32 @@
      },
      "his_command": true,
      "healthy_when": "the Slack tokens, push.env and the resolver session are mode 600"
+    }
+   }
+  },
+  {
+   "id": "sys_laptop_memory",
+   "group": "ledger only",
+   "label": "the laptop's memory (commit charge, free RAM, top holders)",
+   "kind": "store",
+   "machine": "laptop",
+   "status": "live",
+   "hidden": true,
+   "note": "16 GB, Windows sees 11.7; commit limit ~48.8 GB with the page file. 4 Oct 2026: System event 2004 ten times from 14:39, 99% at 20:59 (forks failed 0xC000012D).",
+   "checks": {
+    "laptop:memory": {
+     "probe": {
+      "type": "finding",
+      "key": "laptop:memory"
+     },
+     "healthy_when": "commit charge under 97% (90% is reported)",
+     "if_fails": "H56: a timing failure: wait for the condition (commit charge under 90%), re-run the failed work; after 60 min a fix session finds the holder (the top 3 are on the incident)",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/system-agent/agentlib.py memory_state"
+     ],
+     "rollback": "",
+     "escalate": "fix session after the 60 min window"
     }
    }
   }
