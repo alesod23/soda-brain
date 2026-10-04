@@ -6,6 +6,9 @@ metadata:
 since: 2026-10-02
 ---
 
+**READ FIRST after a compaction: the whole plan (short and long term, 4 Oct 2026 02:50) is the section "THE PLAN" at the
+top of `task-land/_system/WORKPLAN-20261001-soda-brain.md`; decisions S1-S11 and the build log P1-P9 follow it.**
+
 **What it is.** His personal brain for every harness ("change the harness, keep the memory"): the memory repo renamed
 and grown. Laptop `C:/Users/Alessandro/soda-brain`, box `/home/da/soda-brain`, GitHub `alesod23/soda-brain` (private).
 `memory/` IS the Claude memory dir: the laptop path `.claude/projects/C--Users-Alessandro/memory` is a directory
