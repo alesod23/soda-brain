@@ -131,6 +131,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   inbound message becomes a card with a draft answer (email: a Gmail draft through the lane; WhatsApp: a wa-draft card
   with action wa-send; LinkedIn: a DM draft), never a claim of an attachment, and `questions_for_him` when the answer
   needs him. Accept guard: a LinkedIn accept on a person with an existing conversation does not reset the step.
+- Each run also executes his verdicts: the import card (`crm_artifact.apply_import_decisions`) and, since 5 Oct 2026
+  (G148), the push-again card (`push_again.apply` -> `due_today.py run --pids`, see the due-today section).
 - Hints: `task-land/_system/hints/inbound-asks.md`.
 
 ## 3. The meeting loop (Notion meeting AI notes; Granola retired 4 Oct 2026)
@@ -611,8 +613,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   push_again's own out / in types) plus the row's step when he owes one. Kept guards: dead / suppressed / not_target, a
   running campaign sequence, carded or deferred today, a draft already in the lane, "they answered after your last
   message" (skip, logged). Dropped on purpose: the due date, "done outside" (his outbound is why they are on the list),
-  the one-day live-exchange silence. `--max` defaults to the number of pids. Nothing consumes the push-again yes yet:
-  a session (or a later hub action) runs this command with the card's pids. Test `gtm-eng/agent/tests/test_due_today.py`
+  the one-day live-exchange silence. `--max` defaults to the number of pids. **Since 5 Oct 2026 00:30 (G148) his verdict
+  runs it:** `push_again.apply` (`python push_again.py apply [--dry]`, called at the end of every `inbound_asks.py run`,
+  task DA-InboundAsks every 15 min, laptop) reads `decisions.jsonl` from a byte-offset cursor (`push-again-state.json`
+  `offset`; a half-written last line waits), finds the push-again card (`state.cards` written by `push_again.py` when it
+  posts, else the text "Push again (last", pids from the state or the hub item's `meta.pids`), and applies it ONCE per
+  card id (`state.applied`): yes = all its pids; numbers ("2 4", "yes 1 3", "no 4") = only those; no, words with no
+  numbers, or a close without verdict = nothing. It starts `due_today.py run --pids <chosen>` detached (CREATE_NO_WINDOW,
+  breakaway from the task job, output to `due-today-task.log`) so 25 drafts never hit the 40 min task limit. Log
+  `push-again.jsonl`. Test `gtm-eng/agent/tests/test_push_again_apply.py` (stub decisions, stub runner that feeds the
+  argv to due_today.main: dry yes = exactly the 4 pids with --dry, no = nothing, repeat = nothing, numbers = those).
+  Before G148 a session ran the command by hand. Test `gtm-eng/agent/tests/test_due_today.py`
   case 10 (stubbed: a dry run with two pids calls the model for exactly those two, no Gmail / card / CRM write; the lane
   run drafts exactly those two; the one who answered is skipped).
 - **The feedback session (hub; built, armed, LIVE since 4 Oct 2026 17:06; this heading read "OFF until the cut-over").** `task-land/_system/feedback_session.py`, box
