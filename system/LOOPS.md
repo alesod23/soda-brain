@@ -484,6 +484,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   ottobre", a weekday) is applied in code (hold_action.parse_length); one it cannot read is shown back as NOT applied and
   left to the session. Targets: group, org or person. Tests test-holds-reask-20261005.py (19) +
   test-hub-holds-action-20261005.py (37); box block HOLDS v2.
+  G155 (00:51): an `until` that passed does NOT lift a hold by itself: `holds._active` keeps it active until the re-ask
+  card for that until is posted (laptop asleep, hub down: nothing sends between the expiry and the card); the hold lifts
+  only through his verdict. The campaign tick runs reask_due before any step selection. Test: hold expired 2 h ago, never
+  re-asked -> still held, first tick posts the card and sends 0, second tick nothing, his no releases.
 
 - **A DATA-REPAIR CARD RUNS ITS FROZEN PLAN (5 Oct 2026 00:40 Rome, G146, hub #2 a2jggsi3yqw, CRM parents AP-HP).** 15
   company rows on the CRM writer carried parent "AP-HP"; 11 wrong (7 Gruppo San Donato, 1 Gruppo MultiMedica, 3 no parent:
