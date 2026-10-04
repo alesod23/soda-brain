@@ -55,7 +55,7 @@ Why this split: the laptop is the writer for anything that needs Chrome, Windows
 
 | Port | Bind | Owner | Kept alive by |
 |---|---|---|---|
-| 8765 | `/home/da/triage/oauth_receiver.py` (OAuth redirect receiver: exchanges the code for the pending `phone_auth.py` state, writes `tokens/<account>.json`) | `~/.local/bin/oauth-receiver-supervise.sh` (crontab @reboot + */5: PARKED as his line; until then the savior's session) | Binds the Tailscale IP only. Live 4 Oct 2026 21:52 (sodano23 was the first). |
+| 8765 | `/home/da/triage/oauth_receiver.py` (OAuth redirect receiver: exchanges the code for the pending `phone_auth.py` state, writes `tokens/<account>.json`) | `~/.local/bin/oauth-receiver-supervise.sh` (crontab @reboot + */5, his hand 4 Oct 2026 22:05) | Binds the Tailscale IP only. Live 4 Oct 2026 21:52 (sodano23 was the first). |
 | 22 | 0.0.0.0 | sshd | systemd (stock) |
 | 4119 | 127.0.0.1 | `wa-daemon/daemon.js` send API | `da-wa.service` |
 | 4124 | loopback + Tailscale | `coattio/crm-app/server.js` (box copy, `COATTIO_BOX=1`) | tmux `coattio`; `coattio-sync.sh` every 2 min ensures both servers are up |
