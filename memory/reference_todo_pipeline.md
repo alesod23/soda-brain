@@ -41,3 +41,13 @@ dry run `todo_worker.py tick --dry-run` (temp copy of Tasks/, stub hub, real tri
 
 **How to apply:** never write `stage:` by hand; never leave a to-do in progress with nobody on it (`release`).
 Related: [[reference_hub_review_ui]], [[reference_hub_lives_on_the_box]], [[reference_draft_review_lane]].
+
+**BUILT 4-5 Oct 2026 (goal run G46 = soda-brain plan S5 + S6).** S5: `pipeline.py call` sets `call_step: true` and the
+task STAYS (crm-bridge hands the step over without archiving it: `crm_step_at`, `crm_step_sig`); `pipeline.py sync`
+finishes it when the call is logged on the CRM row after the hand-over and closes the CRM step when he ticks it
+(`crm_step_closed`); the CRM Call page has a To-do column (`crm-app/todos.js`, GET `/api/todos`, model.js
+`callTodoStatus`). S6: `pipeline.py child <slug>#<n> [--pickup]` / `pickup <slug>#<n>` = a sub-item becomes a task with
+`child_of: <parent>`, rendered nested under the parent, the parent ticks when all children are done. Tests
+`task-land/_system/test_todo_calls_children.py`, `.medtech-crm/tests/call-todo.test.js`. The "A call is not a to-do
+line" bullet still describes `contact:` tasks WITHOUT call_step.
+
