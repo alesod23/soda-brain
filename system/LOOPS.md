@@ -573,6 +573,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - Observer (G101, 4 Oct 2026): `notif-observer.js` writes `rule-hits.jsonl` lines, surface `notif`, on every rendered card
   (H1 sender on every line, H2 per WhatsApp card) and on every batch the answered() filter thins (H2 `block`). Hits reach
   the laptop through the task-land sync.
+- **Classifier model (G115, 4 Oct 2026)**: the classifier decides what reaches his phone, so its default is
+  `claude-opus-5-5` (was `claude-haiku-4-5`, because `SODANOTIF_MODEL` is unset on the box); the env var still wins.
+  One line in `daemon.js` and one in `notif-observer.js` (marker NOTIF-MODEL-2020, box patch
+  `currency/patch-sodanotif-model-20261004.py`, run after the observer patch); every notif hit line names the model.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
 - **The janitor's ledger (G106, 4 Oct 2026)**: `task-land/_system/CLEANING-CONTRACT.md` (his cleaning rules, out of
