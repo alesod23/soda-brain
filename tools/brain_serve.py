@@ -87,6 +87,68 @@ def recall(query: str, k: int = 8) -> list[dict]:
     return jsonable(res)
 
 
+# ----------------------------------------------------------------- his rules (RULE-LOOP "The template of a loop", part 6)
+# His ask of 4 Oct 2026 18:45: "It will become my own personal AGI; it will know what I like, what I don't like." The seven
+# ledgers are indexed one page per row (brain_index.rule_pages, kind "rule", path <file>#H<n>); this answers from them only,
+# in his own words, split into what he liked (LIKED rows) and what he ruled (HARD / SOFT rows), with how often he
+# re-confirmed each (rule-confirmations.jsonl). No schema change: brain.search with a wide k, filtered to rule rows.
+LEDGER_OF = {"EMAIL-REVIEW-CONTRACT": "email", "HUB-CARD-CONTRACT": "hub", "CRM-CONTRACT": "crm", "NOTIF-CONTRACT": "notif",
+             "MEETING-CONTRACT": "meeting", "PROACTIVE-CONTRACT": "proactive", "WHITELIST-CONTRACT": "whitelist"}
+CONFIRMATIONS = os.environ.get("BRAIN_CONFIRMATIONS", brain_index.BOX_TASKLAND + "/_system/rule-confirmations.jsonl")
+
+
+def confirmation_counts(path: str | None = None) -> dict:
+    import json as _json
+    out: dict = {}
+    try:
+        with open(path or CONFIRMATIONS, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    r = str(_json.loads(line).get("rule") or "")
+                except ValueError:
+                    continue
+                if r:
+                    out[r] = out.get(r, 0) + 1
+    except OSError:
+        pass
+    return out
+
+
+def shape_rules(hits: list[dict], confirmations: dict, ledger: str | None = None, k: int = 10) -> dict:
+    """brain.search rows -> {"liked": [...], "rules": [...]} of ledger rows only, best first, one entry per row."""
+    import re as _re
+    seen, liked, rules = set(), [], []
+    for h in hits:
+        path = str(h.get("path") or "")
+        if h.get("kind") != "rule" or "#H" not in path or path in seen:
+            continue
+        seen.add(path)
+        stem = path.rsplit("/", 1)[-1].split("#")[0].replace(".md", "")
+        led = LEDGER_OF.get(stem, stem.lower())
+        if ledger and led != ledger:
+            continue
+        rid = path.split("#", 1)[1]
+        text = str(h.get("text") or "")
+        body = text.split(": ", 1)[1] if text.startswith(rid + ":") else text
+        src = _re.search(r"\(source: (.+?)\)\s*$", body)
+        body = _re.sub(r"\n?\(source: .+?\)\s*$", "", body).strip()
+        quote = _re.search(r'\*"(.+?)"\*', body)
+        row = {"ledger": led, "rule": rid, "text": _re.sub(r'\s*\*".+?"\*', "", body).replace("**", "").strip()[:600],
+               "his_words": quote.group(1)[:400] if quote else None, "source": src.group(1) if src else None,
+               "soft": "SOFT, flag only" in body, "confirmed": confirmations.get(f"{led}:{rid}", 0),
+               "score": h.get("score"), "path": path}
+        (liked if body.startswith("LIKED:") else rules).append(row)
+    return {"liked": liked[:k], "rules": rules[:k]}
+
+
+def his_rules(topic: str, k: int = 10, ledger: str | None = None) -> dict:
+    k = max(1, min(int(k or 10), 50))
+    hits = jsonable(rows("SELECT * FROM brain.search(%s, %s::vector, %s)", [topic, query_embedding(topic), 200]))
+    out = shape_rules(hits, confirmation_counts(), ledger, k)
+    out["topic"] = topic
+    return out
+
+
 def match_event(text: str, k: int = 8, include_done: bool = False) -> list[dict]:
     """S10: the nearest open to-dos and CRM people for an event text (brain.match_event, RRF over todo.chunks and
     crm.people_chunks). include_done also returns done to-dos, status says so."""
@@ -323,6 +385,13 @@ def build_mcp():
     def _what_is_true(topic: str) -> dict:
         return what_is_true(topic)
 
+    @srv.tool(name="his_rules", description="What Alessandro likes and dislikes about a topic, in his own words: the "
+              "rows of his seven rule ledgers (email, hub, crm, notif, meeting, proactive, whitelist) nearest to the topic, "
+              "split into liked (LIKED rows) and rules (what he ruled), with the date and how often he re-confirmed each. "
+              "Optional ledger filters to one. Read this before deciding anything on his behalf.")
+    def _his_rules(topic: str, k: int = 10, ledger: str | None = None) -> dict:
+        return his_rules(topic, k, ledger)
+
     @srv.tool(name="match_event", description="An event text (a mail, a calendar change, a meeting note, a proposed "
               "step) -> the nearest OPEN to-dos (task-land tasks and sub-items, kind 'todo') and CRM people (kind "
               "'person'), with scores. Use before proposing a step: it may already be on his to-do.")
@@ -363,7 +432,7 @@ class TokenAuth:
 
     # routes a READ-ONLY token (SODA_TOKEN_RO, the public door through Tailscale Funnel) may use: every GET, recall,
     # and the MCP endpoint (its tools only read); never /crm/put, /crm/events, /brain/reindex
-    RO_POST = {"/brain/recall", "/brain/match", "/mcp", "/mcp/"}
+    RO_POST = {"/brain/recall", "/brain/match", "/brain/rules", "/mcp", "/mcp/"}
 
     @staticmethod
     def allowed(scope) -> bool:
@@ -423,6 +492,12 @@ def build_app(host: str, no_model: bool):
         if not body.get("text"):
             raise HTTPException(400, "text required")
         return match_event(body["text"], body.get("k", 8), body.get("include_done", False))
+
+    @app.post("/brain/rules")
+    def _rules(body: dict):
+        if not body.get("topic"):
+            raise HTTPException(400, "topic required")
+        return his_rules(body["topic"], body.get("k", 10), body.get("ledger"))
 
     @app.get("/brain/page")
     def _page(path: str = Query(...)):

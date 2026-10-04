@@ -65,6 +65,7 @@ is refused.
 |---|---|
 | `GET /health` | `{ok, db, pages, chunks, people, last_index_at}` |
 | `POST /brain/recall {query, k=8}` | hybrid search: `[{path, title, ord, text, score, kind, since, superseded_by}]` |
+| `POST /brain/rules {topic, k=10, ledger?}` | what he likes and dislikes about a topic, from his seven ledgers only: `{liked: [...], rules: [...]}`, each `{ledger, rule, text, his_words, source, soft, confirmed, score, path}` (4 Oct 2026, RULE-LOOP template part 6; MCP tool `his_rules`) |
 | `POST /brain/match {text, k=8, include_done=false}` | S10: the nearest to-dos (`kind todo`, task-land rows and sub-items `<slug>#<n>`) and CRM people (`kind person`) for an event or a proposed step, k per kind, to-dos first: `[{kind, id, parent_id, title, text, status, due, score}]`; read-only token allowed; MCP tool `match_event` |
 | `GET /brain/page?path=memory/x.md` | the page body and fields |
 | `POST /brain/reindex` | runs the indexer in a background thread, `{started}` (`{started:false, running:true}` while one runs) |

@@ -13,14 +13,24 @@ code bases read them by path. This file is the pointer and the description.
 | `HUB-CARD-CONTRACT.md` | approval-hub cards | 21 | `~/.claude/skills/hub/SKILL.md` | the hub guard on the box (`hub-rules.json`) |
 | `CRM-CONTRACT.md` | CRM writes, Today, the reader | 42 | `~/.claude/skills/crm/SKILL.md` | `crm-app/observer.js`; `crm-app/reader.js` loads the ledger whole |
 | `MEETING-CONTRACT.md` | Notion meeting notes to steps | 8 | read whole by `gtm-eng/agent/meeting_loop.py` | the meeting loop |
-| `NOTIF-CONTRACT.md` | what reaches his phone | 5 | sodanotif routing prompt | sodanotif |
+| `NOTIF-CONTRACT.md` | what reaches his phone | 5 | `~/.claude/skills/notif/SKILL.md` (4 Oct 2026), read by the SODANOtif classifier on every batch once `currency/patch-sodanotif-notifloop-20261004.py` runs on the box | no observer yet (sized in `handoffs/AUDIT-20261004-rule-loops.md`) |
 | `PROACTIVE-CONTRACT.md` | what the system picks up from his to-do on its own, and how (from 2026-10-03) | 3 | read whole by sessions running `PIPELINE-WORKER.md` | `pipeline.py` (`--auto`, pause gate) |
+| `WHITELIST-CONTRACT.md` | whether the system may change itself without an approval card (from 2026-10-04) | 4 | `~/.claude/skills/whitelist/SKILL.md`, read by `drafts/whitelist_judge.py` on every call | the judge (no hit lines yet) |
 
 Canonical description: `task-land/_system/RULE-LOOP.md` (v3). Evidence: `task-land/_system/rule-hits.jsonl` (one line
 per observer decision, `{ts,surface,rule,action,item,...}`; `action:"ok"` lines are the denominator) and
 `task-land/_system/decisions.jsonl` (his verdicts: hub, boards, CRM review). Hints that grow from misses:
 `task-land/_system/hints/<component>.md` (crm-reader, inbound-asks, meeting-loop, due-today, agent-work), appended by
 the simulation's learner and by sessions, read whole by the callers.
+
+## The six parts every surface has (4 Oct 2026 18:45, his ask "RULE LOOPS EVERYWHERE")
+
+Ledger, a skill loaded by the decider, an input box on the surface, a route into the feedback session that classifies
+like | confirmation | rule | case | system | work (`task-land/_system/drafts/ledger_verdict.py`), an observer, the brain
+index. The template and how to copy it: `task-land/_system/RULE-LOOP.md` section 7. Measured, not assumed:
+`python task-land/_system/rule_loop_check.py --md`. Where it is missing today: `handoffs/AUDIT-20261004-rule-loops.md`.
+Asking the brain: `POST :4150/brain/rules {topic}` or the MCP tool `his_rules` = what he liked and what he ruled about a
+topic, his words, with confirmation counts.
 
 ## How a rule is born, compiled, checked, demoted
 
