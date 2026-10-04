@@ -516,6 +516,17 @@ section 4); the hygiene worker's normal pass now drains the G14 replay itself (G
   `feedback_session.py card_actions()` (`META_EXEC`), box cron every 5 min, decisions.jsonl + queue; the hub's /resolve runs
   nothing for it. Test `python ~/task-land/_system/goal-run/test_crm_parent_repair.py [--data <CRM copy>]` (26 checks, stub
   CRM on a temp port, the door through the real card_actions). Box block G146 in `_system/box-steps-20261004-goal.sh`.
+- **THE SAME DOOR REPAIRS FIELDS (5 Oct 2026 01:05 Rome, G154, hub #3 a2kdgx2f7u8, idem crm:field-repair:it-20261005).**
+  `~/.medtech-crm/finess-enrich.js` (10 min timer on the writer) matches every non-group company to the French FINESS
+  registry by name with no country check and fills blank segment / sector / location / device_intensity / finess_et /
+  finess_ej from the site it finds: 148 companies sit on the WRONG site (24 IT, 79 US, 37 FR, 8 other; Galeazzi -> APHP San
+  Salvadour, HYERES CEDEX). Plan `task-land/_system/goal-run/crm-field-repair-it-20261005.json` (694 field changes, sha
+  48cf6030..), made by `build_crm_field_repair_plan.py` from a read-only GET: a field is in it only when its value equals what
+  that FINESS record gives; proposals are blank or a proven value (11 Italian sectors -> private, Galeazzi -> Milano).
+  Executor: the G146 one, type `crm-field-repair` (fixed field list, never parent), each change written only on a row that
+  still holds `from`; comment overrides by line number (`n=keep`, `n.field=keep|value`). Test
+  `test_crm_field_repair.py [--data <CRM copy>]` (30 checks, 31 with --data incl. G146 + G154 on one CRM). Still open: a
+  country check in the enricher. Box block G154.
 
 ## 6. Campaigns and boards (GTM engine)
 
