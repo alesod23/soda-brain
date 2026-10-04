@@ -4,7 +4,7 @@ The visual map is `SODA-SYSTEM-MAP.html` in this folder (open it in Chrome; it w
 This page is its narrative and its index, so the brain can recall it. Same rules as the rest of `system/`: updated in
 the same turn as a service, port, job, store or rule changes; dated; no secrets; no person records.
 
-Last verified: 2026-10-04 20:33 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
+Last verified: 2026-10-04 20:43 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
 log of 3-4 Oct, not re-checked on the box that night). 2026-10-04 19:15: Granola retired (his ruling); node w_granola
 is drawn retired (task Granola-Auto-Sweep disabled), the Notion meeting note is written by Notion's meeting AI.
 
@@ -76,6 +76,14 @@ the maintenance of the whole core, fix sessions per day for 7 days with the ALER
 registry line. Wires: b_sysupdate reads the registry, nodes.json, decisions.jsonl, the ledgers, integration and UI walk
 runs, health-vps.json; writes the hub (one card) and the registry (the Judge). Not yet drawn in the HTML or in
 `nodes.json` (the System Agent build owns both); details in `LOOPS.md` section 7.
+
+## New loop 4 Oct 2026 20:50: the CRM System log (item 18, G114)
+
+His "Something missing / wrong" line on any CRM page (review mode included) is a row of `system-feedback.jsonl` on the
+CRM writer (box), forwarded to hub-review `/api/feedback` (surface `crm-system`), routed by the box feedback session
+(`ledger_verdict.py`, the same route as every feedback box) and answered back into the same line by
+`task-land/_system/crm_system_log.py` (route, answer, proof). No new node: an edge CRM -> hub-review queue -> feedback
+session -> CRM, and the System log list in hub-review's CRM tab. LOOPS.md section 8 has the contract.
 
 ## How to keep it
 

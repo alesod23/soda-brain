@@ -225,6 +225,25 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `compose_url`, `questions`; the card shows "from the lane: <producer> · open draft" and the questions.
   Test: `.medtech-crm/tools/lane-test/test_lane.js` and `test_lane_full.js` (stubs for gmail.py, the CRM API and the
   sent-log; a fixture sidecar). Phone layout of the board: `.medtech-crm/tools/review_board_check.py`.
+- **A LinkedIn lane version is marked sent too (G9, 4 Oct 2026 20:55).** `review-api sendApproved` hands a LinkedIn
+  version that carries a `draft_id` to `drawer-api.sendNext` with `lane: {draftId, sidecar, before}`; after the send
+  `drawer-api.markLaneChatSent` writes the sidecar (`li-<slug>.md` or `r<id>.md`, found by `laneSidecar`) through the
+  same `common.py` script as the email path: `status: sent`, `sent_at`, `sent_by: crm-review`, his text as
+  `## Body as registered` (+ `## His edit (CRM review)` when he changed it), log line "SENT as a LinkedIn DM / connection
+  note from the CRM Today review board", an open hub card closed. Laptop (live profile): at once, only on a bridge
+  success. Box (no profile): the queue entry carries `lane`, and `liQueueResult` marks it only when the laptop reports
+  ok. Never twice: a sidecar already in a DONE status is skipped (`skipped: already sent`); `reconcile.py` never marks
+  a LinkedIn sidecar (`kind: linkedin` -> continue, and `load_sidecars` globs `r*.md` only, so `li-*.md` is never
+  read) and skips every DONE one. A version with no sidecar (instinct's chat drafts, id `producer:pid:sha`) marks
+  nothing. Tests: `node --test tests/lane-linkedin.test.js tests/lane-linkedin-local.test.js` (stub bridge, stub CRM,
+  fixture sidecar, the lane's real common.py via `LANE_LIB`).
+- **instinct's meta rides with the draft (G7, 4 Oct 2026 20:55).** `crm_artifact.crm_or_card` takes `instinct_of(card
+  meta)` (origin instinct: `instinct_rank`, `instinct_why`, `brief`) and `attach` posts it as `instinct: {rank, why,
+  brief}`; `send_card.py` carries an instinct email's `instinct_rank:` sidecar line (written by `instinct_inbox.py
+  rank_fm` through `due_today.email_draft(extra_fm=...)` and `register_existing`); the hub mirror reads it from an
+  instinct card's meta. `review-artifact.js` keeps it on the version as `instinct` (a new rank on the same draft is
+  written in place). STORED ONLY: the board has no slot for a rank or a brief, `items()` does not serve it. Tests:
+  `node --test tests/instinct-meta.test.js`, `python task-land/_system/drafts/test_crm_artifact_instinct.py`.
 
 - **H41 / H42 / CRM H56 (his rules 4 Oct 2026 16:30): a message to a person NEVER appears as a hub card.** One door:
   `task-land/_system/drafts/crm_artifact.py crm_or_card()`. Known person (pid, email, LinkedIn URL, unique exact name,
@@ -562,6 +581,23 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   text}` for any page (`soda-brain/system/feedback-box.js`, one script line). The SODANOtif classifier reads the compiled
   notif skill on every batch. Box side = three patch scripts in `task-land/_system/currency/` (THE PLAN item 16).
   The brain answers from the ledgers: `POST /brain/rules {topic}`, MCP `his_rules`.
+
+- **THE CRM SYSTEM LOG (plan item 18, G114; his word of 4 Oct 2026 19:42; built 20:50).** A "Something missing / wrong"
+  button on every CRM page (top bar; in review mode in the review bar, behind More on a phone) opens the System log: the
+  rule loop's `feedback-box.js` inline (`data-mount="manual"`, served by the CRM at `/feedback-box.js` from the brain
+  clone; a plain one-line box when the file is missing) and one line per entry. The writer keeps the rows
+  (`~/.medtech-crm/system-feedback.jsonl`, coattio `crm-app/system-feedback.js`, `GET/POST /api/system-feedback`,
+  `/resolve {id|qid}`, `/done`, `/remove`; the laptop proxies) and forwards each to hub-review `/api/feedback` as surface
+  `crm-system`, item = the row id. `feedback_session.ledger_feedback` routes it with `ledger_verdict.py` (default ledger
+  crm): like / confirmation / rule are filed and answered in code (proof = the ledger); a case is filed AND handed to the
+  session; system / work / case reach the Opus session, which gives each `answer`, `proof`, `resolved`, written into the
+  same line by `task-land/_system/crm_system_log.py`. A person follow-up ("I want to follow up with X") is resolved by the
+  session from the CRM itself and run as `crm_system_log.py followup --qid Q --pid P` (step to today through
+  `/review/updates/apply` kind redate, Undo in Updates, proof = the CRM card; nothing sent) or `--name N` when no row
+  matches (the import proposal card, never a silent write). A job or whitelist fix born from the line fills it when it
+  lands (`jobs.system_log`). Pane: empty check = open, filled + proof = resolved, his click = done (24 h, then gone), x =
+  removed. hub-review's CRM tab shows the same rows (`currency/patch-hub-review-systemlog-20261004.py`, box step G114).
+  Tests: `node --test tests/system-feedback.test.js` (.medtech-crm), `python task-land/_system/test_crm_system_log.py`.
 
 ## 9. Tasks and the daily page
 

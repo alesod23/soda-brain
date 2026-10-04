@@ -29,7 +29,7 @@ you to bother about this now".
   "call": the Call page matches the English word). First one moved: Rania Tohme (CDC).
 - Contract for sessions: `task-land/_system/PIPELINE-WORKER.md`; skill `/todo` (laptop + box).
 
-**Not built, his decision:** a scheduled worker that picks to-dos up with nobody present. Today a session does
+**DECIDED 4 Oct 2026 20:48, build item 20 of THE GOAL RUN:** a scheduled worker that picks to-dos up with nobody present ("I fully expect it to happen on its own"; the Tuesday pause is lifted). Was: not built, his decision. Today a session does
 it when asked (`/todo`). An unattended worker runs tools without him, so it needs his explicit yes and a scope.
 
 **How to apply:** never write `stage:` by hand; never leave a to-do in progress with nobody on it (`release`).
