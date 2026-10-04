@@ -11,7 +11,7 @@
    "reads": "Gmail: cdtm, tundra (sodano23 token on the box expired)",
    "writes": "",
    "note": "Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box.",
-   "status": "live",
+   "status": "broken",
    "checks": {
     "box:gmail-sodano23": {
      "probe": {
@@ -42,7 +42,9 @@
      },
      "his_command": true
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "H1 26 Sep 02:00 · him · his sign-in, the account pre-selected (stuck action a)"
   },
   {
    "id": "ev_wa",
@@ -369,15 +371,38 @@
    }
   },
   {
+   "id": "rd_sysagent",
+   "group": "readers",
+   "label": "THE SYSTEM AGENT (the maintainer)",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 10 min (task DA-SystemAgent); unstuck every 1 min (task DA-Unstuck); fix sessions on demand (job runner, kind fix)",
+   "code": "task-land/_system/system-agent/system_agent.py, registry.py, agentlib.py, unstuck.py, fix_guard.py; job_runner.py run_fix",
+   "reads": "this ledger (nodes.json: the checks, probes, known fixes, his_command), the laptop's servers, tasks, Gmail, LinkedIn, sync, windows, the hub; the box in ONE read-only ssh per tick; inbox.jsonl from the GTM agent",
+   "writes": "broken.jsonl (the registry) mirrored onto this ledger and the map (status, broken, stale-ledger), whitelist fixes, fix jobs, STUCK cards, blockers.json, the ONE combined report at 09:00 and 18:15, the heartbeat to the box",
+   "llm": "Opus in the fix sessions only (30 min soft, 45 hard, 1 week point, extendable once to 2)",
+   "gate": "STUCK card (his yes performs the one action)",
+   "status": "live",
+   "note": "Built 4 Oct 2026 (DESIGN-20261004-system-agent.md). A fix counts only when the check passes twice, the second time in its own tick. Never sends, never logs in, never deletes, never treats his decision as broken.",
+   "tasks": [
+    "DA-SystemAgent",
+    "DA-Unstuck"
+   ],
+   "paths": [
+    "~/task-land/_system/system-agent/system_agent.py",
+    "~/task-land/_system/system-agent/unstuck.py"
+   ]
+  },
+  {
    "id": "rd_gtmagent",
    "group": "readers",
-   "label": "the system agent",
+   "label": "the GTM agent (campaigns only)",
    "kind": "script",
    "machine": "laptop",
    "cadence": "every 10 min (task GTM-Agent)",
    "code": "gtm-eng/agent/gtm_agent.py",
-   "reads": "campaigns, CRM Today, hub cards (:4142), servers, tasks, Gmail, LinkedIn, sync, console windows",
-   "writes": "runs.jsonl, incidents.jsonl, whitelist fixes, the heartbeat pushed to the box, two update cards a day (09:00, 18:15)",
+   "reads": "campaign plans, the daily campaign board and fire, CRM Today, contacts to find, the send ledger",
+   "writes": "runs.jsonl, incidents.jsonl, its campaign fixes (release_channel, start_task of the campaign tasks), its section of the combined report (gtm_agent.py section --json), inbox.jsonl lines to the System Agent for non-campaign faults",
    "llm": "none",
    "gate": "update cards",
    "status": "live",
@@ -386,7 +411,8 @@
    ],
    "paths": [
     "~/gtm-eng/agent/gtm_agent.py"
-   ]
+   ],
+   "note": "Since 4 Oct 2026 the campaigns only ('just focusing on the campaigns'); everything else moved to the System Agent. Reads blockers.json: a channel whose tool the System Agent is fixing is 'held', never a second alert."
   },
   {
    "id": "rd_fbworker",
@@ -621,7 +647,7 @@
    "code": "/home/da/hub-review/server.js, page.html",
    "reads": "the hub's state.json from disk, hub-outdated-log.jsonl, todo-match.jsonl",
    "writes": "queue.jsonl (one commit = the yes), /api/cleaning/reverse, /api/queue/done",
-   "status": "live",
+   "status": "broken",
    "note": "Tabs 1 Cards, 2 Agent, 3 Updates, 4 Cleaning (keys 1-4). Patched 3 and 4 Oct: ledger check first, no-telegram switch, cleaning tab, spot check, committed skips leave the list. Outages tonight were a Tailscale flap (EADDRNOTAVAIL), not the patches.",
    "ports": [
     {
@@ -648,7 +674,9 @@
      "his_command": true,
      "healthy_when": "POST /iterate in the hub, the iteration block in hub-review"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "UI-hub-review-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`"
   },
   {
    "id": "gate_board",
@@ -681,7 +709,7 @@
    "code": ".medtech-crm/crm-app (review-api.js, drawer-api.js, ask-api.js)",
    "reads": "",
    "writes": "PUT /api/data; a/s/c held until commit",
-   "status": "live",
+   "status": "broken",
    "ports": [
     {
      "host": "127.0.0.1",
@@ -690,7 +718,9 @@
    ],
    "paths": [
     "~/.medtech-crm/crm-app"
-   ]
+   ],
+   "status_before_broken": "live",
+   "broken": "UI-crm-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-crm-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today`"
   },
   {
    "id": "gate_page",
@@ -1311,7 +1341,7 @@
    "writes": "windows.jsonl with the opener",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "note": "The reviewer of the no-console-window rule; window_lint.py after every task change.",
    "tasks": [
     "DA-WindowWatch"
@@ -1335,7 +1365,9 @@
      "escalate": "STUCK: a page-file size change is a permission/system setting (his)",
      "healthy_when": "no System event 2004 (Resource-Exhaustion-Detector, low virtual memory) in 2 h, commit charge under 90%, the watcher's tick not ending 0xc000012d"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "M2 04 Oct 16:47 · fix_session · find what held the commit charge; a tick that fails on a full page file must not look like a crash of the watcher"
   },
   {
    "id": "w_design",
@@ -1419,8 +1451,8 @@
    "writes": "the box replica (it WROTE on 3-4 Oct: conflict #10)",
    "llm": "none",
    "gate": "",
-   "status": "broken",
-   "note": "Plan items 1 and 2: merge per record, then one writer.",
+   "status": "live",
+   "note": "Merged per record 4 Oct 04:07 (THE PLAN item 1); one writer = the box since 4 Oct 18:03. Its broken part was the dirty pull-only clone (H3), tracked by the System Agent.",
    "ports": [
     {
      "host": "box",
@@ -1536,8 +1568,8 @@
    "writes": "contacts-inbox.jsonl, one card per batch, intake :4137",
    "llm": "none",
    "gate": "hub card",
-   "status": "broken",
-   "note": "Failing since 21 Sep (token)."
+   "status": "live",
+   "note": "Works again: 4 Oct 16:30 '7 new/changed -> contacts-inbox.jsonl; cards posted 1' (the token was re-minted)."
   },
   {
    "id": "b_eod",
@@ -1584,7 +1616,8 @@
      "escalate": "STUCK terminal: a line typed in the savior's tmux",
      "healthy_when": "the newest presweep-<date>.done stamp is newer than the newest 'watchdog fired' line"
     }
-   }
+   },
+   "broken": "M5 28 Sep 22:47 · fix_session · re-arm the session cron in the savior (memory feedback_presweep_deep_check_before_23) or make it durable | M4 28 Sep 23:00 · fix_session · fix the rejected body, prove with a dry post"
   },
   {
    "id": "b_shipwa",
@@ -1612,7 +1645,7 @@
    "writes": "trip boards",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "note": "The supervisor is buggy (EADDRINUSE noise).",
    "ports": [
     {
@@ -1635,7 +1668,9 @@
      "escalate": "STUCK terminal",
      "healthy_when": "at most one 'starting trippy webapp' in 30 min"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "M7 01 Oct 02:00 · fix_session · supervise by port, not pgrep (FINDINGS box 1)"
   },
   {
    "id": "b_sync",
@@ -1775,7 +1810,7 @@
    "llm": "none",
    "gate": "",
    "status": "broken",
-   "note": "Unsupervised; a reboot kills them.",
+   "note": "Not listening since a reboot (no unit keeps them); his decision 4 Oct 18:31: keep them, a fix session builds the unit (M6).",
    "ports": [
     {
      "host": "box",
@@ -1809,7 +1844,8 @@
      "escalate": "STUCK terminal: installing a unit is a box write",
      "healthy_when": ":4143, :4144, :4145 listen on the box"
     }
-   }
+   },
+   "broken": "M6 04 Oct 16:56 · fix_session · one da-research-page@<port> unit with Restart=always (FINDINGS box 6); his decision 4 Oct 18:31: keep them"
   },
   {
    "id": "b_boards",

@@ -323,9 +323,44 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 ## 7. The system agent and the feedback worker
 
-- Code: `gtm-eng/agent/gtm_agent.py` (task GTM-Agent, every 10 min): checks that campaigns run, follow-ups are current,
-  hub items are not waiting, tools are usable; a whitelist of fixes; 2 update cards a day; `box_watch.py` on the box
-  posts "laptop silent". `feedback_worker.py` (task DA-FeedbackWorker, DISABLED on the laptop 2026-10-04 19:19, the box
+- **THE SYSTEM AGENT (built 4 Oct 2026 18:44 to 20:00; DESIGN-20261004-system-agent.md), the maintainer of the whole
+  SODA SYSTEM.** `task-land/_system/system-agent/system_agent.py`, task `DA-SystemAgent` every 10 min through
+  run-hidden.vbs. Its manual is THE LEDGER `soda-brain/system/nodes.json` (his word 19:13: per node the checks with
+  probe, healthy_when, if_fails, known_fixes, rollback, escalate, his_command, for_him; ports, tasks, paths); the map's
+  NODES are rendered from it (`soda-brain/tools/build_map.py`; edit the ledger, never the HTML block; a hand edit of
+  the HTML is absorbed into the ledger at the next build). Every tick: (1) the checks moved from the GTM agent (servers,
+  tasks, Gmail, calendars, LinkedIn, sync, console windows, the hub, the system audit, his system feedback), one
+  read-only ssh to the box for every box probe of the ledger, `inbox.jsonl` from the GTM agent; `check --only <key>`
+  runs ONE check (what a fix session reproduces and proves with); (2) the whitelist fixes (start_task, start_servers,
+  li_repair, hide_task, close_own_cards, close_duplicates, disable_task), capped, 25 min apart; (3) THE REGISTRY
+  `system-agent/broken.jsonl` (id, node, key, what, since, class maintenance | his_command | his_decision, owner agent |
+  fix_session | him, status open | fixing | verifying | stuck | fixed | gone): a line closes only when its check passes
+  twice in the agent's own ticks, or once after a fix session's own pass; a maintenance line owned by the fix session
+  starts ONE fix job (`jobs.add_fix`, `job_runner.py run --job`, lane mutex `runner-fix.lock`): Opus, 30 min soft, 45
+  hard kill, 1 week point read from `sim/harness/budget.py`, extended once to 2 only when progress.json shows a
+  reproduction, never at 80% of the 5-hour window, never when `system-agent/OFF` exists, one per line per day, three a
+  day; the never-list is enforced by the PreToolUse hook `system-agent/fix_guard.py` (fail-closed preflight); the box is
+  read-only for a fix session (a box change = a laptop commit in a synced repo, or a for_him command); a cause on the
+  never-list = `stuck` at once (his word 19:13). (4) A STUCK card ("STUCK on X: I did ... I need you to do exactly
+  this ... YES = ... NO = ...") only after a fix session returned stuck, or for a check the LEDGER marks his_command;
+  his yes is performed by `unstuck.py` (task `DA-Unstuck` every minute): auth = the sign-in page with the account
+  pre-selected; terminal = "a window opens with the command pre-typed; nothing runs until you press Enter" (the one
+  approved console window, recorded `his-yes` through `window-watch/expected.jsonl`); run = executed hidden, output on
+  the line. (5) The drift check: a ledger task missing, a code path missing, a port listening on a node marked
+  off/retired/planned/paused = node `stale-ledger` + a fix-session line `ledger:<node>`. (6) map-sync: the registry onto
+  the ledger (status broken / stale-ledger, the `broken` field) and the map re-rendered, the Known-broken card
+  generated. (7) `blockers.json` for the GTM agent, the heartbeat to the box (`box_watch.py` reads it), and THE ONE
+  COMBINED REPORT at 09:00 and 18:15 (head "GTM: pushing today YES/NO" = the GTM agent's own section via `gtm_agent.py
+  section --json`, then "SYSTEM: N broken, a for the agent, b in a fix session, c need you", decisions waiting, hub,
+  AUDIT, since the last update). Shared engine `system-agent/agentlib.py`. Judge it: `system_agent.py status |
+  incidents | registry [--all] | brief <id>`, `runs.jsonl`, `incidents.jsonl`, `jobs/fix-*`. Kill switch for fix
+  sessions: touch `system-agent/OFF`. Tests: `system-agent/tests/` (engine replay, split, registry, fix jobs, unstuck).
+- **The GTM agent (campaigns only since 4 Oct 2026).** `gtm-eng/agent/gtm_agent.py` (task GTM-Agent, every 10 min):
+  campaigns, the daily board and fire, push by noon, CRM Today, contacts to find, the campaign audit (booked and never
+  sent, an automatic reply naming somebody); fixes release_channel (held while `blockers.json` names that channel) and
+  start_task of the campaign tasks; a non-campaign fault goes to the System Agent's `inbox.jsonl`, never a card of its
+  own; it posts no report any more (its section is in the combined one). `box_watch.py` on the box posts "laptop
+  silent" from the System Agent's heartbeat. `feedback_worker.py` (task DA-FeedbackWorker, DISABLED on the laptop 2026-10-04 19:19, the box
   feedback session took over: one filer) takes system feedback items
   (`_system/gtm-agent/system-feedback.jsonl`, filed by `feedback_queue.py` from his sentences and by the simulation's
   learner) and fixes what is in its whitelist; items it cannot take are `needs_him`.
