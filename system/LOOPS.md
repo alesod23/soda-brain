@@ -378,6 +378,22 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   process keeps the code it loaded; `rule_loop_check.py` shows the route amber until then). Test
   `task-land/_system/test_board_loop.py`. Observer `gtm-eng/board-observer.js`: hit lines (surface board) into `_system/rule-hits.jsonl` on every board page render (H1 keys, H2 j back / k fwd, H3 nothing he must read folded; once per board, rule, day, outcome) and every commit (H4 no confirmation card); `node board-observer.js <slug>` renders a real board read-only.
 
+- **Feeds are streamed, never read whole (hub #69, goal run G123 + G126, 4 Oct 2026).** The 21:09 tick died with a
+  MemoryError in `campaign.py inbound_by_thread` (`f.read()` of the inbound feed `~/.medtech-crm/events-ledger.jsonl`):
+  nothing was sent. Every reader of a growing feed in gtm-eng now iterates it line by line: `campaign.py
+  inbound_by_thread` (last 400 KB window, main session), `agent/inbound_asks.py` (`complete_lines(path, off)`: complete
+  lines only, a half-written last line is never consumed; the 600 KB ledger window of `run`; the decisions.jsonl
+  offset reader), `agent/instinct_inbox.py` (WA store from its offset, two streamed passes up to a fixed end; decisions
+  offset reader), `agent/due_today.py decisions_today` (2000-line deque), `agent/gtm_agent.py` (`_tail_json`, the
+  fire.log tail). Left on purpose: bounded tail reads (gtm_agent tick-log 200 KB, `last_run` 60 KB), small JSON state
+  files, per-run worker slices (`daily-campaign/research.py` w*.jsonl), the drained board-feedback outbox. A side
+  effect: `decode().splitlines()` also split on a raw U+2028 inside a JSON string and lost that event (15 inbound
+  mails of the real ledger carry one); the stream keeps them. Note: the 400 KB / 600 KB windows are by append order,
+  not by `at` (the ledger is not sorted by `at`), so an inbound mail appended before the window is not seen however
+  recent its `at`. Test `python gtm-eng/agent/tests/test_stream_feeds.py` (window cut mid-line and on a line start,
+  old == new on copies of the real WA store, decisions.jsonl, runs.jsonl, peak memory on a 60 MB feed); the dry tick
+  of all 12 plans on COPIES against a 500 MB feed peaks at 81 MB working set, 0 send attempts, send ledger unchanged.
+
 ## 7. The system agent and the feedback worker
 
 - **THE SYSTEM AGENT (built 4 Oct 2026 18:44 to 20:00; DESIGN-20261004-system-agent.md), the maintainer of the whole
