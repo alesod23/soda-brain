@@ -85,6 +85,21 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   never skipped); events older than 14 days are path B's. Metrics A gain `backlog`, `dup_lines`, `stale`; `report` gains
   `backlog` {distinct_unseen, repeated_lines, passes_to_drain} for THIS machine, read-only. coattio ae4783a; tests in
   `tests/crm-outdated.test.js` (3 new); box check block G111 in `_system/box-steps-20261004-goal.sh`.)
+  (4 Oct 22:25, goal run G14: CRM H52 and H53 decided in CODE before the Opus judge. Rule 0 of path B, `relation()`:
+  family = the row's category / tags / `not_target`, the reader's summary saying the person IS Alessandro's relative
+  ("Guido Sodano is Alessandro's father"; "introduced by Alessandro's father" is not), or a family word as his WhatsApp
+  contact name; a CDTM friend = a CDTM label (company, category, tags, or his contact name, "Nick CDTM S26" in
+  wa-daemon aliases.json) AND a friend signal (the word friend in summary / notes, or a mate's check-in like "how are you
+  doing man"); a CDTM label alone stays a target. Such an item is removed with `not_target {why family|friend, rule
+  crm:H52|H53}` (applyUpdate writes it, the Undo clears it), no judge, no rewrite, never a card again. "A phone call
+  since" (H52) also counts a `cold_call` that reached them and the row's `call_done` fact (a later day only). The events
+  the old reader dropped ("path A: N older new event(s) not replayed", 02:54Z 15 and 15:50Z 30 = 3 distinct) are rebuilt
+  by `gapEvents()` from that log line and the ledger lines' write time `ts`; `node crm-outdated.js gaps` lists them,
+  `replay [--dry] [--writer http://100.85.52.84]` runs them once through path A against the writer's items, data and
+  `/review/updates/apply` (Undo on the Updates page; no path B, no metrics line, no ping), done ids in the machine-local
+  `.crm-outdated-replay-cursor`; `report` gains `replay`. Real pass 22:22 from the laptop against the box writer: 17
+  distinct events, 2 items checked, 0 changes. Box dry run of the new rules on the 186 open items: 0 changes. coattio
+  d725f6f, ac9eb87; `tests/crm-outdated-g14.test.js` 4/4.)
 - Since 4 Oct 2026 (same build): the reader asks the brain before it writes a step (`crm-app/brain.js` -> `POST
   :4150/brain/match` with the person and the step, token `SODA_TOKEN_RO` from `~/.env/soda.env`); a strong open to-do or
   hub card (sim >= 0.84) is named in the origin's why in words ("already open in the brain: to-do ..."), the whole match
@@ -194,6 +209,21 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   message of his existed on the thread, so a post-call follow-up written three days after his own scheduling reply was
   killed before it ever reached a card. When the sidecar names a source event (`source: ... (YYYY-MM-DD)`) only a
   message sent after THAT counts. The Martina case it was built for is unaffected: no event, no floor.
+- **The CRM's own drafts get the lane's checks (G13, 4 Oct 2026 22:00).** The board's generated version
+  (`review-api generate`), the drawer's Draft button (`drawer-api draftNext`) and the Alt+Shift+M widget (`ai-draft`)
+  never become Gmail drafts, so `register.py` cannot see them. `coattio/lane-check.js` runs
+  `drafts/crm_check.py`, which calls the lane's own functions on the text only: `critic.deterministic` (live=False, H17
+  skipped for WhatsApp), `critic.llm_judge` (Opus, emails, board only), `register.calendar_guard`, `register.booked_gate`,
+  one rule-hits line per decision (`by crm_check.py`, path `crm-review|drawer|widget`). No Gmail draft is created. On the
+  board the line rides on the version (`version.lane`, shown as "lane checks: ..."), a critic or calendar rewrite
+  replaces the text as register.py applies it (first text kept as `lane.pre_lane_text`), and the prompt carries the
+  due-today performance hints (`_system/hints/due-today.md`, env `CRM_REVIEW_HINTS`). HARD gates (already booked + other
+  times offered, an attachment claim: the CRM send paths attach nothing) refuse an Approve with 409 "refused by the
+  lane" (the card says "Approve is refused") unless his edited text re-checks clean (no model); send-approved refuses an
+  unchanged hard-gated version too. Drawer and widget: deterministic + calendar + booked, the line in the rationale /
+  risk ("DO NOT SEND AS IS" on a hard gate). Env: `CRM_LANE_CHECK_OFF=1`, `CRM_LANE_LLM=0`. Test
+  `node --test tests/crm-lane.test.js` (stub CRM, stub models, stub `~/triage/slots.py` in a temp home). coattio
+  7675c50 + 5aa02c9.
 
 ## 4b. Producers attach to the CRM item, not a card (THE PLAN 10(c), built 4 Oct 2026 04:50)
 
@@ -286,6 +316,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   coming, done) is a row of the brain with kind `review`, re-read every 5 minutes on the box: an event about a person
   with an open item comes back from `POST :4150/brain/match` as a `review` hit, so path A of crm-outdated reaches the item
   even when the person row ranks low, and a producer is told the item is already on the board. Section 13 has the shape.
+- **What the CRM writes itself goes through the same checks (G13, 4 Oct 2026 22:00).** A version a producer attached
+  already passed the lane (its `critic_line` is on the card); a version the board generated itself now runs
+  `drafts/crm_check.py` through `lane-check.js` (section 4): its line on the card, the hard gates refuse the Approve.
 
 ## 5. The approval hub and the review page
 
