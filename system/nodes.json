@@ -1416,7 +1416,7 @@
    "writes": "windows.jsonl with the opener",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "The reviewer of the no-console-window rule; window_lint.py after every task change.",
    "tasks": [
     "DA-WindowWatch"
@@ -1440,9 +1440,7 @@
      "escalate": "STUCK: a page-file size change is a permission/system setting (his)",
      "healthy_when": "no System event 2004 (Resource-Exhaustion-Detector, low virtual memory) in 2 h, commit charge under 90%, the watcher's tick not ending 0xc000012d"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "M2 04 Oct 16:47 · fix_session · find what held the commit charge; a tick that fails on a full page file must not look like a crash of the watcher"
+   }
   },
   {
    "id": "w_intcheck",
