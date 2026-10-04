@@ -43,6 +43,7 @@ Why this split: the laptop is the writer for anything that needs Chrome, Windows
 
 | Port | Owner | Kept alive by | Notes |
 |---|---|---|---|
+| 8765 | `netsh interface portproxy` 127.0.0.1:8765 -> 100.85.52.84:8765 (his hand, 4 Oct 2026 21:50) | Windows (persistent portproxy) | The Google OAuth loopback redirect of every box-issued consent URL lands on the box receiver; the laptop half is `task-land/_system/oauth_catch.py` (opens the URL in the Chrome profile holding the account, H58/H59). |
 | 4124 | `C:/Users/Alessandro/.medtech-crm/crm-app/server.js` (coattio CRM UI and API; the ONLY writer of `crm.json`) | `Coattio-Watchdog` every 5 min + resume-from-sleep event triggers (`coattio-serve.ps1`) | never start via a tool background process (the harness reaps it) |
 | 4137 | `.medtech-crm/intake-server.js` (intake, Alt+K, task-handoff, enrich worker) | `Coattio-Watchdog` | `POST /task-handoff` is what `crm-bridge.ps1` calls |
 | 4141 | `gtm-eng/board-server.js` (GTM board index and boards) | laptop task (named in sources as part of the Coattio-Watchdog family, exact task unverified) | daily page reads `/api/board/daily-<date>`; boards open ONLY via `open-board.ps1` |
@@ -54,6 +55,7 @@ Why this split: the laptop is the writer for anything that needs Chrome, Windows
 
 | Port | Bind | Owner | Kept alive by |
 |---|---|---|---|
+| 8765 | `/home/da/triage/oauth_receiver.py` (OAuth redirect receiver: exchanges the code for the pending `phone_auth.py` state, writes `tokens/<account>.json`) | `~/.local/bin/oauth-receiver-supervise.sh` (crontab @reboot + */5: PARKED as his line; until then the savior's session) | Binds the Tailscale IP only. Live 4 Oct 2026 21:52 (sodano23 was the first). |
 | 22 | 0.0.0.0 | sshd | systemd (stock) |
 | 4119 | 127.0.0.1 | `wa-daemon/daemon.js` send API | `da-wa.service` |
 | 4124 | loopback + Tailscale | `coattio/crm-app/server.js` (box copy, `COATTIO_BOX=1`) | tmux `coattio`; `coattio-sync.sh` every 2 min ensures both servers are up |
