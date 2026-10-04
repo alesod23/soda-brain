@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SODA System Map</title>
+<meta name="description" content="The agentic system and the brain, drawn: events in, readers, the brain, his gate, execution, learning; every worker, store, port and flow as of 4 Oct 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F5F3; --surface:#FFFFFF; --ink:#16201E; --muted:#5E6A68; --line:#D5DAD8; --line-strong:#AEB7B4;
+  --accent:#0E6B68; --accent-ink:#FFFFFF; --accent-soft:#DDEFEC;
+  --live:#2F7D4F; --armed:#B8720A; --paused:#8A8F8D; --broken:#B3433A;
+  --store:#EEF1EF; --event:#F7F8F6;
+  --display:"Archivo","IBM Plex Sans",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1514; --surface:#171E1D; --ink:#E8ECEA; --muted:#9AA5A2; --line:#2B3533; --line-strong:#3E4A47;
+    --accent:#4FB3AE; --accent-ink:#0B1413; --accent-soft:#163432;
+    --live:#5BBF84; --armed:#E0A043; --paused:#8A9491; --broken:#E07068;
+    --store:#1D2625; --event:#141B1A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1514; --surface:#171E1D; --ink:#E8ECEA; --muted:#9AA5A2; --line:#2B3533; --line-strong:#3E4A47;
+  --accent:#4FB3AE; --accent-ink:#0B1413; --accent-soft:#163432;
+  --live:#5BBF84; --armed:#E0A043; --paused:#8A9491; --broken:#E07068;
+  --store:#1D2625; --event:#141B1A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);}
+a{color:var(--accent)}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:34px;line-height:1.1;font-weight:700}
+h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
+h3{font-size:16px;font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.86em}
+.wrap{max-width:1280px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+header.top .brand{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em}
+nav.sections{display:flex;gap:4px;flex-wrap:wrap}
+nav.sections a{color:var(--muted);text-decoration:none;font-size:13px;padding:4px 8px;border-radius:6px}
+nav.sections a:hover,nav.sections a:focus-visible{color:var(--ink);background:var(--accent-soft);outline:none}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tools input{font:inherit;font-size:13px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);width:180px}
+.tools button,.btn{font:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);cursor:pointer}
+.tools button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.hero{padding:40px 0 20px}
+.hero .lede{max-width:72ch;color:var(--muted);margin-top:10px}
+.hero .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--muted)}
+.hero .meta b{color:var(--ink);font-weight:500}
+section.block{padding:34px 0 10px;border-top:1px solid var(--line)}
+section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+
+/* legend */
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:12px}
+.legend .item{display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted)}
+.legend .item b{color:var(--ink);font-weight:500;display:block}
+
+/* nodes */
+.node{position:relative;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px 8px 12px;font-size:13px;line-height:1.3;min-width:0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.node:hover,.node:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+.node .l{font-weight:600;display:block}
+.node .s{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.node .s code{font-size:11px}
+.node.event{border-style:dashed;border-radius:999px;background:var(--event);padding-left:14px}
+.node.reader{border-width:1.5px}
+.node.reader::before{content:"OPUS";position:absolute;top:-8px;right:10px;font:500 10px/1 var(--mono);letter-spacing:.08em;background:var(--surface);color:var(--accent);padding:1px 5px;border:1px solid var(--accent);border-radius:4px}
+.node.llm::before{content:"LLM"}
+.node.store{background:var(--store);border-radius:6px;border-bottom-width:4px}
+.node.store .l{font-family:var(--mono);font-weight:500;font-size:12.5px}
+.node.gate{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,10px 100%,0 50%);padding:10px 20px;border-radius:0}
+.node.gate .s{color:color-mix(in srgb,var(--accent-ink) 78%,transparent)}
+.node.surface{border-color:var(--accent);border-width:1.5px}
+.node.exec{border-radius:4px}
+.node.learn{border-style:dotted;border-width:2px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;border:1.5px solid transparent}
+.dot.live{background:var(--live)} .dot.armed{background:var(--armed)} .dot.off{background:transparent;border-color:var(--armed)}
+.dot.paused{background:var(--paused)} .dot.planned{background:transparent;border-color:var(--paused)} .dot.broken{background:var(--broken)} .dot.retired{background:var(--line-strong)}
+
+/* lane chart (grid + svg) */
+.chart{position:relative;overflow-x:auto;margin:14px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.chart .grid{display:grid;gap:10px 28px;padding:18px 18px 22px;align-items:start;position:relative;z-index:1}
+.chart .lane-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line);align-self:end}
+.chart svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+.chart svg path{fill:none;stroke:var(--line-strong);stroke-width:1.4}
+.chart svg path.strong{stroke:var(--accent);stroke-width:1.8}
+.chart svg path.dashed{stroke-dasharray:4 4}
+.chart svg text{font:11px var(--mono);fill:var(--muted)}
+.chart svg text.strong{fill:var(--accent)}
+.chart .lanebg{position:absolute;top:0;bottom:0;background:var(--event);opacity:.5;z-index:0;pointer-events:none}
+
+/* chain chart (flows) */
+.flow{margin:12px 0 4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px 10px;overflow-x:auto}
+.flow h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.flow h3 small{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.06em}
+.chain{display:flex;align-items:stretch;gap:0;margin-top:12px;min-width:max-content}
+.chain .step{display:flex;align-items:center}
+.chain .node{max-width:200px;min-width:120px;height:100%}
+.chain .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;width:70px;flex:none;color:var(--muted);font-size:10.5px;font-family:var(--mono);text-align:center;line-height:1.2;padding:0 4px}
+.chain .arrow svg{width:46px;height:14px;display:block;margin-top:2px}
+.chain .arrow svg path{stroke:var(--line-strong);fill:none;stroke-width:1.4}
+.chain .arrow.gate svg path{stroke:var(--accent);stroke-width:1.8}
+.chain .arrow.dashed svg path{stroke-dasharray:4 3}
+.flow p.note{color:var(--muted);font-size:13px;margin:10px 0 0;max-width:90ch}
+.flows-grid{display:grid;grid-template-columns:1fr;gap:6px}
+
+/* tables */
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:12px}
+th,td{text-align:left;vertical-align:top;padding:7px 9px;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--surface);position:sticky;top:52px}
+td code{white-space:nowrap}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:0 6px 6px}
+tr.row{cursor:pointer} tr.row:hover td{background:var(--accent-soft)}
+.pill{display:inline-block;font:500 11px/1.4 var(--mono);padding:1px 7px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted);white-space:nowrap}
+.pill.laptop{border-color:var(--line-strong)} .pill.box{border-color:var(--accent);color:var(--accent)} .pill.cloud{border-style:dashed}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center;font-size:13px;color:var(--muted)}
+.filters button{font:inherit;font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* callout */
+.callout{border:1.5px solid var(--accent);border-radius:10px;padding:14px 16px;background:var(--accent-soft);margin-top:16px;max-width:100ch}
+.callout h3{margin-bottom:6px}
+.callout p{margin:6px 0;font-size:14px}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:12px}
+.card{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px}
+.card h3{margin-bottom:8px}
+.card ul{margin:0;padding-left:18px;font-size:13.5px}
+.card li{margin:4px 0}
+.card li b{font-weight:600}
+
+/* drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:-12px 0 30px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .2s;z-index:30;overflow:auto;padding:22px 22px 40px}
+.drawer[aria-hidden="false"]{transform:none}
+.drawer .close{position:absolute;top:12px;right:12px}
+.drawer h2{margin-right:60px;margin-bottom:4px}
+.drawer .kv{display:grid;grid-template-columns:96px 1fr;gap:6px 12px;font-size:13px;margin-top:14px}
+.drawer .kv dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.drawer .kv dd{margin:0}
+.drawer .note{margin-top:14px;font-size:13.5px;color:var(--muted)}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.2);z-index:25;display:none}
+.backdrop.on{display:block}
+footer{padding:30px 0 60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
+footer p{max-width:90ch}
+.sr{position:absolute;left:-9999px}
+@media (max-width:720px){ h1{font-size:28px} th{position:static} .tools input{width:120px} }
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <span class="brand">SODA SYSTEM MAP</span>
+  <nav class="sections" aria-label="Sections">
+    <a href="#shape">The shape</a><a href="#machines">Machines</a><a href="#flows">Flows</a><a href="#surfaces">Where he decides</a><a href="#workers">Workers</a><a href="#stores">Stores</a><a href="#status">Off, armed, planned</a>
+  </nav>
+  <div class="tools">
+    <label class="sr" for="q">Search workers</label>
+    <input id="q" type="search" placeholder="search a worker, a port, a file">
+    <button id="planned" aria-pressed="true" title="show planned and off nodes">planned</button>
+    <button id="theme" title="toggle theme">theme</button>
+  </div>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <div class="eyebrow">soda-brain / system / SODA-SYSTEM-MAP.html</div>
+  <h1>One brain, many agents, one decider</h1>
+  <p class="lede">The system as it runs on 4 October 2026: events from the world, readers that decide what an event means for one person, a brain that remembers what is open, one gate where Alessandro says yes, the systems that execute the yes, and the loop that turns his sentences into rules. Same rules as the rest of the map: updated in the same turn as the system, dated, no secrets.</p>
+  <div class="meta">
+    <span>Last verified <b>2026-10-04 03:20</b></span>
+    <span>Workers <b id="n-workers">0</b></span>
+    <span>Live <b id="n-live">0</b></span>
+    <span>Built, off or armed <b id="n-armed">0</b></span>
+    <span>Planned <b id="n-planned">0</b></span>
+    <span>Open hub cards tonight <b>52</b> (77 at dusk)</span>
+  </div>
+  <div class="legend" aria-label="How to read the charts">
+    <div class="item"><span class="node event" style="pointer-events:none;padding:4px 12px"><span class="l">event</span></span><div><b>An event from the world</b>a mail, a WhatsApp, a note, a line he typed</div></div>
+    <div class="item"><span class="node reader" style="pointer-events:none;padding:4px 12px"><span class="l">reader</span></span><div><b>A reader that decides</b>Opus, headless, with the rules of its surface</div></div>
+    <div class="item"><span class="node" style="pointer-events:none;padding:4px 12px"><span class="l">script</span></span><div><b>A deterministic worker</b>no model, a cron or a task</div></div>
+    <div class="item"><span class="node store" style="pointer-events:none;padding:4px 12px"><span class="l">store</span></span><div><b>A store</b>a table, a file, a ledger</div></div>
+    <div class="item"><span class="node gate" style="pointer-events:none;padding:4px 18px"><span class="l">his yes</span></span><div><b>His gate</b>nothing reaches a person without it</div></div>
+    <div class="item"><span class="node learn" style="pointer-events:none;padding:4px 12px"><span class="l">learning</span></span><div><b>Learning</b>a sentence becomes a rule, a miss a threshold</div></div>
+    <div class="item"><span><i class="dot live"></i>live <i class="dot armed"></i>armed <i class="dot off"></i>built, off <i class="dot paused"></i>paused <i class="dot planned"></i>planned <i class="dot broken"></i>broken</span><div><b>Status dots</b>as of the date above; click any node for its card</div></div>
+  </div>
+</div>
+
+<section class="block" id="shape"><div class="wrap">
+  <div class="eyebrow">1</div>
+  <h2>The shape every loop shares</h2>
+  <p class="intro">Six lanes. An event enters on the left, a reader decides what it means for one person, the brain says what is already open, a card asks him, the owning system executes the yes, and his sentence on the card becomes a rule. Teal wires are the paths added on 3 and 4 October: the connection, the reverse pass, the cleaning tab.</p>
+  <div class="chart" id="chart-shape"></div>
+</div></section>
+
+<section class="block" id="machines"><div class="wrap">
+  <div class="eyebrow">2</div>
+  <h2>The machines and the ports</h2>
+  <p class="intro">The laptop sleeps, so it owns only what needs Chrome, Windows or him: the CRM writer, the boards, LinkedIn. The box never sleeps, so it owns every listener and every night job: Telegram, the hub, WhatsApp, the brain. The phone runs nothing. Git carries the repos both ways; the Drive folder <code>DA/</code> carries the two stores too live for git.</p>
+  <div class="chart" id="chart-machines"></div>
+</div></section>
+
+<section class="block" id="flows"><div class="wrap">
+  <div class="eyebrow">3</div>
+  <h2>The flows, one chain each</h2>
+  <p class="intro">Each chain reads left to right: the event, who reads it, where it is written, where he decides, what executes, what is learned. A teal arrow is his gate. A dashed arrow is a path that exists but is off or paused tonight.</p>
+  <div class="flows-grid" id="flows-grid"></div>
+</div></section>
+
+<section class="block" id="surfaces"><div class="wrap">
+  <div class="eyebrow">4</div>
+  <h2>Where he decides</h2>
+  <p class="intro">Five surfaces take a verdict. Three ledgers of truth sit under all of them: Sent mail, WhatsApp and LinkedIn outbound are what he did; the CRM row is where a person stands; <code>decisions.jsonl</code> is what he decided.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Surface</th><th>Where</th><th>What he decides there</th><th>The verdict lands in</th></tr></thead>
+    <tbody>
+      <tr><td><b>Telegram</b> (the savior lane)</td><td>phone or laptop; the bot is polled only by the <code>savior</code> tmux session on the box</td><td><code>N yes</code> / <code>N no + sentence</code> / <code>N dsend</code> / <code>N change: ...</code>, "hub-review commit ...", corrections, the five rule sentences</td><td>hub <code>/resolve</code> then <code>decisions.jsonl</code>; <code>addrule.py</code> the same turn</td></tr>
+      <tr><td><b>hub-review page</b></td><td><code>http://100.85.52.84:4142/</code> over Tailscale. Tabs: 1 Cards, 2 Agent, 3 Updates, 4 Cleaning</td><td>j/k, a yes, s skip, x no, c change, one commit = the yes; a committed skip leaves the list (4 Oct); the Cleaning tab judges every automatic close or tick and can reverse one; a weekly spot check of 3</td><td><code>queue.jsonl</code>, relayed by the savior now, by <code>feedback_session.py</code> after the cut-over; <code>cleaning-reverse.jsonl</code></td></tr>
+      <tr><td><b>GTM boards</b></td><td><code>:4141/b/&lt;slug&gt;</code> in the GTM Chrome tab group, opened only by <code>open-board.ps1</code></td><td>per person a/s/e, commit = the yes; the daily campaign board is optional, the fire at 16:55 is the one delegated send</td><td><code>boards/&lt;slug&gt;/state.json</code>, <code>commits/</code>; <code>run-commit.py</code> executes (emails via the lane, LinkedIn invites, CRM intake)</td></tr>
+      <tr><td><b>CRM Today, review mode, Call page</b></td><td><code>:4124/#today</code> on the laptop (the box copy serves the phone)</td><td>the person's next step, a/s/c held until commit, Rewrite, Comment, "Make it a task", Alt+L intake, calls</td><td><code>PUT /api/data</code>, <code>decisions.jsonl</code>, <code>rule-hits.jsonl</code></td></tr>
+      <tr><td><b>The daily Obsidian page</b></td><td><code>task-land/Daily/&lt;date&gt;.md</code></td><td>tick, untick, delete, retitle, overwrite a line; <code>((prompt))</code>; the capture box; a stage line links the exact hub card</td><td>task files through the watcher; <code>pipeline.py sync</code> (the card decides the task); his tick closes the card (H15)</td></tr>
+      <tr><td><b>His own channels</b></td><td>Sent mail, WhatsApp, LinkedIn, the calendar</td><td>nothing explicitly: a message he sent counts as approved</td><td>read by <code>reconcile.py</code>, <code>hub_outdated.py</code>, the reverse pass</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout" id="overlap">
+    <h3>The choice he named for tomorrow: CRM review mode vs the approval hub</h3>
+    <p>Both surfaces show one person per screen, both take a verdict on a draft, both file his sentence. Tonight they overlap: a person with a CRM step due and an open hub card about the same step appears on both, with two different proposals. His words (4 Oct 03:20): "the CRM and the approval hub overlap a lot ... I think the CRM keeps the record of the conversation ... but it's not as good as the Approval Hub". The comparison (item sources, what each shows, who executes the yes, the drafting engine behind each, the measured overlap) is being prepared as plan item 9; the stop-gap he chose is a full mirror: every hub card that concerns a CRM person is tied to that CRM item, so a verdict on one closes the other.</p>
+  </div>
+</div></section>
+
+<section class="block" id="workers"><div class="wrap">
+  <div class="eyebrow">5</div>
+  <h2>The workers</h2>
+  <p class="intro">Every scheduled task, cron, timer, service and session, as <code>schtasks</code> and the box inventory list them. Cadences on the laptop are from <code>schtasks /query</code> run at 03:17 today; box rows are from the inventory of 1 Oct and the build log, not re-checked on the box tonight.</p>
+  <div class="filters" id="wfilters">
+    <span>machine</span>
+    <button data-f="machine" data-v="" aria-pressed="true">all</button><button data-f="machine" data-v="laptop">laptop</button><button data-f="machine" data-v="box">box</button><button data-f="machine" data-v="cloud">cloud</button>
+    <span style="margin-left:10px">status</span>
+    <button data-f="status" data-v="" aria-pressed="true">all</button><button data-f="status" data-v="live">live</button><button data-f="status" data-v="armed">armed / off</button><button data-f="status" data-v="paused">paused</button><button data-f="status" data-v="broken">broken</button><button data-f="status" data-v="planned">planned</button><button data-f="status" data-v="retired">retired</button>
+    <span style="margin-left:10px">model</span>
+    <button data-f="llm" data-v="" aria-pressed="true">all</button><button data-f="llm" data-v="yes">uses a model</button>
+  </div>
+  <div class="tablewrap"><table id="wtable">
+    <thead><tr><th>Worker</th><th>Machine</th><th>Cadence</th><th>Code</th><th>Reads</th><th>Writes</th><th>Model</th><th>His gate</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</div></section>
+
+<section class="block" id="stores"><div class="wrap">
+  <div class="eyebrow">6</div>
+  <h2>The stores: what is truth, what is a copy</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Kind of fact</th><th>Truth</th><th>Copies and views</th></tr></thead>
+    <tbody>
+      <tr><td>A person, their stage, their next step</td><td><code>.medtech-crm/crm.json</code> on the laptop, written only by <code>crm-app/server.js</code> <code>PUT /api/data</code></td><td>box <code>coattio/crm.json</code> is a pull replica (tonight in conflict: 647 vs 645 people, card #10); Postgres <code>crm.*</code> on the box mirrors every save (phase 3a), one document snapshot a day; Notion Contacts is a projection</td></tr>
+      <tr><td>A to-do</td><td>the task file's frontmatter under <code>task-land/Tasks/</code> (phase 1); the row <code>todo.items</code> in Postgres is the mirror, with append-only <code>todo.history</code></td><td>the daily page is a rendered view, absorbed back by the watcher; phase 2 turns the rows into the truth and writes the files from them</td></tr>
+      <tr><td>A hub decision</td><td><code>task-land/_system/decisions.jsonl</code>, append-only, union-merged</td><td>the hub's <code>state.json</code> (open cards, resolved kept 24 h), its minute-old mirror in <code>box-tools/</code>, the hub-review page, <code>hub.cards</code> in Postgres</td></tr>
+      <tr><td>Whether an email was sent</td><td>Sent mail in the Google account</td><td>a card is a proposal, never state; <code>sent-log.jsonl</code>, <code>outreach/ledger.json</code>, the CRM activity line, the <code>Campaign/</code> label</td></tr>
+      <tr><td>An email in review</td><td>the Gmail draft, by draft id</td><td>the sidecar <code>_system/drafts/r*.md</code> (status, text, attachments), the card preview; the hub sends by id only</td></tr>
+      <tr><td>A rule</td><td>the ledger <code>*-CONTRACT.md</code>, one numbered line with his quote, written only by <code>addrule.py</code></td><td>the compiled skills <code>crm</code>, <code>drafting</code>, <code>hub</code>, <code>proactive</code>; <code>rule-hits.jsonl</code> is evidence of use; one brain page per rule</td></tr>
+      <tr><td>A memory</td><td><code>soda-brain/memory/&lt;topic&gt;.md</code> plus its index line, both clones peers</td><td><code>brain.pages</code> and <code>brain.chunks</code> in Postgres, rebuilt every 5 min (sha fast path)</td></tr>
+      <tr><td>A WhatsApp message</td><td>the box daemon's <code>message-store.jsonl</code></td><td><code>DA/wa-store.jsonl</code> on Drive, a minute old, read by the laptop</td></tr>
+      <tr><td>A LinkedIn event</td><td>LinkedIn itself</td><td><code>DA/linkedin-store.jsonl</code> is what the poller saw (the ~17 newest threads, his own messages too since 3 Oct)</td></tr>
+      <tr><td>A meeting</td><td>the Notion Meetings DB, fed by Granola</td><td>the CRM row's <code>meeting_event_id</code>, the meeting loop's state, the vault note</td></tr>
+      <tr><td>The brain's data</td><td>the repos and the task files</td><td>Postgres <code>soda</code> is an index plus the CRM versions; nightly <code>pg_dump</code> 03:30 to <code>~/gdrive/DA/backups/</code>, 14 days</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section class="block" id="status"><div class="wrap">
+  <div class="eyebrow">7</div>
+  <h2>Built but off, armed, paused, planned, broken</h2>
+  <div class="cols2">
+    <div class="card"><h3><i class="dot armed"></i>Armed or built, off</h3><ul>
+      <li><b>feedback_session.py</b> (box, cron every 5 min): inert until <code>/home/da/hub-review/no-telegram</code> exists; the cut-over waits for "commits processed"</li>
+      <li><b>cleaning_eval.py</b>: traces, 72 h success, spot check, auto-adjust; off until <code>_system/cleaning-eval.on</code>, after the Tuesday reset; the box lacks the Langfuse SDK and keys</li>
+      <li><b>pipeline.py pickup --auto</b>: paused until Tue 6 Oct 20:20 (<code>AUTO_PAUSED_UNTIL</code>), then only the task types that got a yes on the 8 trial cards</li>
+      <li><b>DailyCampaign-AB-Reminder</b>: one shot, 9 Oct 10:00</li>
+      <li><b>Monitor layer</b>: <code>brain.events</code>, adapters, migration 001 merged, not applied, not wired</li>
+    </ul></div>
+    <div class="card"><h3><i class="dot paused"></i>Paused or set aside</h3><ul>
+      <li><b>DailyCampaign-Research</b>: the Opus research round (82% of last week's spend) paused until 2026-10-07 through <code>research-pause.json</code>; boards are built from the 361-person backlog</li>
+      <li><b>instinct</b> (the cloud orchestrator): set aside 4 Oct 01:50; <code>DA-InstinctInbox</code> and <code>rules_inbox.py</code> run and find nothing</li>
+    </ul></div>
+    <div class="card"><h3><i class="dot planned"></i>Planned, in order</h3><ul>
+      <li>CRM conflict #10 merged per record; S11 one CRM writer, then the box as the email house and campaign runner (shadow first), the laptop LinkedIn only</li>
+      <li>P3 cut-over; comments split into rules + tracked work (the Foch French deck, the Caravaggi OEM deck)</li>
+      <li>P4 holds store and <code>POST :4180/hold</code>, group pauses, ping once</li>
+      <li>S2 the janitor on the box at 22:30 and S3 the currency number per surface (<code>currency.jsonl</code>)</li>
+      <li>S10 phase 2 (writers through the door), phase 3b/3c (Postgres the CRM source, the propose route)</li>
+      <li>The simulation re-run with the brain in the readers and the Edge variant</li>
+    </ul></div>
+    <div class="card"><h3><i class="dot broken"></i>Known broken or stale</h3><ul>
+      <li>box <code>contacts_sync.py</code> failing since 21 Sep (token); the sodano23 Gmail token on the box expired</li>
+      <li>the 23:00 digest's Telegram send fails with HTTP 400</li>
+      <li>research-page servers :4143 to :4145 unsupervised; the box <code>gtm-eng</code> copy dead since 19 Sep; trippy supervise logs EADDRINUSE noise</li>
+      <li>the hub-review feedback box takes no images (H21)</li>
+      <li>no install step for compiled skills on the box (scp by hand, S4 gap)</li>
+      <li>map drift found tonight: LOOPS said <code>due_today.py</code> unscheduled (task DA-DueToday runs 08:30), MACHINES said DA-MeetingLoop every 30 min (it is 5), Voice-Lane-Watch "historical" (enabled, 1 min); eight laptop tasks were absent from MACHINES: DA-Supervisor, DA-InstinctInbox, DA-DueToday, Granola-Auto-Sweep, Peer60-AcceptCheck, RuleLoop-SystemCheck, SODANOtif-Recap, CDTM-Kickoff-Weekly-Update</li>
+    </ul></div>
+  </div>
+</div></section>
+</main>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Node details">
+  <button class="btn close" id="drawer-close">close</button>
+  <div class="eyebrow" id="d-kind"></div>
+  <h2 id="d-title"></h2>
+  <div id="d-status"></div>
+  <dl class="kv" id="d-kv"></dl>
+  <p class="note" id="d-note"></p>
+</aside>
+
+<footer><div class="wrap">
+  <p><b>How this page is kept.</b> It is part of the system map in <code>soda-brain/system/</code> and follows its rules: a service, port, job, store or rule that changes is changed here in the same turn, with the "Last verified" date above moved. The data lives in one JS object at the bottom of this file (<code>NODES</code>, <code>EDGES</code>, <code>FLOWS</code>); the charts draw themselves from it, so a change is a row, not a drawing. Companion text: <code>SODA-SYSTEM-MAP.md</code> (the narrative the brain indexes). Sources: <code>LOOPS.md</code>, <code>MACHINES.md</code>, <code>DATA-MAP.md</code>, <code>REPOS.md</code>, the workplan <code>task-land/_system/WORKPLAN-20261001-soda-brain.md</code> (THE PLAN, S1-S11, the build log), <code>schtasks</code> on 4 Oct 03:17.</p>
+</div></footer>
+
+<script>
+// ---------- DATA ----------
+// kind: event reader script store gate surface exec learn service session
+// status: live armed off paused planned broken retired
+const NODES = {
+// events
+ev_mail:{label:"inbound email",kind:"event",machine:"cloud",cadence:"continuous",reads:"Gmail: cdtm, tundra (sodano23 token on the box expired)",writes:"",note:"Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box.",status:"live"},
+ev_wa:{label:"WhatsApp message",kind:"event",machine:"box",cadence:"continuous",reads:"the linked device (Baileys daemon)",writes:"message-store.jsonl, shipped to Drive DA/ every minute",status:"live"},
+ev_li:{label:"LinkedIn accept or DM",kind:"event",machine:"laptop",cadence:"every 15 min",reads:"the inbox in a dedicated Chrome profile (~17 newest threads)",writes:"G:/My Drive/DA/linkedin-store.jsonl (in and fromMe)",status:"live",note:"The per-person thread read (the Ienna case) is in the monitor-layer design, not built."},
+ev_notion:{label:"Notion meeting note",kind:"event",machine:"cloud",cadence:"Granola writes it 22 to 49 min after the call starts",reads:"the Meetings DB",writes:"",status:"live"},
+ev_cal:{label:"calendar booking",kind:"event",machine:"cloud",cadence:"continuous",reads:"Google Calendar of the chosen account",writes:"",status:"live"},
+ev_slack:{label:"Slack DM",kind:"event",machine:"box",cadence:"every 60 s (poller); every 10 min (sweep)",reads:"cdtm, xplore workspaces",writes:"",status:"live",note:"An event source for the forward and reverse passes since 4 Oct."},
+ev_page:{label:"a line on the daily page",kind:"event",machine:"laptop",cadence:"absorbed ~60 s after typing stops",reads:"task-land/Daily/<date>.md",writes:"a task file",status:"live"},
+ev_sentence:{label:"his sentence",kind:"event",machine:"phone",cadence:"whenever",reads:"Telegram, the review page, a session",writes:"",status:"live",note:"The five sentences: this sucks because, I like this, this again, change X, slower/faster."},
+// readers
+rd_crm:{label:"CRM monitor + reader",kind:"reader",machine:"laptop",cadence:"ticks inside the CRM server (no schtask of its own)",code:".medtech-crm/crm-app/monitor.js, reader.js, observer.js, owed.js, sources.js",reads:"Gmail (full text), the WA and LinkedIn stores on Drive, the sent corpus, the calendar, the Notion Meetings DB",writes:"events-ledger.jsonl, the row's step and state through PUT :4124/api/data, rule-hits.jsonl",llm:"Opus per person, the CRM contract whole plus hints",gate:"CRM Today, review mode",status:"live"},
+rd_meeting:{label:"meeting loop",kind:"reader",machine:"laptop",cadence:"every 5 min (task DA-MeetingLoop)",code:"gtm-eng/agent/meeting_loop.py",reads:"Notion Meetings through the Notion MCP, the full transcript, MEETING-CONTRACT.md, hints/meeting-loop.md",writes:"the CRM step with origin notion:<page>, open_loops, owed-artifact cards, a WhatsApp follow-up card when there is no email; calls todo_match.on_event",llm:"Opus with two MCP tools: Notion and the brain's match_event (the producer check: 'already on your to-do')",gate:"hub card",status:"live",note:"Measured: the card lands 2 min after the note settles."},
+rd_asks:{label:"inbound asks",kind:"reader",machine:"laptop",cadence:"every 15 min (task DA-InboundAsks)",code:"gtm-eng/agent/inbound_asks.py",reads:"the WA store, the LinkedIn store, the events ledger, the CRM",writes:"a card with a draft answer (email through the lane, wa-draft, linkedin-draft), proposed rows",llm:"headless claude",gate:"hub card",status:"live"},
+rd_due:{label:"due today",kind:"reader",machine:"laptop",cadence:"daily 08:30 (task DA-DueToday)",code:"gtm-eng/agent/due_today.py",reads:"CRM steps due today that he owes",writes:"one prepared card per person, due-today.jsonl",llm:"headless claude",gate:"hub card",status:"live"},
+rd_instinct:{label:"instinct inbox",kind:"reader",machine:"laptop",cadence:"every 15 min (task DA-InstinctInbox)",code:"gtm-eng/agent/instinct_inbox.py",reads:"the WhatsApp chat with instinct on the Drive store",writes:"lane cards 'instinct proposes', the text written by the reader when instinct gave none (a yes is final, H34)",llm:"one Opus call per batch",gate:"hub card",status:"paused",note:"The task runs; its producer is set aside (4 Oct 01:50)."},
+rd_match:{label:"todo_match judge",kind:"reader",machine:"box",cadence:"on every event (the connection) and every finished call",code:"soda-brain/tools/todo_match.py: lookup, judge, apply, on_event",reads:"POST /brain/match (read-only token): open to-dos, people, cards, k per kind",writes:"a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",llm:"one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",gate:"none: the Cleaning tab shows it and can reverse it",status:"live",note:"Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."},
+rd_sweep:{label:"hub sweep + reverse pass",kind:"reader",machine:"box",cadence:"cron every 10 min",code:"task-land/_system/hub_outdated.py",reads:"every open card; mail (3-try retry), WhatsApp, the CRM, LinkedIn in and out, Slack; his own messages up to 10 days before a card",writes:"step 0 condition re-checker, info ageing, deterministic rules, step 2a' the connection on new events, step 2b the reverse pass (card_marks), POST /close; hub-outdated-log.jsonl, todo-match.jsonl",llm:"Opus judge with CLOSE_CONFIDENCE (auto-adjusted when the learning layer is on)",gate:"none; holds everything on DEGRADATO (a Gmail account unreadable)",status:"live"},
+rd_research:{label:"daily campaign research",kind:"reader",machine:"laptop",cadence:"every 20 min, 17:00 to 24:00 and 08:00 to 16:20 (task DailyCampaign-Research)",code:"gtm-eng/daily-campaign/supervise.py, research.py, review.py, build.py",reads:"the pool, the CRM, the Notion snapshot, the boards",writes:"pool.json, runs/, the TRIMEDX Notion DB, the board daily-<date> (Opus per email with the drafting skill)",llm:"the research round: one Opus worker x 80 min, the most expensive job of the week",gate:"board review, optional",status:"paused",note:"Paused until 2026-10-07 (research-pause.json). Boards are built from the 361-person backlog."},
+rd_feedback:{label:"feedback session",kind:"reader",machine:"box",cadence:"cron every 5 min with flock",code:"task-land/_system/feedback_session.py",reads:"hub-review queue.jsonl after the cursor; AGENTS.md, RULE-LOOP.md, rules/README.md, LOOPS.md, hints/agent-work.md",writes:"addrule.py in one or two ledgers, recompiled skills, /api/queue/done, ONE told card (meta.origin feedback-session), feedback-session.jsonl",llm:"one resumed Opus session (--session-id / --resume, 60 turns)",gate:"the told card: his sentence on it is a correction",status:"armed",note:"Inert until /home/da/hub-review/no-telegram exists. Next: every comment splits into rules filed now and a tracked WORK job linked to the card."},
+rd_classifier:{label:"page classifier + ((prompt))",kind:"reader",machine:"laptop",cadence:"inside the daily watcher",code:"task-land/_system/daily-lib.ps1 (Resolve-TaskProject, Resolve-TaskDirective)",reads:"the new line, the registry of project slugs, sibling titles",writes:"project, due, surface_on, bucket, sub-checkboxes, notes",llm:"claude.exe -p, single-line JSON, confidence decided in code",gate:"none",status:"live"},
+rd_notif:{label:"sodanotif classifier",kind:"reader",machine:"box",cadence:"always (da-sodanotif.service), pollers every 60 s",code:"/home/da/sodanotif/daemon.js, pollers/*, routing-prompt.md, NOTIF-CONTRACT.md",reads:"Gmail, Slack, the WA tap, the LinkedIn store",writes:"stores/, notification-log.jsonl, a Telegram card per notification (never CDTM group mail, noreply, groups)",llm:"a classifier prompt",gate:"Telegram card",status:"live"},
+rd_savior:{label:"the savior session",kind:"session",machine:"box",cadence:"always (tmux savior, kept by box-sessions.sh every 5 min)",code:"claude --remote-control --channels plugin:telegram",reads:"Telegram (the only poller), hub cards, the hub-review queue",writes:"verdicts to the hub, corrections filed with addrule.py, the 22:12 pre-sweep; never runs the claude CLI, never sends what is not his verdict",llm:"an Opus session",gate:"it IS the relay of his gate",status:"live"},
+rd_gtmagent:{label:"the system agent",kind:"script",machine:"laptop",cadence:"every 10 min (task GTM-Agent)",code:"gtm-eng/agent/gtm_agent.py",reads:"campaigns, CRM Today, hub cards (:4142), servers, tasks, Gmail, LinkedIn, sync, console windows",writes:"runs.jsonl, incidents.jsonl, whitelist fixes, the heartbeat pushed to the box, two update cards a day (09:00, 18:15)",llm:"none",gate:"update cards",status:"live"},
+rd_fbworker:{label:"feedback worker",kind:"reader",machine:"laptop",cadence:"every 10 min (task DA-FeedbackWorker)",code:"gtm-eng/agent/feedback_worker.py",reads:"decisions.jsonl, 'system' verdicts of the review boards",writes:"_system/gtm-agent/system-feedback.jsonl, whitelist fixes, needs_him",llm:"headless claude",gate:"told card",status:"live",note:"To be disabled at the P3 cut-over (it would double-file)."},
+rd_supervisor:{label:"DA supervisor",kind:"script",machine:"laptop",cadence:"every 10 min (task DA-Supervisor)",code:"task-land/_system/supervisor.ps1",reads:"the health of the DA SYSTEM fault classes",writes:"supervisor.log, state; ONE hub card after 3 failed repairs",llm:"none",gate:"hub card",status:"live"},
+// brain + stores
+st_pg:{label:"Postgres soda (box)",kind:"store",machine:"box",cadence:"index every 5 min (da-brain-index.timer)",code:"soda-brain/tools/schema.sql, brain_index.py, todo_ingest.py",reads:"soda-brain md, the contracts and hints, task-land Tasks/**, the hub's state.json, crm.people",writes:"brain.pages/chunks (e5-small, 384-d), crm.doc_versions (one a day) + companies, people, people_chunks (641), events; todo.items (310), links, history (append-only, RESTRICT + trigger), chunks; hub.cards + card_chunks",llm:"none (local embeddings on CPU)",gate:"",status:"live",note:"The repos and the task files stay the truth; the DB is the index plus the CRM versions. Nightly pg_dump 03:30 to the Drive mount, 14 days. pgvector 0.6.0 (0.8 is his sudo step)."},
+st_door:{label:"the door :4150",kind:"service",machine:"box",cadence:"always (da-brain.service)",code:"soda-brain/tools/brain_serve.py",reads:"Postgres soda",writes:"serves recall, what_is_true, page, crm_person, crm_search, match_event over HTTP and MCP (/mcp); POST /crm/put stores versions; POST /brain/match with the read-only token",llm:"none",gate:"",status:"live",note:"Tailscale address only (loopback gives 000); Funnel at da-box.taile93f00.ts.net. Tokens in ~/.env/soda.env, never printed."},
+st_crm:{label:"crm.json (laptop)",kind:"store",machine:"laptop",cadence:"",code:".medtech-crm/crm.json, 5.7 MB",reads:"",writes:"ONE writer: crm-app/server.js PUT /api/data (through it: intake :4137, the monitor, peer.js, run-commit, the Notion sync)",status:"live",note:"The box copy is a pull replica and is in conflict tonight (647 vs 645 people, card #10): the merge per record is plan item 1; one writer is item 2."},
+st_tasks:{label:"task files",kind:"store",machine:"laptop",cadence:"git both ways: 15 min laptop, 60 s box",code:"task-land/Tasks/{inbox,active,waiting,archive}",reads:"",writes:"daily-sync.ps1, capture.py, pipeline.py (sole writer of stage, tick, redate), surface-sweep.ps1, crm-bridge.ps1",status:"live"},
+st_hub:{label:"hub state.json",kind:"store",machine:"box",cadence:"",code:"/home/da/approval-hub/state.json (52 open), hub-rules.json; hub-review/queue.jsonl",reads:"",writes:"approval-hub/server.js only (POST /pending, /resolve, /revise, /close); supersede-at-post by producer + person + action since 3 Oct",status:"live",note:"Resolved cards are pruned after 24 h; counts come from decisions.jsonl. Mirrored into task-land/_system/box-tools/ every minute; queue.jsonl has no backup."},
+st_ledgers:{label:"the rule ledgers",kind:"store",machine:"laptop",cadence:"",code:"task-land/_system/{CRM,EMAIL-REVIEW,HUB-CARD,MEETING,NOTIF,PROACTIVE}-CONTRACT.md",reads:"",writes:"addrule.py only; compile_skill.py --install builds the skills crm, drafting, hub, proactive",status:"live",note:"Compiled skills reach the box by scp, by hand (gap S4)."},
+st_decisions:{label:"decisions.jsonl + rule-hits.jsonl",kind:"store",machine:"laptop",cadence:"union-merged by git",code:"task-land/_system/decisions.jsonl, rule-hits.jsonl",reads:"",writes:"the hub on every resolve or close; the observers (critic, hub guard, CRM observer, proactive observer)",status:"live"},
+st_drive:{label:"Drive DA/",kind:"store",machine:"cloud",cadence:"wa-store every minute, linkedin-store every 15 min",code:"G:/My Drive/DA/ = /home/da/gdrive/DA/",reads:"",writes:"the box ships wa-store.jsonl; the laptop writes linkedin-store.jsonl; backups/ holds the nightly dumps",status:"live"},
+st_drafts:{label:"the draft lane",kind:"store",machine:"laptop",cadence:"reconcile every 5 min on the box",code:"task-land/_system/drafts/: register.py, critic.py, reconcile.py, handoff.py, hubedit.py, send_card.py; sidecars r*.md, queue.jsonl, attachments/",reads:"",writes:"a real Gmail draft + a sidecar + a critic verdict + a hub card; the hub sends by draft id only",status:"live",note:"A draft is never deleted by the system; a message he sent himself closes the card."},
+// gates and surfaces
+gate_tg:{label:"Telegram",kind:"gate",machine:"phone",cadence:"",code:"the savior relays",reads:"",writes:"N yes / no / dsend / change",status:"live"},
+gate_review:{label:"hub-review page :4142",kind:"gate",machine:"box",cadence:"cron supervisor every 5 min",code:"/home/da/hub-review/server.js, page.html",reads:"the hub's state.json from disk, hub-outdated-log.jsonl, todo-match.jsonl",writes:"queue.jsonl (one commit = the yes), /api/cleaning/reverse, /api/queue/done",status:"live",note:"Tabs 1 Cards, 2 Agent, 3 Updates, 4 Cleaning (keys 1-4). Patched 3 and 4 Oct: ledger check first, no-telegram switch, cleaning tab, spot check, committed skips leave the list. Outages tonight were a Tailscale flap (EADDRNOTAVAIL), not the patches."},
+gate_board:{label:"GTM board :4141",kind:"gate",machine:"laptop",cadence:"",code:"gtm-eng/board-server.js; open-board.ps1",reads:"",writes:"state.json, commits/; run-commit.py executes the yes",status:"live"},
+gate_crm:{label:"CRM Today :4124",kind:"gate",machine:"laptop",cadence:"",code:".medtech-crm/crm-app (review-api.js, drawer-api.js, ask-api.js)",reads:"",writes:"PUT /api/data; a/s/c held until commit",status:"live"},
+gate_page:{label:"the daily page",kind:"gate",machine:"laptop",cadence:"",code:"task-land/Daily/<date>.md",reads:"",writes:"his tick closes the card (H15); the card decides the task (pipeline.py sync)",status:"live"},
+// execution
+ex_hub:{label:"approval hub :4180",kind:"exec",machine:"box",cadence:"always (da-hub.service, Restart=always)",code:"/home/da/approval-hub/server.js",reads:"POST /pending {text, context, notify:true}",writes:"executes a yes: gmail-send-draft by id, wa-send through :4119, slack-send; pings Telegram once; decisions.jsonl",llm:"none",gate:"it IS the gate's executor",status:"live",note:"The laptop's 127.0.0.1:4180 is a TCP forward (task DA-HubForward). The guard hub-rules.json downgrades cards that break the hub contract."},
+ex_lane:{label:"the lane sends",kind:"exec",machine:"box",cadence:"on his yes",code:"the hub's gmail-send-draft; reconcile.py sees Sent",reads:"",writes:"the Gmail draft goes out by id; the card closes; the CRM activity line",status:"live"},
+ex_wa:{label:"WhatsApp send :4119",kind:"exec",machine:"box",cadence:"on his yes",code:"/home/da/wa-daemon/send.js (da-wa.service)",reads:"",writes:"the message; message-store.jsonl",status:"live"},
+ex_li:{label:"LinkedIn on the laptop",kind:"exec",machine:"laptop",cadence:"inside 08:00 to 17:00 PT for campaigns",code:"gtm-eng/campaign.py (invites, DMs), li_restore.py (exit 2 = he must sign in)",reads:"",writes:"invites, DMs; the CRM row's campaigns[]",status:"live",note:"S11: the box will decide, the laptop will only execute a linkedin-queue.jsonl."},
+ex_campaign:{label:"campaign tick",kind:"script",machine:"laptop",cadence:"every 10 min (task GTM-Campaign-Tick); the daily fire at 16:55",code:"gtm-eng/campaign.py tick, daily-campaign/fire.py + pick.py",reads:"boards/*/campaign/plan.json, outreach/ledger.json (caps: 20 hard a day), held-ids, Gmail replies",writes:"SENDS email from the tundra account (the one delegated send, on a committed plan), labels Campaign/<slug>, the CRM campaigns[], a pause card when a hospital replies",llm:"none",gate:"delegated: the committed board is the yes",status:"live",note:"Auto-replies are not replies; 'remove me' suppresses for 12 months; a hard bounce is final (H96)."},
+ex_crm_step:{label:"the CRM step moves",kind:"exec",machine:"laptop",cadence:"",code:"PUT :4124/api/data; intake :4137 /task-handoff",reads:"",writes:"next_step with its origin; one person = one step",status:"live"},
+ex_tick:{label:"the to-do ticks",kind:"exec",machine:"laptop",cadence:"",code:"task-land/_system/pipeline.py tick <slug>[#n] --evidence, redate",reads:"",writes:"status: done with done_evidence; a history row; the daily page re-renders",status:"live"},
+// learning
+ln_addrule:{label:"addrule.py",kind:"learn",machine:"laptop",cadence:"the same turn as his sentence",code:"task-land/_system/drafts/addrule.py --contract email|hub|crm|notif|meeting|proactive",reads:"his words",writes:"one numbered line in the ledger with his quote",status:"live"},
+ln_compile:{label:"compile_skill.py",kind:"learn",machine:"laptop",cadence:"after a ledger change",code:"task-land/_system/drafts/compile_skill.py --contract ... --install (limit 110 lines)",reads:"the ledger, the hit counts, the skill map",writes:"~/.claude/skills/{crm,drafting,hub,proactive}/SKILL.md; the box copy by scp",status:"live"},
+ln_observers:{label:"observers",kind:"learn",machine:"laptop",cadence:"on every write, draft, card",code:"crm-app/observer.js, drafts/critic.py, the hub guard, the proactive observer in pipeline.py",reads:"the artifact against its ledger",writes:"rule-hits.jsonl; system-check.py 09:10 writes the weekly check, the box posts it 22:58",status:"live"},
+ln_cleaning:{label:"cleaning_eval.py",kind:"learn",machine:"box",cadence:"with every pass; weekly spot check",code:"task-land/_system/cleaning_eval.py",reads:"cleaning-reverse.jsonl, the 'wrong' rows of the Cleaning tab",writes:"cleaning-actions.jsonl, cleaning-traces.jsonl, Langfuse; auto-adjust: path A match_strong +0.02 (cap 0.95), path B close_confidence +5 (cap 95), a (producer, person) exception; report per path and surface",llm:"none (it records the judges)",gate:"the spot check of 3 random successes",status:"off",note:"Off until _system/cleaning-eval.on exists, after the Tuesday reset. Success = 72 h without a reverse or a 'wrong' comment."},
+ln_sim:{label:"the simulation",kind:"learn",machine:"laptop",cadence:"a night, on his word",code:"~/sim/harness/ (local git, no remote)",reads:"a sandbox copy of the system with a fake world (60 fictional people, mail, WA, LinkedIn, calendar, Notion)",writes:"a score (detected, latency, sent-without-yes, artifacts, hub surface), learn.jsonl (misses as hints, rules, fixes, needs_him)",llm:"a 'me' agent that decides as he does, a judge, a learner",gate:"nothing fake ever enters the real CRM, mail, Notion, memory or tasks",status:"off",note:"12 simulated days on 1 Oct: 56 to 61; meetings-night on 2 Oct: 64.6. The next night scores the brain in the readers and the Edge variant."},
+ln_janitor:{label:"the janitor (S2)",kind:"learn",machine:"box",cadence:"planned: systemd timer 22:30",code:"task-land/_system/janitor.py (does not exist yet)",reads:"the daily page and task files, hub cards, Gmail drafts, Notion, CRM Today",writes:"deterministic candidates, one Opus judgement each; ONE card a night; currency.jsonl (the stale share per surface, S3)",llm:"Opus per candidate",gate:"one card a night; his sentences on it = rules (contract janitor)",status:"planned"},
+// infra workers (registry only)
+w_gitsync:{label:"TaskLand-GitSync",kind:"script",machine:"laptop",cadence:"every 15 min + logon",code:"task-land/_system/git-sync.ps1",reads:"task-land, 7 tool folders",writes:"mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",llm:"none",gate:"",status:"live"},
+w_vaultsync:{label:"DA-VaultSync",kind:"script",machine:"laptop",cadence:"every 10 min",code:"task-land/_system/vault-git-sync.ps1",reads:"vault_kb, medtech-brain, soda-brain, coattio",writes:"commit-first, pull, push; a memory tar to the box",llm:"none",gate:"",status:"live"},
+w_watcher:{label:"DailySync-Watchdog",kind:"script",machine:"laptop",cadence:"every 5 min (the watcher absorbs ~60 s after typing stops)",code:"task-land/_system/start-watcher.ps1, watch-daily.ps1, daily-sync.ps1, daily-lib.ps1",reads:"Daily/<date>.md, the task files",writes:"task files, the page re-render, crm-bridge.ps1, pipeline.py sync, the daily digest in context.md",llm:"claude.exe -p for the classifier and ((prompt))",gate:"the page itself",status:"live"},
+w_coattio:{label:"Coattio-Watchdog",kind:"script",machine:"laptop",cadence:"every 5 min + logon + resume from sleep",code:".medtech-crm/coattio-serve.ps1",reads:"ports 4124 and 4137",writes:"starts the CRM servers when down; the pg-mirror replay tick (crm.json to the box's Postgres)",llm:"none",gate:"",status:"live",note:"Never started with run_in_background: Stop-Process + coattio-serve.ps1."},
+w_postmortem:{label:"DailyCampaign-Postmortem",kind:"script",machine:"laptop",cadence:"daily 09:30; a card on the 1st",code:"gtm-eng/daily-campaign/postmortem.py",reads:"plans, bounces, replies",writes:"the post-mortem card",llm:"none",gate:"hub card",status:"live"},
+w_ab:{label:"DailyCampaign-AB-Reminder",kind:"script",machine:"laptop",cadence:"one shot 2026-10-09 10:00",code:"gtm-eng/daily-campaign/ab-reminder.ps1",reads:"drafts-cache",writes:"one hub card",llm:"none",gate:"hub card",status:"armed"},
+w_us:{label:"US-Campaign-Daily",kind:"script",machine:"laptop",cadence:"daily 18:15",code:"us-campaign-emails (the 114-person wave)",reads:"the wave",writes:"sends through the campaign engine",llm:"none",gate:"delegated",status:"live"},
+w_lipoll:{label:"LinkedIn-Poll",kind:"script",machine:"laptop",cadence:"every 15 min",code:"~/.claude/linkedin-poll/poll.py, launcher.py",reads:"the LinkedIn inbox in a dedicated Chrome profile",writes:"G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",llm:"none",gate:"",status:"live"},
+w_sent:{label:"SentCorpus-Harvest",kind:"script",machine:"laptop",cadence:"daily 07:30",code:"~/.claude/sent-corpus/harvest.js",reads:"Sent mail",writes:".claude/sent-corpus/corpus.jsonl (no backup)",llm:"none",gate:"",status:"live"},
+w_filer:{label:"Notion-MeetingFiler",kind:"script",machine:"laptop",cadence:"hourly",code:"~/.claude/scripts/notion-meeting-filer.ps1",reads:"meetings",writes:"the Notion Meetings DB through the MCP",llm:"claude -p",gate:"",status:"live"},
+w_granola:{label:"Granola-Auto-Sweep",kind:"script",machine:"laptop",cadence:"daily 08:15",code:"~/.claude/granola-auto/",reads:"the Granola cache",writes:"vault notes, Notion",llm:"claude",gate:"",status:"live"},
+w_syscheck:{label:"RuleLoop-SystemCheck",kind:"script",machine:"laptop",cadence:"daily 09:10",code:"task-land/_system/system-check.py",reads:"decisions, rule-hits, the ledgers",writes:"system-check-<n>.md when the decision window is full; the box posts it at 22:58",llm:"none",gate:"",status:"live"},
+w_recap:{label:"SODANOtif-Recap",kind:"script",machine:"laptop",cadence:"every 2 h (at most once per 6 h)",code:"~/.claude/sodanotif/recap.ps1",reads:"the old laptop notification stores",writes:"a Telegram recap",llm:"claude -p",gate:"",status:"live",note:"A remnant of the laptop daemon; the box sodanotif is the live classifier."},
+w_peer60:{label:"Peer60-AcceptCheck 09:00 / 18:00",kind:"script",machine:"laptop",cadence:"daily 09:00 and 18:00",code:"tundra-outreach/peer-60/accept-*.vbs",reads:"LinkedIn accepts of the peer-60 wave",writes:"the DM queue and its approval page",llm:"",gate:"approval page",status:"live"},
+w_kickoff:{label:"CDTM-Kickoff-Weekly-Update",kind:"script",machine:"laptop",cadence:"weekly Thu 16:00",code:"cdtm-taskforce/run-weekly-hidden.vbs",reads:"progress.json",writes:"the Friday status draft",llm:"",gate:"a draft",status:"live"},
+w_trippy:{label:"Trippy-RailLane / Trippy-Requests-Watch",kind:"script",machine:"laptop",cadence:"every 2 min / every 5 min",code:".claude/travel-search/v2/ (rail_lane.py)",reads:"trip requests, Drive DA/trippy/",writes:"hub cards",llm:"none",gate:"hub card",status:"live"},
+w_voice:{label:"Voice-Lane-Watch",kind:"script",machine:"laptop",cadence:"every minute",code:".claude/voice-lane/",reads:"fast-lane voice notes",writes:"hub /pending",llm:"",gate:"hub card",status:"live"},
+w_hubfwd:{label:"DA-HubForward",kind:"service",machine:"laptop",cadence:"keep-alive every 5 min",code:"~/.claude/approval-hub/forward-to-box.js",reads:"127.0.0.1:4180",writes:"a TCP forward to the box :4180",llm:"none",gate:"",status:"live"},
+w_winwatch:{label:"DA-WindowWatch",kind:"service",machine:"laptop",cadence:"logon + every 10 min (pythonw, 4 samples a second)",code:"task-land/_system/window-watch/window_watch.py",reads:"console windows",writes:"windows.jsonl with the opener",llm:"none",gate:"",status:"live",note:"The reviewer of the no-console-window rule; window_lint.py after every task change."},
+w_design:{label:"DesignMirror-Server :4190",kind:"service",machine:"laptop",cadence:"logon, 1-min keep-alive (pythonw)",code:"tundra-design/sync/dsync.py serve",reads:"Claude Design extension snapshots",writes:"tundra-design commits, pull, push",llm:"none",gate:"",status:"live"},
+w_misc:{label:"ClaudeBar, Archive-Screenshots 03:00, Curriculum crawls",kind:"script",machine:"laptop",cadence:"as named",code:"misc",reads:"",writes:"",llm:"none",gate:"",status:"live",note:"Not system-critical."},
+w_retired:{label:"laptop hub and daemon era tasks",kind:"script",machine:"laptop",cadence:"disabled",code:"Approval-Hub-Watchdog, Push-Lane-Watchdog, SNM-Receiver, SODANOtif-Daemon-Watchdog, SODANOtif-Watch, TG-Bridge-Autostart, TG-Savior-Watchdog, Voice-Longform, WA-Daemon-AtLogon, WA-Daemon-Watchdog; three fired one-shots",reads:"",writes:"",llm:"",gate:"",status:"retired",note:"The hub and the daemons moved to the box; popups are off, Telegram only."},
+b_workbench:{label:"workbench session",kind:"session",machine:"box",cadence:"always (tmux)",code:"claude --remote-control",reads:"",writes:"",llm:"a session",gate:"",status:"live"},
+b_coattio:{label:"coattio on the box :4124 / :4137",kind:"service",machine:"box",cadence:"always (tmux coattio; coattio-sync.sh every 2 min)",code:"/home/da/coattio/crm-app/server.js, intake-server.js (COATTIO_BOX=1)",reads:"git ff-only pulls; peer.js pulls the laptop's crm.json",writes:"the box replica (it WROTE on 3-4 Oct: conflict #10)",llm:"none",gate:"",status:"broken",note:"Plan items 1 and 2: merge per record, then one writer."},
+b_rulesinbox:{label:"rules_inbox.py",kind:"script",machine:"box",cadence:"cron every 5 min",code:"soda-brain/tools/rules_inbox.py",reads:"soda-brain/rules/inbox/",writes:"one hub card per proposed rule; his yes files it with addrule.py",llm:"none",gate:"hub card",status:"paused",note:"Idle: instinct is set aside."},
+b_boxwatch:{label:"box_watch.py + box_linkedin_watch.py",kind:"script",machine:"box",cadence:"cron every 10 min",code:"task-land/_system/gtm-agent/",reads:"the laptop's heartbeat; the LinkedIn session state",writes:"one 'laptop silent' card a day; a safety card",llm:"none",gate:"hub card",status:"live"},
+b_promptwatch:{label:"savior_prompt_watch.py",kind:"script",machine:"box",cadence:"cron every minute",code:"task-land/_system/vps/savior_prompt_watch.py",reads:"the savior tmux pane",writes:"one card when a permission prompt sits unanswered",llm:"none",gate:"hub card",status:"live"},
+b_reconcile:{label:"drafts/reconcile.py",kind:"script",machine:"box",cadence:"cron every 5 min",code:"task-land/_system/drafts/reconcile.py",reads:"Gmail drafts (cdtm, tundra), sidecars, queue, cards",writes:"sidecar status; a card closed when Sent shows the message (answered_elsewhere with an event floor)",llm:"none",gate:"",status:"live"},
+b_contacts:{label:"contacts_sync.py",kind:"script",machine:"box",cadence:"cron every 30 min",code:"triage/contacts_sync.py sync --account alesoda2002",reads:"Google Contacts",writes:"contacts-inbox.jsonl, one card per batch, intake :4137",llm:"none",gate:"hub card",status:"broken",note:"Failing since 21 Sep (token)."},
+b_eod:{label:"eod_sweep.py + the 22:12 pre-sweep",kind:"script",machine:"box",cadence:"23:00 (cron); 22:12 (the savior); 22:47 watchdog; 22:58 system check post",code:"triage/eod_sweep.py, presweep-watchdog.sh, post_system_check.py",reads:"open cards",writes:"the digest card and a calendar event (the Telegram post fails with HTTP 400)",llm:"none",gate:"digest",status:"broken"},
+b_shipwa:{label:"ship-wa-store.sh",kind:"script",machine:"box",cadence:"cron every minute",code:"~/.local/bin/ship-wa-store.sh",reads:"wa-daemon/message-store.jsonl",writes:"~/gdrive/DA/wa-store.jsonl",llm:"none",gate:"",status:"live"},
+b_trippy:{label:"trippy :4126",kind:"service",machine:"box",cadence:"cron @reboot + every 5 min",code:"travel-search/app/server.js, trippy-supervise.sh",reads:"",writes:"trip boards",llm:"none",gate:"",status:"live",note:"The supervisor is buggy (EADDRINUSE noise)."},
+b_sync:{label:"da-sync.timer + repo-sync timers",kind:"script",machine:"box",cadence:"task-land every 60 s; vault_kb, medtech-brain, soda-brain, travel-search every 5 min",code:"task-land/_system/vps/git-sync.sh, repo-sync.sh",reads:"the repos; the box tools (approval-hub, sodanotif, triage, skills)",writes:"mirrors into _system/box-tools/, commit, merge, push; parks on conflict-vps",llm:"none",gate:"",status:"live"},
+b_health:{label:"da-health.timer / da-alert.timer",kind:"script",machine:"box",cadence:"every 5 min",code:"health-vps.sh, alert-bridge.sh",reads:"",writes:"health-vps.json (the laptop raises a 'VPS DOWN' calendar event when it goes stale); the laptop's health.json to Telegram",llm:"none",gate:"",status:"live"},
+b_wa:{label:"da-wa.service",kind:"service",machine:"box",cadence:"always",code:"/home/da/wa-daemon/daemon.js (Baileys)",reads:"WhatsApp",writes:"message-store.jsonl; the send API :4119",llm:"none",gate:"",status:"live"},
+b_tgbridge:{label:"da-tg-bridge.service",kind:"service",machine:"box",cadence:"always",code:"/home/da/tg-bridge/bot.js (the second bot)",reads:"phone text",writes:"claude -p answers",llm:"yes",gate:"",status:"live",note:"Never used for pings: he does not see that chat."},
+b_drive:{label:"da-gdrive / da-tundra-drive mounts",kind:"service",machine:"box",cadence:"always (rclone)",code:"/home/da/gdrive (cdtm:), /home/da/tundra-drive (tundra:)",reads:"Drive",writes:"",llm:"none",gate:"",status:"live"},
+b_voice:{label:"da-voice.timer",kind:"script",machine:"box",cadence:"every 5 min",code:"voice-longform-vps.py (faster-whisper)",reads:"long recordings on the Drive mount",writes:"transcripts; safe-word routing to cards and tasks",llm:"faster-whisper + claude",gate:"hub card",status:"live"},
+b_pgdump:{label:"nightly pg_dump",kind:"script",machine:"box",cadence:"03:30",code:"box retention (docs/RETENTION.md)",reads:"Postgres soda",writes:"~/gdrive/DA/backups/, 14 days (first dump 4 Oct 00:50, 7.4 MB)",llm:"none",gate:"",status:"live"},
+b_pages:{label:"research-page :4143 to :4145",kind:"service",machine:"box",cadence:"nothing keeps them",code:"/home/da/research-page/",reads:"",writes:"event companion pages",llm:"none",gate:"",status:"broken",note:"Unsupervised; a reboot kills them."},
+b_boards:{label:"gtm-eng on the box :4141",kind:"service",machine:"box",cadence:"nothing",code:"/home/da/gtm-eng",reads:"",writes:"",llm:"none",gate:"",status:"retired",note:"Dead since 19 Sep; boards are laptop-only."},
+c_instinct:{label:"instinct (orchestrator)",kind:"session",machine:"cloud",cadence:"",code:"its own connectors; reads the repos on GitHub; proposes through rules/inbox/ and the hub",reads:"",writes:"",llm:"yes",gate:"hub card",status:"paused",note:"Set aside 4 Oct 01:50 ('forget about instinct for now'). When an orchestrator is wanted again: through the door and rules/inbox/ only."},
+c_edge:{label:"Edge (getedge.cc)",kind:"service",machine:"cloud",cadence:"once per new task",code:"MCP edge on both machines (/home/da/.mcp.json on the box)",reads:"~20k public skills",writes:"a candidate skill to compare with the local ones",llm:"",gate:"",status:"live",note:"Adopting a skill still needs the test the people-search lost on 18 Sep."},
+c_langfuse:{label:"Langfuse",kind:"service",machine:"cloud",cadence:"every Claude Code turn (hook), the poller, the simulation",code:"~/.env/langfuse.env on the laptop only",reads:"",writes:"traces",llm:"",gate:"",status:"live",note:"The box has no SDK and no keys yet: the learning layer traces locally there."},
+};
+
+// master chart: lanes and placement (lane index, row)
+const SHAPE = {
+  lanes:["events in","readers","the brain and its stores","his gate","execution","learning"],
+  place:{
+    ev_mail:[0,1],ev_wa:[0,2],ev_li:[0,3],ev_notion:[0,4],ev_cal:[0,5],ev_slack:[0,6],ev_page:[0,7],ev_sentence:[0,8],
+    rd_notif:[1,1],rd_crm:[1,2],rd_asks:[1,3],rd_meeting:[1,4],rd_match:[1,5],rd_sweep:[1,6],rd_classifier:[1,7],rd_feedback:[1,8],
+    st_door:[2,1],st_pg:[2,2],st_crm:[2,3],st_tasks:[2,4],st_hub:[2,5],st_drafts:[2,6],st_ledgers:[2,7],st_decisions:[2,8],
+    gate_tg:[3,2],gate_review:[3,3],gate_crm:[3,4],gate_board:[3,5],gate_page:[3,6],
+    ex_hub:[4,2],ex_lane:[4,3],ex_wa:[4,4],ex_li:[4,5],ex_crm_step:[4,6],ex_tick:[4,7],ex_campaign:[4,8],
+    ln_addrule:[5,2],ln_compile:[5,3],ln_observers:[5,4],ln_cleaning:[5,5],ln_sim:[5,6],ln_janitor:[5,7]
+  },
+  edges:[
+    ["ev_mail","rd_notif",""],["ev_mail","rd_crm",""],["ev_mail","rd_sweep","every 10 min",""],
+    ["ev_wa","rd_notif",""],["ev_wa","rd_crm","via Drive"],["ev_wa","rd_asks",""],
+    ["ev_li","rd_crm",""],["ev_li","rd_asks",""],["ev_li","rd_sweep","reverse"],
+    ["ev_notion","rd_meeting",""],["ev_cal","rd_crm",""],["ev_slack","rd_sweep",""],
+    ["ev_page","rd_classifier",""],["ev_sentence","rd_feedback","after cut-over","dashed"],["ev_sentence","ln_addrule","same turn","strong"],
+    ["rd_crm","st_crm","PUT /api/data"],["rd_meeting","st_crm","step + origin"],["rd_meeting","st_door","match_event","strong"],
+    ["rd_sweep","rd_match","on_event","strong"],["rd_crm","rd_match","","strong"],["rd_match","st_door","/brain/match","strong"],
+    ["st_door","st_pg",""],["st_crm","st_pg","mirror 3a"],["st_tasks","st_pg","ingest 5 min"],["st_hub","st_pg","cards"],
+    ["rd_asks","st_drafts","a draft + a card"],["rd_meeting","st_hub","owed artifacts"],["rd_classifier","st_tasks",""],
+    ["rd_match","ex_tick","tick with quote","strong"],["rd_match","st_hub","/close with evidence","strong"],
+    ["st_hub","gate_tg","ping once"],["st_hub","gate_review",""],["st_crm","gate_crm",""],["st_drafts","gate_tg",""],["st_tasks","gate_page",""],["st_tasks","gate_board","","dashed"],
+    ["gate_tg","ex_hub","N yes","strong"],["gate_review","ex_hub","commit = yes","strong"],["gate_board","ex_campaign","commit = yes","strong"],["gate_crm","ex_crm_step","a/s/c commit","strong"],["gate_page","ex_tick","his tick","strong"],
+    ["ex_hub","ex_lane","by draft id"],["ex_hub","ex_wa","wa-send"],["ex_campaign","ex_li",""],["ex_hub","st_decisions",""],
+    ["gate_review","ln_cleaning","Cleaning tab, reverse","strong"],["ln_addrule","st_ledgers",""],["st_ledgers","ln_compile",""],["ln_observers","st_decisions","rule-hits"],["rd_feedback","ln_addrule","","dashed"],
+    ["ln_cleaning","rd_match","thresholds","dashed"],["ln_cleaning","rd_sweep","","dashed"],["ln_sim","ln_addrule","misses as rules","dashed"],["ln_janitor","st_hub","","dashed"]
+  ]
+};
+
+// machines chart
+const MACH = {
+  lanes:["laptop (Windows, sleeps)","box (Ubuntu VPS, always on)","phone","cloud"],
+  nodes:{
+    m_crm:{label:"coattio CRM :4124 + intake :4137",kind:"service",sub:"the ONLY crm.json writer; Coattio-Watchdog"},
+    m_boards:{label:"GTM boards :4141",kind:"service",sub:"open-board.ps1 only"},
+    m_fwd:{label:"127.0.0.1:4180 forward",kind:"service",sub:"DA-HubForward to the box hub"},
+    m_design:{label:"design sync :4190",kind:"service",sub:"Claude Design to GitHub"},
+    m_chrome:{label:"Chrome profiles",kind:"exec",sub:"LinkedIn poller and sends; boards"},
+    m_obsidian:{label:"Obsidian: task-land, vaults",kind:"surface",sub:"the daily page is the edit surface"},
+    m_tasks:{label:"35 scheduled tasks",kind:"script",sub:"all through run-hidden.vbs; no console ever"},
+    m_sessions_l:{label:"Claude Code sessions",kind:"session",sub:"DA SYSTEM, quick-claude, peers"},
+    m_savior:{label:"savior (tmux)",kind:"session",sub:"the only Telegram poller"},
+    m_hub:{label:"approval hub :4180",kind:"exec",sub:"da-hub.service"},
+    m_review:{label:"hub-review :4142",kind:"surface",sub:"cron supervisor every 5 min"},
+    m_brain:{label:"da-brain :4150 + Postgres soda",kind:"store",sub:"index every 5 min; Funnel"},
+    m_wa:{label:"wa-daemon + send :4119",kind:"exec",sub:"da-wa.service"},
+    m_notif:{label:"sodanotif + pollers",kind:"reader",sub:"Gmail, Slack every 60 s"},
+    m_cron:{label:"cron and timers",kind:"script",sub:"sweep 10 min, reconcile 5, sync 60 s, dump 03:30"},
+    m_coattio_b:{label:"coattio replica :4124 / :4137",kind:"service",sub:"pull only (in conflict tonight)"},
+    m_mounts:{label:"rclone mounts",kind:"store",sub:"/home/da/gdrive, tundra-drive"},
+    m_tg:{label:"Telegram",kind:"gate",sub:"cards and verdicts"},
+    m_page:{label:"hub-review page",kind:"surface",sub:"100.85.52.84:4142 over Tailscale"},
+    m_google:{label:"Google: Gmail, Calendar, Contacts, Drive",kind:"store",sub:"cdtm, tundra, sodano23, alesoda2002, lobbly"},
+    m_notion:{label:"Notion: Meetings, Contacts, TRIMEDX",kind:"store",sub:"MCP only, no token"},
+    m_github:{label:"GitHub: task-land, soda-brain, coattio, vault_kb, medtech-brain",kind:"store",sub:"the meeting point of both clones"},
+    m_li:{label:"LinkedIn, WhatsApp, Slack",kind:"event",sub:"the channels"},
+    m_lf:{label:"Langfuse, Edge, instinct (aside)",kind:"service",sub:""}
+  },
+  place:{m_crm:[0,1],m_boards:[0,2],m_fwd:[0,3],m_design:[0,4],m_chrome:[0,5],m_obsidian:[0,6],m_tasks:[0,7],m_sessions_l:[0,8],
+         m_savior:[1,1],m_hub:[1,2],m_review:[1,3],m_brain:[1,4],m_wa:[1,5],m_notif:[1,6],m_cron:[1,7],m_coattio_b:[1,8],m_mounts:[1,9],
+         m_tg:[2,1],m_page:[2,3],
+         m_google:[3,1],m_notion:[3,2],m_github:[3,4],m_li:[3,5],m_lf:[3,7]},
+  edges:[["m_fwd","m_hub","Tailscale","strong"],["m_crm","m_coattio_b","peer.js pull"],["m_crm","m_brain","pg-mirror on every save"],["m_sessions_l","m_brain","MCP /mcp"],["m_tasks","m_github","git 10 to 15 min"],["m_github","m_cron","git 60 s to 5 min"],["m_cron","m_mounts","wa-store every min"],["m_chrome","m_mounts","linkedin-store 15 min","dashed"],["m_savior","m_tg","the lane","strong"],["m_hub","m_tg","ping once"],["m_review","m_page","","strong"],["m_notif","m_google","60 s"],["m_wa","m_li",""],["m_hub","m_google","send by draft id"],["m_crm","m_notion","sync"],["m_mounts","m_google","rclone"],["m_obsidian","m_tasks","watcher"],["m_chrome","m_li","LinkedIn"]]
+};
+
+// flows: chains of {n:nodeId or label, k:kind} with arrows {a:label, g:gate, d:dashed}
+const FLOWS = [
+ {id:"f1",title:"An inbound email",tag:"live",chain:[{n:"ev_mail"},{a:"60 s"},{n:"rd_notif"},{a:"Telegram card"},{n:"gate_tg"},{a:"meanwhile"},{n:"rd_crm"},{a:"step + origin"},{n:"st_crm"},{a:"if an ask"},{n:"rd_asks"},{a:"draft + sidecar + critic"},{n:"st_drafts"},{a:"card",g:1},{n:"gate_review"},{a:"N dsend",g:1},{n:"ex_lane"},{a:"Sent seen"},{n:"b_reconcile"}],
+  note:"In parallel, hub_outdated.py on the box feeds the same mail to todo_match.on_event (flow 9): a to-do or a card the mail proves done is ticked or closed with the quote."},
+ {id:"f2",title:"A WhatsApp message",tag:"live",chain:[{n:"ev_wa"},{a:"Baileys"},{n:"b_wa"},{a:"every minute"},{n:"st_drive"},{a:"the laptop reads it"},{n:"rd_crm"},{a:"an ask"},{n:"rd_asks"},{a:"wa-draft card",g:1},{n:"gate_tg"},{a:"yes",g:1},{n:"ex_hub"},{a:"wa-send"},{n:"ex_wa"}],
+  note:"His own WhatsApp reply counts as done: the sweep's 'done on channel' rule closes the card, and the reverse pass reads his messages up to 10 days before the card."},
+ {id:"f3",title:"A Notion meeting note (Granola)",tag:"live",chain:[{n:"ev_notion"},{a:"every 5 min"},{n:"rd_meeting"},{a:"match_event: already covered?"},{n:"st_door"},{a:"dated items"},{n:"st_crm"},{a:"owed artifacts, 2 min after the note settles",g:1},{n:"gate_review"},{a:"yes",g:1},{n:"ex_lane"},{a:"his sentence"},{n:"ln_addrule"}],
+  note:"Since 3 Oct the reader asks the brain before proposing a step: a commitment already open as a to-do becomes 'already on your to-do (id)' instead of a second step. The finished call also goes through on_event."},
+ {id:"f4",title:"A LinkedIn accept or DM",tag:"live",chain:[{n:"ev_li"},{a:"15 min"},{n:"w_lipoll"},{a:"Drive"},{n:"st_drive"},{a:"accept tick"},{n:"rd_crm"},{a:"intro DM next business day"},{n:"ex_campaign"},{a:"on the laptop"},{n:"ex_li"},{a:"the row's campaigns[]"},{n:"st_crm"}],
+  note:"An inbound DM goes to inbound asks (a linkedin-draft card). His own DMs are stored since 3 Oct and feed the reverse pass. The poller only sees the ~17 newest threads: the per-person read is in the monitor-layer design."},
+ {id:"f5",title:"A to-do line typed in Obsidian",tag:"live",chain:[{n:"ev_page"},{a:"~60 s"},{n:"w_watcher"},{a:"((prompt)), classifier"},{n:"rd_classifier"},{a:"a task file"},{n:"st_tasks"},{a:"names a person? CRM step"},{n:"ex_crm_step"},{a:"git, then ingest 5 min"},{n:"st_pg"},{a:"matchable by every event"},{n:"rd_match"},{a:"pickup (paused to Tue 20:20)",d:1},{n:"st_hub"},{a:"the card decides the task",g:1},{n:"gate_page"}],
+  note:"Stage lines on the page link the exact card; his yes = status done, stage finished; his tick while the card is open closes the card (H15)."},
+ {id:"f6",title:"A daily campaign day (US)",tag:"research paused",chain:[{n:"rd_research",},{a:"paused to 7 Oct",d:1},{n:"gate_board"},{a:"board daily-<date>, review optional"},{n:"ex_campaign"},{a:"16:55: first 10, caps 20 hard"},{n:"ex_lane"},{a:"invite 5 to 60 min later"},{n:"ex_li"},{a:"a reply pauses the hospital",g:1},{n:"gate_tg"},{a:"09:30"},{n:"w_postmortem"}],
+  note:"The one delegated send: a committed plan on a ledger with caps he set. Auto-replies are not replies; 'remove me' suppresses for 12 months; a hard bounce is final."},
+ {id:"f7",title:"A sentence from him (the rule loop)",tag:"live",chain:[{n:"ev_sentence"},{a:"same turn"},{n:"ln_addrule"},{a:"H<n> with his quote"},{n:"st_ledgers"},{a:"--install"},{n:"ln_compile"},{a:"the skills crm, drafting, hub, proactive"},{n:"ln_observers"},{a:"rule-hits"},{n:"st_decisions"},{a:"09:10 weekly"},{n:"w_syscheck"},{a:"one page per rule"},{n:"st_pg"}],
+  note:"After the P3 cut-over the hub-review commit goes to feedback_session.py on the box instead of the savior: one resumed Opus session files the rule, recompiles, answers with one told card. A comment that is WORK (a deck, a translation) becomes a tracked job linked to the card (plan item 7)."},
+ {id:"f8",title:"The night",tag:"live",chain:[{n:"b_eod"},{a:"22:12 pre-sweep, 22:58 check, 23:00 digest"},{n:"rd_sweep"},{a:"every 10 min all night"},{n:"rd_match"},{a:"/close with evidence"},{n:"st_hub"},{a:"03:30"},{n:"b_pgdump"},{a:"08:30"},{n:"rd_due"},{a:"prepared cards",g:1},{n:"gate_review"},{a:"next morning, key 4"},{n:"ln_cleaning"}],
+  note:"Planned: the janitor at 22:30 with the currency number per surface (S2, S3). Open cards went 77 to 52 on the first real pass of the reverse pass."},
+ {id:"f9",title:"THE CONNECTION: todo_match.on_event",tag:"live since 3 Oct 23:20",chain:[{n:"ev_mail"},{a:"or WA, CRM, LinkedIn, Slack, a finished call"},{n:"rd_sweep"},{a:"on_event(text, source)"},{n:"rd_match"},{a:"POST /brain/match, k per kind"},{n:"st_door"},{a:"sim >= 0.84: one judgement"},{n:"rd_match"},{a:"laptop: tick with the quote"},{n:"ex_tick"},{a:"box: card closed with evidence, no verdict"},{n:"st_hub"},{a:"72 h window"},{n:"gate_review"}],
+  note:"Every outcome is a line in _system/todo-match.jsonl with top_sim; the Cleaning tab lists each action with its evidence and reverses one on request (a card re-posted, a to-do reverse queued)."},
+ {id:"f10",title:"THE REVERSE PASS: every open card looks for its own outcome",tag:"live since 3 Oct 23:45",chain:[{n:"st_hub"},{a:"each open decision card"},{n:"rd_sweep"},{a:"its person: others' events after the card, his messages up to 10 days before"},{n:"ev_slack"},{a:"only when card_marks sees something new"},{n:"rd_match"},{a:"moot / still open / unsure"},{n:"st_hub"},{a:"event: reverse"},{n:"ln_cleaning"}],
+  note:"Lena #28 closed on the first pass; today's lines at 02:51 to 03:11 judged two cards still open. Path B of the learning layer's attribution."},
+ {id:"f11",title:"The feedback session (P3)",tag:"armed",chain:[{n:"gate_review"},{a:"commit -> queue.jsonl"},{n:"rd_feedback"},{a:"cron 5 min, one resumed session",d:1},{n:"ln_addrule"},{a:"recompile"},{n:"ln_compile"},{a:"/api/queue/done, ONE told card"},{n:"st_hub"},{a:"his correction",g:1},{n:"gate_tg"}],
+  note:"Cut-over when the peer says 'commits processed': touch no-telegram, restart hub-review through the supervisor, delete the session state, disable DA-FeedbackWorker, watch feedback-session.jsonl and the told card."},
+ {id:"f12",title:"The learning layer (cleaning_eval)",tag:"built, off",chain:[{n:"rd_match"},{a:"every action and judge",d:1},{n:"ln_cleaning"},{a:"traces local + Langfuse",d:1},{n:"c_langfuse"},{a:"72 h without reverse = success",d:1},{n:"gate_review"},{a:"weekly spot check of 3; wrong = failure",d:1},{n:"ln_cleaning"},{a:"thresholds up, a (producer, person) exception",d:1},{n:"rd_sweep"}],
+  note:"On after the Tuesday reset. Path A (event push) vs path B (sweep) attribution with overlap and time-to-find; report per path and surface. The simulation re-run judges the whole: brain in the readers, the Edge variant."}
+];
+
+// ---------- RENDER ----------
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const statusWord={live:"live",armed:"armed",off:"built, off",paused:"paused",planned:"planned",broken:"broken",retired:"retired"};
+function nodeEl(id,extra){
+  const n=NODES[id]||extra; const kind=n.kind||"script";
+  const el=document.createElement("div"); el.className="node "+(kind==="service"||kind==="session"?"":kind);
+  if(n.llm&&!/^none/.test(n.llm)&&kind!=="reader") el.classList.add("llm");
+  el.tabIndex=0; el.dataset.id=id;
+  const st=n.status||""; const sub=extra&&extra.sub!==undefined?extra.sub:(n.cadence||"");
+  el.innerHTML=`<span class="l">${st?`<i class="dot ${st}"></i>`:""}${n.label}</span>${sub?`<span class="s">${sub}</span>`:""}`;
+  if(["off","planned","armed"].includes(st)) el.dataset.planned="1";
+  el.addEventListener("click",()=>openDrawer(id,n)); el.addEventListener("keydown",e=>{if(e.key==="Enter")openDrawer(id,n)});
+  return el;
+}
+function laneChart(container,spec,nodes){
+  const grid=document.createElement("div"); grid.className="grid";
+  grid.style.gridTemplateColumns=`repeat(${spec.lanes.length},minmax(190px,1fr))`;
+  spec.lanes.forEach((l,i)=>{const h=document.createElement("div");h.className="lane-h";h.style.gridColumn=i+1;h.style.gridRow=1;h.textContent=l;grid.appendChild(h)});
+  for(const [id,[c,r]] of Object.entries(spec.place)){const el=nodeEl(id,nodes?nodes[id]:null);el.style.gridColumn=c+1;el.style.gridRow=r+1;grid.appendChild(el)}
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg"); svg.classList.add("wires");
+  svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--line-strong)"></path></marker><marker id="ahs" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"></path></marker></defs>`;
+  container.append(svg,grid);
+  function draw(){
+    const cb=grid.getBoundingClientRect(); svg.setAttribute("width",grid.scrollWidth); svg.setAttribute("height",grid.scrollHeight);
+    $$("path.w,text.w",svg).forEach(e=>e.remove());
+    for(const [a,b,label,style] of spec.edges){
+      const A=$(`[data-id="${a}"]`,grid),B=$(`[data-id="${b}"]`,grid); if(!A||!B||A.hidden||B.hidden) continue;
+      const ra=A.getBoundingClientRect(),rb=B.getBoundingClientRect();
+      const ltr=rb.left>=ra.right-4;
+      const x1=(ltr?ra.right:ra.left)-cb.left+grid.scrollLeft, y1=ra.top+ra.height/2-cb.top;
+      const x2=(ltr?rb.left:rb.right)-cb.left+grid.scrollLeft, y2=rb.top+rb.height/2-cb.top;
+      const same=Math.abs(ra.left-rb.left)<8;
+      let d;
+      if(same){const x0=ra.right-cb.left+grid.scrollLeft; d=`M${x0},${y1} C${x0+40},${y1} ${x0+40},${y2} ${x0},${y2}`;}
+      else{const mx=(x1+x2)/2; d=`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;}
+      const p=document.createElementNS("http://www.w3.org/2000/svg","path"); p.setAttribute("d",d); p.classList.add("w");
+      if(style==="strong")p.classList.add("strong"); if(style==="dashed")p.classList.add("dashed");
+      p.setAttribute("marker-end",style==="strong"?"url(#ahs)":"url(#ah)"); svg.appendChild(p);
+      if(label){const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.classList.add("w"); if(style==="strong")t.classList.add("strong");
+        t.setAttribute("x",(x1+x2)/2); t.setAttribute("y",(y1+y2)/2-4); t.setAttribute("text-anchor","middle"); t.textContent=label; svg.appendChild(t);}
+    }
+  }
+  new ResizeObserver(draw).observe(grid); if(document.fonts) document.fonts.ready.then(draw); setTimeout(draw,50);
+  container._draw=draw;
+}
+function arrow(a){const el=document.createElement("div"); el.className="arrow"+(a.g?" gate":"")+(a.d?" dashed":""); el.innerHTML=`<span>${a.a||""}</span><svg viewBox="0 0 46 14"><path d="M1,7 H40"/><path d="M34,2 L41,7 L34,12"/></svg>`; return el;}
+function flows(){
+  const g=$("#flows-grid");
+  for(const f of FLOWS){
+    const box=document.createElement("article"); box.className="flow"; box.id=f.id;
+    box.innerHTML=`<h3>${f.title} <small>${f.tag}</small></h3>`;
+    const ch=document.createElement("div"); ch.className="chain";
+    for(const s of f.chain){ if(s.a!==undefined){ch.appendChild(arrow(s));} else {const st=document.createElement("div");st.className="step";st.appendChild(nodeEl(s.n));ch.appendChild(st);} }
+    box.appendChild(ch); if(f.note){const p=document.createElement("p");p.className="note";p.textContent=f.note;box.appendChild(p);}
+    g.appendChild(box);
+  }
+}
+const WORKER_KINDS=new Set(["reader","script","service","session"]);
+function registry(){
+  const tb=$("#wtable tbody"); tb.innerHTML="";
+  const rows=Object.entries(NODES).filter(([id,n])=>WORKER_KINDS.has(n.kind)||id.startsWith("ex_campaign")||id.startsWith("ln_")&&n.code);
+  for(const [id,n] of rows){
+    const tr=document.createElement("tr"); tr.className="row"; tr.dataset.id=id; tr.dataset.machine=n.machine||""; tr.dataset.status=n.status||""; tr.dataset.llm=(n.llm&&!/^none/.test(n.llm))?"yes":"";
+    tr.dataset.text=[n.label,n.code,n.cadence,n.reads,n.writes,n.note].join(" ").toLowerCase();
+    tr.innerHTML=`<td><i class="dot ${n.status||""}"></i><b>${n.label}</b></td><td><span class="pill ${n.machine}">${n.machine||""}</span></td><td>${n.cadence||""}</td><td><code>${(n.code||"").split(";")[0]}</code></td><td>${n.reads||""}</td><td>${n.writes||""}</td><td>${n.llm||""}</td><td>${n.gate||""}</td>`;
+    tr.addEventListener("click",()=>openDrawer(id,n)); tb.appendChild(tr);
+  }
+  const all=rows.map(r=>r[1]); $("#n-workers").textContent=all.length;
+  $("#n-live").textContent=all.filter(n=>n.status==="live").length;
+  $("#n-armed").textContent=all.filter(n=>["armed","off"].includes(n.status)).length;
+  $("#n-planned").textContent=all.filter(n=>n.status==="planned").length;
+}
+const F={machine:"",status:"",llm:""};
+function applyFilters(){
+  const q=$("#q").value.trim().toLowerCase();
+  for(const tr of $$("#wtable tbody tr")){
+    const okM=!F.machine||tr.dataset.machine===F.machine;
+    const okS=!F.status||(F.status==="armed"?["armed","off"].includes(tr.dataset.status):tr.dataset.status===F.status);
+    const okL=!F.llm||tr.dataset.llm===F.llm;
+    const okQ=!q||tr.dataset.text.includes(q);
+    tr.hidden=!(okM&&okS&&okL&&okQ);
+  }
+}
+$("#wfilters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;F[b.dataset.f]=b.dataset.v;$$(`#wfilters button[data-f="${b.dataset.f}"]`).forEach(x=>x.setAttribute("aria-pressed",x===b));applyFilters();});
+$("#q").addEventListener("input",()=>{applyFilters(); if($("#q").value.trim()) $("#workers").scrollIntoView({block:"start"});});
+// drawer
+function openDrawer(id,n){
+  n=n||NODES[id]; $("#d-kind").textContent=`${n.kind||""} · ${n.machine||""}`; $("#d-title").textContent=n.label;
+  $("#d-status").innerHTML=n.status?`<i class="dot ${n.status}"></i>${statusWord[n.status]||n.status}`:"";
+  const kv=$("#d-kv"); kv.innerHTML="";
+  for(const [k,v] of [["cadence",n.cadence],["code",n.code],["reads",n.reads],["writes",n.writes],["model",n.llm],["his gate",n.gate]]){ if(!v) continue; const dt=document.createElement("dt");dt.textContent=k;const dd=document.createElement("dd");dd.innerHTML=k==="code"?`<code>${v}</code>`:v;kv.append(dt,dd);}
+  $("#d-note").textContent=n.note||"";
+  $("#drawer").setAttribute("aria-hidden","false"); $("#backdrop").classList.add("on");
+}
+function closeDrawer(){$("#drawer").setAttribute("aria-hidden","true");$("#backdrop").classList.remove("on");}
+$("#drawer-close").addEventListener("click",closeDrawer); $("#backdrop").addEventListener("click",closeDrawer);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer();});
+// planned toggle
+$("#planned").addEventListener("click",e=>{const on=e.currentTarget.getAttribute("aria-pressed")!=="true";e.currentTarget.setAttribute("aria-pressed",on);$$(".node[data-planned]").forEach(n=>n.hidden=!on);$$(".chart").forEach(c=>c._draw&&c._draw());});
+// theme
+$("#theme").addEventListener("click",()=>{const r=document.documentElement;const cur=r.getAttribute("data-theme");const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark");try{localStorage.setItem("soda-map-theme",dark?"light":"dark")}catch(e){}});
+try{const t=localStorage.getItem("soda-map-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}
+// build
+laneChart($("#chart-shape"),SHAPE);
+laneChart($("#chart-machines"),MACH,MACH.nodes);
+flows(); registry(); applyFilters();
+</script>
+</body>
+</html>
