@@ -58,6 +58,15 @@ in Obsidian · 6 a daily campaign day (research paused to 7 Oct) · 7 a sentence
   duplicate `const` from the Cleaning patch): "loading cards" with the server healthy means a client error; read the
   browser console first.
 
+## Changed node 4 Oct 2026 22:15: the LinkedIn event (`ev_li`) reads a quiet thread by person (G89)
+
+`ev_li` was "inbox only": the poller reads the newest ~10 to 17 threads, so a reply in a quiet thread (the Ienna case)
+never reached the store. Now every poll tick, in the same launcher, also opens up to 2 threads by id
+(`linkedin-poll/li_person.py`, `fetch_person`): CRM Today people with LinkedIn whose thread is outside that window, each
+once a day; and `poll.py --person <pid|url|thread>` does it on demand. It writes to the same store with the same ids,
+his messages and their replies newer than what the store held; older inbound history is reported, never written. New
+wire: ev_li reads the CRM (Today people, read-only). Details in `LOOPS.md` section 1.
+
 ## New node 4 Oct 2026 19:40: the UI walk (`w_uiwalk`, laptop, script)
 
 `task-land/_system/system-agent/ui_walk.py`, task `DA-UIWalk` (08:00 to 23:00 every 3 h). It reads his gates the way
