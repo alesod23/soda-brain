@@ -263,6 +263,11 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `$HOME/task-land/_system/rule-hits.jsonl`, on both machines (`drafts/common.py` `TASKLAND`/`HITS`). It was a fixed
   `/home/da/...` path on Linux, so the box's crm-lane test (temp HOME) failed 1 test and wrote 12 `crm:zz-lane-*` test
   hits into the real ledger (00:53, still there). task-land f28dba999.
+  **G159 (5 Oct 2026 01:27):** those 14 fixture lines (12 `crm:zz-lane-*`, 2 `crm:test:wa`) stay (the ledger is
+  append-only); every reader that counts hits skips an item with a `zz-*` or `test` segment through
+  `_system/hit_filter.is_test_hit` (compile_skill and so skill_lag, rule_loop_check, rule-stats, system-check,
+  system_update), and the crm-lane test asserts the real file gets none. The CRM's day is Europe/Rome on every machine
+  (`model.js todayDay`), so a step sent or skipped between 00:00 and 02:00 Rome counts for the right day.
 
 ## 4b. Producers attach to the CRM item, not a card (THE PLAN 10(c), built 4 Oct 2026 04:50)
 
