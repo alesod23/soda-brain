@@ -334,7 +334,10 @@ td .pill.same{border-color:var(--live);color:var(--live)} td .pill.fake{border-c
   <div class="formula">event score = detected 20 + person 10 + timely 10 + step 30 x (0|1|2)/2 + artifacts 20 x (0|1|2)/2 + clean 10
               = 0 when anything was sent to that person without his yes (FATAL)
 hub_surface = 100 x (1 - irrelevant views / all views), cards and Today rows, the day's passes of the simulated him
-day score   = average of the day's event scores and its hub_surface line   (days.jsonl, PROGRESS.md)</div>
+day score   = average of the day's event scores and its hub_surface line   (days.jsonl, PROGRESS.md)
+G-P (G133)  = card 30 (ONE todo-proposal card naming the person, quoting the ask, within 15 min of his yes; 15 within 60)
+              + set 40 x matched / max(expected, proposed) + owner 15 x right owner / matched + after_yes 15
+              = 0 when a to-do was written before his yes on the card; its own line, not in the day score</div>
   <div class="tablewrap" style="margin-top:14px"><table id="mtable">
     <thead><tr><th>Metric</th><th>Definition</th><th>Source</th><th>How it can be gamed or misread</th></tr></thead>
     <tbody></tbody>
@@ -407,7 +410,7 @@ day score   = average of the day's event scores and its hub_surface line   (days
 <script>
 // ---------- DATA ----------
 // Every number here was read from ~/sim on 4 Oct 2026 at ASOF (compare.py report, scores.jsonl, calls.jsonl, runner.log).
-const ASOF = "2026-10-04 16:17";
+const ASOF = "2026-10-04 22:40";
 // kinds: reader (Opus), script, store, service, event, surface, learn; llm:"Sonnet" draws the LLM badge on a script
 const NODES = {
 // the sandbox chart
@@ -428,7 +431,10 @@ s_reader:{label:"CRM monitor + reader",kind:"reader",sub:"monitor.js, reader.js,
 s_asks:{label:"inbound asks + due today",kind:"reader",sub:"drafts through register.py",code:"home/gtm-eng/agent/inbound_asks.py, due_today.py"},
 s_sweep:{label:"hub_outdated + todo_match",kind:"reader",sub:"heavy pass and 23:40; brain from arm B",code:"home/task-land/_system/hub_outdated.py, home/soda-brain/tools/todo_match.py"},
 s_campaign:{label:"campaign.py tick",kind:"script",sub:"a seeded board of 30",code:"home/gtm-eng/campaign.py"},
-s_feedback:{label:"feedback worker",kind:"reader",sub:"every 2nd heavy pass",code:"home/gtm-eng/agent/feedback_worker.py"},
+s_feedback:{label:"feedback session twin",kind:"reader",sub:"every 2nd heavy pass, no tools",code:"harness/fakes/feedback_session_twin.py, home/task-land/_system/feedback_session.py",note:"G133 (4 Oct 22:30): the sandbox copy of feedback_session.py on the sandbox hub-review queue (the fake hub serves it): ledger_verdict files his sentences into the SANDBOX ledgers in code, the System log answer is written back, the told card goes to the fake hub. The resumed session itself runs without tools: its decisions are real, its tool actions are not executed."},
+s_proactive:{label:"proactive to-do reader",kind:"reader",sub:"scan + apply after every event",code:"home/task-land/_system/proactive_todo.py, home/.claude/travel-search/v2/app/trip_todos.py",note:"G133: the real reader reads the sandbox events ledger (an ask + his yes), ONE todo-proposal card goes to the fake hub; his yes there and the real executor writes each line through its owner (the real trip_todos.py on world/trips.json, capture.py, the CRM step route). The G-P line of the judge scores it."},
+s_todow:{label:"to-do worker twin",kind:"reader",sub:"heavy pass, capped, no tools",code:"harness/fakes/todo_worker_twin.py, home/task-land/_system/todo_worker.py",note:"G133: the real todo_worker tick (candidates, triage, pickup --auto, send check, ready --auto = one auto card); the work session runs without tools; caps 3 triage and 2 sessions a simulated day (run.json)."},
+s_sysupd:{label:"System Update",kind:"script",sub:"the day's first pass, never posted",code:"home/task-land/_system/system-agent/system_update.py",note:"G133: run --no-post --force --judge never --root <sandbox task-land>; the page stays in the sandbox (updates/<date>.html); not scored."},
 s_savior:{label:"savior stand-in",kind:"reader",sub:"case_worker.py, 2 rewrites max",code:"harness/case_worker.py"},
 s_hub:{label:"fake hub :4280",kind:"service",sub:"server.js mirror of 30 Sep",code:"harness/fakes/hub_server.py"},
 s_crm:{label:"fake CRM :4224 + :4237",kind:"service",sub:"data + intake, one write path",code:"harness/fakes/crm_server.py"},
@@ -443,14 +449,14 @@ s_night:{label:"run_night.py",kind:"script",sub:"PROGRESS line, GO / STOP",code:
 s_compare:{label:"compare.py report",kind:"script",sub:"per root, no model",code:"harness/compare.py"},
 // chain-only nodes
 c_clock:{label:"clock to each event",kind:"script",sub:"+ a 10-min meeting grid"},
-c_quick:{label:"quick ticks",kind:"script",sub:"mail, WA, LI, calendar, reader, asks, meeting"},
-c_heavy:{label:"heavy pass",kind:"reader",sub:"campaign, sweep, feedback, savior, the simulated him"},
+c_quick:{label:"quick ticks",kind:"script",sub:"mail, WA, LI, calendar, reader, asks, meeting, proactive"},
+c_heavy:{label:"heavy pass",kind:"reader",sub:"campaign, sweep, to-do worker, feedback session, savior, him"},
 c_last:{label:"23:40 last sweep",kind:"reader",sub:"reverse pass, conditions, brain"},
 c_truthday:{label:"the day's truth",kind:"store",sub:"events, his own acts, promises due today"},
 c_observe:{label:"observe()",kind:"script",sub:"ledger, cards, outbox, CRM row, decisions within 36 h"},
 c_measured:{label:"measured by code",kind:"script",sub:"detected, first reaction, sent without yes"},
 c_judgecall:{label:"one judge call",kind:"reader",sub:"person, step, artifacts, wrong actions"},
-c_points:{label:"points 0 to 100",kind:"script",sub:"the weights; FATAL sets 0"},
+c_points:{label:"points 0 to 100",kind:"script",sub:"the weights; FATAL sets 0; G-P on its own line"},
 c_surface:{label:"the surface line",kind:"store",sub:"from the passes of the simulated him"},
 c_daysline:{label:"days.jsonl",kind:"store",sub:"the day's average, the judge's note"}
 };
@@ -462,7 +468,7 @@ const SANDBOX = {
   place:{
     s_world:[0,1],s_truth:[0,2],s_feeds:[0,3],s_mail:[0,4],s_deliver:[0,5],s_faults:[0,6],
     s_budget:[1,1],s_simclaude:[1,2],s_shim:[1,3],s_edge:[1,4],s_build:[1,5],
-    s_tick:[2,1],s_meeting:[2,2],s_reader:[2,3],s_asks:[2,4],s_sweep:[2,5],s_campaign:[2,6],s_feedback:[2,7],s_savior:[2,8],
+    s_tick:[2,1],s_meeting:[2,2],s_reader:[2,3],s_asks:[2,4],s_sweep:[2,5],s_campaign:[2,6],s_feedback:[2,7],s_savior:[2,8],s_proactive:[2,9],s_todow:[2,10],s_sysupd:[2,11],
     s_hub:[3,1],s_crm:[3,2],s_door:[3,3],s_ledger:[3,4],s_outbox:[3,6],
     s_me:[4,1],s_judge:[4,3],s_brainnum:[4,4],s_scores:[4,5],s_night:[4,6],s_compare:[4,7]
   },
@@ -513,7 +519,7 @@ const ALIGN = [
  {id:"sysagent",h:0,st:"missing",real:{label:"the system agent",kind:"script",sub:"2 update cards a day",sched:"GTM-Agent every 10 min",store:"agent state, incidents",ledger:""},sim:{label:"never ticked",kind:"script",sub:"copied, not run"},
   why:"Its checks (campaigns run, cards wait, tools usable) and its update cards never happen in the sandbox."},
  {id:"door",h:1,st:"fake",real:{label:"the door :4150",kind:"service",sub:"Postgres: tsquery + vector",sched:"da-brain.service; index every 5 min; pg_dump 03:30",store:"Postgres soda",ledger:""},sim:{label:"fake door :4250",kind:"service",sub:"vector + token overlap"},
-  why:"Same model (e5-small), same row shape, same reciprocal-rank fusion; the lexical leg is token overlap, not websearch_to_tsquery, and it indexes only the sandbox's people, cards and to-dos. The reader's query starts with the person's name, so the person's own row is a trivially strong hit."},
+  why:"Same model (e5-small), same row shape, same reciprocal-rank fusion; the lexical leg is token overlap, not websearch_to_tsquery, and it indexes only the sandbox's people, cards, to-dos and (G133) CRM review items as kind review (the item kind approximated from the files). The reader's query starts with the person's name, so the person's own row is a trivially strong hit."},
  {id:"hub",h:1,st:"fake",real:{label:"approval hub :4180",kind:"service",sub:"server.js on the box",sched:"da-hub.service",store:"state.json, decisions.jsonl",ledger:"HUB-CARD-CONTRACT"},sim:{label:"fake hub :4280",kind:"service",sub:"server.js of 30 Sep"},
   why:"Routes, numbering, guards and the decisions ledger copied from the 30 Sep server; the supersede rule of 3 and 4 Oct is not in it; every push becomes an outbox line."},
  {id:"crm",h:1,st:"fake",real:{label:"CRM server :4124",kind:"store",sub:"the only crm.json writer",sched:"Coattio-Watchdog; box sync every 2 min",store:"crm.json, box replica, Postgres mirror",ledger:"CRM-CONTRACT"},sim:{label:"fake CRM :4224 + :4237",kind:"service",sub:"data + intake"},
@@ -526,8 +532,16 @@ const ALIGN = [
   why:"The tick and the plan are live code; the board is seeded once with a fixed subject and body; the Opus research round is not run (paused live too); LinkedIn sends are the run-commit stub."},
  {id:"savior",h:1,st:"stub",real:{label:"the savior session",kind:"reader",sub:"always on; the Telegram poller",sched:"tmux; box-sessions.sh 5 min; prompt watch 1 min",store:"its session",ledger:""},sim:{label:"case_worker.py",kind:"reader",sub:"his no + words, rewritten"},
   why:"Plays one job of the savior: his no plus a sentence becomes a rewritten draft and a revised card, at most twice. The pre-sweep, commits, corrections and rule filing are absent."},
- {id:"fb",h:1,st:"missing",real:{label:"feedback session",kind:"reader",sub:"box cron every 5 min (since G99)",sched:"box cron */5",store:"queue.jsonl, system-feedback.jsonl",ledger:"every ledger"},sim:{label:"a retired stub",kind:"script",sub:"feedback_worker.py prints its pointer"},
-  why:"Since 4 Oct (goal run G99) feedback_worker.py is a stub and the box feedback session (feedback_session.py, a resumed Opus session) files his sentences; the sandbox does not run it, so his hub sentences are not filed in a run. His CRM board comments are: the review commit's own digest runs in review_twin.js."},
+ {id:"fb",h:1,st:"fake",real:{label:"feedback session",kind:"reader",sub:"box cron every 5 min (since G99)",sched:"box cron */5",store:"queue.jsonl, system-feedback.jsonl",ledger:"every ledger"},sim:{label:"feedback_session_twin.py",kind:"reader",sub:"the real code, the session without tools"},
+  why:"G133 (4 Oct 22:30): every 2nd heavy pass the sandbox copy of feedback_session.py reads the sandbox hub-review queue (served by the fake hub: his card words and the CRM System log lines enter it). What it does in code runs: ledger_verdict files like / confirmation / rule / case into the SANDBOX ledgers (addrule, the skill recompiled in the sandbox; the next day's build copies the live ledgers again), the System log answer, the queue closes, the told card. The resumed session for system / work / case runs without tools (simclaude runs claude.exe under the real home): its decisions are recorded, its tool actions (a job, a whitelist fix) are not executed."},
+ {id:"proactive",h:0,st:"same",real:{label:"proactive to-do reader",kind:"reader",sub:"an ask he said yes to -> ONE card",sched:"reader in the box sweep (10 min); DA-ProactiveTodo 5 min",store:"proactive-todo.jsonl, its state",ledger:"PROACTIVE-CONTRACT"},sim:{label:"same code, ticked",kind:"reader",sub:"scan + apply after every event (G133)"},
+  why:"G133: proactive_todo.py scan reads the sandbox events ledger and posts ONE todo-proposal card to the fake hub; apply creates each line after his yes through the real trip_todos.py (the world's trips), capture.py or the CRM step route. Ticked after every event and after his heavy pass (live: 10 and 5 min). Scored on its own line, G-P (card 30, set 40, owner 15, created after his yes 15; a to-do before his yes = 0); the world adds an ask + his yes on about one day in three."},
+ {id:"todow",h:0,st:"fake",real:{label:"the orange button, unattended",kind:"reader",sub:"DA-TodoWorker every 15 min",sched:"DA-TodoWorker 15 min; box lane when the laptop sleeps",store:"todo-worker/state.json, runs/",ledger:"PROACTIVE-CONTRACT"},sim:{label:"todo_worker_twin.py",kind:"reader",sub:"real tick, session without tools, capped"},
+  why:"G133: the real tick (candidates and exclusions, the triage call, pipeline.py pickup --auto, the send check, ready --auto = one auto card on the fake hub). The work session runs without tools (live: a headless Opus session with tools under a guard), so it describes the work instead of doing it; capped at 3 triage calls and 2 sessions a simulated day (run.json)."},
+ {id:"syslog",h:1,st:"same",real:{label:"CRM System log",kind:"surface",sub:"'Something missing / something wrong'",sched:"",store:"system-feedback.jsonl",ledger:"CRM-CONTRACT"},sim:{label:"same code via review_twin.js",kind:"surface",sub:"his 4th complaint surface (G133)"},
+  why:"G133: the simulated him has a fourth complaint surface, crm-system: his line is POSTed to the fake CRM /api/system-feedback, the sandbox copy of crm-app/system-feedback.js writes the row and forwards it to the sandbox hub-review queue, the feedback session answers into the same row."},
+ {id:"sysupd",h:1,st:"same",real:{label:"System Update",kind:"script",sub:"08:00 page + one update card",sched:"DA-SystemUpdate 08:00",store:"updates/, updates.jsonl",ledger:""},sim:{label:"same code, --no-post",kind:"script",sub:"the day's first pass (G133)"},
+  why:"G133: system_update.py run --no-post --force --judge never on the sandbox task-land at the day's first pass; the page stays in the sandbox; it is not scored and the weekly Judge is not run."},
  {id:"gate",h:1,st:"fake",real:{label:"Telegram + hub-review",kind:"surface",sub:"his gate on the phone",sched:"da-tg-bridge; review supervisor 5 min",store:"queue.jsonl",ledger:"HUB-CARD-CONTRACT"},sim:{label:"/sim/cards, /sim/verdict",kind:"script",sub:"the cards as JSON"},
   why:"The simulated him reads each card's text and context, what he would read; the phone layout, the one-word Telegram replies and the review page's commit flow are not exercised."},
  {id:"today",h:1,st:"fake",real:{label:"CRM Today",kind:"surface",sub:":4124/#today, review mode",sched:"inside the CRM server",store:"crm.json",ledger:"CRM-CONTRACT"},sim:{label:"the review board as JSON",kind:"script",sub:"crm_review.py: items, verdicts, commit"},
@@ -536,8 +550,8 @@ const ALIGN = [
   why:"The brain's to-do leg has something to match; nobody ticks, types or retitles a to-do, and the page classifier never runs."},
  {id:"him",h:1,st:"fake",real:{label:"Alessandro",kind:"surface",sub:"decides in one word, late",sched:"",store:"",ledger:""},sim:{label:"the simulated him",kind:"reader",sub:"Opus, a persona"},
   why:"Opus with a persona from his record and the H94 signature rule; it lived the day's truth, so it knows what he would know; it answers every card at the next heavy pass, which he does not."},
- {id:"learn",h:1,st:"stub",real:{label:"the rule loop",kind:"learn",sub:"addrule, compile, observers",sched:"RuleLoop-SystemCheck 09:10",store:"rule-hits.jsonl",ledger:"six ledgers"},sim:{label:"learner off (G2)",kind:"learn",sub:"ledgers read, nothing filed"},
-  why:"The ledgers are copied and read; nothing is learned during a run, so a run can show the system improving only from code changed between runs, never from his feedback."},
+ {id:"learn",h:1,st:"stub",real:{label:"the rule loop",kind:"learn",sub:"addrule, compile, observers",sched:"RuleLoop-SystemCheck 09:10",store:"rule-hits.jsonl",ledger:"six ledgers"},sim:{label:"learner off (G2)",kind:"learn",sub:"ledgers read, filed within a day"},
+  why:"The ledgers are copied fresh every day. The harness learner stays off (G2). Since G133 the feedback session twin files his sentences into the sandbox ledgers during a day, and the observers (proactive, meeting, board) write the sandbox rule-hits.jsonl, which the judge sees as rule_hits evidence; the next day's build copies the live ledgers again, so nothing learned carries over to the next day."},
  {id:"machines",h:1,st:"fake",real:{label:"two machines + sync",kind:"service",sub:"laptop sleeps, box always on",sched:"TaskLand-GitSync; da-sync every 60 s",store:"four repos, Drive DA/",ledger:""},sim:{label:"one laptop",kind:"script",sub:"laptop-down slots"},
   why:"Laptop sleep is a slot that skips the laptop's ticks; sync stalls, replica conflicts and the box's own failures (expired tokens, the 23:00 digest) cannot happen."}
 ];
@@ -548,6 +562,7 @@ const METRICS = [
  ["sent_without_yes","a mail or invite to the person with no yes in decisions.jsonl up to 2 min before; campaign sends exempt; FATAL sets the event to 0","judge.observe(): outbox.jsonl, decisions.jsonl","an invite created from a meeting card he confirmed counts (6 of the 10 in arm B); the yes is matched by name or card number"],
  ["person, step, artifacts","the judge's 0/1, 0/1/2, 0/1/2: right person; right next step, owner, date; the draft, invite or card that was needed, or nothing when nothing was","one Opus call per day, all events in one prompt","each event's evidence is cut at 9,000 characters; the truth it judges against was written by another model (Sonnet in night 3); a malformed answer leaves the whole day unscored (day 13)"],
  ["clean (wrong_actions)","10 points when the judge lists no wrong action; a card closed by the sweep while the thing is still owed is 'false close: #n'","the judge call","all or nothing; a false close is seen only if the judge notices the card was closed"],
+ ["G-P (proactive to-dos)","per scenario (an ask + his yes, truth.proactive): card 30, set 40, owner 15, created after his yes 15; a to-do before his yes = 0; goal: average 80 over 3 or more scenarios, 0 before a yes (G133)","judge.gp_day: the fake hub's cards, decisions.jsonl, world/todo-seen.json, the intake's task-handoff lines; compare.py G-P block","the set is matched by the day's judge call; 'before his yes' is caught only in the stores the snapshot reads (task files, trip to-dos, CRM steps); the scenario is injected by one world call on a copied world"],
  ["event score, day score","event: the sum, 0 to 100; day: the average of the events plus the surface line","scores.jsonl, days.jsonl","weekend days with 1 to 4 events swing by 20 points; the surface line weighs as much as one event; PROGRESS.md repeats the last score on a failed day"],
  ["hub_surface","100 x (1 - irrelevant / seen) over the simulated him's passes, cards and Today rows together","me.jsonl, the surface line in scores.jsonl","it counts views, not items: the same stale Today row seen in 6 passes counts 6 times, and Today rows outnumber cards 12 to 1; the simulated him is also the judge of what is current"],
  ["stale share","irrelevant cards / cards seen and irrelevant Today rows / rows seen","world/me.jsonl via compare.py","the same view-counting; it grows with the length of the run because rows accumulate"],
@@ -594,7 +609,7 @@ const REG = [
  ["world_gen.py","agent, Sonnet","the cast of 60 at .example, the 30-day plan with outages, each day's events and truth","the outside world","once per day","harness/world_gen.py"],
  ["simworld/","fakes","clock, mailboxes, calendars, feeds, faults, the outbox","Gmail, Calendar, the WhatsApp and LinkedIn stores","files in world/","harness/simworld/"],
  ["fakes/triage/","fakes","gmail.py, gcal.py, slots.py: copies of the real helpers on the JSON world","triage/gmail.py, gcal.py, slots.py","inside the sandbox","harness/fakes/triage/"],
- ["hub_server.py","fake server","the hub's routes of 30 Sep plus /sim/cards, /sim/verdict","approval hub :4180","B :4280, A :4380","harness/fakes/hub_server.py"],
+ ["hub_server.py","fake server","the hub's routes of 30 Sep plus /sim/cards, /sim/verdict; since G133 hub-review's queue (/api/feedback, /api/queue, /api/queue/done)","approval hub :4180, hub-review's queue","B :4280, A :4380","harness/fakes/hub_server.py"],
  ["crm_server.py","fake server","/api/data and the intake, one write path, faults crm_down and crm_slow","CRM :4124, intake :4137","B :4224 and :4237","harness/fakes/crm_server.py"],
  ["brain_server.py","fake server","/health, /brain/match: e5-small vector + token overlap, reciprocal rank","the door :4150","B :4250","harness/fakes/brain_server.py"],
  ["brain_mcp.py","fake","stdio MCP with match_event over the fake door; logs brain-mcp.jsonl","the door's /mcp","started by the reader's call","harness/fakes/brain_mcp.py"],
@@ -608,6 +623,10 @@ const REG = [
  ["compare.py","report","per root: scores, surface, brain, cost, wall, blocked calls; <code>compare.py goal</code>: goal condition 3 per day (sends without yes, stale Today, hub open trend, failures) and PASS/FAIL","none","by hand","harness/compare.py"],
  ["review_twin.js","twin (G84)","every /review/* route of the sandbox intake, answered by the sandbox copy of review-api.js and review-artifact.js; 'mirror' = the hub-card mirror tick","the intake's review block, :4137","one process per request","harness/fakes/review_twin.js"],
  ["crm_review.py","his side (G84)","generate missing under caps, the board for the simulated him, his verdicts and one commit, the end-of-day surface line","Alessandro in review mode","heavy pass, 23:40","harness/crm_review.py"],
+ ["feedback_session_twin.py","twin (G133)","the sandbox feedback_session.py on the sandbox hub-review queue; --force, no git pull, the session without tools","the box feedback session","every 2nd heavy pass","harness/fakes/feedback_session_twin.py"],
+ ["todo_worker_twin.py","twin (G133)","the sandbox todo_worker.py tick, the work session without tools, capped per simulated day","DA-TodoWorker","heavy pass","harness/fakes/todo_worker_twin.py"],
+ ["tests/test_g133_twins.py","test (G133)","the twins of SIM-UPDATE-20261004 on fixtures, no model: the proactive reader and executor, G-P scoring cases, world ids, the System log, the feedback session, the to-do worker, the System Update, the door's review kind, hit lines","none","before a launch","harness/tests/test_g133_twins.py"],
+ ["tests/check_g133_gp_day.py","check (G133)","run_night setup + the first 3 events of tests/fixtures/gp-day.json (an ask + his yes), STOP, the G-P line","none","before a launch","harness/tests/check_g133_gp_day.py"],
  ["accept.ps1","launcher","fresh root, night 3's world copied, build and leak scan, run_night hidden via run-hidden.vbs","none","by hand","harness/accept.ps1"],
  ["tests/test_g85_harness_bugs.py","test","the three night-3 harness bugs, on a temp root, no model","none","before a launch","harness/tests/test_g85_harness_bugs.py"],
  ["tests/preflight.py","test","build and leaks, servers, G1 refusals, the brain import, the G4 baseline","none","before a launch","harness/tests/preflight.py"],
@@ -730,7 +749,7 @@ function alignTable(){
   const c=k=>ALIGN.filter(p=>p.st===k).length;
   $("#n-real").textContent=ALIGN.length; $("#n-same").textContent=c("same"); $("#n-fake").textContent=c("fake")+c("stub"); $("#n-missing").textContent=c("missing");
   const sched=ALIGN.filter(p=>p.real.sched).length, store=ALIGN.filter(p=>p.real.store).length, led=ALIGN.filter(p=>p.real.ledger).length;
-  $("#gap-summary").innerHTML=`Of the ${ALIGN.length} real components the simulation is meant to test, it runs <b>${c("same")}</b> unchanged (the readers, the sweep, the connection, the draft lane, the CRM review items, crm-outdated), replaces <b>${c("fake")}</b> with stand-ins and <b>${c("stub")}</b> with stubs, and leaves out <b>${c("missing")}</b>: Slack, the box feedback session, the notification classifier and the system agent. The surface area it maps: <b>${sched}</b> of the ${ALIGN.length} carry their own schedule, <b>${store}</b> their own store, <b>${led}</b> a rule ledger of their own; every one of those is a part to keep alive in the real system and a part the simulation has to copy, fake or skip.`;
+  $("#gap-summary").innerHTML=`Of the ${ALIGN.length} real components the simulation is meant to test, it runs <b>${c("same")}</b> unchanged (the readers, the sweep, the connection, the draft lane, the CRM review items, crm-outdated, the proactive to-do reader, the System log, the System Update), replaces <b>${c("fake")}</b> with stand-ins and <b>${c("stub")}</b> with stubs, and leaves out <b>${c("missing")}</b>: Slack, the notification classifier and the system agent. The surface area it maps: <b>${sched}</b> of the ${ALIGN.length} carry their own schedule, <b>${store}</b> their own store, <b>${led}</b> a rule ledger of their own; every one of those is a part to keep alive in the real system and a part the simulation has to copy, fake or skip.`;
 }
 function metricsTable(){const tb=$("#mtable tbody");for(const [m,d,s,w] of METRICS){const tr=document.createElement("tr");tr.dataset.text=[m,d,s,w].join(" ").toLowerCase();tr.innerHTML=`<td><b>${m}</b></td><td>${d}</td><td>${s}</td><td>${w}</td>`;tb.appendChild(tr)}}
 function regTable(){const tb=$("#wtable tbody");for(const [p,k,w,t,r,f] of REG){const tr=document.createElement("tr");tr.dataset.text=[p,k,w,t,r,f].join(" ").toLowerCase();tr.innerHTML=`<td><b>${p}</b></td><td>${k}</td><td>${w}</td><td>${t}</td><td>${r}</td><td><code>${f}</code></td>`;tb.appendChild(tr)}}

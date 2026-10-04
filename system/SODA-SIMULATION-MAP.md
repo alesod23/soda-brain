@@ -5,22 +5,25 @@ works offline except for the fonts). This page is its narrative and its index, s
 as the rest of `system/`: updated in the same turn as `~/sim/harness` changes; dated; no secrets; no real person (the
 cast is fictional, at `.example`).
 
-Last verified: 2026-10-04 16:17 (`compare.py report` on both roots, each run's `scores.jsonl`, `runner.log`,
-`runs/night3/PROGRESS.md`, the harness code and git log). Harness changes of 2026-10-04 20:40 (G84, G85, G86 below)
-written into both files; the results numbers are still the 16:17 reading.
+Last verified: 2026-10-04 22:40 (harness code and git log, `tests/test_g133_twins.py` PASS x2; the results numbers are
+still the 16:17 reading of `compare.py report` on both roots). Harness changes of 2026-10-04 20:40 (G84, G85, G86) and
+22:30 (G133, the SIM-UPDATE twins and the G-P score) are written into both files.
 
 ## What it shows
 
 1. How it works: one lane chart of the sandbox (the fake world, shims and guards, the system copied, the fake
    surfaces, him and the judge; every node a real script or store with its port) and the chain of one simulated day.
-2. The alignment: 28 real components, each with its twin and a fidelity mark (7 run unchanged, 12 stand-ins, 4 stubs,
-   5 missing) and its maintenance surface (own schedule, own store, own rule ledger), as a four-lane chart and a
+2. The alignment: 32 real components, each with its twin and a fidelity mark (11 run unchanged, 14 stand-ins, 4
+   stubs, 3 missing; G133 added the proactive to-do reader, the unattended to-do worker, the CRM System log and the
+   System Update, and the feedback session moved from missing to a twin) and its maintenance surface (own schedule, own store, own rule ledger), as a four-lane chart and a
    filterable table with the reason each is or is not faithful.
 3. The approaches: arms A (no brain, 2 days), B (the brain in the readers, 17 days), C (Edge skill hints, built, not
    run), D (cleaning layer, designed only); guards G1 to G5; the cost cuts; the budget policy (week 35 stop, 33 slow,
    5-hour window 80); the GO / STOP files; the two roots on port bases 4200 and 4300.
 4. The eval: the judge's path, the score formula (detected 20, person 10, timely 10, step 30, artifacts 20, clean 10;
-   a send without his yes = 0), and every metric with its definition, its source file and how it can be misread.
+   a send without his yes = 0), the G-P line of a proactive-ask scenario (card 30, set 40, owner 15, created after his
+   yes 15; a to-do before his yes = 0; its own line, outside the day score), and every metric with its definition, its
+   source file and how it can be misread.
 5. The results: nights 1 to 3 run by run, and one time series of the event score and the hub surface per simulated
    day across all nights, with the failed days marked.
 6. The registry of every harness part with its real twin. 7. How to keep it.
@@ -39,9 +42,15 @@ written into both files; the results numbers are still the 16:17 reading.
   review mode page; one CRM writer (live: the box writes, the laptop proxies); crm-outdated after each event, not every
   10 min. The smoke day showed `crm-outdated.js` ending with a libuv assertion at `process.exit` (exit 3221226505) after
   a complete pass: Node 20 on Windows, not seen in the live log; counted as a non-zero step, not a harness failure.
-- Never run in the sandbox: the box feedback session (`feedback_session.py`, which replaced `feedback_worker.py`, now a
-  retired stub: the sandbox's `feedback` tick prints its pointer), the system agent, `reconcile.py`, the sodanotif
-  classifier, Slack, the daily page and its watcher (12 seeded task files instead).
+- Never run in the sandbox: the system agent, its UI walk and whitelist tabs, `reconcile.py`, the sodanotif
+  classifier, Slack, the daily page and its watcher (12 seeded task files instead; no `((rule: ...))`), the two-node
+  writer split (SIM-UPDATE rows 7, 10, 11, 16, 18, 19 stay GAPs).
+- Twins WITHOUT tools (G133, 4 Oct 22:30): the box feedback session (`fakes/feedback_session_twin.py`: the real script
+  on the sandbox hub-review queue; what it does in code runs, the resumed session answers with no tools) and the
+  unattended to-do worker (`fakes/todo_worker_twin.py`: the real tick, the work session with no tools, capped 3 triage
+  calls and 2 sessions a simulated day). simclaude runs claude.exe under the REAL home, so no sandbox session gets
+  tools; their decisions are real, their tool actions are not executed. Rules the session files land in the sandbox
+  ledgers and last until the next day's build copies the live ledgers again.
 - Cadences: the sweep every ~85 simulated minutes (live 10), the meeting loop on a 10-minute grid (live 5), the
   feedback worker every 2nd heavy pass (live 10 min); quick ticks right after each event, so latency is the harness's.
 - Notion is a file: listing without a model, the note inlined in the prompt; settle times written by the world.
@@ -95,6 +104,30 @@ over that hour, other builders included. G127 (4 Oct 21:40): `run_night.py` tear
 Windows job object with kill-on-close, finally + atexit, `runs/<night>/pids.json`, `run_night.py reap [<night>]`
 that checks each pid's command line is a harness fake); proof `tests/test_g127_teardown.py` (STOP, an injected day
 failure, a hard kill).
+
+## The SIM-UPDATE twins (G133, 4 Oct 2026 22:30)
+
+Every TO BUILD row of `~/sim/harness/SIM-UPDATE-20261004.md` runs in the sandbox on real system code copied by
+`build_sandbox.py` (leak scan 0):
+- row 14, the proactive to-do reader + executor: tick `proactive` after every event and after his heavy pass =
+  `proactive_todo.py scan` (reads the sandbox events ledger, ONE todo-proposal card on the fake hub) + `apply` (his
+  yes -> each line through its owner: the real `trip_todos.py` on `world/trips.json`, `capture.py`, the CRM step route);
+- the scored goal G-P: the world adds an ask + his yes on about 1 day in 3 (`world_gen.proactive_scenario`, one call,
+  `truth.proactive` with the expected to-dos); `judge.gp_day` writes one `proactive_todo` line per scenario and prints
+  `G-P <id> <person>: <score>/100 (card, set, owner, after_yes)`; `compare.py goal` prints the G-P block after
+  condition 3 (PASS = average >= 80 over >= 3 scenarios, 0 to-dos before a yes), condition 3's verdict unchanged;
+- row 8, observers: `rule_directive.py`, `board-observer.js` and the proactive / cleaning / board skills copied; every
+  observer writes the sandbox `rule-hits.jsonl`; the judge sees the lines of an event's card as `rule_hits`;
+- row 6: the fake door indexes the CRM review items as kind `review`;
+- row 9: tick `feedbacksession` every 2nd heavy pass (the twin above); the fake hub serves hub-review's queue
+  (`/api/feedback`, `/api/queue`, `/api/queue/done`) and his card words enter it;
+- row 13: the simulated him has a 4th complaint surface, `crm-system`, POSTed to the fake CRM `/api/system-feedback`
+  (the sandbox `system-feedback.js` through `review_twin.js`, forwarded to the queue);
+- row 15: tick `todoworker` in every heavy pass (the twin above, capped);
+- row 12: tick `sysupdate` at the day's first pass, `--no-post`, the page kept in the sandbox.
+Proof: `python tests/test_g133_twins.py` (39 checks, no model call) and `python tests/check_g133_gp_day.py` (run_night
+setup + the first 3 events of `tests/fixtures/gp-day.json`, his Caleb case with Caspar Lind, stopped through STOP,
+real model calls). New `run_night.py` flags: `--fixture-day <events.json>`, `--max-events N`.
 
 ## How to keep it
 

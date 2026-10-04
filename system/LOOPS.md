@@ -803,6 +803,16 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   condition 3 per day (sends without his yes, stale Today, hub open trend, failures) and PASS/FAIL (exit 0 = PASS).
   The acceptance run: `powershell -NoProfile -File ~/sim/harness/accept.ps1 -Root C:/Users/Alessandro/sim/accept
   -Base 4400 -Name accept-B -Days 1-7 -Setup -Launch` (night 3's world copied, arm B, hidden).
+- Goal run, 4 Oct 2026 22:30 (G133, the SIM-UPDATE twins): the sandbox now also runs, on real code copied by
+  `build_sandbox.py`, the proactive to-do reader + executor (`proactive_todo.py scan` + `apply` after every event, the
+  real `trip_todos.py` on the world's trips), the unattended to-do worker (`fakes/todo_worker_twin.py`, capped, its
+  work session without tools), the box feedback session on the sandbox hub-review queue (`fakes/feedback_session_twin.py`,
+  the session without tools), the CRM System log as his 4th complaint surface, the 08:00 System Update (`--no-post`),
+  the door's review kind and the observers' hit lines as judge evidence. The new scored goal G-P: the world adds an ask +
+  his yes on about 1 day in 3; `judge.py` scores each on its own `proactive_todo` line (card 30, set 40, owner 15,
+  created after his yes 15; a to-do before his yes = 0) and `compare.py goal` prints the G-P block after condition 3
+  (goal: average >= 80 over >= 3 scenarios, 0 before a yes). Proof: `python ~/sim/harness/tests/test_g133_twins.py`
+  and `python ~/sim/harness/tests/check_g133_gp_day.py`.
 
 ## 13. The brain (this repo) and the door
 

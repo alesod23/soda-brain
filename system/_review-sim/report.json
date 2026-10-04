@@ -8,9 +8,9 @@
   "outside": [],
   "counts": {
    "charts": 2,
-   "nodes": 111,
-   "wires": 52,
-   "rows": 35
+   "nodes": 122,
+   "wires": 57,
+   "rows": 39
   },
   "console_errors": [],
   "page_hscroll": []
@@ -24,9 +24,9 @@
   "outside": [],
   "counts": {
    "charts": 2,
-   "nodes": 111,
-   "wires": 52,
-   "rows": 35
+   "nodes": 122,
+   "wires": 57,
+   "rows": 39
   },
   "console_errors": [],
   "page_hscroll": []
