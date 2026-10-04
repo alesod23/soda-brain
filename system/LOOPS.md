@@ -583,6 +583,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `currency/patch-sodanotif-model-20261004.py`, run after the observer patch); every notif hit line names the model.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
+- **Event pages get the feedback box (G107, 4 Oct 2026)**: the event companion servers (box `~/research-page/`,
+  `snitem_server.py`, `event_server.py`) serve `/feedback-box.js` and inject it with `data-surface="event-page"`; a
+  sentence there reaches hub-review `/api/feedback` and the CRM ledger by default; the Confirmed worker
+  (`event_next_steps.py`) reads skills/crm next to skills/drafting. Box patch `currency/patch-event-pages-feedback-20261004.py`.
 - **The janitor's ledger (G106, 4 Oct 2026)**: `task-land/_system/CLEANING-CONTRACT.md` (his cleaning rules, out of
   the janitor workplan), compiled to `skills/cleaning`, read by `hub_outdated.py`'s judge on every call (ledger rows when
   the skill is not on that machine); a line on the hub-review Cleaning tab = kind feedback, surface cleaning ->
