@@ -642,6 +642,26 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `todo-worker/off` (both lanes). Test `python _system/test_todo_worker.py` (26 checks, temp copy, stub hub). Log
   `todo-worker/worker.log`, runs in `todo-worker/runs/` (both machine-local).
 
+- **Proactive to-dos from an ask he accepted (G118, plan item 19, 4 Oct 2026; PROACTIVE H22, off leash 20:55).** Someone
+  asks him to take something on and he says yes (plus what he adds he will do himself): `task-land/_system/proactive_todo.py`
+  proposes the to-dos on ONE decision card. Reader = `scan`, on the box at the end of `hub_outdated.py`'s 10-minute pass
+  (own try, `HUB_OUTDATED_PROACTIVE=0` = off): it reads the CRM monitor's event ledger (`.medtech-crm/events-ledger.jsonl`,
+  the path A source of section 1: WhatsApp, mail, LinkedIn; no second ingester), takes each thread where HE wrote since the
+  last pass, waits until his burst is quiet 4 min (the yes and what he adds come together), needs an inbound ask in the 48 h
+  before, and makes ONE Opus call (never Haiku) with the compiled `proactive` skill (newer of the install and the
+  laptop-tools mirror), the upcoming trippy trips and the brain's open to-dos near the thread (`todo_match.match`). One card
+  per event: only asks accepted in THIS burst; the same ask (its message id) never twice (state
+  `~/.local/state/proactive-todo/state.json` + the synced `_system/proactive-todo.jsonl`); a line the brain already holds is
+  dropped (the decider names the lookup id, or sim >= 0.90 with a 0.03 margin). Card: `type todo-proposal`, `meta.auto`,
+  `meta.todos` (text, owner, trip/person, quote, from_id), the ask and his answer quoted, YES / NO + numbers / NO said.
+  Owners: `trip` = the trip's to-do list in trippy (`travel-search/app/trip_todos.py`, page `/t/<slug>/todos`, `api/todos`),
+  `crm` = an external person's next step (`POST :4137/task-handoff` action step; Caleb/team never), `task` = `capture.py`.
+  Executor = `apply`, laptop task DA-ProactiveTodo every 5 min through run-hidden.vbs: his verdict in decisions.jsonl (yes =
+  all, no + numbers = those, no / change / close = none), once per card (`applied.json`). His words on the card: hub-review
+  queue -> `feedback_session.TYPE_ROUTES` -> `ledger_verdict` surface proactive. Observer: hit lines H22 (minutes after his
+  reply) and H3, `by proactive_todo.py`; `rule_loop_check.py` row `proactive-todo`. Tests `_system/test_proactive_todo.py`;
+  replay `proactive_todo.py replay --wa-chat <jid> --since --until` (dry, the live pass simulated per event over the WA store).
+
 ## 10. Notifications and voice
 
 - `/home/da/sodanotif/` (systemd `da-sodanotif`, pollers every 60 s): Gmail, Slack, WhatsApp taps and the LinkedIn
