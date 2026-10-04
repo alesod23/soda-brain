@@ -255,7 +255,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - `due_today.py` (built 1 Oct, not scheduled): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
 - **The feedback session (hub; built, armed, OFF until the cut-over).** `task-land/_system/feedback_session.py`, box
-  cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent. One resumed Opus session reads the
+  cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent (LIVE since 4 Oct 2026 17:06: the switch exists and the laptop's DA-FeedbackWorker is disabled). One resumed Opus session reads the
   open hub-review `queue.jsonl` entries, splits every entry into RULES (addrule.py now) and WORK (a job, below); "big
   job: ..." is a job of size big, his words verbatim. One "told" update card per batch; log
   `_system/feedback-session.jsonl`. Turning it on: the command list in THE PLAN, RESUME item (4).
