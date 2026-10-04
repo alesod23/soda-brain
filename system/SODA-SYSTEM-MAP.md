@@ -112,3 +112,10 @@ LOOPS.md section 9 has the contract.
 
 The data is one JS object at the bottom of the HTML (`NODES`, `EDGES` in `SHAPE` and `MACH`, `FLOWS`); the charts draw
 themselves, so a change is a row, not a drawing. Move the "Last verified" line in both files.
+
+**4 Oct 2026 23:05, G110 (plan item 17 + 17(f)).** `gate_review` (hub-review :4142) gets the System agent tab (Needs you,
+Spot check, Whitelist changes, Review, Health) fed read-only from the System Agent's registry, incidents, whitelist changes
+and System Update in the synced task-land, plus nodes.json, the laptop heartbeat and health-vps.json; and a left index on
+every tab. New edge: hub-review spot verdict -> `system-agent/spot-verdicts.jsonl` (+ a Wrong to the feedback session).
+The audit became `system-agent/whitelist_actions.py` (duplicate cards, booked-and-never-sent, automatic-reply successors),
+reporting into `whitelist-changes.jsonl`. No new node; LOOPS.md sections 5 and 7.

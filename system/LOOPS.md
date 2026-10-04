@@ -407,6 +407,25 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   env `CRM_PUBLIC_URL` (default `https://desktop-1bojsrg.taile93f00.ts.net`, the laptop over Tailscale; after the
   writer flip set it to the box address). Test `.medtech-crm/tests/deep_link_test.py` (1568 and 390 px).
 
+- **THE SYSTEM AGENT TAB + THE LEFT INDEX (G110, plan item 17 + 17(f), HUB H45-H53, 4 Oct 2026 23:05).** Box patch
+  `task-land/_system/currency/patch-hub-review-sysagent-20261004.py` (marker SYSAGENT-G110, assets `sysagent_tab_server.js`,
+  `sysagent_tab_page.js`, `sysagent_tab_page.css` next to it; run by path). The "GTM agent" tab is "System agent": Needs you
+  (agent-born approval cards, his_command registry lines with age, his decisions folded in one line) · Spot check (3 random
+  actions of 72 h across whitelist fixes, cleaning, notifications; Right / Wrong -> `POST /api/system-agent/spot`, written to
+  `system-agent/spot-verdicts.jsonl` + decisions.jsonl surface `system-agent-spot`, a Wrong also queued kind feedback for the
+  feedback session) · Whitelist changes since the last report (`whitelist-changes.jsonl`, incidents fix events, other
+  producers' whitelist cards; Revert queues the undo to the feedback session) · Review (the System Update card + the
+  combined / GTM report, the AUDIT section retired, H51) · Health (one line per machine from nodes.json, the laptop
+  heartbeat, health-vps.json, ui-walk-last.json; then the open registry with owner and age). Every line expands with
+  step by step, evidence, sources (`/api/system-agent/source?f=registry|incidents|changes|spot&q=`) and links; the ask box
+  stays (comments go out with the commit under SYSTEM AGENT, decisions surface `system-agent`). A left index on EVERY tab
+  (fixed beside the content from 1100 px, a drawer from the button at the start of the tab bar on the phone; scroll spy);
+  To decide grouped by type (Email, LinkedIn, WhatsApp, Slack, Contacts, CRM import, System agent, To-do review, Decision),
+  chronological inside, the types as chips filtering list and index; Cleaning grouped by rule with chips; the header of the
+  card or section being read is pinned under the tab bar (H45). The page code is a second script that wraps the page's
+  functions, so it stacks with every other patch in either order. Tests: `_system/test_patch_sysagent.py` (both orders),
+  `_system/check_sysagent_tab.py --url <hub-review>` (render check), ui_walk.py with UIWALK_HUB.
+
 ## 6. Campaigns and boards (GTM engine)
 
 - Code: `gtm-eng/` (board-server.js :4141, `campaign.py`, `run-commit.py`, `commit-to-contacts.js`,
@@ -613,6 +632,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `system-agent/tests/test_system_update.py` (fixture: both ALERTs, a stub hub on a temp port gets exactly one card, a
   stub claude, `held` filled the next Sunday). When `goal-run/ui-walk/` is absent (the box) the UI walk line comes from `ui-walk-last.json`.
   Gap: the update node is not yet in `nodes.json` (the System Agent build owns the ledger).
+
+- **THE WHITELIST ACTIONS (G110, plan item 17(a), HUB H51, 4 Oct 2026 22:40).** `task-land/_system/system-agent/whitelist_actions.py`:
+  the audit checks are actions, not lines for him. close_duplicate_cards (the younger of two identical cards closes, HUB H5);
+  rebook_never_sent (a past `planned` booking in `outreach/ledger.json`: moved to the day its re-drawn steps are due within
+  the caps, dropped when its steps went out, ONE approval card when no readable plan exists, his yes/no applied from
+  decisions.jsonl; a stopped channel is held); import_successor (an automatic reply naming somebody: the named address
+  joins THE import card via `crm_artifact.queue_import`, the row marked `referral.note` through PUT /api/data; a reply
+  naming nobody is marked handled). Each change = a line in `whitelist-changes.jsonl` + one silent whitelist card.
+  State `whitelist-actions-state.json` (gitignored). Not wired yet: the System Agent's tick needs ONE line
+  (`import whitelist_actions as WL; facts["whitelist_actions"] = WL.tick(now, CFG, dry)`). Test
+  `system-agent/tests/test_whitelist_actions.py` (42 checks, fixtures only).
 
 ## 8. The rule loop
 
