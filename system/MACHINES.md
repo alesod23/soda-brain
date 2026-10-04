@@ -86,7 +86,7 @@ Every task named in the sources. Cadence and script as the sources state them; a
 | DailyCampaign-Postmortem | monthly (card on the 1st) | `daily-campaign/postmortem.py` | proposed-vs-sent post-mortem card |
 | DailyCampaign-AB-Reminder | unverified | unverified | A/B reminder; was rewrapped by `window_lint.py --fix` on 2026-09-28 |
 | US-Campaign-Daily | unverified | unverified | the 114-person US wave (`us-campaign-emails`); rewrapped 2026-09-28 |
-| DA-FeedbackWorker | unverified | `gtm-eng/agent/feedback_worker.py` | lifts system sentences from review fields into `_system/gtm-agent/system-feedback.jsonl` |
+| DA-FeedbackWorker | DISABLED 2026-10-04 19:19 (was every 10 min) | `gtm-eng/agent/feedback_worker.py` | lifts system sentences from review fields into `_system/gtm-agent/system-feedback.jsonl`; disabled because the box feedback session took over (one filer, goal run G34) |
 | DA-InboundAsks | unverified | `gtm-eng/agent/inbound_asks.py` | reads WhatsApp, LinkedIn and events ledger for asks owed to people |
 | DA-MeetingLoop | unverified | `gtm-eng/agent/meeting_loop.py` | reads Notion meetings, drives the booked-call loop |
 | LinkedIn-Poll | unverified | `~/.claude/linkedin-poll/poll.py` | writes `G:/My Drive/DA/linkedin-store.jsonl` (Langfuse-traced) |
@@ -97,6 +97,8 @@ Every task named in the sources. Cadence and script as the sources state them; a
 | Push-Lane-Watchdog, Approval-Hub-Watchdog, Voice-Lane-Watch | historical (August 2026) | `approval-hub/push-watchdog.ps1`, `start-hub.ps1`, `watch-voice.ps1` | the laptop hub and popup lane; laptop and phone popups were deactivated (Telegram only) and the live hub moved to the box; whether these tasks still exist is unverified |
 
 Laptop WA tasks: Disabled (the laptop wa-daemon store is kept but the box daemon is the live one).
+
+One-off test tasks `Scheduled-Email-Test-20260531-1230` and `WA-Test-Send-1350`: DISABLED 2026-10-04 19:19 (goal run G67, M10), kept, never deleted.
 
 ## 5. Cron on the box (user `da`)
 
