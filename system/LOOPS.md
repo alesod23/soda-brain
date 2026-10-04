@@ -461,6 +461,22 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   campaign cycle x2 = one card id; the same test without the patch reproduces a new card per cycle). Box block G39 in
   `_system/box-steps-20261004-goal.sh`.
 
+- **A DECISION CARD CAN RUN A HOLD (5 Oct 2026 00:27 Rome, hub #1 a2i6n27zhs, Gruppo San Donato).** A card's `action` may
+  be `{type:"holds", group, yes:{op:"hold",until:"YYYY-MM-DD"}|{op:"release"}, no:{...}}` and nothing else: one executor,
+  `task-land/_system/outreach/hold_action.py`, validates the shape (other keys, ops, groups not in holds.json, dates of any
+  other form: refused), calls holds.py in process, and is idempotent by card id + verdict (ledger
+  `_system/outreach/hold-actions.jsonl`). A verdict that carries his words is not run ("deferred": the card says a comment
+  sets another length; the feedback session applies it); a system close never runs it. Two doors, same executor: (a) the
+  hub's /resolve on yes AND no (box patch `currency/patch-hub-holds-action-20261005.py`, marker HUB-HOLDS-ACTION, result
+  on the card `action_results` + one Telegram result line; a no with words on such a card no longer fires the draft
+  redraft ping; route POST /action-result stores a result, executes nothing); (b) `feedback_session.py card_actions()` in
+  every 5-min run, from queue entries with a verdict and decisions.jsonl of the last 48 h, event "card-action" in
+  feedback-session.jsonl. holds.py `hold` on an existing hold now UPDATES it (until moved, why and outside contacts kept,
+  a released hold re-armed; a bare date = through that day, 23:59:59Z). Test
+  `python ~/task-land/_system/currency/test-hub-holds-action-20261005.py` (33 checks, temp copies + a patched and an
+  unpatched stub hub). Box block HOLDS CARD ACTION in `_system/box-steps-20261004-goal.sh`. Gap: YES promises "then one
+  card asks you again" on 12 Oct; no producer posts that card yet.
+
 ## 6. Campaigns and boards (GTM engine)
 
 - Code: `gtm-eng/` (board-server.js :4141, `campaign.py`, `run-commit.py`, `commit-to-contacts.js`,
