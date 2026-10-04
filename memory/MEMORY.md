@@ -2,6 +2,7 @@
 
 - 🧠🚪 [THE SODA BRAIN (2 Oct 2026): this repo, the system map in `system/`, the Postgres+pgvector door on the box (:4150, Funnel), the CRM mirrored, instinct as orchestrator](reference_soda_brain.md) — update `system/` in the same turn as any service, port, job, store or rule changes; tokens in `~/.env/soda.env`, never printed.
 
+- 🪞📇 [Open hub draft cards are mirrored onto the CRM review item (latest revision); the CRM never drafts beside a card](reference_crm_mirrors_open_hub_draft_cards.md) — `review-artifact.js mirrorHubCards`, every 10 min + before generate (Vincent, 2026-10-04).
 - 📇➡️ [The CRM is where every follow-up is decided and sent; the box becomes the CRM writer; the hub keeps non-person items (his decision 4 Oct 2026 04:00)](project_crm_is_the_followup_surface.md) — never a second writer of crm.json; a card about a person links to the CRM item; build order in THE PLAN item 10.
 - 👁️🔁 [A visual deliverable gets a screenshot review LOOP before he sees it: no line through a node, no label on a shape, text centred, repeat until clean](feedback_visual_review_loop_before_handing_a_page.md) — "This is disgusting ... Continue until loop until you have all those minor details fixed" (2026-10-04).
 - 🗺️ The visual map: `soda-brain/system/SODA-SYSTEM-MAP.html` (+ `.md` narrative), same rules as the system map; "loading cards" on hub-review with a healthy server = a client JS error, read the console first (2026-10-04).
