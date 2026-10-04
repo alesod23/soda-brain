@@ -16,15 +16,59 @@ page itself never scrolls sideways (a chart may scroll inside its own box). Exit
 
 The defaults screenshot the system map's charts and sections; another page in the same family (the simulation map,
 4 Oct 2026) names its own ids.
+
+OBSERVER (goal run G109, 5 Oct 2026; RULE-LOOP.md section 5 hit line). The rule these checks enforce is his, filed as
+PROACTIVE-CONTRACT.md H25 (the screenshot review loop before he sees a page: "Continue until loop until you have all
+those minor details fixed"). Every run appends ONE hit line to task-land/_system/rule-hits.jsonl: surface proactive,
+rule H25, action ok (CLEAN) or flag (the finding counts in the note), item = the page's file name, by review_map.py.
+No line when the ledger row is not found (a rule that is not in the ledger is not scored). --hits <file> writes
+elsewhere (tests), --no-hits writes nothing.
 """
 import argparse
+import datetime
 import json
+import os
 import pathlib
+import re
 import sys
 
 sys.stdout.reconfigure(encoding="utf-8")
 HERE = pathlib.Path(__file__).resolve().parent
 DEFAULT_HTML = HERE.parent / "system" / "SODA-SYSTEM-MAP.html"
+TASKLAND_SYS = pathlib.Path(os.environ.get("TASKLAND_SYSTEM") or (pathlib.Path.home() / "task-land" / "_system"))
+RULE = ("proactive", "H25", "PROACTIVE-CONTRACT.md", r"screenshot review loop")   # surface, rule, ledger, row must say
+FINDINGS = ("wires", "loose", "overflow", "gates", "overlaps", "outside", "console_errors", "page_hscroll")
+
+
+def hit_line(report, html):
+    """-> the hit line of one run (section 5 shape), or None when the ledger row it scores is not there."""
+    surface, rule, ledger, says = RULE
+    try:
+        txt = (TASKLAND_SYS / ledger).read_text(encoding="utf-8")
+    except OSError:
+        return None
+    if not re.search(r"^\| " + rule + r" \|[^\n]*" + says, txt, re.M):
+        return None
+    n = {k: sum(len(r.get(k) or []) for r in report.values()) for k in FINDINGS}
+    bad = sum(n.values())
+    return {"ts": datetime.datetime.now().astimezone().isoformat(timespec="seconds"), "surface": surface, "rule": rule,
+            "action": "ok" if bad == 0 else "flag", "item": pathlib.Path(html).name, "model": "deterministic", "skill_v": None,
+            "path": "review_map.py render", "by": "review_map.py",
+            "note": ("CLEAN in " + "+".join(report) + " themes") if bad == 0 else
+                    f"{bad} findings: " + ", ".join(f"{k} {v}" for k, v in n.items() if v)}
+
+
+def log_hit(row, path):
+    """Append the line; never raises (a logging failure must not change the review's verdict)."""
+    if not row:
+        print("hit line: none (no ledger row " + RULE[1] + " in " + RULE[2] + ")")
+        return
+    try:
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(row, ensure_ascii=False) + "\n")
+        print(f"hit line: {RULE[0]} {RULE[1]} {row['action']} -> {path}")
+    except OSError as e:
+        sys.stderr.write(f"hit log failed: {e}\n")
 
 CHECK_JS = r"""
 () => {
@@ -70,6 +114,8 @@ def main():
     ap.add_argument("--charts", default="chart-shape,chart-machines", help="ids of the elements screenshotted one by one")
     ap.add_argument("--sections", default="flows,surfaces,workers", help="ids of the sections screenshotted one by one")
     ap.add_argument("--phone", type=int, default=0, help="also render at this width (390) and check the page does not scroll sideways")
+    ap.add_argument("--hits", default=str(TASKLAND_SYS / "rule-hits.jsonl"), help="where the observer's hit line goes")
+    ap.add_argument("--no-hits", action="store_true", help="write no hit line")
     a = ap.parse_args()
     charts = [c for c in a.charts.split(",") if c]; sections = [c for c in a.sections.split(",") if c]
     from playwright.sync_api import sync_playwright
@@ -110,12 +156,14 @@ def main():
     (out / "report.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
     bad = 0
     for theme, res in report.items():
-        for k in ("wires", "loose", "overflow", "gates", "overlaps", "outside", "console_errors", "page_hscroll"):
+        for k in FINDINGS:
             n = len(res[k]); bad += n
             print(f"{theme:5} {k:15} {n}")
             for item in res[k][:12]: print("      ", json.dumps(item, ensure_ascii=False)[:200])
         print(f"{theme:5} counts          {res['counts']}")
     print("screenshots ->", out)
+    if not a.no_hits:
+        log_hit(hit_line(report, a.html), a.hits)
     print("RESULT:", "CLEAN" if bad == 0 else f"{bad} findings")
     sys.exit(0 if bad == 0 else 1)
 

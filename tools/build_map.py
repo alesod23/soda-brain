@@ -14,7 +14,12 @@ THE LEDGER. `soda-brain/system/nodes.json` = {"about", "nodes": [ ... ]}, one ob
                             a node line edited by hand in the HTML since the last build is absorbed into the ledger first
                             (display fields only), so a session that edited the HTML loses nothing
   build_map.py --bootstrap  create nodes.json from the HTML's NODES once (ports/tasks/paths derived), merge runbooks
-  build_map.py --check      exit 1 when the HTML is not what nodes.json renders (a test for the same-turn rule)
+  build_map.py --check      exit 1 when the HTML is not what nodes.json renders (a test for the same-turn rule), or when
+                            a map page lost its feedback box
+FEEDBACK BOX (goal run G109, 5 Oct 2026; RULE-LOOP.md section 7 part 3). Every render also makes sure each map page in
+FEEDBACK_PAGES carries ONE `<script src="feedback-box.js" data-surface="...">` line right before </body> (the system map
+as surface system-map, the hand-written simulation map as simulation-map; ledger_verdict.SURFACE_LEDGER routes both), so
+no rebuild or hand edit of the page can drop the box. Env SODA_SIM_MAP_HTML overrides the simulation map's path (tests).
 
 The System Agent (task-land/_system/system-agent/) writes `status`/`broken` through registry.map_sync(), which edits
 nodes.json and calls render(). Idempotent: the same ledger gives the same HTML byte for byte.
@@ -30,6 +35,8 @@ SYSTEM = Path(__file__).resolve().parent.parent / "system"
 LEDGER = Path(os.environ.get("SODA_LEDGER") or (SYSTEM / "nodes.json"))
 HTML = Path(os.environ.get("SODA_MAP_HTML") or (SYSTEM / "SODA-SYSTEM-MAP.html"))
 STAMP = Path(os.environ.get("SODA_MAP_STAMP") or (SYSTEM / ".nodes-render.sha"))
+SIM_HTML = Path(os.environ.get("SODA_SIM_MAP_HTML") or (SYSTEM / "SODA-SIMULATION-MAP.html"))
+FEEDBACK_PAGES = ((HTML, "system-map"), (SIM_HTML, "simulation-map"))   # page -> data-surface of its feedback box
 DISPLAY = ["label", "kind", "machine", "cadence", "code", "reads", "writes", "llm", "gate", "status", "broken", "note"]
 NODE_LINE = re.compile(r'^(?P<id>[a-z][a-z0-9_]*):\{(?P<body>.*)\},\s*$')
 PAIR = re.compile(r'([a-z_]+):"((?:[^"\\]|\\.)*)"')
@@ -110,12 +117,41 @@ def absorb(led, html):
     return changed
 
 
+def feedback_line(surface):
+    return f'<script src="feedback-box.js" data-surface="{surface}"></script>'
+
+
+def with_feedback_box(html, surface):
+    """-> html carrying exactly one feedback-box include for `surface`, right before </body> (idempotent)."""
+    line = feedback_line(surface)
+    if line in html:
+        return html
+    html = re.sub(r'[ \t]*<script src="feedback-box\.js"[^>]*></script>\n?', "", html)   # a stale surface name
+    i = html.rindex("</body>")
+    return html[:i] + line + "\n" + html[i:]
+
+
+def ensure_feedback_boxes(write=True):
+    """The pages of FEEDBACK_PAGES other than the system map (rendered by render()) -> [pages that lacked the box]."""
+    out = []
+    for page, surface in FEEDBACK_PAGES:
+        if page == HTML or not page.exists():
+            continue
+        html = page.read_text(encoding="utf-8")
+        new = with_feedback_box(html, surface)
+        if new != html:
+            out.append(page.name)
+            if write:
+                page.write_text(new, encoding="utf-8", newline="\n")
+    return out
+
+
 def render(led=None, write=True):
     """-> (changed?, html). Writes the HTML and the stamp when changed."""
     led = led or load()
     html = HTML.read_text(encoding="utf-8")
     a, b, _ = parse_block(html)
-    new = html[:a] + render_block(led["nodes"]) + html[b:]
+    new = with_feedback_box(html[:a] + render_block(led["nodes"]) + html[b:], dict(FEEDBACK_PAGES)[HTML])
     if write and new != html:
         HTML.write_text(new, encoding="utf-8", newline="\n")
     if write:
@@ -190,13 +226,16 @@ def main():
     led = load()
     if "--check" in sys.argv:
         ch, _ = render(led, write=False)
-        print("the map is what the ledger renders" if not ch else "DRIFT: the map's NODES differ from nodes.json (run build_map.py)")
-        return 1 if ch else 0
+        boxless = ensure_feedback_boxes(write=False)
+        print("the map is what the ledger renders" if not ch else "DRIFT: the map's NODES (or its feedback box) differ from nodes.json (run build_map.py)")
+        if boxless:
+            print("DRIFT: no feedback box on " + ", ".join(boxless) + " (run build_map.py)")
+        return 1 if ch or boxless else 0
     ab = absorb(led, HTML.read_text(encoding="utf-8"))
     if ab:
         save(led)
     ch, _ = render(led)
-    print(json.dumps({"absorbed_from_html": ab, "html_changed": ch}))
+    print(json.dumps({"absorbed_from_html": ab, "html_changed": ch, "feedback_box_added": ensure_feedback_boxes()}))
     return 0
 
 
