@@ -1,0 +1,34 @@
+{
+ "light": {
+  "wires": [],
+  "loose": [],
+  "overflow": [],
+  "gates": [],
+  "overlaps": [],
+  "outside": [],
+  "counts": {
+   "charts": 0,
+   "nodes": 0,
+   "wires": 0,
+   "rows": 0
+  },
+  "console_errors": [],
+  "page_hscroll": []
+ },
+ "dark": {
+  "wires": [],
+  "loose": [],
+  "overflow": [],
+  "gates": [],
+  "overlaps": [],
+  "outside": [],
+  "counts": {
+   "charts": 0,
+   "nodes": 0,
+   "wires": 0,
+   "rows": 0
+  },
+  "console_errors": [],
+  "page_hscroll": []
+ }
+}

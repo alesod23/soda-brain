@@ -188,7 +188,7 @@ footer p{max-width:90ch}
   <h1>One brain, many agents, one decider</h1>
   <p class="lede">The system as it runs on 4 October 2026: events from the world, readers that decide what an event means for one person, a brain that remembers what is open, one gate where Alessandro says yes, the systems that execute the yes, and the loop that turns his sentences into rules. Same rules as the rest of the map: updated in the same turn as the system, dated, no secrets.</p>
   <div class="meta">
-    <span>Last verified <b>2026-10-04 21:33</b></span>
+    <span>Last verified <b>2026-10-04 22:13</b></span>
     <span>Workers <b id="n-workers">0</b></span>
     <span>Live <b id="n-live">0</b></span>
     <span>Built, off or armed <b id="n-armed">0</b></span>
@@ -324,7 +324,7 @@ footer p{max-width:90ch}
       <li><b>task:DA-Unstuck:missing</b> (A-task-da-unstuck-missing-10041942, fix_session, since 04 Oct 19:41): the scheduled task DA-Unstuck does not exist any more; next: a fix session (reproduce, fix, prove)</li>
       <li><b>gate_review</b> (UI-hub-review-1568, fix_session, since 04 Oct 20:24): UI walk hub-review@1568: screenshot (cards); control missing (messages, notif); next: open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`</li>
       <li><b>gate_crm</b> (UI-laptop-review-390, fix_session, since 04 Oct 20:48): UI walk laptop-review@390: &#x27;loading&#x27; still on screen after 10 s (load); next: open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review`</li>
-      <li><b>ev_mail</b> (H1, him, since 26 Sep 02:00): box Gmail sodano23: AUTH REQUIRED (token present but unusable); next: the System Agent&#x27;s check closes the line when it passes</li>
+      <li><b>ev_mail</b> (H1, him, since 26 Sep 02:00): box Gmail sodano23: AUTH REQUIRED (token present but unusable); next: the check passes once the box receiver has the token</li>
       <li>waiting for his decision (not broken): 14 items, listed in the System Agent report</li>
       <!-- registry:end -->
     </ul></div>
@@ -353,7 +353,7 @@ footer p{max-width:90ch}
 const NODES = {
 // generated from soda-brain/system/nodes.json by soda-brain/tools/build_map.py: edit the ledger, not this block
 // events
-ev_mail:{label:"inbound email",kind:"event",machine:"cloud",cadence:"continuous",reads:"Gmail: cdtm, tundra (sodano23 token on the box expired)",writes:"",status:"broken",broken:"H1 26 Sep 02:00 · him · the System Agent's check closes the line when it passes",note:"Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box."},
+ev_mail:{label:"inbound email",kind:"event",machine:"cloud",cadence:"continuous",reads:"Gmail: cdtm, tundra (sodano23 token on the box expired)",writes:"",status:"broken",broken:"H1 26 Sep 02:00 · him · the check passes once the box receiver has the token",note:"Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box."},
 ev_wa:{label:"WhatsApp message",kind:"event",machine:"box",cadence:"continuous",reads:"the linked device (Baileys daemon)",writes:"message-store.jsonl, shipped to Drive DA/ every minute",status:"live"},
 ev_li:{label:"LinkedIn accept or DM",kind:"event",machine:"laptop",cadence:"every 15 min",reads:"the inbox in a dedicated Chrome profile (~17 newest threads); quiet threads of CRM Today people by id",writes:"G:/My Drive/DA/linkedin-store.jsonl (in and fromMe)",status:"live",note:"Since 4 Oct 22:10 (G89) every tick also opens up to 2 quiet threads by id (li_person.py fetch_person: CRM Today people outside the inbox window, once a day); poll.py --person reads one on demand. Same store, same ids."},
 ev_notion:{label:"Notion meeting note",kind:"event",machine:"cloud",cadence:"Notion meeting AI writes it 22 to 49 min after the call starts",reads:"the Meetings DB",writes:"",status:"live"},

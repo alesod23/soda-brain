@@ -44,7 +44,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "H1 26 Sep 02:00 · him · the System Agent's check closes the line when it passes"
+   "broken": "H1 26 Sep 02:00 · him · the check passes once the box receiver has the token"
   },
   {
    "id": "ev_wa",
