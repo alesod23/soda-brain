@@ -16,7 +16,7 @@
     "box:gmail-sodano23": {
      "probe": {
       "type": "box_sh",
-      "cmd": "l=$(grep -a 'sodano23' ~/.local/state/draft-reconcile.log | grep -v 'Token path' | tail -1); case \"$l\" in *'AUTH REQUIRED'*) echo 'BAD the sodano23 token on the box is unusable (AUTH REQUIRED)';; *) echo \"OK ${l:-no sodano23 line}\";; esac"
+      "cmd": "o=$(timeout 60 /home/da/triage/venv/bin/python /home/da/triage/gmail.py whoami --account sodano23 2>&1 | tail -1); case \"$o\" in *@*) echo \"OK sodano23 answers as $o\";; *) echo \"BAD sodano23 whoami: ${o:0:160}\";; esac"
      },
      "for_him": {
       "kind": "auth",
@@ -27,7 +27,7 @@
       "why_only_him": "a Google sign-in is his alone (never-list: never log in)"
      },
      "his_command": true,
-     "healthy_when": "the last sodano23 line of draft-reconcile.log is not AUTH REQUIRED"
+     "healthy_when": "gmail.py whoami --account sodano23 on the box prints the address (read-only; the old probe read a log line that never changes after a re-auth)"
     },
     "gmail:*": {
      "probe": {
