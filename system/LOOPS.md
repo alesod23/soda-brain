@@ -161,6 +161,23 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   Test: `.medtech-crm/tools/lane-test/test_lane.js` and `test_lane_full.js` (stubs for gmail.py, the CRM API and the
   sent-log; a fixture sidecar). Phone layout of the board: `.medtech-crm/tools/review_board_check.py`.
 
+- **H41 / H42 / CRM H56 (his rules 4 Oct 2026 16:30): a message to a person NEVER appears as a hub card.** One door:
+  `task-land/_system/drafts/crm_artifact.py crm_or_card()`. Known person (pid, email, LinkedIn URL, unique exact name,
+  or a row whose whole name is the mailbox name) -> attached to the CRM card (`allow_coming`), no card; a call or a step
+  with no text -> the CRM's own Today item, no card; unknown named person -> THE import card (`queue_import`: one open
+  card at a time, revised in place without a ping, people in `meta.people`; "Import these N people into the CRM? yes =
+  all, no + numbers = those", kind decision); the CRM refuses -> a card whose first line is `REFUSED by the CRM: ...`;
+  the CRM does not answer or the producer failed -> first line `FAILED: ...`; both carry `meta.crm_pid` + `crm_url`.
+  An email reaches the CRM only with its Gmail draft id (`sendLaneDraft`). His verdict on the import card:
+  `apply_import_decisions()` (decisions.jsonl; rows via `POST :4137/intake`, matched by name with no org so a row that
+  lacked its address is completed; then the message attached and its old card closed), called by inbound_asks.run
+  (`import_opened` sets the reply owed) and instinct_inbox.run (`lane_on_yes` puts the shown draft in the lane, his
+  words rewrite it). Callers of crm_or_card: due_today, inbound_asks, instinct_inbox, meeting_loop, send_card.py.
+  Left as cards on purpose: silent loops (Quick Claude, CRM Ask), a bare number (not a named person, H56), the
+  meeting loop's "next step?" questions. Executor state `~/gtm-eng/agent/crm-import-state.json`. Tests
+  `drafts/test_crm_or_card.py` (11), the producer tests in `gtm-eng/agent/tests`. The 4 Oct sweep: `drafts/hub_sweep.py`
+  (THE PLAN item 13).
+
 ## 5. The approval hub and the review page
 
 - Since 3 Oct 2026 23:20, THE CONNECTION: every new mail, WhatsApp and CRM event (hub_outdated.py on the box, every
@@ -227,6 +244,19 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   feedback lines; `review.js` shows the same block on the item's face. Box patches:
   `task-land/_system/currency/patch-hub-iterations-20261004.py` (hub) and
   `patch-hub-review-iterations-20261004.py` (page + server). Tests: `task-land/_system/test_iterations.py`.
+
+- **The SodaPing hub (H42, 4 Oct 2026):** the Telegram header of every card reads "SodaPing hub"; a card with
+  `meta.crm_url` / `meta.crm_pid` ends with "Open the CRM card" -> `CRM_PUBLIC_URL/?review=1#/today/<pid>`; /revise of
+  the import card edits its Telegram message in place. Box patch `currency/patch-hub-sodaping-20261004.py`.
+- **The CRM tab on hub-review (H41):** `GET /api/crm` reads the CRM review items (`CRM_ITEMS_URL`, default the laptop
+  writer `http://desktop-1bojsrg:4137/review/items?coming=1`, fallback the box intake), keeps what waits for him (today's
+  items with a draft, a call or a comment being worked; a later item only when iterated, commented or NOT sent), one
+  line each (name, org, "NOT sent ...", "vN after your comment of <date>, waiting for your verdict", ...) linking to that
+  exact CRM card. Nothing is decided on the hub. Box patch `currency/patch-hub-review-crm-20261004.py`.
+- **The CRM card deep link:** `#/today/<pid>` on the CRM board (`crm-app/public/review.js`) opens review mode with that
+  card current, turning "coming up" on when the person is due later this week. Base URL in ONE place per process:
+  env `CRM_PUBLIC_URL` (default `https://desktop-1bojsrg.taile93f00.ts.net`, the laptop over Tailscale; after the
+  writer flip set it to the box address). Test `.medtech-crm/tests/deep_link_test.py` (1568 and 390 px).
 
 ## 6. Campaigns and boards (GTM engine)
 
