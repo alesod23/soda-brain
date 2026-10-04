@@ -22,7 +22,7 @@ section 7.
 - **Registry** `broken.jsonl` (newest line per id wins): maintenance / his_command / his_decision. Closes only when the
   check passes twice in its own ticks (or once after a fix session's own pass).
 - **Fix session** = job kind `fix` (`jobs.add_fix`, `job_runner.run_fix`): Opus, 30 min soft, 45 hard, 1 week point,
-  once to 2 after a reproduction, 3 a day, never at 5h >= 80%, kill switch `system-agent/OFF`. The box is READ-ONLY for
+  once to 2 after a reproduction, NO daily cap (his word 19:14; brakes: sessions.jsonl memory, the trend alert, 92% commit charge), never at 5h >= 80%, kill switch `system-agent/OFF`. The box is READ-ONLY for
   it; a never-list cause = `stuck` at once. The guard hook fails OPEN if it crashes (Claude Code), hence the preflight.
 - **STUCK card** only after a fix session said stuck, or for a check the ledger marks his_command. His yes runs through
   `unstuck.py`: auth (account pre-selected), terminal (pre-typed, `his-yes` in window-watch via expected.jsonl), run.
