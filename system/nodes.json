@@ -1438,7 +1438,273 @@
    ],
    "paths": [
     "~/task-land/_system/goal-run/integration_check.py"
-   ]
+   ],
+   "checks": {
+    "integration:crm-health": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "crm-health",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+crm-health\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+crm-health\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only crm-health prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-crm-health stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:crm-board": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "crm-board",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+crm-board\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+crm-board\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only crm-board prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-crm-board stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:crm-review": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "crm-review",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+crm-review\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+crm-review\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only crm-review prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-crm-review stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:review-parity": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "review-parity",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+review-parity\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+review-parity\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only review-parity prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-review-parity stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:hub-pending": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "hub-pending",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+hub-pending\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+hub-pending\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only hub-pending prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-hub-pending stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:hub-review-count": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "hub-review-count",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+hub-review-count\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+hub-review-count\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only hub-review-count prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-hub-review-count stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:brain-recall": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "brain-recall",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+brain-recall\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+brain-recall\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only brain-recall prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-brain-recall stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:event-dry-run": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "event-dry-run",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+event-dry-run\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+event-dry-run\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only event-dry-run prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-event-dry-run stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:window-lint": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "window-lint",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+window-lint\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+window-lint\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only window-lint prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-window-lint stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:health-lines": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "health-lines",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+health-lines\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+health-lines\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only health-lines prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-health-lines stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    },
+    "integration:maps-fresh": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "~/task-land/_system/goal-run/integration_check.py",
+       "--only",
+       "maps-fresh",
+       "--registry",
+       "{tmp}"
+      ],
+      "ok_re": "^\\s*PASS\\s+maps-fresh\\b",
+      "evidence_re": "^\\s*(PASS|FAIL)\\s+maps-fresh\\b",
+      "timeout": 240
+     },
+     "healthy_when": "integration_check.py --only maps-fresh prints PASS (run against a scratch registry, so the probe never writes the real one)",
+     "if_fails": "the registry line IC-maps-fresh stays open; the System Agent re-runs this check every tick and closes the line after two passes",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/goal-run/integration_check.py"
+     ],
+     "rollback": "",
+     "escalate": "the owner of the surface the check names"
+    }
+   }
   },
   {
    "id": "w_uiwalk",
@@ -2147,8 +2413,113 @@
      ],
      "rollback": "",
      "escalate": "fix session after the 60 min window"
+    },
+    "laptop:orphans": {
+     "probe": {
+      "type": "finding",
+      "key": "laptop:orphans"
+     },
+     "healthy_when": "no sim/harness/fakes/*.py process without a run_night.py above it",
+     "if_fails": "reap_orphans (whitelist): each pid re-checked by its command line, stopped, logged in system-agent/reap.log",
+     "known_fixes": [
+      "reap_orphans"
+     ],
+     "files": [
+      "~/task-land/_system/system-agent/system_agent.py orphan_fakes"
+     ],
+     "rollback": "none needed (the night restarts its own fakes)",
+     "escalate": "fix session"
     }
    }
+  },
+  {
+   "id": "svc_oauth_receiver",
+   "group": "infra workers (registry only)",
+   "label": "oauth_receiver.py :8765 (Tailscale IP only)",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "always (supervisor ~/.local/bin/oauth-receiver-supervise.sh; its crontab lines are his command, parked)",
+   "code": "/home/da/triage/oauth_receiver.py",
+   "reads": "Google's OAuth redirect for a pending phone_auth.py state",
+   "writes": "triage/tokens/<account>.json",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "Live since 4 Oct 21:52 (H58/H59): the box issues the consent URL, oauth_catch.py opens it on the laptop, this receiver finishes.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 8765
+    }
+   ],
+   "paths": [
+    "/home/da/triage/oauth_receiver.py"
+   ],
+   "checks": {
+    "box:oauth-receiver": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "ss -ltn | grep -q '100.85.52.84:8765 ' && echo 'OK the receiver listens on 100.85.52.84:8765' || echo 'BAD nothing listens on 100.85.52.84:8765'"
+     },
+     "healthy_when": "the socket 100.85.52.84:8765 listens",
+     "if_fails": "a fix session: the supervisor (its crontab lines are his command, parked)",
+     "known_fixes": [],
+     "files": [
+      "box:/home/da/triage/oauth_receiver.py",
+      "box:/home/da/.local/bin/oauth-receiver-supervise.sh"
+     ],
+     "rollback": "",
+     "escalate": "fix session"
+    }
+   }
+  },
+  {
+   "id": "net_portproxy_8765",
+   "group": "infra workers (registry only)",
+   "label": "netsh portproxy 127.0.0.1:8765 -> 100.85.52.84:8765",
+   "kind": "service",
+   "machine": "laptop",
+   "cadence": "always (Windows IP Helper)",
+   "code": "netsh interface portproxy (set by his hand, admin)",
+   "reads": "Google's redirect to http://localhost:8765/",
+   "writes": "forwards it to the box receiver",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "checks": {
+    "laptop:portproxy-8765": {
+     "probe": {
+      "type": "ps",
+      "cmd": "if ((netsh interface portproxy show v4tov4 | Out-String) -match '8765') { 'OK portproxy 127.0.0.1:8765 -> the box is set' } else { 'BAD no portproxy for 8765' }"
+     },
+     "healthy_when": "netsh interface portproxy show v4tov4 lists 8765",
+     "his_command": true,
+     "for_him": {
+      "kind": "terminal",
+      "what": "set the port forward for the sign-in receiver again (an admin PowerShell: right-click, Run as administrator, then Enter)",
+      "account": null,
+      "command": "netsh interface portproxy add v4tov4 listenaddress=127.0.0.1 listenport=8765 connectaddress=100.85.52.84 connectport=8765",
+      "why_only_him": "an admin network setting (a permission)"
+     }
+    }
+   }
+  },
+  {
+   "id": "tool_oauth_catch",
+   "group": "infra workers (registry only)",
+   "label": "oauth_catch.py (the laptop half of a sign-in)",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "on demand (the System Agent's auth action, H58)",
+   "code": "task-land/_system/oauth_catch.py",
+   "reads": "Chrome's Local State (the profile per account)",
+   "writes": "opens the consent URL in his CDTM Chrome profile, login_hint + authuser forced",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "paths": [
+    "~/task-land/_system/oauth_catch.py"
+   ]
   }
  ]
 }

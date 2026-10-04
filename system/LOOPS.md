@@ -89,6 +89,24 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   :4150/brain/match` with the person and the step, token `SODA_TOKEN_RO` from `~/.env/soda.env`); a strong open to-do or
   hub card (sim >= 0.84) is named in the origin's why in words ("already open in the brain: to-do ..."), the whole match
   is kept as `next_step_origin.brain`; the door down = the step is written anyway with `brain.ok false`.
+- Since 4 Oct 2026 22:10 (goal run G89, THE PLAN short term 6, the Ienna test): the LinkedIn feed has a per-person
+  thread read. The poller's `get_inbox` only reaches the newest threads (10 on 4 Oct evening, ~17 at most), so a quiet
+  thread is never re-read. `~/.claude/linkedin-poll/li_person.py` (`fetch_person`; CLI `poll.py --person <pid | profile
+  URL | thread id> [--dry] [--json]`) resolves the person (CRM row read-only, thread ids from the store by display name;
+  no thread known = `get_conversation(linkedin_username)`), opens the thread by id on the POLLER profile (same run lock,
+  same spawn and hard kill as poll.py), parses every message both directions and appends what the store lacks to
+  `G:/My Drive/DA/linkedin-store.jsonl`, same line shape plus `via: fetch_person`, same id rule
+  (`li:<thread>:sha1("<You|first name>: <text>")`), so a message the poller stored is not written again (dedupe by id,
+  by folded text, and by one text being the start of the other: a shortened preview, a link card). Written: every
+  message of his, and THEIR messages newer than the thread's newest stored line (a missed reply, notified by sodanotif
+  like any poller line); older inbound history is reported, never written (no notification storm). Caller: the stale
+  pass at the end of every poll tick, inside the same launcher: CRM Today people (due, reply, stale, waiting on them)
+  with LinkedIn whose thread is outside the latest inbox read, at most 2 a tick, each once a day (`state.json`
+  `person_fetched`), a LinkedIn error = 1 h backoff, "no conversation" = skip. The CRM monitor, reader and crm-outdated
+  read the result through the store the way they read every poller line. Side effect stated: opening a thread selects
+  it in LinkedIn's UI, as `get_inbox` already does to every inbox row each tick. Never sends. Tests:
+  `venv\Scripts\python.exe test_li_person.py` (parser, ids, dedupe, the Jonathan Crowe duplicate case). Mirror:
+  `task-land/_system/laptop-tools/linkedin-poll/`.
 
 ## 2. Inbound asks (WhatsApp, LinkedIn, email asks)
 
