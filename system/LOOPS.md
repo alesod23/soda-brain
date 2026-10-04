@@ -73,6 +73,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `node --test tests/crm-outdated.test.js` (a stub CRM on a copy; no model). Box: not scheduled yet (the CRM writer is
   the laptop); at the cut-over the cron line is
   `*/10 * * * * cd /home/da/coattio && flock -n /tmp/crm-outdated.lock node crm-outdated.js >> /home/da/.local/state/crm-outdated.log 2>&1`
+  (4 Oct 19:19, goal run G10: that box cron crashed on every run, `lemlist-api.js:39` `path.join(USERPROFILE)` undefined
+  on Linux; coattio 67ad780 falls back to `os.homedir()` in every box-required module; box check in
+  `_system/box-steps-20261004-goal.sh` block G10.)
   and the laptop task is disabled the same minute (one worker, one writer).
 - Since 4 Oct 2026 (same build): the reader asks the brain before it writes a step (`crm-app/brain.js` -> `POST
   :4150/brain/match` with the person and the step, token `SODA_TOKEN_RO` from `~/.env/soda.env`); a strong open to-do or
@@ -304,7 +307,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 - Code: `gtm-eng/agent/gtm_agent.py` (task GTM-Agent, every 10 min): checks that campaigns run, follow-ups are current,
   hub items are not waiting, tools are usable; a whitelist of fixes; 2 update cards a day; `box_watch.py` on the box
-  posts "laptop silent". `feedback_worker.py` (task DA-FeedbackWorker) takes system feedback items
+  posts "laptop silent". `feedback_worker.py` (task DA-FeedbackWorker, DISABLED on the laptop 2026-10-04 19:19, the box
+  feedback session took over: one filer) takes system feedback items
   (`_system/gtm-agent/system-feedback.jsonl`, filed by `feedback_queue.py` from his sentences and by the simulation's
   learner) and fixes what is in its whitelist; items it cannot take are `needs_him`.
 - `due_today.py` (built 1 Oct, laptop task DA-DueToday): a promise he made ("reach back in two weeks") comes back prepared on
@@ -351,7 +355,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 ## 8. The rule loop
 
 - His five sentences: "this sucks because", "I like this", "this again", a change request, "slower/faster".
-- `addrule.py --contract email|hub|crm|notif|meeting` the same turn; `compile_skill.py --install` compiles the skill;
+- `addrule.py --contract email|hub|crm|notif|meeting|proactive|whitelist` the same turn; `compile_skill.py --install` compiles the skill;
   observers (critic, hub guard, CRM observer) write `rule-hits.jsonl`; `rule-stats.py` counts; `system-check.py`
   (09:10) writes the weekly check when the decision window is full; the box posts it. Canonical: `task-land/_system/RULE-LOOP.md`.
 - Phase 2 of the brain: ledgers and hits move into `soda-brain/rules/`, every rule gets `since`, `checked_last`,
@@ -386,6 +390,19 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
     whitelist fix; a job created on the box runs on the box (`run_on`), the laptop leaves it 15 min.
   - Tests: `python task-land/_system/test_whitelist.py` (6 classifier fixtures, the job end to end in a temp JOBS_DIR, the
     revert, the routing; `WL_LIVE=1` adds one live Opus call), `node --test tests/whitelist-path.test.js` in `.medtech-crm`.
+
+- **RULE LOOPS EVERYWHERE (his ask of 4 Oct 2026 18:45; built 18:50 to 19:30).** *"I want a feedback session that
+  understands: they will always understand if there are rules coming out of my feedback, what type of rules, and where
+  to put them."* One template, six parts per surface (RULE-LOOP.md section 7): ledger, skill loaded by the decider, input
+  box, route, observer, brain index; `task-land/_system/rule_loop_check.py --md` prints the coverage table. The route is
+  ONE classifier in code, `drafts/ledger_verdict.py` (like -> LIKED row, confirmation -> `rule-confirmations.jsonl`,
+  rule -> `addrule.py` in the ledger the sentence is about, case -> `rule-cases.jsonl`, system / work -> the Opus
+  session), called by `feedback_session.ledger_feedback` for queue kinds `notif-feedback` and `feedback`. Inputs: the
+  hub-review **Notifications** tab (key 6, every SODANOtif card of the last 48 h), Telegram `notif: <sentence>` or a
+  swipe-reply on a card (the savior runs `_system/notif_feedback.py`), and `POST :4142/api/feedback {surface, item, line,
+  text}` for any page (`soda-brain/system/feedback-box.js`, one script line). The SODANOtif classifier reads the compiled
+  notif skill on every batch. Box side = three patch scripts in `task-land/_system/currency/` (THE PLAN item 16).
+  The brain answers from the ledgers: `POST /brain/rules {topic}`, MCP `his_rules`.
 
 ## 9. Tasks and the daily page
 

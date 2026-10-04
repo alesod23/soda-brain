@@ -95,7 +95,7 @@ section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
 .node.learn{border-style:dotted;border-width:2px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;border:1.5px solid transparent}
 .dot.live{background:var(--live)} .dot.armed{background:var(--armed)} .dot.off{background:transparent;border-color:var(--armed)}
-.dot.paused{background:var(--paused)} .dot.planned{background:transparent;border-color:var(--paused)} .dot.broken{background:var(--broken)} .dot.retired{background:var(--line-strong)}
+.dot.paused{background:var(--paused)} .dot.planned{background:transparent;border-color:var(--paused)} .dot.broken{background:var(--broken)} .dot.retired{background:var(--line-strong)} .dot.stale-ledger{background:transparent;border-color:var(--broken)}
 
 /* lane chart (grid + svg) */
 .chart{position:relative;overflow-x:auto;margin:14px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
@@ -310,13 +310,9 @@ footer p{max-width:90ch}
       <li>S10 phase 2 (writers through the door), phase 3b/3c (Postgres the CRM source, the propose route)</li>
       <li>The simulation re-run with the brain in the readers and the Edge variant</li>
     </ul></div>
-    <div class="card"><h3><i class="dot broken"></i>Known broken or stale</h3><ul>
-      <li>box <code>contacts_sync.py</code> works again (4 Oct 16:30: 7 new/changed, 1 card); the sodano23 Gmail token on the box is still expired (his sign-in, H1)</li>
-      <li>the 23:00 digest's Telegram send fails with HTTP 400</li>
-      <li>research-page servers :4143 to :4145 unsupervised; the box <code>gtm-eng</code> copy dead since 19 Sep; trippy supervise logs EADDRINUSE noise</li>
-      <li>the hub-review feedback box takes no images (H21)</li>
-      <li>no install step for compiled skills on the box (scp by hand, S4 gap)</li>
-      <li>map drift found tonight: LOOPS said <code>due_today.py</code> unscheduled (task DA-DueToday runs 08:30), MACHINES said DA-MeetingLoop every 30 min (it is 5), Voice-Lane-Watch "historical" (enabled, 1 min); eight laptop tasks were absent from MACHINES: DA-Supervisor, DA-InstinctInbox, DA-DueToday, Granola-Auto-Sweep, Peer60-AcceptCheck, RuleLoop-SystemCheck, SODANOtif-Recap, CDTM-Kickoff-Weekly-Update</li>
+    <div class="card"><h3><i class="dot broken"></i>Known broken or stale (generated from the System Agent registry, task-land/_system/system-agent/broken.jsonl)</h3><ul>
+<!-- registry:start -->
+      <!-- registry:end -->
     </ul></div>
   </div>
 </div></section>
@@ -341,8 +337,9 @@ footer p{max-width:90ch}
 // kind: event reader script store gate surface exec learn service session
 // status: live armed off paused planned broken retired
 const NODES = {
+// generated from soda-brain/system/nodes.json by soda-brain/tools/build_map.py: edit the ledger, not this block
 // events
-ev_mail:{label:"inbound email",kind:"event",machine:"cloud",cadence:"continuous",reads:"Gmail: cdtm, tundra (sodano23 token on the box expired)",writes:"",note:"Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box.",status:"live"},
+ev_mail:{label:"inbound email",kind:"event",machine:"cloud",cadence:"continuous",reads:"Gmail: cdtm, tundra (sodano23 token on the box expired)",writes:"",status:"live",note:"Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box."},
 ev_wa:{label:"WhatsApp message",kind:"event",machine:"box",cadence:"continuous",reads:"the linked device (Baileys daemon)",writes:"message-store.jsonl, shipped to Drive DA/ every minute",status:"live"},
 ev_li:{label:"LinkedIn accept or DM",kind:"event",machine:"laptop",cadence:"every 15 min",reads:"the inbox in a dedicated Chrome profile (~17 newest threads)",writes:"G:/My Drive/DA/linkedin-store.jsonl (in and fromMe)",status:"live",note:"The per-person thread read (the Ienna case) is in the monitor-layer design, not built."},
 ev_notion:{label:"Notion meeting note",kind:"event",machine:"cloud",cadence:"Notion meeting AI writes it 22 to 49 min after the call starts",reads:"the Meetings DB",writes:"",status:"live"},
@@ -546,7 +543,7 @@ const FLOWS = [
 
 // ---------- RENDER ----------
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-const statusWord={live:"live",armed:"armed",off:"built, off",paused:"paused",planned:"planned",broken:"broken",retired:"retired"};
+const statusWord={live:"live",armed:"armed",off:"built, off",paused:"paused",planned:"planned",broken:"broken",retired:"retired","stale-ledger":"the ledger disagrees with reality"};
 function nodeEl(id,extra){
   const n=NODES[id]||extra; const kind=n.kind||"script";
   const el=document.createElement("div"); el.className="node "+(kind==="service"||kind==="session"?"":kind);
