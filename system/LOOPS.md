@@ -449,6 +449,18 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   functions, so it stacks with every other patch in either order. Tests: `_system/test_patch_sysagent.py` (both orders),
   `_system/check_sysagent_tab.py --url <hub-review>` (render check), ui_walk.py with UIWALK_HUB.
 
+- **A CARD PINGS ONCE: the idem key (G39, HUB H5 + H27, plan P4 (2), 4 Oct 2026 23:58).** Box patch
+  `task-land/_system/currency/patch-hub-idem-20261004.py` (marker HUB-H27-IDEM, stacks on supersede + H40 + H42 + H43,
+  node --check before the file is replaced). `POST /pending` with `idem` (or meta.idem / meta.idem_key) = the subject's
+  key: when a card carries it, the hub UPDATES that card (same id; text, context, meta, action replaced; its Telegram
+  message edited in place, silently; never a second push). A resolved card is reopened (fresh #N, the old verdicts kept in
+  `history`); a card pruned after its 24 h comes back from `state.idem_cards` (60 days). No key = the old behaviour.
+  First producer: `campaign.py` org pause, key `campaign:<slug>:org-pause:<unit>`, so the first ask and every expiry re-ask
+  are ONE card (before: a new card per expiry). Test `python ~/task-land/_system/currency/test-hub-idem-20261004.py`
+  (temp copy of the box mirror, stub push.js; 22 checks: two posts = one push + one edit, reopen, prune restore, the
+  campaign cycle x2 = one card id; the same test without the patch reproduces a new card per cycle). Box block G39 in
+  `_system/box-steps-20261004-goal.sh`.
+
 ## 6. Campaigns and boards (GTM engine)
 
 - Code: `gtm-eng/` (board-server.js :4141, `campaign.py`, `run-commit.py`, `commit-to-contacts.js`,
@@ -475,6 +487,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   default, email when it is about the wording) and recompiles. Live on :4141 from the server's next restart (the node
   process keeps the code it loaded; `rule_loop_check.py` shows the route amber until then). Test
   `task-land/_system/test_board_loop.py`. Observer `gtm-eng/board-observer.js`: hit lines (surface board) into `_system/rule-hits.jsonl` on every board page render (H1 keys, H2 j back / k fwd, H3 nothing he must read folded; once per board, rule, day, outcome) and every commit (H4 no confirmation card); `node board-observer.js <slug>` renders a real board read-only.
+
+- **THE HOLDS STORE + PAUSE BY HOSPITAL GROUP (G40, plan P4 1a-1c, 4 Oct 2026 23:58).** `task-land/_system/outreach/
+  holds.json` (two-way synced, the box writes it too) via `holds.py list|hold|release|check` (`--person`, `--org`,
+  `--group`, `--why`, `--until`, `--contact "name|org|why"` for people outside the CRM such as Luca Diamanti). A store hold
+  is a PAUSE (steps wait with the reason in `result`, nothing cancelled), read by `campaign.py live_held` at every tick and
+  by `plan`. A person's group: a store group definition (CRM company id, e-mail domain, org-name pattern) > the CRM company
+  `parent` (after `parent_overrides`, which neutralise the wrong "AP-HP" parents) > none. The reply pause (`pause_org`,
+  `ask_pause`, `check_pauses`) now pauses the whole GROUP (`unit()`), not the exact org. Seeded: Gruppo San Donato held
+  (San Raffaele PoC, Luca Diamanti call Tue 6 Oct 11:00; release `holds.py release --group "Gruppo San Donato"`), the 14
+  laptop-only privati-nord holds copied. The legacy `boards/<slug>/held-ids.json` + `holds.json` are still read (true =
+  cancel). Open: the CRM parents themselves are still wrong on the writer; `hub_outdated.py` still reads only held-ids.
 
 - **Feeds are streamed, never read whole (hub #69, goal run G123 + G126, 4 Oct 2026).** The 21:09 tick died with a
   MemoryError in `campaign.py inbound_by_thread` (`f.read()` of the inbound feed `~/.medtech-crm/events-ledger.jsonl`):
