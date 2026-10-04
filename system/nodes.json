@@ -719,7 +719,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-crm-review-390 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-crm-today-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review`"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-crm-review-390 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | UI-laptop-today-1568 04 Oct 20:51 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today`"
   },
   {
    "id": "gate_page",
@@ -1726,7 +1726,7 @@
      "healthy_when": "the newest presweep-<date>.done stamp is newer than the newest 'watchdog fired' line"
     }
    },
-   "broken": "M5 28 Sep 22:47 · fix_session · the next tick's check must pass | M4 28 Sep 23:00 · fix_session · fix the rejected body, prove with a dry post"
+   "broken": "M5 28 Sep 22:47 · fix_session · the agent's own check after 22:25 Rome must pass | M4 28 Sep 23:00 · fix_session · fix the rejected body, prove with a dry post"
   },
   {
    "id": "b_shipwa",
