@@ -961,7 +961,25 @@
    ],
    "paths": [
     "~/task-land/_system/git-sync.ps1"
-   ]
+   ],
+   "checks": {
+    "gitsync:task-land": {
+     "probe": {
+      "type": "finding"
+     },
+     "healthy_when": "task-land: 0 behind origin/main after a fetch, no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
+     "if_fails": "a fix session: merge origin/main into the branch (merge, NEVER rebase, both sides kept; JSON/jsonl conflicts = union by id), push, then the box pulls (memory reference_task_land_sync_parked_conflict); a parked conflict-* branch is merged into main the same way",
+     "known_fixes": [],
+     "files": [
+      "~/task-land",
+      "~/task-land/_system/git-sync.ps1",
+      "~/task-land/_system/vault-git-sync.ps1",
+      "~/task-land/_system/vps/sync-guards.sh"
+     ],
+     "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
+     "escalate": "fix session (G116); a box-side park is a for_him terminal command"
+    }
+   }
   },
   {
    "id": "w_vaultsync",
@@ -981,7 +999,41 @@
    ],
    "paths": [
     "~/task-land/_system/vault-git-sync.ps1"
-   ]
+   ],
+   "checks": {
+    "gitsync:soda-brain": {
+     "probe": {
+      "type": "finding"
+     },
+     "healthy_when": "soda-brain: 0 behind origin/main after a fetch, no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
+     "if_fails": "a fix session: merge origin/main into the branch (merge, NEVER rebase, both sides kept; JSON/jsonl conflicts = union by id), push, then the box pulls (memory reference_task_land_sync_parked_conflict); a parked conflict-* branch is merged into main the same way",
+     "known_fixes": [],
+     "files": [
+      "~/soda-brain",
+      "~/task-land/_system/git-sync.ps1",
+      "~/task-land/_system/vault-git-sync.ps1",
+      "~/task-land/_system/vps/sync-guards.sh"
+     ],
+     "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
+     "escalate": "fix session (G116); a box-side park is a for_him terminal command"
+    },
+    "gitsync:coattio": {
+     "probe": {
+      "type": "finding"
+     },
+     "healthy_when": "coattio (~/.medtech-crm): 0 behind origin/main after a fetch, no MERGE_HEAD, no conflict markers in tracked files, no origin/conflict-* branch newer than origin/main",
+     "if_fails": "a fix session: merge origin/main into the branch (merge, NEVER rebase, both sides kept; JSON/jsonl conflicts = union by id), push, then the box pulls (memory reference_task_land_sync_parked_conflict); a parked conflict-* branch is merged into main the same way",
+     "known_fixes": [],
+     "files": [
+      "~/.medtech-crm",
+      "~/task-land/_system/git-sync.ps1",
+      "~/task-land/_system/vault-git-sync.ps1",
+      "~/task-land/_system/vps/sync-guards.sh"
+     ],
+     "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
+     "escalate": "fix session (G116); a box-side park is a for_him terminal command"
+    }
+   }
   },
   {
    "id": "w_watcher",
