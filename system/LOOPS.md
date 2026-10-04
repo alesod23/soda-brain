@@ -242,6 +242,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   meeting loop's "next step?" questions. Executor state `~/gtm-eng/agent/crm-import-state.json`. Tests
   `drafts/test_crm_or_card.py` (11), the producer tests in `gtm-eng/agent/tests`. The 4 Oct sweep: `drafts/hub_sweep.py`
   (THE PLAN item 13).
+- **The brain sees the review item (G12, 4 Oct 2026 20:25).** Every item of the review board (due, owed, waiting,
+  coming, done) is a row of the brain with kind `review`, re-read every 5 minutes on the box: an event about a person
+  with an open item comes back from `POST :4150/brain/match` as a `review` hit, so path A of crm-outdated reaches the item
+  even when the person row ranks low, and a producer is told the item is already on the board. Section 13 has the shape.
 
 ## 5. The approval hub and the review page
 
@@ -620,6 +624,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `match_event`; `tools/todo_match.py` does the lookup, one Opus judgement (done / moved / none with the quote) and
   the tick through `pipeline.py tick|redate --evidence` (log `_system/todo-match.jsonl`). Done is a state with
   evidence, never a delete. Phase 2 (writers go through the door, task files written from the rows) is next.
+- CRM review items are rows of the brain since 4 Oct 2026 (G12, THE PLAN 10(d)): `crm.review_items` (pid, name, org,
+  kind due | owed (the board's reply) | waiting | coming | done, status open | dealt | gone, step text and date, channel,
+  current version v / at / head = subject + 400 characters, dealt, updated_at) + `crm.review_chunks` (one embedded chunk
+  each), filled by `todo_ingest.upsert_reviews` on the same index pass from the writer's `GET 127.0.0.1:4137/review/items
+  ?coming=1` (read-only; `REVIEW_ITEMS_URL` overrides; unreachable = nothing changes; an item off the board keeps its
+  row as `gone`, never a delete). `brain.match_event` returns kind `review` (id = pid, parent_id = the item kind, title =
+  the name, due = the step date; dealt only with include_done). Consumers: `crm-outdated.js` path A adds the pid of an
+  open review hit whose name the event carries (metric `matched_review`), `todo_match.already_open_text` lists open
+  review items to producers, `on_event` logs them (`reviews` in todo-match.jsonl). Dry read: `todo_ingest.py
+  --reviews-dry`; test `tools/tests/test_review_kind.py` (temp Postgres via pgserver, never the live index); box
+  step: block G12 of `task-land/_system/box-steps-20261004-goal.sh` (schema re-apply, one index pass, the check).
 - The orchestrator (instinct, from 2 Oct 2026): uses its own connectors for Notion, WhatsApp, the Tundra Gmail and
   Calendar; reads this repo, task-land and coattio on GitHub; gets the CDTM account and LinkedIn through the door;
   proposes, never holds a send scope (his decision 2 Oct, to be relaxed rule by rule for what he never reviews); puts

@@ -14,8 +14,8 @@ Six lanes. An event enters from the world (a mail, a WhatsApp, a LinkedIn accept
 booking, a Slack DM, a line typed on the daily page, one of his sentences). A reader decides what it means for ONE
 person: the CRM monitor and reader on the laptop, the meeting loop, inbound asks, due today, the sodanotif classifier
 on the box, the page classifier in the daily watcher. The brain answers "what is already open": Postgres `soda` on the
-box behind the door `:4150` (memory, rules, hints, CRM people with vectors, to-dos, hub cards), filled every 5 minutes
-from the repos and the task files. His gate: Telegram through the savior, the hub-review page `:4142`, a GTM board,
+box behind the door `:4150` (memory, rules, hints, CRM people with vectors, to-dos, hub cards, CRM review items as
+their own kind `review` since G12), filled every 5 minutes from the repos, the task files and the CRM review board. His gate: Telegram through the savior, the hub-review page `:4142`, a GTM board,
 CRM Today, the daily page. Execution by the system that owns the artifact: the hub sends by draft id, WhatsApp through
 `:4119`, LinkedIn on the laptop, the CRM step moves, the to-do ticks with evidence. Learning: his sentence becomes a
 ledger line the same turn (`addrule.py`), the compile makes it a skill, observers count hits, the cleaning layer tunes
