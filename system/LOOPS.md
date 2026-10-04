@@ -534,6 +534,12 @@ section 4); the hygiene worker's normal pass now drains the G14 replay itself (G
   still holds `from`; comment overrides by line number (`n=keep`, `n.field=keep|value`). Test
   `test_crm_field_repair.py [--data <CRM copy>]` (30 checks, 31 with --data incl. G146 + G154 on one CRM). Still open: a
   country check in the enricher. Box block G154.
+- **THE FINESS ENRICHER MATCHES ONLY FRENCH ROWS (5 Oct 2026 01:21 Rome, G160, coattio 1404d9d).** Root fix of G154:
+  `finess-lookup.js frenchEvidence` (a row country decides; a foreign TLD, US state, foreign country, Italian province or
+  Italian/German/English institution word refuses; else a .fr email, French postcode/department or French hospital word is
+  required), `agrees` (site city in the row's name or location, or its postcode/department, or the exact name), at least one
+  of the name's own words on the site, a CHU query only on a regional site, no CHRS/foyer/annex site. `finess-enrich.js
+  --dry [--data <copy>] [--force] [--report]`; FINESS ids only into blank ids. Test `node --test tests/finess-g160.test.js`.
 
 ## 6. Campaigns and boards (GTM engine)
 
