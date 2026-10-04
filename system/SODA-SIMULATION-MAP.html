@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SODA Simulation Map</title>
+<meta name="description" content="The simulation harness that tests the SODA system, drawn: the sandbox, its alignment to the real system, the arms and guards, the eval, the results of nights 1 to 3, as of 4 Oct 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F5F3; --surface:#FFFFFF; --ink:#16201E; --muted:#5E6A68; --line:#D5DAD8; --line-strong:#AEB7B4;
+  --accent:#0E6B68; --accent-ink:#FFFFFF; --accent-soft:#DDEFEC;
+  --live:#2F7D4F; --armed:#B8720A; --paused:#8A8F8D; --broken:#B3433A;
+  --store:#EEF1EF; --event:#F7F8F6;
+  --display:"Archivo","IBM Plex Sans",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1514; --surface:#171E1D; --ink:#E8ECEA; --muted:#9AA5A2; --line:#2B3533; --line-strong:#3E4A47;
+    --accent:#4FB3AE; --accent-ink:#0B1413; --accent-soft:#163432;
+    --live:#5BBF84; --armed:#E0A043; --paused:#8A9491; --broken:#E07068;
+    --store:#1D2625; --event:#141B1A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1514; --surface:#171E1D; --ink:#E8ECEA; --muted:#9AA5A2; --line:#2B3533; --line-strong:#3E4A47;
+  --accent:#4FB3AE; --accent-ink:#0B1413; --accent-soft:#163432;
+  --live:#5BBF84; --armed:#E0A043; --paused:#8A9491; --broken:#E07068;
+  --store:#1D2625; --event:#141B1A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);}
+a{color:var(--accent)}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:34px;line-height:1.1;font-weight:700}
+h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
+h3{font-size:16px;font-weight:600}
+code,.mono{font-family:var(--mono);font-size:.86em}
+.wrap{max-width:1280px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+header.top .brand{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.02em}
+nav.sections{display:flex;gap:4px;flex-wrap:wrap}
+nav.sections a{color:var(--muted);text-decoration:none;font-size:13px;padding:4px 8px;border-radius:6px}
+nav.sections a:hover,nav.sections a:focus-visible{color:var(--ink);background:var(--accent-soft);outline:none}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tools input{font:inherit;font-size:13px;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);width:180px}
+.tools button,.btn{font:inherit;font-size:13px;padding:5px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);cursor:pointer}
+.tools button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.hero{padding:40px 0 20px}
+.hero .lede{max-width:72ch;color:var(--muted);margin-top:10px}
+.hero .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--muted)}
+.hero .meta b{color:var(--ink);font-weight:500}
+section.block{padding:34px 0 10px;border-top:1px solid var(--line)}
+section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+
+/* legend */
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:12px}
+.legend .item{display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted)}
+.legend .item b{color:var(--ink);font-weight:500;display:block}
+.legend .item.wide{grid-column:1 / -1;align-items:center;margin-top:4px}
+.legend .dots{display:inline-flex;gap:10px;white-space:nowrap;font-size:12.5px;color:var(--muted);align-items:center}
+.legend .dots .dot{margin-right:4px}
+.legend .item.wide div{display:flex;gap:8px;align-items:baseline}
+.legend .item.wide b{display:inline}
+
+/* nodes */
+.node{position:relative;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:7px 9px 7px 10px;font-size:12.5px;line-height:1.3;min-width:0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.node:hover,.node:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+.node .l{font-weight:600;display:block}
+.node .s{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.node .s code{font-size:11px}
+.node.event{border-style:dashed;border-radius:999px;background:var(--event);padding-left:14px}
+.node.reader{border-width:1.5px}
+.node.reader::before,.node.llm::before{content:"OPUS";position:absolute;top:-8px;right:10px;font:500 10px/1 var(--mono);letter-spacing:.08em;background:var(--surface);color:var(--accent);padding:1px 5px;border:1px solid var(--accent);border-radius:4px}
+.node.llm::before{content:"LLM"}
+.node.store{background:var(--store);border-radius:6px;border-bottom-width:4px}
+.node.store .l{font-family:var(--mono);font-weight:500;font-size:12.5px}
+.node.gate{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%,0 50%);padding:10px 22px;border-radius:0;text-align:center}
+.node.gate .l{display:block;text-align:center}
+.node.gate .s{color:color-mix(in srgb,var(--accent-ink) 78%,transparent);text-align:center}
+.node .chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.node .chips span{font:500 10px/1.4 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node.hot{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.chart .grid.focus .node:not(.hot):not(.src){opacity:.45}
+.sample{display:inline-flex;align-items:center;justify-content:center;height:30px;min-width:76px;padding:0 12px;font-size:12.5px;font-weight:600;flex:none;cursor:default;box-sizing:border-box}
+.sample.gate{min-width:90px}
+.node.surface{border-color:var(--accent);border-width:1.5px}
+.node.exec{border-radius:4px}
+.node.learn{border-style:dotted;border-width:2px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px;border:1.5px solid transparent}
+.dot.live{background:var(--live)} .dot.armed{background:var(--armed)} .dot.off{background:transparent;border-color:var(--armed)}
+.dot.paused{background:var(--paused)} .dot.planned{background:transparent;border-color:var(--paused)} .dot.broken{background:var(--broken)} .dot.retired{background:var(--line-strong)}
+
+/* lane chart (grid + svg) */
+.chart{position:relative;overflow-x:auto;margin:14px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.chart.bleed{width:min(1560px,calc(100vw - 32px));margin-left:calc(50% - min(780px,50vw - 16px))}
+.chart .grid{display:grid;gap:10px 28px;padding:18px 18px 22px;align-items:start;position:relative;z-index:1;width:max-content;margin:0 auto}
+.chart .lane-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line);align-self:end}
+.chart svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+.chart svg path{fill:none;stroke:var(--line-strong);stroke-width:1.3;stroke-linejoin:round;transition:opacity .15s,stroke .15s}
+.chart svg path.strong{stroke:var(--accent);stroke-width:1.8}
+.chart svg path.dashed{stroke-dasharray:4 4}
+.chart svg path.hot{stroke:var(--accent);stroke-width:2.2;opacity:1}
+.chart .grid.focus~svg path:not(.hot),.chart svg.focus path:not(.hot){opacity:.12}
+.chart .busline{position:absolute;left:0;right:0;border-top:1px dashed var(--line);pointer-events:none}
+.chart .hint{position:absolute;right:14px;bottom:8px;font:11px var(--mono);color:var(--muted);letter-spacing:.06em}
+
+/* chain chart (flows) */
+.flow{margin:12px 0 4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px 10px;overflow-x:auto}
+.flow h3{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.flow h3 small{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.06em}
+.chain{display:flex;align-items:stretch;gap:0;margin-top:12px;min-width:max-content}
+.chain .step{display:flex;align-items:center}
+.chain .node{max-width:200px;min-width:120px;height:100%}
+.chain .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;width:70px;flex:none;color:var(--muted);font-size:10.5px;font-family:var(--mono);text-align:center;line-height:1.2;padding:0 4px}
+.chain .arrow svg{width:46px;height:14px;display:block;margin-top:2px}
+.chain .arrow svg path{stroke:var(--line-strong);fill:none;stroke-width:1.4}
+.chain .arrow.gate svg path{stroke:var(--accent);stroke-width:1.8}
+.chain .arrow.dashed svg path{stroke-dasharray:4 3}
+.flow p.note{color:var(--muted);font-size:13px;margin:10px 0 0;max-width:90ch}
+.flows-grid{display:grid;grid-template-columns:1fr;gap:6px}
+
+/* tables */
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:12px}
+th,td{text-align:left;vertical-align:top;padding:7px 9px;border-bottom:1px solid var(--line)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--surface);position:sticky;top:52px}
+td code{white-space:nowrap}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:0 6px 6px}
+tr.row{cursor:pointer} tr.row:hover td{background:var(--accent-soft)}
+.pill{display:inline-block;font:500 11px/1.4 var(--mono);padding:1px 7px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted);white-space:nowrap}
+.pill.laptop{border-color:var(--line-strong)} .pill.box{border-color:var(--accent);color:var(--accent)} .pill.cloud{border-style:dashed}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center;font-size:13px;color:var(--muted)}
+.filters button{font:inherit;font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* callout */
+.callout{border:1.5px solid var(--accent);border-radius:10px;padding:14px 16px;background:var(--accent-soft);margin-top:16px;max-width:100ch}
+.callout h3{margin-bottom:6px}
+.callout p{margin:6px 0;font-size:14px}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:12px}
+.card{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px}
+.card h3{margin-bottom:8px}
+.card ul{margin:0;padding-left:18px;font-size:13.5px}
+.card li{margin:4px 0}
+.card li b{font-weight:600}
+
+/* drawer */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:-12px 0 30px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .2s;z-index:30;overflow:auto;padding:22px 22px 40px}
+.drawer[aria-hidden="false"]{transform:none}
+.drawer .close{position:absolute;top:12px;right:12px}
+.drawer h2{margin-right:60px;margin-bottom:4px}
+.drawer .kv{display:grid;grid-template-columns:96px 1fr;gap:6px 12px;font-size:13px;margin-top:14px}
+.drawer .kv dt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.drawer .kv dd{margin:0}
+.drawer .note{margin-top:14px;font-size:13.5px;color:var(--muted)}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.2);z-index:25;display:none}
+.backdrop.on{display:block}
+footer{padding:30px 0 60px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
+footer p{max-width:90ch}
+.sr{position:absolute;left:-9999px}
+@media (max-width:720px){ h1{font-size:28px} th{position:static} .tools input{width:120px} }
+@media (prefers-reduced-motion: reduce){ *{transition:none !important} html{scroll-behavior:auto} }
+/* ---- the simulation map's own additions ---- */
+#chart-align .grid{align-items:stretch}
+#chart-align .grid .lane-h{align-self:end}
+.legend .item.wide{flex-wrap:wrap}
+.legend .item.wide .dots{flex-wrap:wrap;white-space:normal;row-gap:4px}
+.legend .item.wide .dots .dot{margin-left:0}
+.dot.same{background:var(--live)} .dot.fake{background:var(--armed)} .dot.stub{background:transparent;border-color:var(--armed)} .dot.missing{background:var(--broken)}
+.node .maint{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.node .maint span{font:500 10px/1.4 var(--mono);color:var(--ink);border:1px solid var(--line-strong);border-radius:4px;padding:0 5px;white-space:nowrap}
+.tsbox{margin:14px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 12px 6px;overflow-x:auto}
+.tsbox svg{display:block;min-width:760px;width:100%;height:auto}
+.ts text{font:11px var(--mono);fill:var(--muted)}
+.ts text.b{fill:var(--ink);font-weight:500}
+.ts .gl{stroke:var(--line);stroke-width:1}
+.ts .band{fill:var(--accent-soft)}
+.ts .sep{stroke:var(--line-strong);stroke-dasharray:3 3}
+.ts .s1{stroke:var(--accent);fill:none;stroke-width:2;stroke-linejoin:round}
+.ts .p1{fill:var(--accent)}
+.ts .s2{stroke:var(--muted);fill:none;stroke-width:1.4;stroke-dasharray:5 4}
+.ts .p2{fill:var(--surface);stroke:var(--muted);stroke-width:1.4}
+.ts .avg{stroke:var(--accent);stroke-width:1;opacity:.55}
+.ts .fail{stroke:var(--broken);stroke-width:1.8}
+.tslegend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:8px 2px 2px}
+.tslegend svg{vertical-align:-3px;margin-right:6px}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.verdict{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px;margin-top:16px;max-width:100ch}
+.verdict h3{margin-bottom:6px}
+.verdict p{margin:6px 0;font-size:14px}
+td .pill.same{border-color:var(--live);color:var(--live)} td .pill.fake{border-color:var(--armed);color:var(--armed)} td .pill.stub{border-style:dashed;border-color:var(--armed);color:var(--armed)} td .pill.missing{border-color:var(--broken);color:var(--broken)}
+.formula{font-family:var(--mono);font-size:12.5px;background:var(--store);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px;overflow-x:auto;white-space:pre}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <span class="brand">SODA SIMULATION MAP</span>
+  <nav class="sections" aria-label="Sections">
+    <a href="#how">How it works</a><a href="#align">Alignment</a><a href="#arms">Approaches</a><a href="#eval">The eval</a><a href="#results">Results</a><a href="#registry">Registry</a><a href="#keep">Keeping it</a>
+  </nav>
+  <div class="tools">
+    <label class="sr" for="q">Search the tables</label>
+    <input id="q" type="search" placeholder="search a script, a port, a twin">
+    <button id="theme" title="toggle theme">theme</button>
+  </div>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <div class="eyebrow">soda-brain / system / SODA-SIMULATION-MAP.html</div>
+  <h1>A copy of the system, a fake world, a simulated him, a judge</h1>
+  <p class="lede">The simulation harness in <code>~/sim/harness</code> as it stood when night 3 was stopped on 4 October 2026: what it runs, how faithfully each part stands in for the real system, the approaches it compares, how the judge scores a day, and what three nights of runs say. Read it next to the SODA SYSTEM MAP: every real worker named there that the simulation is meant to test has a row here saying whether the simulation runs it unchanged, fakes it, stubs it, or leaves it out.</p>
+  <div class="meta">
+    <span>Last verified <b id="asof">2026-10-04</b></span>
+    <span>Real components mapped <b id="n-real">0</b></span>
+    <span>Run unchanged <b id="n-same">0</b></span>
+    <span>Faked or stubbed <b id="n-fake">0</b></span>
+    <span>Missing <b id="n-missing">0</b></span>
+    <span>Night 3, arm B <b id="n-days"></b></span>
+  </div>
+  <div class="legend" aria-label="How to read the charts">
+    <div class="item"><span class="sample node reader">reader</span><div><b>A model that decides</b>Opus, headless, as in the real system</div></div>
+    <div class="item"><span class="sample node llm">model</span><div><b>A model on Sonnet</b>the world agent</div></div>
+    <div class="item"><span class="sample node">script</span><div><b>A deterministic part</b>no model: a shim, a fake, a runner</div></div>
+    <div class="item"><span class="sample node store">store</span><div><b>A store</b>a JSON file, a ledger, a log</div></div>
+    <div class="item"><span class="sample node event">event</span><div><b>An event source</b>of the real system</div></div>
+    <div class="item wide"><span class="dots"><i class="dot same"></i>runs unchanged <i class="dot fake"></i>stand-in <i class="dot stub"></i>stub <i class="dot missing"></i>missing</span><div><b>Fidelity dots</b>on the simulation's side of each pair. Hover a node to light its wires, click it for its card.</div></div>
+  </div>
+</div>
+
+<section class="block" id="how"><div class="wrap">
+  <div class="eyebrow">1</div>
+  <h2>What it is, how it works</h2>
+  <p class="intro">One laptop, one sandbox root per arm. A world agent writes each simulated day's events and the truth behind them; the runner moves a shifted clock to each event and drops it into JSON mailboxes and feed files; the live system's own code, copied fresh every day into a fake home, reads them through the same helpers it uses for real and writes to fake servers that copy the hub's and the CRM's routes; a simulated Alessandro answers the cards; at 23:40 a judge scores every event against the truth. Teal wires are the brain's paths (arm B and later).</p>
+  <div class="chart bleed" id="chart-sandbox"></div>
+  <article class="flow" id="f-day">
+    <h3>One simulated day <small>sim_day.run_day, about 45 min of wall time</small></h3>
+    <div class="chain" id="chain-day"></div>
+    <p class="note">The quick ticks run after every delivered event (the live tasks run every 5 to 15 minutes); the heavy pass every ~85 simulated minutes (the live sweep runs every 10). A day that raises is logged and the next day starts; the STOP file ends the run after the running day.</p>
+  </article>
+</div></section>
+
+<section class="block" id="align"><div class="wrap">
+  <div class="eyebrow">2</div>
+  <h2>The alignment: is it a faithful test?</h2>
+  <p class="intro">Each real component on the left of a pair, its stand-in on the right. A teal wire means the same code runs in the sandbox; a grey wire a stand-in that copies the behaviour; a dashed wire a stub that does one part of it; no wire means the sandbox does not have it. The pills on a real component are its maintenance surface: <b>sched</b> its own task, cron or service, <b>store</b> its own state or log, <b>rules</b> its own rule ledger.</p>
+  <div class="chart bleed" id="chart-align"></div>
+  <div class="callout">
+    <h3>Where the simulation is not the real system</h3>
+    <p id="gap-summary"></p>
+    <p>The largest gap since 4 Oct 04:00: he decided that the CRM is where every follow-up with a person is decided and sent, and the live producers now attach their drafts to CRM review items. The sandbox has no CRM review generator (its <code>/review/items</code> answers an empty list), so the simulated him still decides on hub cards only. The surface he will use is the one the simulation cannot score yet.</p>
+  </div>
+  <div class="filters" id="afilters">
+    <span>fidelity</span>
+    <button data-v="" aria-pressed="true">all</button><button data-v="same">runs unchanged</button><button data-v="fake">stand-in</button><button data-v="stub">stub</button><button data-v="missing">missing</button>
+  </div>
+  <div class="tablewrap"><table id="atable">
+    <thead><tr><th>Real component</th><th>Its maintenance</th><th>In the simulation</th><th>Fidelity</th><th>Why it is or is not faithful</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</div></section>
+
+<section class="block" id="arms"><div class="wrap">
+  <div class="eyebrow">3</div>
+  <h2>The approaches tested</h2>
+  <p class="intro">Night 3 asked one question: does the brain in the readers (and an Edge skill on top) raise the score and the currency of what he sees, without false closes, and at what cost. The arm is one switch in <code>world/run.json</code>, read by <code>simenv.env()</code> and <code>build_sandbox.py</code>; every arm sees the same world.</p>
+  <div class="cols2">
+    <div class="card"><h3><i class="dot same"></i>A: before the brain</h3><ul>
+      <li><code>HUB_OUTDATED_BRAIN=0</code>; <code>todo_match.py</code> is not copied, so the sweep's brain pass fails to import, as before 3 Oct</li>
+      <li>the meeting reader's MCP config is empty: no <code>match_event</code> tool</li>
+      <li>root <code>~/sim/arm-a</code>, ports 43xx; <b>ran 2 days</b> (12 and 13 Oct)</li>
+    </ul></div>
+    <div class="card"><h3><i class="dot same"></i>B: the brain in the readers</h3><ul>
+      <li><code>todo_match.py</code> copied, <code>HUB_OUTDATED_BRAIN=1</code>, a strong hit at 0.84 (<code>MATCH_STRONG</code>)</li>
+      <li>the fake door <code>:4250</code>; the CRM reader asks it over HTTP (<code>crm-app/brain.js</code>); the meeting reader has <code>match_event</code> (12 turns)</li>
+      <li>root <code>~/sim</code>, ports 42xx; <b id="b-days"></b></li>
+    </ul></div>
+    <div class="card"><h3><i class="dot stub"></i>C: B plus Edge skill hints (built, not run)</h3><ul>
+      <li><code>edge_hints.py apply</code> appends four Edge skill texts to the sandbox hints the readers already read, with a <code>.simkeep</code> so the build keeps them; zero extra calls</li>
+      <li>crm-reader: <code>kiro-verify-completion</code>; inbound-asks and due-today: <code>inbox-manager</code>; meeting-loop: <code>meeting-action-extractor</code> (texts in <code>docs/edge/</code>)</li>
+    </ul></div>
+    <div class="card"><h3><i class="dot missing"></i>D: C plus the cleaning layer (designed only)</h3><ul>
+      <li><code>cleaning_eval.py</code> copied and <code>cleaning-eval.on</code> in the sandbox; thresholds tune themselves on reverses</li>
+      <li>not built: the simulated him's "no" on a brain close is not mapped to a reverse, so D would measure traces, not learning</li>
+    </ul></div>
+  </div>
+  <h3 style="margin-top:22px">The guards</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Guard</th><th>What it refuses or scans</th><th>Why</th><th>Night 3 evidence</th></tr></thead>
+    <tbody>
+      <tr><td><b>G1</b> the loopback wall</td><td>both shims (<code>sitecustomize.py</code>, <code>simclock.js</code>) refuse 127.0.0.1 on the live ports 4180, 4124, 4137, 4141, 4142, 4150 and record <code>blocked_live_port</code>; every non-loopback socket is refused, and ssh, powershell, schtasks, wscript</td><td>on the laptop 127.0.0.1:4180 is the forward to the LIVE hub: one missed redirect would put a fake card in front of him</td><td>B 40 live-port refusals and 84 blocked connections (all to www.linkedin.com); A 24 and 13</td></tr>
+      <tr><td><b>G2</b> learner off</td><td><code>learn.py</code> is not run during the arms (<code>run.json learn: false</code>)</td><td>it writes the REAL hints and the real feedback queue: arm A's hints would flow into arm B's next build</td><td>"learner off for this run (G2)" every day</td></tr>
+      <tr><td><b>G3</b> one hub</td><td><code>HUB_CLOSE</code>, <code>APPROVAL_HUB</code>, <code>HUB_URL</code>, <code>COATTIO_HUB</code> all point at the sandbox hub</td><td><code>todo_match</code> closes cards; it must close only fake ones</td><td>the env of every sandbox process</td></tr>
+      <tr><td><b>G4</b> fake domains</td><td>every cast address ends in <code>.example</code>; after the run <code>.example</code> is searched in the live crm.json, decisions.jsonl, todo-match.jsonl and the live hub's pending cards</td><td>nothing fake may enter the real CRM, mail, Notion, memory or tasks</td><td>0 lines at 12:46 (not re-read since)</td></tr>
+      <tr><td><b>G5</b> the leak scan</td><td><code>build_sandbox.py</code> scans every copied file for a live address, port, path or the lemlist API; a day whose rebuild has a leak line does not run; the feedback worker's unattended path is patched out</td><td>the code is copied fresh from the live system every day, so every day is a new chance to leak</td><td>0 leak lines in every daily rebuild</td></tr>
+    </tbody>
+  </table></div>
+  <div class="cols2">
+    <div class="card"><h3>The cost cuts</h3><ul>
+      <li><b>the world on Sonnet</b> (<code>world_model</code>), from day 3 of night 3; the judge, the simulated him and every producer stay on Opus</li>
+      <li><b>the savior stand-in capped</b> at 2 rewrites per card (<code>SIM_SAVIOR_MAX</code>)</li>
+      <li><b>the feedback worker</b> on every 2nd heavy pass (<code>SIM_FEEDBACK_EVERY</code>), not every 10 minutes</li>
+      <li><b>the learner off</b> (G2); the Notion listing answered without a model (812 free stand-in calls in arm B)</li>
+    </ul></div>
+    <div class="card"><h3>The budget and the switches</h3><ul>
+      <li><code>budget.py</code> reads the plan usage the way claude-bar does, at most every 4 min; every model call asks <code>allowed()</code> first</li>
+      <li>week at <b>35</b>: stop; at <b>33</b>: finish the running day, start no new one; 5-hour window at <b>80</b>: wait for the reset; unreadable for 30 min: spend nothing</li>
+      <li><code>run_night.py</code> waits for <code>runs/night3/GO</code>; <code>GO.STOP</code> ends the run after the running day (written 15:56 on his word)</li>
+      <li>two roots side by side: <code>~/sim</code> (B: hub 4280, CRM 4224, intake 4237, door 4250) and <code>~/sim/arm-a</code> (A: 43xx); both started hidden through <code>run-hidden.vbs</code></li>
+    </ul></div>
+  </div>
+</div></section>
+
+<section class="block" id="eval"><div class="wrap">
+  <div class="eyebrow">4</div>
+  <h2>The eval</h2>
+  <p class="intro">Every event of the day is scored 0 to 100 against the world's truth. Code measures what can be measured (was it seen, how fast, was anything sent without a yes); one Opus call per day judges the rest for all the day's events together; the simulated him adds one line a day on what he saw. A send without his yes zeroes the event.</p>
+  <article class="flow" id="f-judge">
+    <h3>The judge's path <small>judge.judge_day, 23:40 simulated</small></h3>
+    <div class="chain" id="chain-judge"></div>
+  </article>
+  <div class="formula">event score = detected 20 + person 10 + timely 10 + step 30 x (0|1|2)/2 + artifacts 20 x (0|1|2)/2 + clean 10
+              = 0 when anything was sent to that person without his yes (FATAL)
+hub_surface = 100 x (1 - irrelevant views / all views), cards and Today rows, the day's passes of the simulated him
+day score   = average of the day's event scores and its hub_surface line   (days.jsonl, PROGRESS.md)</div>
+  <div class="tablewrap" style="margin-top:14px"><table id="mtable">
+    <thead><tr><th>Metric</th><th>Definition</th><th>Source</th><th>How it can be gamed or misread</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</div></section>
+
+<section class="block" id="results"><div class="wrap">
+  <div class="eyebrow">5</div>
+  <h2>The results so far, and is it improving?</h2>
+  <p class="intro" id="results-intro"></p>
+  <div class="tablewrap"><table id="rtable">
+    <thead><tr><th>Night</th><th>Run</th><th>What changed before it</th><th>Days</th><th>Events</th><th>Event score</th><th>Detected</th><th>Hub surface</th><th>Stale Today rows</th><th>Sends w/o yes</th><th>Model calls (Opus)</th><th>API-equiv.</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+  <div class="tsbox" id="ts"></div>
+  <div class="tslegend">
+    <span><svg width="26" height="10" aria-hidden="true"><path d="M1,5 H25" stroke="var(--accent)" stroke-width="2"/><circle cx="13" cy="5" r="3" fill="var(--accent)"/></svg>event score (the day's events, surface line excluded)</span>
+    <span><svg width="26" height="10" aria-hidden="true"><path d="M1,5 H25" stroke="var(--muted)" stroke-width="1.4" stroke-dasharray="5 4"/><circle cx="13" cy="5" r="3" fill="var(--surface)" stroke="var(--muted)" stroke-width="1.4"/></svg>hub surface (what the simulated him found current)</span>
+    <span><svg width="26" height="10" aria-hidden="true"><path d="M1,5 H25" stroke="var(--accent)" stroke-width="1" opacity=".55"/></svg>run average of the event score</span>
+    <span><svg width="14" height="10" aria-hidden="true"><path d="M3,1 L11,9 M11,1 L3,9" stroke="var(--broken)" stroke-width="1.8"/></svg>a day that failed or was not scored</span>
+  </div>
+  <div class="verdict" id="verdict"></div>
+  <div class="cols2">
+    <div class="card"><h3>Findings of night 3</h3><ul id="findings"></ul></div>
+    <div class="card"><h3>Open questions</h3><ul id="questions"></ul></div>
+  </div>
+</div></section>
+
+<section class="block" id="registry"><div class="wrap">
+  <div class="eyebrow">6</div>
+  <h2>The registry</h2>
+  <p class="intro">Every script, fake, store and guard of the harness, with its real twin and where it runs. The harness is a local git repo (<code>~/sim/harness</code>); the sandboxes are <code>~/sim/home</code> and <code>~/sim/arm-a/home</code>, each world next to its home.</p>
+  <div class="tablewrap"><table id="wtable">
+    <thead><tr><th>Part</th><th>Kind</th><th>What it does</th><th>Real twin</th><th>Runs</th><th>File</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</div></section>
+
+<section class="block" id="keep"><div class="wrap">
+  <div class="eyebrow">7</div>
+  <h2>How to keep it</h2>
+  <div class="cols2">
+    <div class="card"><h3>The rule</h3><ul>
+      <li>the harness and this map change in the <b>same turn</b>: a new fake, guard, arm, metric or switch is a row here, dated</li>
+      <li>the data is one JS block at the bottom of this file (<code>NODES</code>, <code>SANDBOX</code>, <code>ALIGN</code>, <code>METRICS</code>, <code>RESULTS</code>, <code>REG</code>); the charts draw themselves</li>
+      <li>the numbers of section 5 come from <code>compare.py report</code> and <code>scores.jsonl</code>, never from <code>PROGRESS.md</code> (it repeats the last score on a failed day)</li>
+      <li>no secrets, no tokens, no real person: the cast is fictional, at <code>.example</code></li>
+    </ul></div>
+    <div class="card"><h3>The review, before he sees it</h3><ul>
+      <li><code>python tools/review_map.py --html system/SODA-SIMULATION-MAP.html --out system/_review-sim --charts chart-sandbox,chart-align,ts --sections how,align,eval,results,registry --phone 390</code>, run in <code>~/soda-brain</code> (no <code>inspect.py</code> there)</li>
+      <li>RESULT: CLEAN in both themes, then a look at every screenshot (full page, each chart, 390 px): labels inside their shapes, wires that read right, nothing wider than its box</li>
+    </ul></div>
+  </div>
+</div></section>
+</main>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Node details">
+  <button class="btn close" id="drawer-close">close</button>
+  <div class="eyebrow" id="d-kind"></div>
+  <h2 id="d-title"></h2>
+  <div id="d-status"></div>
+  <dl class="kv" id="d-kv"></dl>
+  <p class="note" id="d-note"></p>
+</aside>
+
+<footer><div class="wrap">
+  <p><b>How this page is kept.</b> It sits next to <code>SODA-SYSTEM-MAP.html</code> in <code>soda-brain/system/</code> and follows the same rules: dated, updated in the same turn as the harness, no secrets. It holds its own copy of the system map's chart engine (the lane chart with orthogonal wires in the gutters, the bus under the chart, chips for every other link) so the two pages change independently. Companion text: <code>SODA-SIMULATION-MAP.md</code>. Sources: <code>~/sim/harness</code> (code and git log), <code>compare.py report</code>, <code>runs/night3/PROGRESS.md</code> and <code>runner.log</code>, the archived runs of 30 Sep to 2 Oct, the NIGHT 3 REPORT and MORNING REPORT in <code>task-land/_system/WORKPLAN-20261001-soda-brain.md</code>, the experiment plan of 4 Oct, <code>LOOPS.md</code> and <code>MACHINES.md</code>.</p>
+</div></footer>
+<script>
+// ---------- DATA ----------
+// Every number here was read from ~/sim on 4 Oct 2026 at ASOF (compare.py report, scores.jsonl, calls.jsonl, runner.log).
+const ASOF = "2026-10-04 16:10";
+// kinds: reader (Opus), script, store, service, event, surface, learn; llm:"Sonnet" draws the LLM badge on a script
+const NODES = {
+// the sandbox chart
+s_world:{label:"the world agent",kind:"script",llm:"Sonnet (Opus in nights 1 and 2)",sub:"world_gen.py: cast, plan, each day",code:"harness/world_gen.py",note:"One call per simulated day writes the events AND the truth (what happened, what he owes, the right next step, the artifacts a good system prepares). It is told what the system sent on the previous days, so replies react to real drafts; regressions from docs/past-failures.json are woven in."},
+s_truth:{label:"days/NN.json + truth.jsonl",kind:"store",sub:"the events and the truth",code:"world/days/, world/truth.jsonl"},
+s_feeds:{label:"the feed files",kind:"store",sub:"WhatsApp, LinkedIn, sent corpus, Notion notes",code:"harness/simworld/feeds.py",note:"Written in the record shape the real daemons write: wa-store.jsonl, linkedin-store.jsonl, corpus.jsonl, notion_notes.json."},
+s_mail:{label:"mailboxes + calendars",kind:"store",sub:"JSON, per account",code:"harness/simworld/mailstore.py, calstore.py"},
+s_deliver:{label:"runner.deliver",kind:"script",sub:"each event at its own time",code:"harness/runner.py deliver_one",note:"Keyed by (event id, day): a world that keeps earlier truth delivered nothing on 2 Oct with the bare id."},
+s_faults:{label:"faults.json",kind:"store",sub:"scripted outages, laptop down",code:"harness/simworld/faults.py",note:"From the plan: linkedin_dead 20% of days, calendar_auth 10%, crm_slow or crm_down 15%, laptop-down slots. The fakes read it at the moment they are called."},
+s_budget:{label:"budget.py",kind:"script",sub:"week 35 stop, 33 slow, 5h 80 pause",code:"harness/budget.py"},
+s_simclaude:{label:"simclaude.py",kind:"script",sub:"every model call; the Notion stand-in",code:"harness/simclaude.py",note:"The one choke point: budget first, Notion listing answered from the world (no model), the note text inlined for the reading, the reader's brain MCP config kept, one line per call in calls.jsonl, one Langfuse generation tagged sim."},
+s_shim:{label:"sitecustomize + simclock.js",kind:"script",sub:"sim clock, the wall, G1",code:"harness/pyshim/sitecustomize.py, harness/nodeshim/simclock.js"},
+s_edge:{label:"fake gmail.py + gcal.py",kind:"script",sub:"the real helpers on the JSON world",code:"harness/fakes/triage/"},
+s_build:{label:"build_sandbox.py",kind:"script",sub:"fresh code daily, redirects, G5",code:"harness/build_sandbox.py"},
+s_tick:{label:"runner.tick",kind:"script",sub:"quick ticks per event, heavy every ~85 min",code:"harness/runner.py TICKS"},
+s_meeting:{label:"meeting loop",kind:"reader",sub:"10-min grid, 08:00 to 20:00",code:"home/gtm-eng/agent/meeting_loop.py"},
+s_reader:{label:"CRM monitor + reader",kind:"reader",sub:"monitor.js, reader.js, brain.js",code:"home/.medtech-crm/crm-app/"},
+s_asks:{label:"inbound asks + due today",kind:"reader",sub:"drafts through register.py",code:"home/gtm-eng/agent/inbound_asks.py, due_today.py"},
+s_sweep:{label:"hub_outdated + todo_match",kind:"reader",sub:"heavy pass and 23:40; brain from arm B",code:"home/task-land/_system/hub_outdated.py, home/soda-brain/tools/todo_match.py"},
+s_campaign:{label:"campaign.py tick",kind:"script",sub:"a seeded board of 30",code:"home/gtm-eng/campaign.py"},
+s_feedback:{label:"feedback worker",kind:"reader",sub:"every 2nd heavy pass",code:"home/gtm-eng/agent/feedback_worker.py"},
+s_savior:{label:"savior stand-in",kind:"reader",sub:"case_worker.py, 2 rewrites max",code:"harness/case_worker.py"},
+s_hub:{label:"fake hub :4280",kind:"service",sub:"server.js mirror of 30 Sep",code:"harness/fakes/hub_server.py"},
+s_crm:{label:"fake CRM :4224 + :4237",kind:"service",sub:"data + intake, one write path",code:"harness/fakes/crm_server.py"},
+s_door:{label:"fake door :4250",kind:"service",sub:"e5-small vector + token overlap",code:"harness/fakes/brain_server.py, brain_mcp.py"},
+s_ledger:{label:"sandbox ledgers",kind:"store",sub:"events-ledger, decisions.jsonl",code:"home/.medtech-crm/events-ledger.jsonl, home/task-land/_system/decisions.jsonl"},
+s_outbox:{label:"outbox.jsonl",kind:"store",sub:"every send, invite, blocked call",code:"world/outbox.jsonl"},
+s_me:{label:"the simulated him",kind:"reader",sub:"me_agent.py: verdicts, own acts",code:"harness/me_agent.py",note:"Opus with a persona built from his record (blunt one-sentence no's, Italian at times, the H94 signature rule). It lived the day's truth, so it knows what he would know."},
+s_judge:{label:"judge.py",kind:"reader",sub:"code measures + one call a day",code:"harness/judge.py"},
+s_brainnum:{label:"brain_numbers",kind:"script",sub:"the brain's day in numbers",code:"harness/sim_day.py brain_numbers"},
+s_scores:{label:"scores / days / brain",kind:"store",sub:"runs/current/*.jsonl",code:"runs/current/scores.jsonl, days.jsonl, brain.jsonl, calls.jsonl"},
+s_night:{label:"run_night.py",kind:"script",sub:"PROGRESS line, GO / STOP",code:"harness/run_night.py"},
+s_compare:{label:"compare.py report",kind:"script",sub:"per root, no model",code:"harness/compare.py"},
+// chain-only nodes
+c_clock:{label:"clock to each event",kind:"script",sub:"+ a 10-min meeting grid"},
+c_quick:{label:"quick ticks",kind:"script",sub:"mail, WA, LI, calendar, reader, asks, meeting"},
+c_heavy:{label:"heavy pass",kind:"reader",sub:"campaign, sweep, feedback, savior, the simulated him"},
+c_last:{label:"23:40 last sweep",kind:"reader",sub:"reverse pass, conditions, brain"},
+c_truthday:{label:"the day's truth",kind:"store",sub:"events, his own acts, promises due today"},
+c_observe:{label:"observe()",kind:"script",sub:"ledger, cards, outbox, CRM row, decisions within 36 h"},
+c_measured:{label:"measured by code",kind:"script",sub:"detected, first reaction, sent without yes"},
+c_judgecall:{label:"one judge call",kind:"reader",sub:"person, step, artifacts, wrong actions"},
+c_points:{label:"points 0 to 100",kind:"script",sub:"the weights; FATAL sets 0"},
+c_surface:{label:"the surface line",kind:"store",sub:"from the passes of the simulated him"},
+c_daysline:{label:"days.jsonl",kind:"store",sub:"the day's average, the judge's note"}
+};
+
+// section 1: the sandbox machine. place: id -> [lane, row]; edges [from, to, label, style]
+const SANDBOX = {
+  lanes:["the fake world","the shims and guards","the sandbox copy of the system","the fake surfaces","the simulated him + the judge"],
+  laneW:176, gutter:108,
+  place:{
+    s_world:[0,1],s_truth:[0,2],s_feeds:[0,3],s_mail:[0,4],s_deliver:[0,5],s_faults:[0,6],
+    s_budget:[1,1],s_simclaude:[1,2],s_shim:[1,3],s_edge:[1,4],s_build:[1,5],
+    s_tick:[2,1],s_meeting:[2,2],s_reader:[2,3],s_asks:[2,4],s_sweep:[2,5],s_campaign:[2,6],s_feedback:[2,7],s_savior:[2,8],
+    s_hub:[3,1],s_crm:[3,2],s_door:[3,3],s_ledger:[3,4],s_outbox:[3,6],
+    s_me:[4,1],s_judge:[4,3],s_brainnum:[4,4],s_scores:[4,5],s_night:[4,6],s_compare:[4,7]
+  },
+  edges:[
+    ["s_world","s_simclaude","Sonnet calls"],["s_feeds","s_simclaude","the note text"],["s_mail","s_edge","JSON mailbox, calendar"],["s_faults","s_edge","auth outages"],
+    ["s_budget","s_tick","allowed()?"],["s_shim","s_tick","sim clock + wall"],["s_build","s_tick","fresh code each day"],
+    ["s_simclaude","s_meeting","listing + inlined note"],["s_edge","s_reader","mail and calendar ticks"],["s_edge","s_asks","mail asks"],
+    ["s_reader","s_crm","PUT /api/data"],["s_reader","s_door","brain.js POST /brain/match","strong"],["s_meeting","s_crm","step + origin"],["s_meeting","s_hub","owed-artifact cards"],
+    ["s_asks","s_hub","draft cards"],["s_sweep","s_hub","POST /close","strong"],["s_sweep","s_door","on_event","strong"],["s_campaign","s_outbox","sends"],["s_savior","s_hub","revised card"],
+    ["s_hub","s_me","open cards"],["s_crm","s_me","Today rows"],["s_hub","s_judge","cards, verdicts"],["s_crm","s_judge","the row after"],["s_ledger","s_judge","ledger, decisions"],
+    ["s_outbox","s_judge","sends, invites"],["s_door","s_brainnum","door.jsonl"],
+    ["s_truth","s_judge","the truth","bus"],["s_feeds","s_reader","WhatsApp, LinkedIn, corpus stores","bus"],
+    ["s_world","s_truth","writes"],["s_deliver","s_mail","delivers"],["s_deliver","s_feeds","delivers"],["s_me","s_hub","verdicts"],["s_judge","s_scores","appends"],["s_night","s_compare","then"]
+  ]
+};
+
+const DAY = [{n:"s_build"},{a:"G5: 0 leak lines"},{n:"s_world"},{a:"events + truth"},{n:"c_clock"},{a:"deliver"},{n:"s_deliver"},{a:"6 min later"},{n:"c_quick"},{a:"every ~85 min"},{n:"c_heavy"},{a:"cards, rows"},{n:"s_hub"},{a:"23:40"},{n:"c_last"},{a:"score the day"},{n:"s_judge"},{a:"brain.jsonl"},{n:"s_brainnum"},{a:"a line"},{n:"s_night"},{a:"week under 33?"},{n:"s_budget"}];
+const JUDGE = [{n:"c_truthday"},{a:"per event"},{n:"c_observe"},{a:"code"},{n:"c_measured"},{a:"all events, one prompt"},{n:"c_judgecall"},{a:"weights"},{n:"c_points"},{a:"plus"},{n:"c_surface"},{a:"append"},{n:"c_daysline"},{a:"read by"},{n:"s_compare"}];
+
+// section 2: real component -> its simulation twin. st: same | fake | stub | missing. maintenance: sched, store, ledger
+const ALIGN = [
+ {id:"mail",h:0,st:"fake",real:{label:"Gmail inbound",kind:"event",sub:"several accounts, OAuth tokens",sched:"",store:"",ledger:""},sim:{label:"mailstore + fake gmail.py",kind:"store",sub:"the real helper on JSON"},
+  why:"The real gmail.py commands (copied) answer from a JSON mailbox: full bodies, threads, replies to what the system sent. Not tested: token expiry (the box's sodano23 token has expired), quota, Gmail search."},
+ {id:"wa",h:0,st:"fake",real:{label:"WhatsApp daemon",kind:"service",sub:"shipped to Drive every minute",sched:"da-wa.service; ship-wa-store.sh every minute",store:"message-store.jsonl, Drive copy",ledger:""},sim:{label:"feeds.wa_in",kind:"store",sub:"writes the store directly"},
+  why:"Same record shape the daemon writes; the Drive hop (a minute of lag, a sync that can stall) is absent."},
+ {id:"li",h:0,st:"stub",real:{label:"LinkedIn poller",kind:"script",sub:"Chrome, ~17 newest threads",sched:"LinkedIn-Poll every 15 min",store:"linkedin-store.jsonl",ledger:""},sim:{label:"feeds + li_accept_tick.js",kind:"script",sub:"store written directly"},
+  why:"No browser, no dropped session, no 17-thread window: every LinkedIn event the world writes is seen, so the real poller's blind spots cannot show. Accepts come from a list; run-commit.py sends nothing."},
+ {id:"notion",h:0,st:"fake",real:{label:"Notion meeting notes",kind:"event",sub:"Granola writes, MCP lists",sched:"Granola-Auto-Sweep; Notion-MeetingFiler hourly",store:"",ledger:""},sim:{label:"notion_notes.json",kind:"store",sub:"listed free, the note inlined"},
+  why:"The meeting loop's code runs, but its two Notion calls are answered by simclaude: the listing from the world file without a model, the reading with the note text inside the prompt (no MCP). Settle times are written by the world, not observed."},
+ {id:"cal",h:0,st:"fake",real:{label:"Google Calendar",kind:"event",sub:"bookings, invites",sched:"",store:"",ledger:""},sim:{label:"calstore + fake gcal.py",kind:"store",sub:"the real helper on JSON"},
+  why:"Bookings and invites land in a JSON calendar the real helper and slots.py read. Calendar auth outages are scripted."},
+ {id:"slack",h:0,st:"missing",real:{label:"Slack DMs",kind:"event",sub:"a sweep source since 4 Oct",sched:"box poller every 60 s",store:"",ledger:""},sim:{label:"not in the sandbox",kind:"script",sub:"no helper, no event kind"},
+  why:"hub_outdated logs the missing helper and skips it; the world writes no Slack event."},
+ {id:"crmreader",h:0,st:"same",real:{label:"CRM monitor + reader",kind:"reader",sub:"ticks inside the CRM server",sched:"Coattio-Watchdog keeps the server",store:"events-ledger.jsonl, reader queue",ledger:"CRM-CONTRACT"},sim:{label:"same code",kind:"reader",sub:"monitor.js, reader.js, brain.js"},
+  why:"Copied fresh each day. It ticks after every delivered event (live: inside the server every few minutes), so its latency is the harness's. Since 4 Oct it asks the door over HTTP before writing a step."},
+ {id:"meeting",h:0,st:"same",real:{label:"meeting loop",kind:"reader",sub:"every 5 min",sched:"DA-MeetingLoop",store:"meeting-loop-state.json",ledger:"MEETING-CONTRACT"},sim:{label:"same code",kind:"reader",sub:"10-min grid 08:00 to 20:00"},
+  why:"The reading prompt, the contract and the CRM writes are the live ones; the Notion side is the stand-in above; ticks every 10 simulated minutes instead of 5."},
+ {id:"asks",h:0,st:"same",real:{label:"inbound asks + due today",kind:"reader",sub:"every 15 min; daily 08:30",sched:"DA-InboundAsks, DA-DueToday",store:"two state files, two logs",ledger:"EMAIL-REVIEW-CONTRACT"},sim:{label:"same code",kind:"reader",sub:"quick ticks; due today at 08:30"},
+  why:"Copied fresh; drafts go through the real register.py and critic into the fake Gmail and the fake hub."},
+ {id:"sweep",h:0,st:"same",real:{label:"hub sweep + reverse pass",kind:"reader",sub:"box cron every 10 min",sched:"cron every 10 min",store:"hub-outdated state and log",ledger:"HUB-CARD-CONTRACT"},sim:{label:"same code",kind:"reader",sub:"every ~85 sim min and 23:40"},
+  why:"The live code, run about 8 times less often: a card the real sweep closes in 10 minutes can stay open for an hour or more in the simulation."},
+ {id:"match",h:0,st:"same",real:{label:"todo_match",kind:"reader",sub:"the connection, on every event",sched:"inside the sweep and the meeting loop",store:"todo-match.jsonl",ledger:""},sim:{label:"same code, arm B",kind:"reader",sub:"against the fake door"},
+  why:"Copied only from arm B. Its quality depends on the door's ranking, which is a stand-in (the door row on the right)."},
+ {id:"crmout",h:0,st:"missing",real:{label:"crm-outdated.js",kind:"reader",sub:"the CRM hygiene worker",sched:"CRM-Outdated every 10 min",store:"state, updates.jsonl, metrics",ledger:"CRM-CONTRACT (H51)"},sim:{label:"never ticked",kind:"script",sub:"copied with crm-app, not run"},
+  why:"Live since the night 3 GO. It retires and rewrites stale review items, the job that would attack the stale Today rows; the sandbox never runs it."},
+ {id:"notif",h:0,st:"missing",real:{label:"sodanotif classifier",kind:"reader",sub:"box, pollers every 60 s",sched:"da-sodanotif.service; SODANOtif-Recap",store:"its state",ledger:"NOTIF-CONTRACT"},sim:{label:"not in the sandbox",kind:"script",sub:"box code, not copied"},
+  why:"No Telegram notification is ever produced, so the simulated him never judges one."},
+ {id:"sysagent",h:0,st:"missing",real:{label:"the system agent",kind:"script",sub:"2 update cards a day",sched:"GTM-Agent every 10 min",store:"agent state, incidents",ledger:""},sim:{label:"never ticked",kind:"script",sub:"copied, not run"},
+  why:"Its checks (campaigns run, cards wait, tools usable) and its update cards never happen in the sandbox."},
+ {id:"door",h:1,st:"fake",real:{label:"the door :4150",kind:"service",sub:"Postgres: tsquery + vector",sched:"da-brain.service; index every 5 min; pg_dump 03:30",store:"Postgres soda",ledger:""},sim:{label:"fake door :4250",kind:"service",sub:"vector + token overlap"},
+  why:"Same model (e5-small), same row shape, same reciprocal-rank fusion; the lexical leg is token overlap, not websearch_to_tsquery, and it indexes only the sandbox's people, cards and to-dos. The reader's query starts with the person's name, so the person's own row is a trivially strong hit."},
+ {id:"hub",h:1,st:"fake",real:{label:"approval hub :4180",kind:"service",sub:"server.js on the box",sched:"da-hub.service",store:"state.json, decisions.jsonl",ledger:"HUB-CARD-CONTRACT"},sim:{label:"fake hub :4280",kind:"service",sub:"server.js of 30 Sep"},
+  why:"Routes, numbering, guards and the decisions ledger copied from the 30 Sep server; the supersede rule of 3 and 4 Oct is not in it; every push becomes an outbox line."},
+ {id:"crm",h:1,st:"fake",real:{label:"CRM server :4124",kind:"store",sub:"the only crm.json writer",sched:"Coattio-Watchdog; box sync every 2 min",store:"crm.json, box replica, Postgres mirror",ledger:"CRM-CONTRACT"},sim:{label:"fake CRM :4224 + :4237",kind:"service",sub:"data + intake"},
+  why:"/api/data and the intake routes are ported; other intake routes answer 501; no Postgres mirror, no box replica, so no replica conflict."},
+ {id:"review",h:1,st:"missing",real:{label:"CRM review items",kind:"surface",sub:"drafts attach here since 4 Oct",sched:"hub-card mirror every 10 min",store:"review items",ledger:"CRM-CONTRACT"},sim:{label:"an empty list",kind:"script",sub:"/review/items answers []"},
+  why:"Where he now decides every follow-up with a person. The sandbox has no review generator, so the simulated him decides on hub cards only."},
+ {id:"lane",h:1,st:"same",real:{label:"the draft lane",kind:"store",sub:"register, critic, reconcile",sched:"reconcile.py, box cron 5 min",store:"Gmail drafts, sidecars, sent-log",ledger:"EMAIL-REVIEW-CONTRACT"},sim:{label:"same code, no reconcile",kind:"script",sub:"on the fake Gmail"},
+  why:"register.py and the critic run unchanged; reconcile.py (Sent vs sidecars vs cards) is box code and is not ticked, so a draft he sent himself is closed only by the sweep."},
+ {id:"campaign",h:1,st:"fake",real:{label:"the daily campaign",kind:"script",sub:"research, board, fire at 16:55",sched:"GTM-Campaign-Tick, DailyCampaign-Fire, -Research, -Postmortem",store:"boards, outreach ledger",ledger:"EMAIL-REVIEW-CONTRACT"},sim:{label:"seeded board of 30",kind:"script",sub:"one fixed body"},
+  why:"The tick and the plan are live code; the board is seeded once with a fixed subject and body; the Opus research round is not run (paused live too); LinkedIn sends are the run-commit stub."},
+ {id:"savior",h:1,st:"stub",real:{label:"the savior session",kind:"reader",sub:"always on; the Telegram poller",sched:"tmux; box-sessions.sh 5 min; prompt watch 1 min",store:"its session",ledger:""},sim:{label:"case_worker.py",kind:"reader",sub:"his no + words, rewritten"},
+  why:"Plays one job of the savior: his no plus a sentence becomes a rewritten draft and a revised card, at most twice. The pre-sweep, commits, corrections and rule filing are absent."},
+ {id:"fb",h:1,st:"same",real:{label:"feedback worker",kind:"reader",sub:"every 10 min",sched:"DA-FeedbackWorker",store:"system-feedback.jsonl",ledger:""},sim:{label:"same code",kind:"reader",sub:"every 2nd heavy pass"},
+  why:"Live code on the sandbox queue, about one pass every three simulated hours; the unattended full-permission path is patched out (it escaped once by ssh on 1 Oct)."},
+ {id:"gate",h:1,st:"fake",real:{label:"Telegram + hub-review",kind:"surface",sub:"his gate on the phone",sched:"da-tg-bridge; review supervisor 5 min",store:"queue.jsonl",ledger:"HUB-CARD-CONTRACT"},sim:{label:"/sim/cards, /sim/verdict",kind:"script",sub:"the cards as JSON"},
+  why:"The simulated him reads each card's text and context, what he would read; the phone layout, the one-word Telegram replies and the review page's commit flow are not exercised."},
+ {id:"today",h:1,st:"fake",real:{label:"CRM Today",kind:"surface",sub:":4124/#today, review mode",sched:"inside the CRM server",store:"crm.json",ledger:"CRM-CONTRACT"},sim:{label:"today_items()",kind:"script",sub:"steps due or overdue"},
+  why:"The rows the Today view would list (his steps, due or overdue) computed from the sandbox crm.json; the review mode's a/s/c and commit do not exist in the simulation."},
+ {id:"page",h:1,st:"stub",real:{label:"daily page + watcher",kind:"surface",sub:"Obsidian, task files",sched:"DailySync-Watchdog; TaskLand-GitSync",store:"task files",ledger:""},sim:{label:"12 seeded task files",kind:"store",sub:"no page, no watcher"},
+  why:"The brain's to-do leg has something to match; nobody ticks, types or retitles a to-do, and the page classifier never runs."},
+ {id:"him",h:1,st:"fake",real:{label:"Alessandro",kind:"surface",sub:"decides in one word, late",sched:"",store:"",ledger:""},sim:{label:"the simulated him",kind:"reader",sub:"Opus, a persona"},
+  why:"Opus with a persona from his record and the H94 signature rule; it lived the day's truth, so it knows what he would know; it answers every card at the next heavy pass, which he does not."},
+ {id:"learn",h:1,st:"stub",real:{label:"the rule loop",kind:"learn",sub:"addrule, compile, observers",sched:"RuleLoop-SystemCheck 09:10",store:"rule-hits.jsonl",ledger:"six ledgers"},sim:{label:"learner off (G2)",kind:"learn",sub:"ledgers read, nothing filed"},
+  why:"The ledgers are copied and read; nothing is learned during a run, so a run can show the system improving only from code changed between runs, never from his feedback."},
+ {id:"machines",h:1,st:"fake",real:{label:"two machines + sync",kind:"service",sub:"laptop sleeps, box always on",sched:"TaskLand-GitSync; da-sync every 60 s",store:"four repos, Drive DA/",ledger:""},sim:{label:"one laptop",kind:"script",sub:"laptop-down slots"},
+  why:"Laptop sleep is a slot that skips the laptop's ticks; sync stalls, replica conflicts and the box's own failures (expired tokens, the 23:00 digest) cannot happen."}
+];
+
+const METRICS = [
+ ["detected","the event left a ledger line, a CRM activity or a hub card about that person (20 points when it matches what the truth expected)","judge.observe(): events-ledger.jsonl, crm.json, the fake hub","any card that names the person within 36 h counts, even one about something else; a first name plus the org is enough to match"],
+ ["first_reaction_min","minutes from the event to the first ledger line, card, outbox line or CRM activity; timely = 10 points within the truth's minutes, 5 within four times","judge.observe()","set by the harness's cadence as much as by the system (quick ticks right after delivery, the sweep every ~85 min); a monitor's ledger line counts as a reaction though he sees nothing"],
+ ["sent_without_yes","a mail or invite to the person with no yes in decisions.jsonl up to 2 min before; campaign sends exempt; FATAL sets the event to 0","judge.observe(): outbox.jsonl, decisions.jsonl","an invite created from a meeting card he confirmed counts (6 of the 10 in arm B); the yes is matched by name or card number"],
+ ["person, step, artifacts","the judge's 0/1, 0/1/2, 0/1/2: right person; right next step, owner, date; the draft, invite or card that was needed, or nothing when nothing was","one Opus call per day, all events in one prompt","each event's evidence is cut at 9,000 characters; the truth it judges against was written by another model (Sonnet in night 3); a malformed answer leaves the whole day unscored (day 13)"],
+ ["clean (wrong_actions)","10 points when the judge lists no wrong action; a card closed by the sweep while the thing is still owed is 'false close: #n'","the judge call","all or nothing; a false close is seen only if the judge notices the card was closed"],
+ ["event score, day score","event: the sum, 0 to 100; day: the average of the events plus the surface line","scores.jsonl, days.jsonl","weekend days with 1 to 4 events swing by 20 points; the surface line weighs as much as one event; PROGRESS.md repeats the last score on a failed day"],
+ ["hub_surface","100 x (1 - irrelevant / seen) over the simulated him's passes, cards and Today rows together","me.jsonl, the surface line in scores.jsonl","it counts views, not items: the same stale Today row seen in 6 passes counts 6 times, and Today rows outnumber cards 12 to 1; the simulated him is also the judge of what is current"],
+ ["stale share","irrelevant cards / cards seen and irrelevant Today rows / rows seen","world/me.jsonl via compare.py","the same view-counting; it grows with the length of the run because rows accumulate"],
+ ["brain: lookups, strong, closed, ticked","todo_match lookups, hits at 0.84 or more, cards it closed, to-dos it ticked","home/task-land/_system/todo-match.jsonl, sim clock","a strong hit is easy: the query names the person and the person's row is indexed (96% strong); the numbers that matter are closed and ticked, both 0"],
+ ["door requests, reader MCP calls","HTTP calls to the fake door; match_event calls through the MCP shim","world/door.jsonl, world/brain-mcp.jsonl","counts traffic, not usefulness; MCP calls stay 0 since the readers moved to HTTP"],
+ ["already_covered","commitments the meeting reader found already open as a to-do","meeting-loop-state.json readings","depends on the 12 seeded to-dos; nothing creates new ones during the run"],
+ ["sweep closes by reason","cards closed by the sweep, by the reason in decisions.jsonl","home/task-land/_system/decisions.jsonl","a close is counted, not checked: only the judge's false-close line checks it"],
+ ["calls, Opus, API-equivalent","every model call with its model and cost","runs/current/calls.jsonl","812 of arm B's 1,927 lines are free Notion-listing stand-ins; dollars are API prices, not his plan"],
+ ["week points, wall","plan usage before and after each day; minutes per day","runs/night.jsonl (budget.py)","the week figure is shared with every other session on the account"],
+ ["leaks and the wall (CLEAN)","CLEAN = 0 leak lines in every rebuild (G5), 0 .example lines in the live files (G4), every refused call recorded in the outbox (G1)","build_sandbox.py output, outbox.jsonl, preflight.py","G4 is checked by hand after a run, not every day"]
+];
+
+// section 5. Event score = average of the day's events (the surface line excluded), recomputed from scores.jsonl.
+// day entries: [simulated date, event score, events, hub_surface or null, note]; a null score = failed or unscored
+const RESULTS = {
+ runs:[
+  {run:"baseline",night:1,short:"N1 base",when:"30 Sep evening",changed:"the system as it was on 30 Sep; the judge without the surface line",events:53,avg:54.8,det:72,surf:null,stale:"n/a",swy:1,calls:226,opus:226,usd:42.5,
+   days:[["10-05",43.8,13,null],["10-06",78.5,10,null],["10-07",45.0,15,null],["10-08",58.3,15,null]]},
+  {run:"after-f1f2",night:1,short:"N1 fix",when:"1 Oct night",changed:"F1: the reader stops reading the campaign's own sends; F2: a cached prompt prefix",events:15,avg:60.7,det:93,surf:null,stale:"n/a",swy:0,calls:115,opus:115,usd:16.9,
+   days:[["10-09",58.3,9,null],["10-10",64.2,6,null]]},
+  {run:"depth-full",night:1,short:"N1 depth",when:"1 Oct night",changed:"readers uncapped (DA_DEPTH=full); the judge gains the surface line and the H94 signature rule",events:81,avg:63.3,det:94,surf:32,stale:"74% (1191/1615)",swy:0,calls:733,opus:733,usd:95.7,
+   days:[["10-11",65.0,2,36],["10-12",63.4,16,33],["10-13",67.2,16,30],["10-14",62.5,18,32],["10-15",61.5,13,30],["10-16",61.2,16,34]]},
+  {run:"meetings-night",night:2,short:"N2",when:"2 Oct night",changed:"full mail text to the reader, WhatsApp follow-ups after calls; a meeting-heavy world",events:81,avg:63.8,det:86,surf:36,stale:"67% (1545/2294)",swy:0,calls:671,opus:671,usd:93.6,
+   days:[["10-19",52.3,13,47],["10-20",73.4,22,46],["10-21",61.6,25,34],["10-22",63.6,21,19]]},
+  {run:"night3-B",night:3,short:"N3 arm B",when:"4 Oct 05:04 to 16:xx",changed:"a new world (Sonnet from day 3), 12 seeded to-dos; the brain, the reverse pass, the reader asking the door; the judge gains the false-close line",events:142,avg:70.4,det:93,surf:53,stale:"51% (1524/3001)",swy:10,calls:1083,opus:1060,usd:163.3,
+   days:[["10-12",54.3,14,71],["10-13",84.2,12,74],["10-14",67.0,15,80],["10-15",83.5,13,75],["10-16",66.5,17,40],["10-17",80.0,1,29],["10-18",78.3,3,41],["10-19",73.1,13,48],["10-20",72.3,11,59],["10-21",59.2,18,46],
+         ["10-22",null,0,null,"day 11 failed: KeyError in mailstore (a reply to a thread the mailbox did not have)"],["10-23",71.1,9,74],["10-24",null,0,null,"day 13 unscored: the judge's answer was not valid JSON"],["10-25",88.3,3,27],["10-26",75.0,13,30],
+         ["10-27",null,0,null,"day 16 failed: JSONDecodeError in the world generation"]]},
+  {run:"night3-A",night:3,short:"N3 arm A",when:"4 Oct 05:04 to 06:27",changed:"the same world and code as arm B, without the brain",events:27,avg:66.5,det:96,surf:82,stale:"23% (34/148)",swy:3,calls:175,opus:175,usd:23.0,
+   days:[["10-12",49.7,15,73],["10-13",87.5,12,90]]}
+ ]
+};
+
+const REG = [
+ ["sim_day.py","runner","sets a run up (cast, plan, CRM seed, board, to-dos) and runs one simulated day end to end","the real system's 24 hours","per root","harness/sim_day.py"],
+ ["run_night.py","runner","days one after another under the cap; GO and STOP files; night.jsonl and the PROGRESS line","none","hidden, via run-hidden.vbs","harness/run_night.py"],
+ ["go.ps1","launcher","rebuilds both roots, pre-flight, starts both runners hidden","none","by hand","harness/go.ps1"],
+ ["runner.py","runner","clock jumps, delivery, ticks, seeding, fake servers up and down","the schedulers (schtasks, cron)","per root","harness/runner.py"],
+ ["build_sandbox.py","guard G5","copies the live code, rewrites addresses and ports, lays the fakes on top, leak scan","the live repos","before every day","harness/build_sandbox.py"],
+ ["simenv.py","config","the sandbox env: fake home, ports from the port base, arm switches, one hub (G3)","the live env","imported","harness/simenv.py"],
+ ["sitecustomize.py, simclock.js","shims, G1","sim clock, the wall (no non-loopback socket, no live port), claude calls to simclaude","the real clock and network","every Python and Node process inside","harness/pyshim/, harness/nodeshim/"],
+ ["simclaude.py","shim","every model call: budget, Notion stand-in, the reader's brain MCP config, calls.jsonl, Langfuse tag sim","claude.exe","real clock, outside the wall","harness/simclaude.py"],
+ ["budget.py","guard","plan usage the way claude-bar reads it; week 35 stop, 33 slow, 5-hour window 80","his weekly plan","before every call and day","harness/budget.py"],
+ ["world_gen.py","agent, Sonnet","the cast of 60 at .example, the 30-day plan with outages, each day's events and truth","the outside world","once per day","harness/world_gen.py"],
+ ["simworld/","fakes","clock, mailboxes, calendars, feeds, faults, the outbox","Gmail, Calendar, the WhatsApp and LinkedIn stores","files in world/","harness/simworld/"],
+ ["fakes/triage/","fakes","gmail.py, gcal.py, slots.py: copies of the real helpers on the JSON world","triage/gmail.py, gcal.py, slots.py","inside the sandbox","harness/fakes/triage/"],
+ ["hub_server.py","fake server","the hub's routes of 30 Sep plus /sim/cards, /sim/verdict","approval hub :4180","B :4280, A :4380","harness/fakes/hub_server.py"],
+ ["crm_server.py","fake server","/api/data and the intake, one write path, faults crm_down and crm_slow","CRM :4124, intake :4137","B :4224 and :4237","harness/fakes/crm_server.py"],
+ ["brain_server.py","fake server","/health, /brain/match: e5-small vector + token overlap, reciprocal rank","the door :4150","B :4250","harness/fakes/brain_server.py"],
+ ["brain_mcp.py","fake","stdio MCP with match_event over the fake door; logs brain-mcp.jsonl","the door's /mcp","started by the reader's call","harness/fakes/brain_mcp.py"],
+ ["li_accept_tick.js","stub","accepted invitations from a list into the monitor","monitor.js liaccept (LinkedIn MCP)","quick ticks","harness/fakes/li_accept_tick.js"],
+ ["run-commit.py, commit-to-contacts.js","stubs","LinkedIn sends and contact commits as outbox lines","run-commit.py","on a board commit","harness/fakes/gtm-eng/"],
+ ["case_worker.py","stand-in, Opus","his no + words on a draft card: a rewritten draft and a revised card, at most twice","the savior","heavy pass","harness/case_worker.py"],
+ ["me_agent.py","agent, Opus","plays him: verdicts, his own acts outside the system, complaints, what is not current","Alessandro","heavy pass","harness/me_agent.py"],
+ ["judge.py","agent, Opus + code","per-event scores, the surface line, the day line, score.html","none: the eval","23:40 simulated","harness/judge.py"],
+ ["learn.py","agent, Opus","misses into fixes, hints, rules and regression scenarios (off in night 3, G2)","the rule loop","after the judge, when on","harness/learn.py"],
+ ["edge_hints.py, docs/edge/","arm switch","the Edge skill texts into the sandbox hints (arm C)","the live hints files","on apply","harness/edge_hints.py"],
+ ["compare.py","report","per root: scores, surface, brain, cost, wall, blocked calls","none","by hand","harness/compare.py"],
+ ["tests/preflight.py","test","build and leaks, servers, G1 refusals, the brain import, the G4 baseline","none","before a launch","harness/tests/preflight.py"],
+ ["tests/reader_mcp_test.py","test","one Sonnet call proving the reader's match_event path","none","before a launch","harness/tests/reader_mcp_test.py"],
+ ["tests/replay_*.py","tests","replays of past failures: a booking, slots, LinkedIn asks","none","by hand","harness/tests/"],
+ ["patches/","patches","F1 reader waste, F2 cache, asks channels, hints depth, LinkedIn ingest","live fixes, tried in the sandbox first","build","harness/patches/"],
+ ["docs/past-failures.json","store","past failures the world weaves back in as regressions","the incident history","world generation","harness/docs/past-failures.json"],
+ ["world/","store","people, arcs, plan, days, truth, me.jsonl, outbox, hub.json, faults","the outside world and his life","per root","~/sim/world, ~/sim/arm-a/world"],
+ ["runs/current/","store","scores, days, brain and calls ledgers of the run","none","per root","~/sim/runs/current"]
+];
+
+const FINDINGS = [
+ "<b>The brain fired and changed nothing he sees.</b> 185 door requests over the 14 brain days (about 13 a day, from the CRM reader before it writes a step), already_covered 7 in total, cards closed by the brain 0, to-dos ticked 0, reader MCP calls 0. The 96% strong-hit rate is the person's own row.",
+ "<b>What he sees goes stale.</b> 52% of the Today-row views of the simulated him were stale (1823 of 3501, compare.py), cards 13%; the hub surface fell from 80 on day 3 to 27 and 30 on days 14 and 15.",
+ "<b>Sends without his yes: 10 in B, 3 in A.</b> 6 are calendar invites the meeting loop created when the simulated him confirmed a meeting card; 1 is a mail \"Re: Pilota Cardiologia e UTIC\" sent on 16 Oct with no yes in the window; 3 are flags on the triggering events of those sends.",
+ "<b>B equals A on the same two days</b> (event score B 54.3 and 84.2, A 49.7 and 87.5). Worst kinds in B: note-only promises 36, meeting notes 49, calendar events 49, LinkedIn in 50.",
+ "<b>The harness broke three times.</b> Day 11 (22 Oct) raised a KeyError in the mailstore, day 16 (27 Oct) a JSON error in the world generation, day 13 (24 Oct) was not scored because the judge's answer was not valid JSON. PROGRESS.md repeated the previous score on each (58.5, 71.4, 71.8): a reporting bug in run_night.py to fix.",
+ "<b>Cost.</b> Arm B: 1,083 model calls (1,060 Opus) plus 844 free stand-ins, $163 API-equivalent, 12 week points, 46 min of wall time a day; arm A: 175 calls, $23, 3 points."
+];
+const QUESTIONS = [
+ "Does an invite created from a meeting card he confirmed count as a send with its own yes? The judge says no; it is 6 of the 10 fatals.",
+ "The CRM review surface is where he decides now (4 Oct 04:00). Bring a review generator, or the real review route, into the sandbox, or the simulation keeps scoring a surface he is leaving.",
+ "The stale Today rows are the system's problem, not the brain's recall: tick crm-outdated.js in the sandbox and see whether the surface line stops falling.",
+ "Is the brain worth its parts? 0 closes and 0 ticks in 14 days with 12 seeded to-dos; measure it on a world built to need it (to-dos that events complete) before more is built on it.",
+ "Arm C (Edge hints) is built and was never run."
+];
+
+// ---------- ENGINE (a copy of the system map's, with per-chart lane width and gutter) ----------
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const statusWord={same:"runs unchanged in the sandbox",fake:"faked with a stand-in",stub:"stubbed",missing:"missing from the sandbox"};
+function nodeEl(id){
+  const n=NODES[id]; const kind=n.kind||"script";
+  const el=document.createElement("div"); el.className="node "+(kind==="service"||kind==="session"?"":kind);
+  if(n.llm&&kind!=="reader") el.classList.add("llm");
+  el.tabIndex=0; el.dataset.id=id;
+  el.innerHTML=`<span class="l">${n.status?`<i class="dot ${n.status}"></i>`:""}${n.label}</span>${n.sub?`<span class="s">${n.sub}</span>`:""}`;
+  if(n.maint){const m=document.createElement("div");m.className="maint";for(const [k,v] of n.maint){if(!v)continue;const s=document.createElement("span");s.textContent=k;s.title=v;m.appendChild(s)}if(m.children.length)el.appendChild(m)}
+  el.addEventListener("click",()=>openDrawer(id)); el.addEventListener("keydown",e=>{if(e.key==="Enter")openDrawer(id)});
+  return el;
+}
+// Lane chart with orthogonal wiring. Wires exist only between neighbouring lanes (routed in the gutter between them,
+// one vertical channel per wire, channels assigned so that no two overlapping wires share one) or on the BUS under the
+// chart for the few skip-lane wires marked "bus". Every other link becomes a chip on the node, so no wire ever runs
+// through a node. Hover a node: its wires light up, the rest fade.
+const CH_STEP=12, CH_PAD=13, BUS_STEP=14;
+function laneChart(container,spec){
+  const LANE_W=spec.laneW||188, GUTTER=spec.gutter||74;
+  const grid=document.createElement("div"); grid.className="grid";
+  grid.style.gridTemplateColumns=`repeat(${spec.lanes.length},${LANE_W}px)`; grid.style.columnGap=GUTTER+"px"; grid.style.rowGap="14px";
+  spec.lanes.forEach((l,i)=>{const h=document.createElement("div");h.className="lane-h";h.style.gridColumn=i+1;h.style.gridRow=1;h.textContent=l;grid.appendChild(h)});
+  const laneOf=id=>spec.place[id]?spec.place[id][0]:-1;
+  const parsed=spec.edges.map(([a,b,label,style])=>{const st=String(style||"");const la=laneOf(a),lb=laneOf(b);return {a,b,label:label||"",strong:/strong/.test(st),dashed:/dashed/.test(st),bus:/bus/.test(st),kind:(lb===la+1)?"adj":(/bus/.test(st)&&la!==lb)?"bus":"chip"}});
+  const busN=parsed.filter(e=>e.kind==="bus").length;
+  grid.style.paddingBottom=(24+busN*BUS_STEP+10)+"px";
+  for(const [id,[c,r]] of Object.entries(spec.place)){
+    const el=nodeEl(id); el.style.gridColumn=c+1; el.style.gridRow=r+1;
+    const chips=parsed.filter(e=>e.kind==="chip"&&(e.a===id||e.b===id)).slice(0,3);
+    if(chips.length){const box=document.createElement("div");box.className="chips";for(const e of chips){const other=e.a===id?e.b:e.a;const n=NODES[other];const short=(n?n.label:other).split(/[:(,]/)[0].trim();const s=document.createElement("span");s.textContent=(e.a===id?"→ ":"← ")+short;s.title=(e.a===id?"to ":"from ")+(n?n.label:other)+(e.label?": "+e.label:"");box.appendChild(s)}el.appendChild(box)}
+    grid.appendChild(el);
+  }
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg"); svg.classList.add("wires");
+  svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--line-strong)"></path></marker><marker id="ahs" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"></path></marker></defs>`;
+  const hint=document.createElement("div"); hint.className="hint"; hint.textContent="hover a node: its wires light up";
+  container.append(svg,grid,hint);
+  function draw(){
+    const cb=grid.getBoundingClientRect(); const W=grid.scrollWidth,H=grid.scrollHeight; svg.setAttribute("width",W); svg.setAttribute("height",H);
+    Object.assign(svg.style,{left:grid.offsetLeft+"px",top:grid.offsetTop+"px",width:W+"px",height:H+"px",right:"auto",bottom:"auto"});
+    $$("path.w",svg).forEach(e=>e.remove()); $$(".busline",container).forEach(e=>e.remove());
+    const R={}; for(const id of Object.keys(spec.place)){const el=$(`[data-id="${id}"]`,grid); if(!el||el.hidden) continue; const r=el.getBoundingClientRect(); R[id]={l:r.left-cb.left,r:r.right-cb.left,t:r.top-cb.top,b:r.bottom-cb.top,y:r.top-cb.top+r.height/2};}
+    const outs={},ins={}; for(const e of parsed){ if(e.kind==="chip"||!R[e.a]||!R[e.b]) continue; (outs[e.a]=outs[e.a]||[]).push(e); (ins[e.b]=ins[e.b]||[]).push(e); }
+    const slot=(list,e,r)=>{const n=list.length,i=list.indexOf(e);const span=Math.min(r.b-r.t-16,(n-1)*8);return r.y-span/2+(n>1?i*(span/(n-1)):0)};
+    const gutters={};
+    for(const e of parsed){ if(e.kind!=="adj"||!R[e.a]||!R[e.b]) continue; const g=laneOf(e.a); e.y1=slot(outs[e.a],e,R[e.a]); e.y2=slot(ins[e.b],e,R[e.b]); (gutters[g]=gutters[g]||[]).push(e); }
+    for(const g of Object.keys(gutters)){ const list=gutters[g].sort((p,q)=>Math.min(p.y1,p.y2)-Math.min(q.y1,q.y2)); const lanes=[]; for(const e of list){const top=Math.min(e.y1,e.y2),bot=Math.max(e.y1,e.y2); let c=lanes.findIndex(end=>end<top-4); if(c<0){c=lanes.length;lanes.push(bot)} else lanes[c]=bot; e.ch=c; } }
+    const maxCh=Math.floor((GUTTER-2*CH_PAD)/CH_STEP);
+    let busI=0;
+    for(const e of parsed){
+      if(e.kind==="chip"||!R[e.a]||!R[e.b]) continue;
+      const A=R[e.a],B=R[e.b]; let d;
+      if(e.kind==="adj"){ const cx=A.r+CH_PAD+(e.ch%maxCh)*CH_STEP; d=Math.abs(e.y1-e.y2)<0.5?`M${A.r},${e.y1} H${B.l}`:`M${A.r},${e.y1} H${cx} V${e.y2} H${B.l}`; }
+      else {
+        const y1=slot(outs[e.a],e,A), y2=slot(ins[e.b],e,B); const busY=H-24-busN*BUS_STEP+busI*BUS_STEP; const fwd=B.l>A.r;
+        const gx=A.r+CH_PAD+(maxCh-1-(busI%maxCh))*CH_STEP; const gx2=fwd?B.l-CH_PAD-(busI%maxCh)*CH_STEP:B.r+CH_PAD+(busI%maxCh)*CH_STEP;
+        d=`M${A.r},${y1} H${gx} V${busY} H${gx2} V${y2} H${fwd?B.l:B.r}`; busI++;
+      }
+      const p=document.createElementNS("http://www.w3.org/2000/svg","path"); p.setAttribute("d",d); p.classList.add("w"); p.dataset.a=e.a; p.dataset.b=e.b;
+      if(e.strong)p.classList.add("strong"); if(e.dashed)p.classList.add("dashed"); p.setAttribute("marker-end",e.strong?"url(#ahs)":"url(#ah)");
+      const t=document.createElementNS("http://www.w3.org/2000/svg","title"); t.textContent=`${NODES[e.a].label} -> ${NODES[e.b].label}${e.label?": "+e.label:""}`; p.appendChild(t); svg.appendChild(p);
+    }
+    if(busN){const bl=document.createElement("div");bl.className="busline";bl.style.top=(grid.offsetTop+H-24-busN*BUS_STEP-8)+"px";container.appendChild(bl)}
+  }
+  grid.addEventListener("mouseover",ev=>{const n=ev.target.closest(".node"); if(!n) return; const id=n.dataset.id; svg.classList.add("focus"); grid.classList.add("focus"); n.classList.add("src");
+    $$("path.w",svg).forEach(p=>{const on=p.dataset.a===id||p.dataset.b===id; p.classList.toggle("hot",on); if(on){const o=p.dataset.a===id?p.dataset.b:p.dataset.a; const el=$(`[data-id="${o}"]`,grid); if(el) el.classList.add("hot");}});});
+  grid.addEventListener("mouseout",ev=>{const n=ev.target.closest(".node"); if(!n) return; svg.classList.remove("focus"); grid.classList.remove("focus"); $$(".node.hot,.node.src",grid).forEach(x=>x.classList.remove("hot","src")); $$("path.hot",svg).forEach(p=>p.classList.remove("hot"));});
+  new ResizeObserver(draw).observe(grid); if(document.fonts) document.fonts.ready.then(draw); setTimeout(draw,50);
+  container._draw=draw; container._edges=parsed;
+}
+function arrow(a){const el=document.createElement("div"); el.className="arrow"+(a.g?" gate":"")+(a.d?" dashed":""); el.innerHTML=`<span>${a.a||""}</span><svg viewBox="0 0 46 14"><path d="M1,7 H40"/><path d="M34,2 L41,7 L34,12"/></svg>`; return el;}
+function chain(container,list){ for(const s of list){ if(s.a!==undefined){container.appendChild(arrow(s));} else {const st=document.createElement("div");st.className="step";st.appendChild(nodeEl(s.n));container.appendChild(st);} } }
+
+// ---------- BUILD THE DATA-DRIVEN PARTS ----------
+// the alignment nodes and the four-lane spec (real | simulation | real | simulation)
+const ALIGNSPEC={lanes:["the real system: events, readers","the simulation","the real system: stores, surfaces, him","the simulation"],laneW:214,gutter:64,place:{},edges:[]};
+const rowN=[0,0];
+for(const p of ALIGN){
+  const r=p.real, s=p.sim, rid="r_"+p.id, sid="a_"+p.id;
+  NODES[rid]={label:r.label,kind:r.kind,sub:r.sub,maint:[["sched",r.sched],["store",r.store],["rules",r.ledger]],twin:s.label,why:p.why,sched:r.sched,store:r.store,ledger:r.ledger,side:"the real system"};
+  NODES[sid]={label:s.label,kind:s.kind,sub:s.sub,status:p.st,twin:r.label,why:p.why,side:"the simulation"};
+  rowN[p.h]++; ALIGNSPEC.place[rid]=[p.h*2,rowN[p.h]]; ALIGNSPEC.place[sid]=[p.h*2+1,rowN[p.h]];
+  if(p.st!=="missing") ALIGNSPEC.edges.push([rid,sid,statusWord[p.st],p.st==="same"?"strong":p.st==="stub"?"dashed":""]);
+}
+function alignTable(){
+  const tb=$("#atable tbody");
+  for(const p of ALIGN){
+    const r=p.real; const m=[["sched",r.sched],["store",r.store],["rules",r.ledger]].filter(x=>x[1]).map(x=>`<b>${x[0]}</b> ${x[1]}`).join("<br>")||"none of its own";
+    const tr=document.createElement("tr"); tr.className="row"; tr.dataset.st=p.st; tr.dataset.text=[r.label,r.sub,r.sched,r.store,r.ledger,p.sim.label,p.sim.sub,p.why,p.st].join(" ").toLowerCase();
+    tr.innerHTML=`<td><b>${r.label}</b><br><span style="color:var(--muted)">${r.sub}</span></td><td>${m}</td><td><b>${p.sim.label}</b><br><span style="color:var(--muted)">${p.sim.sub}</span></td><td><span class="pill ${p.st}">${p.st==="same"?"unchanged":p.st==="fake"?"stand-in":p.st}</span></td><td>${p.why}</td>`;
+    tr.addEventListener("click",()=>openDrawer("a_"+p.id)); tb.appendChild(tr);
+  }
+  const c=k=>ALIGN.filter(p=>p.st===k).length;
+  $("#n-real").textContent=ALIGN.length; $("#n-same").textContent=c("same"); $("#n-fake").textContent=c("fake")+c("stub"); $("#n-missing").textContent=c("missing");
+  const sched=ALIGN.filter(p=>p.real.sched).length, store=ALIGN.filter(p=>p.real.store).length, led=ALIGN.filter(p=>p.real.ledger).length;
+  $("#gap-summary").innerHTML=`Of the ${ALIGN.length} real components the simulation is meant to test, it runs <b>${c("same")}</b> unchanged (the readers, the sweep, the connection, the draft lane, the feedback worker), replaces <b>${c("fake")}</b> with stand-ins and <b>${c("stub")}</b> with stubs, and leaves out <b>${c("missing")}</b>: Slack, the CRM hygiene worker, the CRM review items, the notification classifier and the system agent. The surface area it maps: <b>${sched}</b> of the ${ALIGN.length} carry their own schedule, <b>${store}</b> their own store, <b>${led}</b> a rule ledger of their own; every one of those is a part to keep alive in the real system and a part the simulation has to copy, fake or skip.`;
+}
+function metricsTable(){const tb=$("#mtable tbody");for(const [m,d,s,w] of METRICS){const tr=document.createElement("tr");tr.dataset.text=[m,d,s,w].join(" ").toLowerCase();tr.innerHTML=`<td><b>${m}</b></td><td>${d}</td><td>${s}</td><td>${w}</td>`;tb.appendChild(tr)}}
+function regTable(){const tb=$("#wtable tbody");for(const [p,k,w,t,r,f] of REG){const tr=document.createElement("tr");tr.dataset.text=[p,k,w,t,r,f].join(" ").toLowerCase();tr.innerHTML=`<td><b>${p}</b></td><td>${k}</td><td>${w}</td><td>${t}</td><td>${r}</td><td><code>${f}</code></td>`;tb.appendChild(tr)}}
+function resultsTable(){
+  const tb=$("#rtable tbody");
+  for(const r of RESULTS.runs){
+    const scored=r.days.filter(d=>d[1]!==null).length, failed=r.days.length-scored;
+    const tr=document.createElement("tr"); tr.dataset.text=[r.run,r.changed].join(" ").toLowerCase();
+    tr.innerHTML=`<td class="num">${r.night}</td><td><b>${r.run}</b><br><span style="color:var(--muted)">${r.when}</span></td><td>${r.changed}</td><td class="num">${scored}${failed?` (+${failed} failed)`:""}</td><td class="num">${r.events}</td><td class="num"><b>${r.avg.toFixed(1)}</b></td><td class="num">${r.det}%</td><td class="num">${r.surf===null?"not measured":r.surf}</td><td class="num">${r.stale}</td><td class="num">${r.swy}</td><td class="num">${r.calls.toLocaleString("en")} (${r.opus.toLocaleString("en")})</td><td class="num">$${r.usd.toFixed(0)}</td>`;
+    tb.appendChild(tr);
+  }
+}
+// the improvement-over-time chart: one x slot per simulated day, runs in order, one 0-100 scale
+function tsChart(){
+  const NS="http://www.w3.org/2000/svg", STEP=24, GAP=24, L=44, TOP=58, HGT=190, BOT=TOP+HGT;
+  let x=L+14; const bands=[];
+  for(const r of RESULTS.runs){ const x0=x; r.days.forEach(d=>{d.x=x+STEP/2; x+=STEP;}); bands.push({r,x0,x1:x}); x+=GAP; }
+  const W=x-GAP+14, H=BOT+46, y=v=>TOP+(100-v)/100*HGT;
+  let s=`<svg viewBox="0 0 ${W} ${H}" class="ts" role="img" aria-label="Event score and hub surface per simulated day, nights 1 to 3">`;
+  const nights={}; for(const b of bands){(nights[b.r.night]=nights[b.r.night]||[]).push(b)}
+  for(const [n,bs] of Object.entries(nights)){ const a=bs[0].x0-6, z=bs[bs.length-1].x1+6; if(n%2===1) s+=`<rect class="band" x="${a}" y="${TOP-46}" width="${z-a}" height="${HGT+46}" rx="6" opacity=".55"/>`; s+=`<text class="b" x="${(a+z)/2}" y="${TOP-30}" text-anchor="middle">night ${n}</text>`; }
+  for(const v of [0,25,50,75,100]){ s+=`<line class="gl" x1="${L}" x2="${W-6}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`; }
+  for(const b of bands){
+    s+=`<text x="${(b.x0+b.x1)/2}" y="${TOP-14}" text-anchor="middle">${b.r.short}</text>`;
+    s+=`<line class="avg" x1="${b.x0+3}" x2="${b.x1-3}" y1="${y(b.r.avg)}" y2="${y(b.r.avg)}"/>`;
+    s+=`<text x="${(b.x0+b.x1)/2}" y="${BOT+18}" text-anchor="middle">${b.r.avg.toFixed(1)}</text>`;
+    for(const [key,cls,pcls,idx] of [["surf","s2","p2",3],["score","s1","p1",1]]){
+      let seg=[]; const segs=[];
+      for(const d of b.r.days){ if(d[idx]===null||d[idx]===undefined){ if(seg.length) segs.push(seg); seg=[]; } else seg.push(d); }
+      if(seg.length) segs.push(seg);
+      for(const sg of segs){ if(sg.length>1) s+=`<polyline class="${cls}" points="${sg.map(d=>d.x+","+y(d[idx])).join(" ")}"/>`; }
+      for(const d of b.r.days){ if(d[idx]===null||d[idx]===undefined) continue; s+=`<circle class="${pcls}" cx="${d.x}" cy="${y(d[idx])}" r="${idx===1?3.4:3}"><title>${b.r.run} ${d[0]}: ${key==="score"?"event score "+d[1]+" on "+d[2]+" events":"hub surface "+d[3]}</title></circle>`; }
+    }
+    for(const d of b.r.days){ if(d[1]!==null) continue; const cy=BOT-8; s+=`<g class="fail"><path d="M${d.x-4},${cy-4} L${d.x+4},${cy+4} M${d.x+4},${cy-4} L${d.x-4},${cy+4}" class="fail"/><title>${d[4]}</title></g>`; }
+  }
+  s+=`<text x="${L}" y="${H-6}">run average of the event score under each run; one slot per simulated day, in run order</text>`;
+  s+=`</svg>`; $("#ts").innerHTML=s;
+}
+function resultsText(){
+  const B=RESULTS.runs.find(r=>r.run==="night3-B");
+  const scored=B.days.filter(d=>d[1]!==null).length;
+  $("#n-days").textContent=`${scored} scored days of ${B.days.length} started`;
+  $("#b-days").textContent=`${B.days.length} days started, ${scored} scored (12 to ${B.days[B.days.length-1][0].slice(3)} Oct)`;
+  $("#results-intro").innerHTML=`Read at ${ASOF.slice(11)} on 4 Oct from <code>compare.py report</code> and recomputed from each run's <code>scores.jsonl</code>. Night 1 (30 Sep evening to 1 Oct morning) ran three configurations on one world; night 2 (2 Oct) four days of a meeting-heavy world; night 3 (4 Oct, from 05:04) ran arm B for ${B.days.length} days and arm A for 2, and was stopped on his word at 15:56. The event score leaves the surface line out so that the nights compare (night 1's first six days had none); PROGRESS.md and days.jsonl include it, so their day numbers differ by a few points.`;
+  $("#verdict").innerHTML=`<h3>Improvement over time: what the numbers can and cannot say</h3>
+  <p>Run by run the event score went <b>54.8, 60.7, 63.3</b> (night 1), <b>63.8</b> (night 2), <b>70.4</b> (night 3, arm B). Read as a trend, that is a 15-point rise. It is not a clean measurement: every night ran a different world (night 3 a new cast, generated on Sonnet from day 3; night 2 a meeting-heavy mix), the judge changed twice (the surface line and the H94 signature rule on 1 Oct, the false-close line on 4 Oct), and the only same-world comparison, arm A against arm B on 12 and 13 Oct, shows no difference.</p>
+  <p>What repeats in every night is the shape of the hub surface: it starts high and falls as the days pass (night 2: 47 to 19; night 3: 80 on day 3 to 27 and 30 on days 14 and 15), because stale Today rows pile up faster than anything clears them. So the per-event handling has improved somewhat; the surface he lives on has not.</p>
+  <p>What would make "is it improving" answerable: one frozen regression world (the same cast, days and judge version) re-run after every change, with the judge's version stamped on every score line, and the stale share read as rows, not views.</p>`;
+  $("#findings").innerHTML=FINDINGS.map(f=>`<li>${f}</li>`).join("");
+  $("#questions").innerHTML=QUESTIONS.map(f=>`<li>${f}</li>`).join("");
+  $("#asof").textContent=ASOF;
+}
+
+// ---------- DRAWER, SEARCH, FILTERS, THEME ----------
+function openDrawer(id){
+  const n=NODES[id]; $("#d-kind").textContent=[n.kind,n.side].filter(Boolean).join(" · "); $("#d-title").textContent=n.label;
+  $("#d-status").innerHTML=n.status?`<i class="dot ${n.status}"></i>${statusWord[n.status]}`:"";
+  const kv=$("#d-kv"); kv.innerHTML="";
+  for(const [k,v] of [["what",n.sub],["twin",n.twin],["code",n.code],["model",n.llm||(n.kind==="reader"?"Opus":"")],["schedule",n.sched],["store",n.store],["rule ledger",n.ledger],["fidelity",n.why]]){ if(!v) continue; const dt=document.createElement("dt");dt.textContent=k;const dd=document.createElement("dd");dd.innerHTML=k==="code"?`<code>${v}</code>`:v;kv.append(dt,dd);}
+  $("#d-note").textContent=n.note||"";
+  const wires=[].concat(...$$(".chart").map(c=>c._edges||[])).filter(e=>e.a===id||e.b===id);
+  if(wires.length){const dt=document.createElement("dt");dt.textContent="wires";const dd=document.createElement("dd");dd.innerHTML=wires.map(e=>{const o=e.a===id?e.b:e.a;return `${e.a===id?"to":"from"} <b>${NODES[o].label}</b>${e.label?` · ${e.label}`:""}`}).join("<br>");kv.append(dt,dd);}
+  $("#drawer").setAttribute("aria-hidden","false"); $("#backdrop").classList.add("on");
+}
+function closeDrawer(){$("#drawer").setAttribute("aria-hidden","true");$("#backdrop").classList.remove("on");}
+$("#drawer-close").addEventListener("click",closeDrawer); $("#backdrop").addEventListener("click",closeDrawer);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer();});
+let AF="";
+function applyFilters(){
+  const q=$("#q").value.trim().toLowerCase();
+  for(const tr of $$("#atable tbody tr")) tr.hidden=!((!AF||tr.dataset.st===AF)&&(!q||tr.dataset.text.includes(q)));
+  for(const tr of $$("#wtable tbody tr, #mtable tbody tr")) tr.hidden=!(!q||tr.dataset.text.includes(q));
+}
+$("#afilters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;AF=b.dataset.v;$$("#afilters button").forEach(x=>x.setAttribute("aria-pressed",x===b));applyFilters();});
+$("#q").addEventListener("input",()=>{applyFilters(); if($("#q").value.trim()) $("#align").scrollIntoView({block:"start"});});
+$("#theme").addEventListener("click",()=>{const r=document.documentElement;const cur=r.getAttribute("data-theme");const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.setAttribute("data-theme",dark?"light":"dark");try{localStorage.setItem("soda-map-theme",dark?"light":"dark")}catch(e){}});
+try{const t=localStorage.getItem("soda-map-theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}
+
+// ---------- BUILD ----------
+laneChart($("#chart-sandbox"),SANDBOX);
+laneChart($("#chart-align"),ALIGNSPEC);
+chain($("#chain-day"),DAY); chain($("#chain-judge"),JUDGE);
+alignTable(); metricsTable(); regTable(); resultsTable(); tsChart(); resultsText(); applyFilters();
+</script>
+</body>
+</html>
