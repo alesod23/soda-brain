@@ -64,10 +64,10 @@
    "kind": "event",
    "machine": "laptop",
    "cadence": "every 15 min",
-   "reads": "the inbox in a dedicated Chrome profile (~17 newest threads)",
+   "reads": "the inbox in a dedicated Chrome profile (~17 newest threads); quiet threads of CRM Today people by id",
    "writes": "G:/My Drive/DA/linkedin-store.jsonl (in and fromMe)",
    "status": "live",
-   "note": "The per-person thread read (the Ienna case) is in the monitor-layer design, not built."
+   "note": "Since 4 Oct 22:10 (G89) every tick also opens up to 2 quiet threads by id (li_person.py fetch_person: CRM Today people outside the inbox window, once a day); poll.py --person reads one on demand. Same store, same ids."
   },
   {
    "id": "ev_notion",
