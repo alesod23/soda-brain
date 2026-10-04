@@ -46,6 +46,38 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - He sees: CRM Today (:4124/#today, laptop; the box's :4124 is a pull), the review mode (j/k, a/s/c held until commit),
   the daily page's one line "Today's items in the CRM (n)".
 - Rules: `CRM-CONTRACT.md` (42); observer scores H2, H15, H16, H17, H21 on every write and render.
+- Since 4 Oct 2026 05:00 (THE PLAN 10(d), CRM H51, the hub's double system on the CRM): the hygiene worker
+  `.medtech-crm/crm-outdated.js` (laptop task CRM-Outdated, every 10 min through `run-hidden.vbs`; log
+  `crm-outdated.log` + `crm-outdated.out.log`, state `crm-outdated-state.json`, lock beside it) checks every OPEN review
+  item (`review-api.items({coming})`, about 180 on the first pass). PATH A: every new line of `events-ledger.jsonl` goes
+  through `POST :4150/brain/match` (brain.match_event, the lookup of `todo_match.on_event`); the event's pid and a CRM
+  person the brain returns whose first and last name the event carries are the items it touches, checked against that
+  event only. PATH B (the reverse pass): every open item against the person's whole timeline. Rules in order: a call or
+  meeting after the step / owed reply AND after the draft (H52) = remove; their message after the draft = rewrite (draft
+  retired, Opus writes a new one); his own message on the draft's channel saying the same thing = remove; the
+  conversation on another channel = channel; his message on another channel since the step = the Opus judge (moot at 70+,
+  6 a pass, `judged` marks, never Haiku). A change goes through `POST :4137/review/updates/apply` (the review API owns
+  the dossiers; the person through `PUT :4124/api/data`): versions are RETIRED, never deleted (`current()` skips them,
+  so a retired draft is never sent); one line per change in `review/updates.jsonl` (id, ts, pid, name, kind
+  rewrite|remove|redate|channel, before -> after, why, evidence {event_id, at, channel, text, would_also_B, brain},
+  path A|B, judge, undo payload); `person.review_state.last_update` records it on the row (so the Postgres mirror and
+  the brain see it). Measured: one line per pass in `review/crm-outdated-metrics.jsonl` (A: events, brain calls and
+  failures, matched by pid / by the brain, strong to-do or card hits, items checked, changes, judged; B: items checked,
+  changes, judged; overlap = an A change B would also have found); `node crm-outdated.js report` answers "which path
+  solves most" with the undos counted. He sees: the `Updates (N new)` button on the review-mode bar opens the list
+  (`GET :4137/review/updates`, last 24 h, newest first, marks seen; `?peek=1` does not), each line who / before -> after
+  / why / evidence / Undo (`POST :4137/review/updates/undo {id}`: retired versions back, a version written for the
+  update retired, the step, origin, reply_owed and reply_seen restored, a `step_restored` activity, a `crm-updates`
+  line in decisions.jsonl). Deep link `?review=1&updates=1` or `#/today/updates`. Ping: ONE link-only hub card (kind
+  update, `meta.origin crm-outdated`) at most every 12 h when a pass changed something. Tests:
+  `node --test tests/crm-outdated.test.js` (a stub CRM on a copy; no model). Box: not scheduled yet (the CRM writer is
+  the laptop); at the cut-over the cron line is
+  `*/10 * * * * cd /home/da/coattio && flock -n /tmp/crm-outdated.lock node crm-outdated.js >> /home/da/.local/state/crm-outdated.log 2>&1`
+  and the laptop task is disabled the same minute (one worker, one writer).
+- Since 4 Oct 2026 (same build): the reader asks the brain before it writes a step (`crm-app/brain.js` -> `POST
+  :4150/brain/match` with the person and the step, token `SODA_TOKEN_RO` from `~/.env/soda.env`); a strong open to-do or
+  hub card (sim >= 0.84) is named in the origin's why in words ("already open in the brain: to-do ..."), the whole match
+  is kept as `next_step_origin.brain`; the door down = the step is written anyway with `brain.ok false`.
 
 ## 2. Inbound asks (WhatsApp, LinkedIn, email asks)
 
