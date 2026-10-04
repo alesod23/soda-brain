@@ -9,9 +9,8 @@ Line shape (field names as in the real store on 2026-10-04; values here are fict
 What it shows the other adapters how to do:
 - incremental by byte offset; a file that shrank or whose first line changed (rewritten, not appended) is read
   again from 0 and the store's (source, source_id) dedupe absorbs the repeat;
-- both directions: `fromMe` -> direction out. On 2026-10-04 the real store held 0 fromMe lines of 87 because the
-  poller drops them (poll.py ~line 127, `not it["fromMe"]`, HANDOFF 6d Fix 1); the adapter is ready for the day it
-  stops dropping them, and the shadow report counts out-events per channel so the gap stays visible;
+- both directions: `fromMe` -> direction out. The poller stores his own previews since 3 Oct 2026 and writes the real
+  fromMe value since 4 Oct (li_inbox.to_store_line had it hard-coded false; 8 lines repaired in place that night);
 - the store repeats ids (87 lines, 63 distinct ids on 2026-10-04): dedupe is the store's job, not the adapter's;
 - `timestamp` is the poll time; the message time is `ts`/`iso` with its precision (35 of 87 lines are day-precision);
 - handles: the chat id (li_thread) is the stable route; a profile url when the line carries one; the name only as
@@ -97,8 +96,10 @@ class LinkedInStoreAdapter:
         return events, {"offset": offset + len(complete), "head": head}
 
     def fetch_person(self, routes: list[dict]) -> list[Event]:
-        """Skeleton: filters the store by the person's thread ids. Live version: open THAT thread through the LinkedIn
-        session (the poller profile) and return every message in it, both directions."""
+        """Filters the store by the person's thread ids. The live thread read is laptop-side (G89, 4 Oct 2026):
+        `~/.claude/linkedin-poll/li_person.py` (`poll.py --person <pid|url|thread>`, and the stale pass inside every
+        poll tick for CRM Today people outside the inbox window) opens THAT thread on the poller profile and appends
+        the messages the store lacks, same line shape and id rule, so this filter then returns them."""
         threads = {r["value"] for r in routes if r.get("kind") == "li_thread"}
         if not threads or not self.path.exists():
             return []
