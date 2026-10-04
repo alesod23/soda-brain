@@ -628,6 +628,19 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - **Quick Claude `rule:` (G104, 4 Oct 2026)**: a Quick Claude message starting `rule:` is filed the same way
   (`--surface quick-claude`): in code by `~/.claude/quick-claude/run.ps1` (the dictated runner, also what the voice lane
   spawns), by the panel's workspace CLAUDE.md in an interactive window.
+- **The orange button unattended (G119, 4 Oct 2026 21:20)**: `task-land/_system/todo_worker.py tick` = mutex
+  `todo-worker/worker.lock`, the open un-staged to-dos of Today + Inbox (hard exclusions in code: `contact:`, a stage,
+  PARKED), ONE Opus triage (no tools, the proactive skill as guidance, his "off leash" 20:55) picks 1 per tick (later /
+  declined; declined kept in `todo-worker/state.json` by file hash), `pipeline.py pickup --auto`, ONE headless Opus work
+  session (bypassPermissions behind the PreToolUse guard `todo-worker/guard.py` = fix_guard's never-list + no pipeline
+  state moves, no ledger `sent`, no draft delete, no hub verdict), then the send check (outreach `ledger.json` sent
+  entries and lane `queue.jsonl` sent lines must not grow; growth = release + broken.jsonl line), then `pipeline.py ready
+  --auto --silent` = orange circle + ONE meta.auto card under Automatic; his yes ticks it (pipeline sync). Laptop lane:
+  task DA-TodoWorker every 15 min via run-hidden.vbs (`todo-worker/register-task.ps1`, NOT registered yet: the classifier
+  refused it from a session, his one command). Box lane: no cron of its own, `job_runner.py run` (existing */5 cron)
+  calls `todo_worker.py box-lane` = one detached tick when the laptop is offline 30 min on the tailnet. Off switch
+  `todo-worker/off` (both lanes). Test `python _system/test_todo_worker.py` (26 checks, temp copy, stub hub). Log
+  `todo-worker/worker.log`, runs in `todo-worker/runs/` (both machine-local).
 
 ## 10. Notifications and voice
 

@@ -29,8 +29,15 @@ you to bother about this now".
   "call": the Call page matches the English word). First one moved: Rania Tohme (CDC).
 - Contract for sessions: `task-land/_system/PIPELINE-WORKER.md`; skill `/todo` (laptop + box).
 
-**DECIDED 4 Oct 2026 20:48, build item 20 of THE GOAL RUN:** a scheduled worker that picks to-dos up with nobody present ("I fully expect it to happen on its own"; the Tuesday pause is lifted). Was: not built, his decision. Today a session does
-it when asked (`/todo`). An unattended worker runs tools without him, so it needs his explicit yes and a scope.
+**BUILT 4 Oct 2026 21:20 (THE GOAL RUN item 20, G119): the unattended worker.** `task-land/_system/todo_worker.py tick`:
+mutex `_system/todo-worker/worker.lock`, Today + Inbox to-dos without a stage / `contact:` / PARKED note, ONE Opus triage
+(proactive skill = guidance, his "off leash" 20:55) picks 1 per tick, `pipeline.py pickup --auto`, ONE headless Opus
+work session behind the guard `_system/todo-worker/guard.py` (never a send, never a delete, no pipeline state moves),
+send check after (outreach ledger + lane queue `sent` must not grow), `ready --auto --silent` = orange circle + meta.auto
+card under Automatic. Laptop task DA-TodoWorker: script `_system/todo-worker/register-task.ps1`, NOT registered (the
+classifier refuses registering a task and running a real tick from a session: his command). Box lane through
+`job_runner.py run` (`todo_worker.py box-lane`, laptop offline 30 min). Test `python _system/test_todo_worker.py`;
+dry run `todo_worker.py tick --dry-run` (temp copy of Tasks/, stub hub, real triage). Off switch `_system/todo-worker/off`.
 
 **How to apply:** never write `stage:` by hand; never leave a to-do in progress with nobody on it (`release`).
 Related: [[reference_hub_review_ui]], [[reference_hub_lives_on_the_box]], [[reference_draft_review_lane]].

@@ -92,6 +92,7 @@ Every task named in the sources. Cadence and script as the sources state them; a
 | US-Campaign-Daily | unverified | unverified | the 114-person US wave (`us-campaign-emails`); rewrapped 2026-09-28 |
 | DA-SystemUpdate | daily 08:00, StartWhenAvailable (a missed slot runs at wake until 23:00) | wscript + `run-hidden.vbs` -> `task-land/_system/system-agent/system_update.py run --cron --until 23` (registered by `register-system-update-task.ps1`, 4 Oct 2026 19:58) | the daily System Update page `system-agent/updates/<date>.html` + ONE hub update card; Sundays the weekly Judge (Opus); the synced `updates.jsonl` guard stops a second card from either machine; `updates/NO-POST-ONCE` makes one run post nothing; log `system-agent/updates/system-update.log` |
 | DA-FeedbackWorker | DISABLED 2026-10-04 19:19 (was every 10 min) | `gtm-eng/agent/feedback_worker.py` | lifts system sentences from review fields into `_system/gtm-agent/system-feedback.jsonl`; disabled because the box feedback session took over (one filer, goal run G34) |
+| DA-TodoWorker | every 15 min (NOT REGISTERED yet: the session's classifier refused it; his command `powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\Alessandro\task-land\_system\todo-worker\register-task.ps1`) | wscript `run-hidden.vbs` -> `task-land/_system/todo_worker.py tick` | the unattended orange button (G119): 1 to-do per tick, Opus triage + Opus work session behind `todo-worker/guard.py`, never a send or a delete, hand-back = orange circle + meta.auto card; mutex `todo-worker/worker.lock`; log `todo-worker/worker.log` |
 | DA-InboundAsks | unverified | `gtm-eng/agent/inbound_asks.py` | reads WhatsApp, LinkedIn and events ledger for asks owed to people |
 | DA-MeetingLoop | unverified | `gtm-eng/agent/meeting_loop.py` | reads Notion meetings, drives the booked-call loop |
 | LinkedIn-Poll | unverified | `~/.claude/linkedin-poll/poll.py` | writes `G:/My Drive/DA/linkedin-store.jsonl` (Langfuse-traced) |
@@ -128,6 +129,8 @@ Crontab header sets `TELEGRAM_STATE_DIR=/home/da/.claude/channels/telegram-null`
 | `*/10` | `task-land/_system/gtm-agent/box_watch.py` | laptop GTM-agent heartbeat watch; one card a day if the laptop is silent 60 min in business hours with sends due |
 | `*/10` | `task-land/_system/gtm-agent/box_linkedin_watch.py` | LinkedIn session safety net |
 | `* * * * *` | `task-land/_system/vps/savior_prompt_watch.py` | one hub card when a claude permission prompt sits unanswered in the savior pane |
+
+The job runner's */5 run (`task-land/_system/job_runner.py run`) also carries THE TODO LANE (G119, 4 Oct 2026): `todo_worker.py box-lane` starts one detached to-do worker tick when the laptop has been offline 30 min on the tailnet (no cron line of its own; stamp `todo-worker/box-last-tick.txt`, log `todo-worker/box-tick.log`).
 
 ## 6. systemd on the box
 
