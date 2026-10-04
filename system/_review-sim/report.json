@@ -9,8 +9,8 @@
   "counts": {
    "charts": 2,
    "nodes": 111,
-   "wires": 51,
-   "rows": 31
+   "wires": 52,
+   "rows": 35
   },
   "console_errors": [],
   "page_hscroll": []
@@ -25,8 +25,8 @@
   "counts": {
    "charts": 2,
    "nodes": 111,
-   "wires": 51,
-   "rows": 31
+   "wires": 52,
+   "rows": 35
   },
   "console_errors": [],
   "page_hscroll": []
