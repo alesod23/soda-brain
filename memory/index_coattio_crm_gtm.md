@@ -1,8 +1,11 @@
 ---
 name: index-coattio-crm-gtm
-description: Sub-index of every memory about coattio, the CRM, GTM boards and campaigns
+description: "Sub-index of every memory about coattio, the CRM, GTM boards and campaigns"
 metadata:
+  node_type: memory
   type: reference
+  originSessionId: 879703ca-03ba-4195-8f02-ae93a57452dd
+  modified: 2026-10-04T03:35:11.522Z
 ---
 
 # coattio / CRM / GTM (sub-index, moved out of MEMORY.md 2026-09-28)
@@ -10,6 +13,7 @@ metadata:
 - [HANDOFF 2026-09-28: the GTM AGENT (campaigns going, follow-ups current, hub items not waiting, tools usable, 2 pings a day)](../handoffs/HANDOFF-20260928-gtm-agent.md) - read it first when he pastes that prompt; campaign.py now stops a CHANNEL not the board and retries transient failures.
 - 📡🎙️ [EVENT LOOP + VOICE REVIEW + Ctrl+Alt+S feedback + phone https links (2026-09-27)](reference_event_loop_voice_feedback.md) — every event leaves a ledger line; Events view is optional; never `tailscale serve` on :4137 itself.
 - 🎛️🧭 [CRM vision 2026-09-26 + the Today REVIEW MODE (j/k board, a/s/r/c, ← why pane, corpus hypotheses)](project_crm_review_loop_vision.md) — `review-api.js`, `/review/*`, `review.js`; every sentence on a card becomes a rule; commit = the yes; nightly proposed-vs-sent.
+- ↩️🚫 [Did they reply? = code (`M.replyOwed`, `M.inboundLines`), never a step text or the raw flag; generator rejects "thanks for getting back" with no reply on file](reference_reply_check_before_draft.md) — Amy Fischer, H101 (2026-10-04).
 - 🪟 ["Random terminal windows" = a console task run directly in his session; every scheduled console task goes through a .vbs](reference_interactive_console_tasks_open_windows.md) — GTM-Campaign-Tick did it, closing the window killed ticks (2026-09-25).
 - 🏥 [CRM check board :4143/crm-catchup.html](reference_crm_catchup_board.md) — person items + one item per targeted hospital (data/hospitals.json built on the laptop), s asks why, commit = one TG message the savior executes (2026-09-20).
 - 🎪 [Event contact workflow](project_event_contact_workflow.md) — capture -> one card -> coattio + Notion + 48 h task; `POST :4137/intake` exists since 2026-09-15 (it was the missing link).
