@@ -1,10 +1,10 @@
 # SODA SKILLS MAP: every skill, as it is tonight
 
 The visual page is [SODA-SKILLS-MAP.html](file:///C:/Users/Alessandro/soda-brain/system/SODA-SKILLS-MAP.html); this file is the same content as Markdown links,
-for Obsidian or any viewer. Built 4 Oct 2026 22:25 from the live files. See also [SODA-SYSTEM-MAP.md](file:///C:/Users/Alessandro/soda-brain/system/SODA-SYSTEM-MAP.md).
+for Obsidian or any viewer. Built 4 Oct 2026 23:02 from the live files. See also [SODA-SYSTEM-MAP.md](file:///C:/Users/Alessandro/soda-brain/system/SODA-SYSTEM-MAP.md).
 
 8 compiled skills, 2 ledgers read without a compiled skill, 24 hand-written skills.
-Coverage (rule_loop_check.py --md): G green 77, A amber 16, R red 11 of 104 cells (+ 4 n/a: no such part by nature, reason in the cell).
+Coverage (rule_loop_check.py --md): G green 76, A amber 15, R red 11 of 102 cells (+ 6 n/a: no such part by nature, reason in the cell).
 
 ## Read this first
 
@@ -38,11 +38,11 @@ Sources: [RULE-LOOP.md](file:///C:/Users/Alessandro/task-land/_system/RULE-LOOP.
 READ THIS BEFORE WRITING ANY MESSAGE TO A PERSON - email, WhatsApp, LinkedIn DM, in any language, from any account. It is the compiled form of the rule file that governs how Alessandro's messages are written and of how a new rule gets added the moment he gives one. Use when drafting or revising outreach or follow-up, when he says "draft", "scrivi a", "rispondi a", "mandagli", when reviewing a draft, and whenever he gives feedback on something you wrote.
 
 - Ledger: [EMAIL-REVIEW-CONTRACT.md](file:///C:/Users/Alessandro/task-land/_system/EMAIL-REVIEW-CONTRACT.md) · 95 rules · newest row H103, 2026-10-04
-- Skill: [drafting/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/drafting/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/drafting/SKILL.md) · box `/home/da/.claude/skills/drafting/SKILL.md` · compiled 2026-10-03 (skill_v 2026-10-03a); 15 rules in front, compiled from 81 ledger rules; 44 [ledger H..] tags; 14 ledger rows newer than this compile, not in the skill yet
+- Skill: [drafting/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/drafting/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/drafting/SKILL.md) · box `/home/da/.claude/skills/drafting/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 89 ledger rules; 25 [ledger H..] tags; 6 ledger rows newer than this compile, not in the skill yet
 - Map: [skill-map-email.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-email.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract email --install`
 - Loaded by: every session before it writes a message to a person (email, WhatsApp, LinkedIn); the draft critic reads the ledger itself; the event-page Confirmed worker reads it too
 - Observer: 741 lines, 314 of them a hit (not "ok"); last line 4 Oct 19:37
-- R1 as it reads in the skill: "Italian cold outreach (email AND LinkedIn note) never greets by first name. Open with 'Salve' or 'Gentile' (never 'Buongiorno': time-dependent) plus title and SURNAME: 'Ing. <Cognome>' for an engineer, 'Dott. <Cognome>' / 'Dott.ssa <Cognome>' for a graduate/doctor, 'Prof.' when it applies; no ..." `[ledger H64]`
+- R1 as it reads in the skill: "Top down: greeting, one line of warmth (or, in a cold mail, a minimal intro: who I am plus one line of what we do), then the ask, then why, in the same paragraph. The subject is the ask too, and a cold subject opens with the sender framing ("AI founder curious to learn ...", "Student-founder ..." `[ledger H18,H47,H49,H59,H61 +like H57,H58; memory feedback_outreach_ask_first_peer_voice]`
 - Coverage (email (drafts)): ledger G, skill G, box G, route G, observer G, brain G
 - Your input: On the CRM review, a / s / c on the message (the reason box), or one sentence on Telegram or in a session: filed into this ledger the same turn.
 
@@ -51,10 +51,10 @@ READ THIS BEFORE WRITING ANY MESSAGE TO A PERSON - email, WhatsApp, LinkedIn DM,
 READ THIS BEFORE WRITING TO THE CRM (a person, a next step, a note) and, for the reader, BEFORE DECIDING A PERSON'S NEXT STEP. Compiled from CRM-CONTRACT.md.
 
 - Ledger: [CRM-CONTRACT.md](file:///C:/Users/Alessandro/task-land/_system/CRM-CONTRACT.md) · 57 rules · newest row H57, 2026-10-04
-- Skill: [crm/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/crm/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/crm/SKILL.md) · box `/home/da/.claude/skills/crm/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 54 ledger rules; 50 [ledger H..] tags; 3 ledger rows newer than this compile, not in the skill yet
+- Skill: [crm/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/crm/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/crm/SKILL.md) · box `/home/da/.claude/skills/crm/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 57 ledger rules; 53 [ledger H..] tags
 - Map: [skill-map-crm.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-crm.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract crm --install`
 - Loaded by: review-api.js (the CRM reader, before it decides a next step) and every session before it writes to the CRM; the event-page Confirmed worker
-- Observer: 11,721 lines, 5,346 of them a hit (not "ok"); last line 4 Oct 22:20
+- Observer: 11,722 lines, 5,347 of them a hit (not "ok"); last line 4 Oct 22:29
 - R1 as it reads in the skill: "A draft produced from the person panel (ask box) is a real Gmail draft, never only text in the panel's Draft tab; if the person has a thread, the draft is a reply in that thread. "this clealry doesnt work btw, i dont have that email drafted.... it should be a response, too."" `[ledger H25]`
 - Coverage (CRM review + Ask box): ledger G, skill G, box G, route G, observer G, brain G
 - Your input: On the CRM row, a / s / r / c or the Ask box; or say it on Telegram: filed the same turn.
@@ -67,7 +67,7 @@ READ THIS BEFORE POSTING ANY CARD to the Ping hub (POST 127.0.0.1:4180/pending) 
 - Skill: [hub/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/hub/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/hub/SKILL.md) · box `/home/da/.claude/skills/hub/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 15 rules in front, compiled from 57 ledger rules; 45 [ledger H..] tags; 2 ledger rows newer than this compile, not in the skill yet
 - Map: [skill-map-hub.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-hub.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract hub --install`
 - Loaded by: every session before it posts a card to the hub (127.0.0.1:4180); the hub guard checks hub-rules.json
-- Observer: 624 lines, 255 of them a hit (not "ok"); last line 4 Oct 22:20
+- Observer: 627 lines, 256 of them a hit (not "ok"); last line 4 Oct 23:00
 - R1 as it reads in the skill: "Every new event (a message or email he sent, a reply that arrived, a meeting that happened) is checked against the open cards: a card whose proposal that event makes moot is closed or marked outdated the same run, never left open. "the moment that new event went out (the moment I sent that ..." `[ledger H15]`
 - Coverage (hub cards): ledger G, skill G, box G, route G, observer G, brain G
 - Your input: The comment box under any verdict on hub-review, or a reply to the card: filed the same turn.
@@ -91,11 +91,11 @@ READ THIS BEFORE PICKING UP A TO-DO ON YOUR OWN (pipeline.py pickup --auto), whi
 
 READ THIS BEFORE DECIDING WHAT REACHES HIS PHONE UNASKED (a SODANOtif card, the recap, the missed-earlier block, a done-notification) and before writing one. Loaded by the SODANOtif classifier (box sodanotif/daemon.js) on every batch. Compiled from NOTIF-CONTRACT.md.
 
-- Ledger: [NOTIF-CONTRACT.md](file:///C:/Users/Alessandro/task-land/_system/NOTIF-CONTRACT.md) · 6 rules · newest row H6, 2026-10-04
-- Skill: [notif/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/notif/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/notif/SKILL.md) · box `/home/da/.claude/skills/notif/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 4 rules in front, compiled from 5 ledger rules; 5 [ledger H..] tags; 1 ledger row newer than this compile, not in the skill yet
+- Ledger: [NOTIF-CONTRACT.md](file:///C:/Users/Alessandro/task-land/_system/NOTIF-CONTRACT.md) · 7 rules · newest row H7, 2026-10-04
+- Skill: [notif/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/notif/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/notif/SKILL.md) · box `/home/da/.claude/skills/notif/SKILL.md` · compiled 2026-10-04 (skill_v 2026-10-04a); 5 rules in front, compiled from 7 ledger rules; 6 [ledger H..] tags
 - Map: [skill-map-notif.json](file:///C:/Users/Alessandro/task-land/_system/drafts/skill-map-notif.json) · compile with `python task-land/_system/drafts/compile_skill.py --contract notif --install`
 - Loaded by: the SODANOtif classifier on the box (sodanotif/daemon.js, buildSystemPrompt) on every batch
-- Observer: 8 lines, 1 of them a hit (not "ok"); last line 4 Oct 22:10
+- Observer: 12 lines, 5 of them a hit (not "ok"); last line 4 Oct 22:50
 - R1 as it reads in the skill: "Every line of a card names who wrote it (and the group, for a group) before the snippet. e.g. "Caleb: are you taking over the hotel in Orlando?" then "Rocco /GG SMOM Torino: ...", never a bare snippet" `[ledger H1]`
 - Coverage (notifications (SODANOtif)): ledger G, skill G, box A, route G, observer G, brain G
 - Your input: On Telegram, a message starting notif: (or a quote-reply to the card): filed the same turn.
@@ -150,7 +150,7 @@ Meeting notes (the Notion meeting AI page) turned into steps: what the meeting l
 - Map: none (nothing is compiled for this surface)
 - Loaded by: gtm-eng/agent/meeting_loop.py reads the ledger itself on every run (no compiled skill)
 - Observer: 8 lines, 0 of them a hit (not "ok"); last line 4 Oct 19:56
-- Coverage (meeting notes): ledger G, skill G, box A, route A, observer G, brain G
+- Coverage (meeting notes): ledger G, skill n/a:, box A, route A, observer G, brain G
 - Your input: A comment on the hub card the meeting loop produces, or one sentence on Telegram: filed the same turn.
 
 ### Trips (trippy) (ledger, skill hand-written)
@@ -161,8 +161,8 @@ How a trip is searched and judged: modes, layovers, overnights, departure times,
 - Skill: [trippy/SKILL.md (installed)](file:///C:/Users/Alessandro/.claude/skills/trippy/SKILL.md) · [mirror in task-land](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/trippy/SKILL.md) · box `/home/da/.claude/skills/trippy/SKILL.md` · hand-written, 598 lines, no [ledger H..] tags
 - Map: none (nothing is compiled for this surface)
 - Loaded by: the trip worker reads the ledger and preferences.json; the trippy skill itself is hand-written
-- Observer: 8 lines, 3 of them a hit (not "ok"); last line 4 Oct 21:03
-- Coverage (trippy boards): ledger G, skill G, box G, route G, observer A, brain G
+- Observer: 16 lines, 6 of them a hit (not "ok"); last line 4 Oct 22:28
+- Coverage (trippy boards): ledger G, skill n/a:, box G, route G, observer G, brain G
 - Your input: A comment on a rule on the trip board, or a context duel: filed the same turn.
 
 ## The 24 hand-written skills
@@ -186,7 +186,7 @@ No ledger behind them: a session loads one when your ask matches its first line.
 - **telegram-switch** (99 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/telegram-switch/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/telegram-switch/SKILL.md) · box `/home/da/.claude/skills/telegram-switch/SKILL.md`. Move the Telegram-facing daemons (tg-bridge @Soda2402_bot, sodanotif card pusher) between the laptop and the DA VPS. Usage /telegram-switch laptop or /telegram-switch vps. No QR or re-auth ever - bots are tokens; the only rule is ONE listener per bot, so ...
 - **todo** (43 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/todo/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/todo/SKILL.md) · box `/home/da/.claude/skills/todo/SKILL.md`. Work Alessandro's to-dos through the pipeline: created -> in progress (picked up by AI) -> ready for review (a hub card, linked from the daily page) -> finished. Use when he says "/todo", "work my to-dos", "pick up my to-dos", "do what you can on my list", ...
 - **tovps** (75 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/tovps/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/tovps/SKILL.md) · box `/home/da/.claude/skills/tovps/SKILL.md`. Migrate THE CURRENT Claude Code session from the laptop to the DA VPS so work continues there (phone-reachable via /rc) with the laptop off. Copies this session's transcript to the box, resumes it in tmux with a handoff prompt, and verifies it answered. ...
-- **triage** (545 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/triage/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/triage/SKILL.md) · box `/home/da/.claude/skills/triage/SKILL.md`. Unified inbox triage across Gmail (cdtm via C:\Users\Alessandro\triage\gmail.py), WhatsApp DMs + groups (via the wa-daemon at C:\Users\Alessandro\.claude\wa-daemon\), AND Slack DMs + @-mentions + recent channel activity for cdtm + xplore (via ...
+- **triage** (544 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/triage/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/triage/SKILL.md) · box `/home/da/.claude/skills/triage/SKILL.md`. Unified inbox triage across Gmail (cdtm via C:\Users\Alessandro\triage\gmail.py), WhatsApp DMs + groups (via the wa-daemon at C:\Users\Alessandro\.claude\wa-daemon\), AND Slack DMs + @-mentions + recent channel activity for cdtm + xplore (via ...
 - **trippy-old** (476 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/trippy-old/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/trippy-old/SKILL.md) · box `/home/da/.claude/skills/trippy-old/SKILL.md`. SUPERSEDED — the original one-shot travel sweep, formerly called /trippy. Its deliverable is a standalone cooked-trips HTML in OneDrive; it has NO persistent trip boards, NO context duels and NO preference wiki. Do NOT use it for new travel searches — use ...
 - **trippy** (598 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/trippy/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/trippy/SKILL.md) · box `/home/da/.claude/skills/trippy/SKILL.md`. THE CURRENT TRIPPY. Deep multi-modal travel search (flights, trains, buses, ferries, rideshare) with learned effort allocation — persistent per-trip boards served by a local webapp, pairwise context duels that feed a big search, and a cross-trip preference ...
 - **wa-search** (95 lines): [installed](file:///C:/Users/Alessandro/.claude/skills/wa-search/SKILL.md) · [mirror](file:///C:/Users/Alessandro/task-land/_system/laptop-tools/skills/wa-search/SKILL.md) · box `/home/da/.claude/skills/wa-search/SKILL.md`. Paraphrase / semantic search over WhatsApp message history. Dumps a chat's messages chronologically so the model can reason over them — finds topics even when the user's keyword isn't in the literal text. Use when user says "what did X say about Y", "find ...
@@ -194,4 +194,4 @@ No ledger behind them: a session loads one when your ask matches its first line.
 - **people-search** (box only, not installed on the laptop): [box copy mirrored in task-land](file:///C:/Users/Alessandro/task-land/_system/box-tools/skills/people-search/SKILL.md) · box `/home/da/.claude/skills/people-search/SKILL.md`. Find and rank professional people for recruiting, partnerships, sales, or research from user-provided data, public web sources, an authenticated search session, or a connected provider. Use for people discovery, LinkedIn or Sales Navigator search design, ...
 - **tundra-poc-deck** (box only, not installed on the laptop): [box copy mirrored in task-land](file:///C:/Users/Alessandro/task-land/_system/box-tools/skills/tundra-poc-deck/SKILL.md) · box `/home/da/.claude/skills/tundra-poc-deck/SKILL.md`. Rebuild the generic hospital PoC proposal PDF from a Claude Design export of the Tundra pitch deck, and version that export in the Tundra Shared Drive. Use when Alessandro supplies a new "Tundra Pitch Deck" .zip exported from Claude Design, or asks to ...
 
-Box copies checked over ssh at 22:20 on 4 Oct: the eight compiled skills on the box are byte-identical (md5) to the laptop's and the mirror's; the box also has people-search and tundra-poc-deck, which the laptop does not.
+Box copies last checked over ssh at 22:20 on 4 Oct (byte-identical then); the drafting, crm and notif recompiles of 23:00 reach the box with box step G137 (box-steps-20261004-goal.sh).
