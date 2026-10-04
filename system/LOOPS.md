@@ -389,7 +389,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   tasks, Gmail, calendars, LinkedIn, sync, console windows, the hub, the system audit, his system feedback), one
   read-only ssh to the box for every box probe of the ledger, `inbox.jsonl` from the GTM agent; `check --only <key>`
   runs ONE check (what a fix session reproduces and proves with); (2) the whitelist fixes (start_task, start_servers,
-  li_repair, hide_task, close_own_cards, close_duplicates, disable_task), capped, 25 min apart; (3) THE REGISTRY
+  li_repair, hide_task, close_own_cards, close_duplicates, disable_task), capped, 25 min apart; past the whitelist an
+  incident is NEVER a card (HUB H54/H55, 4 Oct 21:19-21:21, both agents, `agentlib.Engine`): a TIMING failure (H56:
+  memory full / MemoryError, a port busy or down, a timeout, a sync parked; `agentlib.TRANSIENT_CLASSES`) waits with its
+  context, re-checks its condition every tick (commit charge under 90%, the port answering) and, once clear, re-runs
+  the failed work itself (the finding's `retry`, e.g. start_task GTM-Campaign-Tick); it goes to the fix session only
+  when the condition does not clear within the class's window (memory 60 min, port / timeout / sync 30) or the retry
+  fails on a clear condition; anything else goes straight to the fix session; the laptop memory check (`laptop:memory`:
+  commit charge, free RAM, the top 3 holders) gives a MemoryError incident its cause; (3) THE REGISTRY
   `system-agent/broken.jsonl` (id, node, key, what, since, class maintenance | his_command | his_decision, owner agent |
   fix_session | him, status open | fixing | verifying | stuck | fixed | gone): a line closes only when its check passes
   twice in the agent's own ticks, or once after a fix session's own pass; a maintenance line owned by the fix session
