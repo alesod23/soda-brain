@@ -12,7 +12,8 @@
    "wires": 54,
    "rows": 67
   },
-  "console_errors": []
+  "console_errors": [],
+  "page_hscroll": []
  },
  "dark": {
   "wires": [],
@@ -27,6 +28,7 @@
    "wires": 54,
    "rows": 67
   },
-  "console_errors": []
+  "console_errors": [],
+  "page_hscroll": []
  }
 }

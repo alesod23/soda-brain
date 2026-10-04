@@ -167,7 +167,9 @@ footer p{max-width:90ch}
 @media (max-width:720px){ h1{font-size:28px} th{position:static} .tools input{width:120px} }
 @media (prefers-reduced-motion: reduce){ *{transition:none !important} html{scroll-behavior:auto} }
 /* ---- the simulation map's own additions ---- */
+.wrap.hero{padding:40px 16px 20px}
 #chart-align .grid{align-items:stretch}
+.flow .chain{flex-wrap:wrap;min-width:0;row-gap:14px}
 #chart-align .grid .lane-h{align-self:end}
 .legend .item.wide{flex-wrap:wrap}
 .legend .item.wide .dots{flex-wrap:wrap;white-space:normal;row-gap:4px}
@@ -306,7 +308,7 @@ td .pill.same{border-color:var(--live);color:var(--live)} td .pill.fake{border-c
       <li><b>the world on Sonnet</b> (<code>world_model</code>), from day 3 of night 3; the judge, the simulated him and every producer stay on Opus</li>
       <li><b>the savior stand-in capped</b> at 2 rewrites per card (<code>SIM_SAVIOR_MAX</code>)</li>
       <li><b>the feedback worker</b> on every 2nd heavy pass (<code>SIM_FEEDBACK_EVERY</code>), not every 10 minutes</li>
-      <li><b>the learner off</b> (G2); the Notion listing answered without a model (812 free stand-in calls in arm B)</li>
+      <li><b>the learner off</b> (G2); the Notion listing answered without a model (about 845 free stand-in lines in arm B)</li>
     </ul></div>
     <div class="card"><h3>The budget and the switches</h3><ul>
       <li><code>budget.py</code> reads the plan usage the way claude-bar does, at most every 4 min; every model call asks <code>allowed()</code> first</li>
@@ -401,7 +403,7 @@ day score   = average of the day's event scores and its hub_surface line   (days
 <script>
 // ---------- DATA ----------
 // Every number here was read from ~/sim on 4 Oct 2026 at ASOF (compare.py report, scores.jsonl, calls.jsonl, runner.log).
-const ASOF = "2026-10-04 16:10";
+const ASOF = "2026-10-04 16:17";
 // kinds: reader (Opus), script, store, service, event, surface, learn; llm:"Sonnet" draws the LLM badge on a script
 const NODES = {
 // the sandbox chart
@@ -451,7 +453,7 @@ c_daysline:{label:"days.jsonl",kind:"store",sub:"the day's average, the judge's 
 
 // section 1: the sandbox machine. place: id -> [lane, row]; edges [from, to, label, style]
 const SANDBOX = {
-  lanes:["the fake world","the shims and guards","the sandbox copy of the system","the fake surfaces","the simulated him + the judge"],
+  lanes:["the fake world","shims and guards","the system, copied","the fake surfaces","him and the judge"],
   laneW:176, gutter:108,
   place:{
     s_world:[0,1],s_truth:[0,2],s_feeds:[0,3],s_mail:[0,4],s_deliver:[0,5],s_faults:[0,6],
@@ -473,7 +475,7 @@ const SANDBOX = {
   ]
 };
 
-const DAY = [{n:"s_build"},{a:"G5: 0 leak lines"},{n:"s_world"},{a:"events + truth"},{n:"c_clock"},{a:"deliver"},{n:"s_deliver"},{a:"6 min later"},{n:"c_quick"},{a:"every ~85 min"},{n:"c_heavy"},{a:"cards, rows"},{n:"s_hub"},{a:"23:40"},{n:"c_last"},{a:"score the day"},{n:"s_judge"},{a:"brain.jsonl"},{n:"s_brainnum"},{a:"a line"},{n:"s_night"},{a:"week under 33?"},{n:"s_budget"}];
+const DAY = [{n:"s_build"},{a:"G5: 0 leak lines"},{n:"s_world"},{a:"events + truth"},{n:"c_clock"},{a:"deliver"},{n:"s_deliver"},{a:"6 min later"},{n:"c_quick"},{a:"every ~85 min"},{n:"c_heavy"},{a:"cards, rows"},{n:"s_hub"},{a:"23:40"},{n:"c_last"},{a:"score the day"},{n:"s_judge"},{a:"then"},{n:"s_brainnum"},{a:"a line"},{n:"s_night"},{a:"week under 33?"},{n:"s_budget"}];
 const JUDGE = [{n:"c_truthday"},{a:"per event"},{n:"c_observe"},{a:"code"},{n:"c_measured"},{a:"all events, one prompt"},{n:"c_judgecall"},{a:"weights"},{n:"c_points"},{a:"plus"},{n:"c_surface"},{a:"append"},{n:"c_daysline"},{a:"read by"},{n:"s_compare"}];
 
 // section 2: real component -> its simulation twin. st: same | fake | stub | missing. maintenance: sched, store, ledger
@@ -545,11 +547,11 @@ const METRICS = [
  ["event score, day score","event: the sum, 0 to 100; day: the average of the events plus the surface line","scores.jsonl, days.jsonl","weekend days with 1 to 4 events swing by 20 points; the surface line weighs as much as one event; PROGRESS.md repeats the last score on a failed day"],
  ["hub_surface","100 x (1 - irrelevant / seen) over the simulated him's passes, cards and Today rows together","me.jsonl, the surface line in scores.jsonl","it counts views, not items: the same stale Today row seen in 6 passes counts 6 times, and Today rows outnumber cards 12 to 1; the simulated him is also the judge of what is current"],
  ["stale share","irrelevant cards / cards seen and irrelevant Today rows / rows seen","world/me.jsonl via compare.py","the same view-counting; it grows with the length of the run because rows accumulate"],
- ["brain: lookups, strong, closed, ticked","todo_match lookups, hits at 0.84 or more, cards it closed, to-dos it ticked","home/task-land/_system/todo-match.jsonl, sim clock","a strong hit is easy: the query names the person and the person's row is indexed (96% strong); the numbers that matter are closed and ticked, both 0"],
+ ["brain: lookups, strong, closed, ticked","todo_match lookups, hits at 0.84 or more, cards it closed, to-dos it ticked","home/task-land/_system/todo-match.jsonl, sim clock","a strong hit is easy: the query names the person and the person's row is indexed (96% strong); the numbers that matter are closed and ticked: 0 and 1 in 17 days"],
  ["door requests, reader MCP calls","HTTP calls to the fake door; match_event calls through the MCP shim","world/door.jsonl, world/brain-mcp.jsonl","counts traffic, not usefulness; MCP calls stay 0 since the readers moved to HTTP"],
  ["already_covered","commitments the meeting reader found already open as a to-do","meeting-loop-state.json readings","depends on the 12 seeded to-dos; nothing creates new ones during the run"],
  ["sweep closes by reason","cards closed by the sweep, by the reason in decisions.jsonl","home/task-land/_system/decisions.jsonl","a close is counted, not checked: only the judge's false-close line checks it"],
- ["calls, Opus, API-equivalent","every model call with its model and cost","runs/current/calls.jsonl","812 of arm B's 1,927 lines are free Notion-listing stand-ins; dollars are API prices, not his plan"],
+ ["calls, Opus, API-equivalent","every model call with its model and cost","runs/current/calls.jsonl","845 of arm B's 1,949 lines are free stand-ins (mostly the Notion listing); dollars are API prices, not his plan"],
  ["week points, wall","plan usage before and after each day; minutes per day","runs/night.jsonl (budget.py)","the week figure is shared with every other session on the account"],
  ["leaks and the wall (CLEAN)","CLEAN = 0 leak lines in every rebuild (G5), 0 .example lines in the live files (G4), every refused call recorded in the outbox (G1)","build_sandbox.py output, outbox.jsonl, preflight.py","G4 is checked by hand after a run, not every day"]
 ];
@@ -566,10 +568,10 @@ const RESULTS = {
    days:[["10-11",65.0,2,36],["10-12",63.4,16,33],["10-13",67.2,16,30],["10-14",62.5,18,32],["10-15",61.5,13,30],["10-16",61.2,16,34]]},
   {run:"meetings-night",night:2,short:"N2",when:"2 Oct night",changed:"full mail text to the reader, WhatsApp follow-ups after calls; a meeting-heavy world",events:81,avg:63.8,det:86,surf:36,stale:"67% (1545/2294)",swy:0,calls:671,opus:671,usd:93.6,
    days:[["10-19",52.3,13,47],["10-20",73.4,22,46],["10-21",61.6,25,34],["10-22",63.6,21,19]]},
-  {run:"night3-B",night:3,short:"N3 arm B",when:"4 Oct 05:04 to 16:xx",changed:"a new world (Sonnet from day 3), 12 seeded to-dos; the brain, the reverse pass, the reader asking the door; the judge gains the false-close line",events:142,avg:70.4,det:93,surf:53,stale:"51% (1524/3001)",swy:10,calls:1083,opus:1060,usd:163.3,
+  {run:"night3-B",night:3,short:"N3 arm B",when:"4 Oct 05:04 to 16:06",changed:"a new world (Sonnet from day 3), 12 seeded to-dos; the brain, the reverse pass, the reader asking the door; the judge gains the false-close line",events:158,avg:71.3,det:93,surf:53,stale:"51% (1693/3323)",swy:10,calls:1104,opus:1080,usd:167.7,
    days:[["10-12",54.3,14,71],["10-13",84.2,12,74],["10-14",67.0,15,80],["10-15",83.5,13,75],["10-16",66.5,17,40],["10-17",80.0,1,29],["10-18",78.3,3,41],["10-19",73.1,13,48],["10-20",72.3,11,59],["10-21",59.2,18,46],
          ["10-22",null,0,null,"day 11 failed: KeyError in mailstore (a reply to a thread the mailbox did not have)"],["10-23",71.1,9,74],["10-24",null,0,null,"day 13 unscored: the judge's answer was not valid JSON"],["10-25",88.3,3,27],["10-26",75.0,13,30],
-         ["10-27",null,0,null,"day 16 failed: JSONDecodeError in the world generation"]]},
+         ["10-27",null,0,null,"day 16 failed: JSONDecodeError in the world generation"],["10-28",79.1,16,51]]},
   {run:"night3-A",night:3,short:"N3 arm A",when:"4 Oct 05:04 to 06:27",changed:"the same world and code as arm B, without the brain",events:27,avg:66.5,det:96,surf:82,stale:"23% (34/148)",swy:3,calls:175,opus:175,usd:23.0,
    days:[["10-12",49.7,15,73],["10-13",87.5,12,90]]}
  ]
@@ -610,18 +612,18 @@ const REG = [
 ];
 
 const FINDINGS = [
- "<b>The brain fired and changed nothing he sees.</b> 185 door requests over the 14 brain days (about 13 a day, from the CRM reader before it writes a step), already_covered 7 in total, cards closed by the brain 0, to-dos ticked 0, reader MCP calls 0. The 96% strong-hit rate is the person's own row.",
- "<b>What he sees goes stale.</b> 52% of the Today-row views of the simulated him were stale (1823 of 3501, compare.py), cards 13%; the hub surface fell from 80 on day 3 to 27 and 30 on days 14 and 15.",
+ "<b>The brain fired and changed almost nothing he sees.</b> 204 door requests over 15 brain days (about 14 a day, from the CRM reader before it writes a step), already_covered 7 in total, cards closed by the brain 0, to-dos ticked 1 (28 Oct, the first in 17 days), reader MCP calls 0. The 96% strong-hit rate is the person's own row.",
+ "<b>What he sees goes stale.</b> 52% of the Today-row views of the simulated him were stale (1870 of 3589, compare.py), cards 13%; the hub surface fell from 80 on day 3 to 27 and 30 on days 14 and 15 (51 on day 17).",
  "<b>Sends without his yes: 10 in B, 3 in A.</b> 6 are calendar invites the meeting loop created when the simulated him confirmed a meeting card; 1 is a mail \"Re: Pilota Cardiologia e UTIC\" sent on 16 Oct with no yes in the window; 3 are flags on the triggering events of those sends.",
- "<b>B equals A on the same two days</b> (event score B 54.3 and 84.2, A 49.7 and 87.5). Worst kinds in B: note-only promises 36, meeting notes 49, calendar events 49, LinkedIn in 50.",
- "<b>The harness broke three times.</b> Day 11 (22 Oct) raised a KeyError in the mailstore, day 16 (27 Oct) a JSON error in the world generation, day 13 (24 Oct) was not scored because the judge's answer was not valid JSON. PROGRESS.md repeated the previous score on each (58.5, 71.4, 71.8): a reporting bug in run_night.py to fix.",
- "<b>Cost.</b> Arm B: 1,083 model calls (1,060 Opus) plus 844 free stand-ins, $163 API-equivalent, 12 week points, 46 min of wall time a day; arm A: 175 calls, $23, 3 points."
+ "<b>B equals A on the same two days</b> (event score B 54.3 and 84.2, A 49.7 and 87.5). Worst kinds in B: note-only promises 34, LinkedIn in 50, meeting notes 52, calendar events 63.",
+ "<b>The harness broke three times.</b> Day 11 (22 Oct) raised a KeyError in the mailstore, day 16 (27 Oct) a JSON error in the world generation, day 13 (24 Oct) was not scored because the judge's answer was not valid JSON. PROGRESS.md repeated the previous score on each (58.5, 71.4, 71.8): a reporting bug in run_night.py to fix. And the stop was missed: the runner was launched without <code>--wait-go</code>, so it watches <code>runs/STOP</code>, not <code>runs/night3/GO.STOP</code>; it started day 18 at 16:06; <code>runs/STOP</code> was written at 16:17, so it ends after day 18.",
+ "<b>Cost.</b> Arm B to day 17: 1,104 model calls (1,080 Opus) plus 845 free stand-in lines, $168 API-equivalent, 13 week points, 47 min of wall time a day; arm A: 175 calls, $23, 3 points."
 ];
 const QUESTIONS = [
  "Does an invite created from a meeting card he confirmed count as a send with its own yes? The judge says no; it is 6 of the 10 fatals.",
  "The CRM review surface is where he decides now (4 Oct 04:00). Bring a review generator, or the real review route, into the sandbox, or the simulation keeps scoring a surface he is leaving.",
  "The stale Today rows are the system's problem, not the brain's recall: tick crm-outdated.js in the sandbox and see whether the surface line stops falling.",
- "Is the brain worth its parts? 0 closes and 0 ticks in 14 days with 12 seeded to-dos; measure it on a world built to need it (to-dos that events complete) before more is built on it.",
+ "Is the brain worth its parts? 0 closes and 1 tick in 17 days with 12 seeded to-dos; measure it on a world built to need it (to-dos that events complete) before more is built on it.",
  "Arm C (Edge hints) is built and was never run."
 ];
 
@@ -729,7 +731,7 @@ function resultsTable(){
   for(const r of RESULTS.runs){
     const scored=r.days.filter(d=>d[1]!==null).length, failed=r.days.length-scored;
     const tr=document.createElement("tr"); tr.dataset.text=[r.run,r.changed].join(" ").toLowerCase();
-    tr.innerHTML=`<td class="num">${r.night}</td><td><b>${r.run}</b><br><span style="color:var(--muted)">${r.when}</span></td><td>${r.changed}</td><td class="num">${scored}${failed?` (+${failed} failed)`:""}</td><td class="num">${r.events}</td><td class="num"><b>${r.avg.toFixed(1)}</b></td><td class="num">${r.det}%</td><td class="num">${r.surf===null?"not measured":r.surf}</td><td class="num">${r.stale}</td><td class="num">${r.swy}</td><td class="num">${r.calls.toLocaleString("en")} (${r.opus.toLocaleString("en")})</td><td class="num">$${r.usd.toFixed(0)}</td>`;
+    tr.innerHTML=`<td class="num">${r.night}</td><td><b>${r.run}</b><br><span style="color:var(--muted)">${r.when}</span></td><td>${r.changed}</td><td class="num">${scored}${failed?` (+${failed} not scored)`:""}</td><td class="num">${r.events}</td><td class="num"><b>${r.avg.toFixed(1)}</b></td><td class="num">${r.det}%</td><td class="num">${r.surf===null?"not measured":r.surf}</td><td class="num">${r.stale}</td><td class="num">${r.swy}</td><td class="num">${r.calls.toLocaleString("en")} (${r.opus.toLocaleString("en")})</td><td class="num">$${r.usd.toFixed(0)}</td>`;
     tb.appendChild(tr);
   }
 }
@@ -763,11 +765,11 @@ function resultsText(){
   const B=RESULTS.runs.find(r=>r.run==="night3-B");
   const scored=B.days.filter(d=>d[1]!==null).length;
   $("#n-days").textContent=`${scored} scored days of ${B.days.length} started`;
-  $("#b-days").textContent=`${B.days.length} days started, ${scored} scored (12 to ${B.days[B.days.length-1][0].slice(3)} Oct)`;
-  $("#results-intro").innerHTML=`Read at ${ASOF.slice(11)} on 4 Oct from <code>compare.py report</code> and recomputed from each run's <code>scores.jsonl</code>. Night 1 (30 Sep evening to 1 Oct morning) ran three configurations on one world; night 2 (2 Oct) four days of a meeting-heavy world; night 3 (4 Oct, from 05:04) ran arm B for ${B.days.length} days and arm A for 2, and was stopped on his word at 15:56. The event score leaves the surface line out so that the nights compare (night 1's first six days had none); PROGRESS.md and days.jsonl include it, so their day numbers differ by a few points.`;
+  $("#b-days").textContent=`${B.days.length} days (12 to ${B.days[B.days.length-1][0].slice(3)} Oct), ${scored} scored; a day 18 ran after his stop`;
+  $("#results-intro").innerHTML=`Read at ${ASOF.slice(11)} on 4 Oct from <code>compare.py report</code> and recomputed from each run's <code>scores.jsonl</code>. Night 1 (30 Sep evening to 1 Oct morning) ran three configurations on one world; night 2 (2 Oct) four days of a meeting-heavy world; night 3 (4 Oct, from 05:04) ran arm B for ${B.days.length} days and arm A for 2; he stopped it at 15:56, but the runner watched another stop file and began a day 18 at 16:06, which is not in these numbers (stopped after that day, see the findings). The event score leaves the surface line out so that the nights compare (night 1's first six days had none); PROGRESS.md and days.jsonl include it, so their day numbers differ by a few points.`;
   $("#verdict").innerHTML=`<h3>Improvement over time: what the numbers can and cannot say</h3>
-  <p>Run by run the event score went <b>54.8, 60.7, 63.3</b> (night 1), <b>63.8</b> (night 2), <b>70.4</b> (night 3, arm B). Read as a trend, that is a 15-point rise. It is not a clean measurement: every night ran a different world (night 3 a new cast, generated on Sonnet from day 3; night 2 a meeting-heavy mix), the judge changed twice (the surface line and the H94 signature rule on 1 Oct, the false-close line on 4 Oct), and the only same-world comparison, arm A against arm B on 12 and 13 Oct, shows no difference.</p>
-  <p>What repeats in every night is the shape of the hub surface: it starts high and falls as the days pass (night 2: 47 to 19; night 3: 80 on day 3 to 27 and 30 on days 14 and 15), because stale Today rows pile up faster than anything clears them. So the per-event handling has improved somewhat; the surface he lives on has not.</p>
+  <p>Run by run the event score went <b>54.8, 60.7, 63.3</b> (night 1), <b>63.8</b> (night 2), <b>71.3</b> (night 3, arm B). Read as a trend, that is a 16-point rise. It is not a clean measurement: every night ran a different world (night 3 a new cast, generated on Sonnet from day 3; night 2 a meeting-heavy mix), the judge changed twice (the surface line and the H94 signature rule on 1 Oct, the false-close line on 4 Oct), and the only same-world comparison, arm A against arm B on 12 and 13 Oct, shows no difference.</p>
+  <p>What repeats in every night is the shape of the hub surface: it starts high and falls as the days pass (night 2: 47 to 19; night 3: 80 on day 3 to 27 and 30 on days 14 and 15, 51 on day 17), because stale Today rows pile up faster than anything clears them. So the per-event handling has improved somewhat; the surface he lives on has not.</p>
   <p>What would make "is it improving" answerable: one frozen regression world (the same cast, days and judge version) re-run after every change, with the judge's version stamped on every score line, and the stale share read as rows, not views.</p>`;
   $("#findings").innerHTML=FINDINGS.map(f=>`<li>${f}</li>`).join("");
   $("#questions").innerHTML=QUESTIONS.map(f=>`<li>${f}</li>`).join("");

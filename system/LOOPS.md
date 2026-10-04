@@ -270,6 +270,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   WhatsApp, LinkedIn, calendar, Notion notes), a "me" agent that decides as he does, a judge that scores detected /
   latency / sent-without-yes / artifacts, and a learner that turns misses into hints, rules, fixes or `needs_him`.
   12 simulated days on 1 Oct: score 56 to 61; the misses are in the artifact layer and hub hygiene, not in reading.
+- Drawn in `SODA-SIMULATION-MAP.html` (+ `.md`, 4 Oct 2026): the sandbox, every real component's twin and its
+  fidelity, the arms A to D and guards G1 to G5, the judge's metrics and their weaknesses, nights 1 to 3 over time.
+  Night 3 (4 Oct, brain arm B, 17 days, 14 scored): event score 71.3, hub surface 53 falling as stale Today rows pile
+  up, the brain closed 0 cards and ticked 1 to-do; arm A on the same two days scored the same.
 - Nothing fake ever enters the real CRM, mail, Notion, memory or tasks; the fake world is deleted on his word.
 
 ## 13. The brain (this repo) and the door

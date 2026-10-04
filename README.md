@@ -21,12 +21,16 @@ Started 2026-10-01 from the repo `claude-memory` (the assistants' memory since M
 8. `memory/MEMORY.md`: the index of the 350 facts the assistants learned (one file per fact).
 9. `handoffs/`: the notes one session wrote for another when a decision crossed machines or days.
 10. `system/FINDINGS-20261001.md`: what the first full inventory found wrong, with severity and fix.
+11. `system/SODA-SYSTEM-MAP.html` and `system/SODA-SIMULATION-MAP.html` (each with its `.md`): the system drawn, and the
+    simulation harness that tests it drawn next to it (what runs unchanged, faked, stubbed or missing; the eval; the
+    results over nights 1 to 3). Review both with `tools/review_map.py`.
 
 ## Layout
 
 ```
 README.md, AGENTS.md
-system/      the SODA SYSTEM map (LOOPS, MACHINES, DATA-MAP, REPOS, ACCOUNTS, FINDINGS-*)
+system/      the SODA SYSTEM map (LOOPS, MACHINES, DATA-MAP, REPOS, ACCOUNTS, FINDINGS-*, SODA-SYSTEM-MAP,
+             SODA-SIMULATION-MAP)
 memory/      the facts: MEMORY.md index, index_*.md sub-indexes, one markdown file per fact, _attic/
 handoffs/    HANDOFF-*.md, dated
 rules/       README.md pointer to the ledgers (they move here in phase 2)
