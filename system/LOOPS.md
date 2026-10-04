@@ -148,10 +148,18 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   the box 127.0.0.1:4137 proxies to the laptop while it answers, else 503 and the card. No queue.
 - Off switch: `task-land/_system/drafts/crm-attach.off` (or env `CRM_ATTACH_OFF=1`) = cards again. Test:
   `node --test review-artifact.test.js` in `.medtech-crm` (a copy of crm.json, a fake person, a temp review dir).
-- Gap: the review's approve sends through `drawer-api.sendNext` (a fresh Gmail draft, then send), not the lane's
-  Gmail draft by id; the lane's Gmail draft stays in Drafts and its sidecar stays `drafted` (reconcile acts only
-  when a draft leaves Drafts). `items()` does not
-  serve `draft_id`/`compose_url` yet (review-api.js change owed).
+- The send (closed 4 Oct 05:24): his approve of an EMAIL version that carries a lane `draft_id` goes through
+  `drawer-api.sendLaneDraft`, the lane's own path: `gmail.py update-draft --account <sidecar account> --draft-id <id>`
+  with his board edit (only when he edited; a failed update sends nothing), then `gmail.py send-draft --account
+  <sidecar account> --draft-id <id> --confirmed` (what the hub's `gmail-send-draft` action runs). Never a second
+  Gmail draft. The sidecar is then written through the lane's `common.py` like the reconciler does (`status: sent`,
+  `sent_at`, `sent_message_id`, `sent_thread_id`, `sent_by: crm-review`, his text as `## Body as registered` plus
+  `## His edit (CRM review)`), an open hub card on it is closed as sent, the CRM fact and `sent-log.jsonl` as for any
+  drawer send. A sidecar already finished (`sent`, `rejected`, `abandoned`, ...) refuses with 409. LinkedIn and
+  WhatsApp versions (no Gmail id) stay on `drawer-api.sendNext`. `items()` serves `source`, `draft_id`,
+  `compose_url`, `questions`; the card shows "from the lane: <producer> · open draft" and the questions.
+  Test: `.medtech-crm/tools/lane-test/test_lane.js` and `test_lane_full.js` (stubs for gmail.py, the CRM API and the
+  sent-log; a fixture sidecar). Phone layout of the board: `.medtech-crm/tools/review_board_check.py`.
 
 ## 5. The approval hub and the review page
 
