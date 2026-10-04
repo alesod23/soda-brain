@@ -31,3 +31,7 @@ about the event into the worker, watching notes he never confirms, checking prop
 A new event page gets the button by serving `event_confirm.js` and adding the `/api/confirm` route.
 
 Related: [[feedback-event-companion-pages]], [[project-event-contact-workflow]], [[reference-system-agent]].
+
+**4 Oct 2026 (goal run G107):** a new event page also serves `/feedback-box.js` (soda-brain/system) and injects
+`<script src="/feedback-box.js" data-surface="event-page">`; his sentence there becomes a CRM-ledger rule through the
+feedback session. Patch: `task-land/_system/currency/patch-event-pages-feedback-20261004.py` (copy its two edits).

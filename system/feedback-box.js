@@ -49,7 +49,7 @@
   if (MANUAL) root.style.display = 'none';
   var panel = root.querySelector('#fbx-panel'), t = root.querySelector('#fbx-t'), s = root.querySelector('#fbx-s');
   function ctx() { var c = API.context ? (API.context() || {}) : last; return { item: c.item || '', line: c.line || '', extra: c.extra || null }; }
-  function open() { if (!panel.classList.contains('fbx-inline')) panel.style.display = 'block'; var c = ctx(); root.querySelector('#fbx-on').textContent = c.line ? 'on: ' + c.line : 'on: the whole page'; s.textContent = ''; t.focus(); }
+  function open() { if (!panel.classList.contains('fbx-inline')) panel.style.display = 'block'; var c = ctx(); panel.querySelector('#fbx-on').textContent = c.line ? 'on: ' + c.line : 'on: the whole page'; s.textContent = ''; t.focus(); }
   function close() { if (panel.classList.contains('fbx-inline')) { t.value = ''; s.textContent = ''; document.dispatchEvent(new CustomEvent('fbx:cancel')); return; } panel.style.display = 'none'; }
   API.open = open;
   API.inline = function (el) { panel.classList.add('fbx-inline'); panel.style.display = ''; el.appendChild(panel); open(); };

@@ -676,7 +676,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "UI-hub-review-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`"
+   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`"
   },
   {
    "id": "gate_board",
@@ -720,7 +720,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-crm-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-crm-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598"
+   "broken": "UI-crm-review-1568 04 Oct 19:32 · agent · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review` | UI-crm-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-today` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-crm-review-390 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only crm-review`"
   },
   {
    "id": "gate_page",
