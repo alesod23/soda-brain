@@ -583,6 +583,9 @@ function laneChart(container,spec,nodes){
   container.append(svg,grid,hint);
   function draw(){
     const cb=grid.getBoundingClientRect(); const W=grid.scrollWidth,H=grid.scrollHeight; svg.setAttribute("width",W); svg.setAttribute("height",H);
+    // the SVG sits exactly over the grid, not over the chart: in the full-width chart the grid is centred, and a wire
+    // drawn in grid coordinates from a chart-anchored SVG ended 118 px short of its node (seen 4 Oct)
+    Object.assign(svg.style,{left:grid.offsetLeft+"px",top:grid.offsetTop+"px",width:W+"px",height:H+"px",right:"auto",bottom:"auto"});
     $$("path.w",svg).forEach(e=>e.remove()); $$(".busline",container).forEach(e=>e.remove());
     const R={}; for(const id of Object.keys(spec.place)){const el=$(`[data-id="${id}"]`,grid); if(!el||el.hidden) continue; const r=el.getBoundingClientRect(); R[id]={l:r.left-cb.left,r:r.right-cb.left,t:r.top-cb.top,b:r.bottom-cb.top,y:r.top-cb.top+r.height/2};}
     // entry and exit offsets so that several wires on one side of a node do not share one point

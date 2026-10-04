@@ -33,11 +33,4 @@ gtm-eng/agent/tests/test_instinct_inbox.py` cases [5], [8], [9].
 Row EXISTS and instinct gave no text (hub #39, Andellini, 4 Oct: "You should have drafted the message too."): `write_text`
 drafts it (H34), the old `ask_text_card` is deleted; `scheduled_already` first skips when a message to the person already
 sits in Gmail's Scheduled folder (Martina's follow-up was scheduled for 5 Oct 06:00Z, so nothing was drafted). Hints in `_system/hints/instinct-inbox.md`. Rule: HUB H39.
-
-OLDER card with no draft, or two cards for one person (hub #3, Bifulco, 4 Oct 2026: "yes, but you shoulve made a draft for me to review."):
-the card was posted before this rule, so the yes opened the row only, and it opened a SECOND row (bifulco-unina-2) because #44's yes had
-opened bifulco-unina and the intake/crm_find miss a one-word name. Now `apply_decisions` first calls `row_already` (pid of an earlier
-executed yes for the same name words, else match_row with the card's address) and a no-draft yes runs `handle_proposal(pid=...)`, so it
-always ends in a lane draft or a named skip. Test case [10]. The dup row and an empty dup company "Unina" (same id c-unina) were merged/removed;
-the draft is lane card #8.
 See [[reference_approval_hub]], [[reference_soda_brain]], [[feedback_every_email_draft_goes_through_the_lane]].
