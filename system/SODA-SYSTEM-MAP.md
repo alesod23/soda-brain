@@ -4,7 +4,7 @@ The visual map is `SODA-SYSTEM-MAP.html` in this folder (open it in Chrome; it w
 This page is its narrative and its index, so the brain can recall it. Same rules as the rest of `system/`: updated in
 the same turn as a service, port, job, store or rule changes; dated; no secrets; no person records.
 
-Last verified: 2026-10-04 21:14 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
+Last verified: 2026-10-04 21:23 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
 log of 3-4 Oct, not re-checked on the box that night). 2026-10-04 19:15: Granola retired (his ruling); node w_granola
 is drawn retired (task Granola-Auto-Sweep disabled), the Notion meeting note is written by Notion's meeting AI.
 
@@ -84,6 +84,16 @@ CRM writer (box), forwarded to hub-review `/api/feedback` (surface `crm-system`)
 (`ledger_verdict.py`, the same route as every feedback box) and answered back into the same line by
 `task-land/_system/crm_system_log.py` (route, answer, proof). No new node: an edge CRM -> hub-review queue -> feedback
 session -> CRM, and the System log list in hub-review's CRM tab. LOOPS.md section 8 has the contract.
+
+## New loop 4 Oct 2026 21:35: proactive to-dos from an accepted ask (item 19, G118)
+
+An ask someone made of him plus his yes becomes ONE `todo-proposal` hub card of to-dos, each with its owning system.
+No new node and no new cron: the reader (`task-land/_system/proactive_todo.py scan`) rides on the box's `hub_outdated.py`
+pass and reads the CRM monitor's event ledger (edge events-ledger -> hub_outdated -> hub /pending); his verdict comes back
+through decisions.jsonl to the laptop task DA-ProactiveTodo (`proactive_todo.py apply`, edges decisions.jsonl -> trippy
+trip to-dos / CRM intake :4137 task-handoff / capture.py). New store: `trips/<slug>/todos.jsonl` in trippy, shown on the
+board's To-dos page. His words on the card: hub-review queue -> feedback session (`TYPE_ROUTES`) -> PROACTIVE-CONTRACT.
+LOOPS.md section 9 has the contract.
 
 ## How to keep it
 
