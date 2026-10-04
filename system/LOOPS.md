@@ -132,6 +132,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `venv\Scripts\python.exe test_li_person.py` (parser, ids, dedupe, the Jonathan Crowe duplicate case). Mirror:
   `task-land/_system/laptop-tools/linkedin-poll/`.
 
+- **Channel search: the WhatsApp match needs the person as the ADDRESSEE (G158, 5 Oct 2026).**
+  `crm-app/channel-search.js` (CRM H36) proposes a number from a direct chat only when one of his messages greets the
+  person in its first 90 characters (a greeting, optional title, right before the first name: "Ciao Luigi", "Hi
+  Christopher") or opens with the name as a vocative ("Nevio, ..."), or when the WhatsApp contact name carries the full
+  name. A chat where he ever talks ABOUT that name (after di/of/figlio di, inside a list of 3+ names, "Is Lucas at 9?")
+  is dropped; "thanks, Sophie!" / "Grazie Luigi!" are neutral. Test: `node --test tests/channel-search-addressee.test.js`.
+
 ## 2. Inbound asks (WhatsApp, LinkedIn, email asks)
 
 - Code: `gtm-eng/agent/inbound_asks.py` (task DA-InboundAsks), reading the same stores; a question or a request in an
