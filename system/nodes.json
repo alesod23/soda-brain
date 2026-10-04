@@ -2043,7 +2043,7 @@
    "writes": "trip boards",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "The supervisor is buggy (EADDRINUSE noise).",
    "ports": [
     {
@@ -2066,9 +2066,7 @@
      "escalate": "STUCK terminal",
      "healthy_when": "at most one 'starting trippy webapp' in 30 min"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "M7 01 Oct 02:00 · fix_session · supervise by port, not pgrep (FINDINGS box 1)"
+   }
   },
   {
    "id": "b_sync",
