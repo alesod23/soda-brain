@@ -479,6 +479,20 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   unpatched stub hub). Box block HOLDS CARD ACTION in `_system/box-steps-20261004-goal.sh`. Gap: YES promises "then one
   card asks you again" on 12 Oct; no producer posts that card yet.
 
+- **A DATA-REPAIR CARD RUNS ITS FROZEN PLAN (5 Oct 2026 00:40 Rome, G146, hub #2 a2jggsi3yqw, CRM parents AP-HP).** 15
+  company rows on the CRM writer carried parent "AP-HP"; 11 wrong (7 Gruppo San Donato, 1 Gruppo MultiMedica, 3 no parent:
+  UniSR, Diaconesses, Hopital Americain), 3 lines / 4 rows genuine AP-HP kept. The planned set is frozen in
+  `task-land/_system/goal-run/crm-parent-repair-20261005.json` (sha256 of the changes); the card carries
+  `meta.exec {type:"crm-parent-repair", plan, sha256}` in META, not in `action` (a hub "no" with words on a card with an action
+  spawns the draft redraft session). Executor `_system/goal-run/crm_parent_repair.py`: yes = ONE GET + backup
+  (`~/.medtech-crm/backups/crm.json.bak-parent-repair-<card>-<ts>`) + only those parent fields (whole-document diff guard) +
+  PUT `CRM_API` (default 127.0.0.1:4124, on the box the writer) + GET verify; a row no longer "AP-HP" is skipped and named;
+  no = nothing; a yes with words = deferred, the feedback session re-runs it with `--override <id>=<parent>|keep` (its
+  prompt has the command); idempotent by card id + verdict (ledger `_system/goal-run/crm-parent-repair.jsonl`). Door:
+  `feedback_session.py card_actions()` (`META_EXEC`), box cron every 5 min, decisions.jsonl + queue; the hub's /resolve runs
+  nothing for it. Test `python ~/task-land/_system/goal-run/test_crm_parent_repair.py [--data <CRM copy>]` (26 checks, stub
+  CRM on a temp port, the door through the real card_actions). Box block G146 in `_system/box-steps-20261004-goal.sh`.
+
 ## 6. Campaigns and boards (GTM engine)
 
 - Code: `gtm-eng/` (board-server.js :4141, `campaign.py`, `run-commit.py`, `commit-to-contacts.js`,
