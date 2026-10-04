@@ -575,6 +575,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   the laptop through the task-land sync.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
+- **The janitor's ledger (G106, 4 Oct 2026)**: `task-land/_system/CLEANING-CONTRACT.md` (his cleaning rules, out of
+  the janitor workplan), compiled to `skills/cleaning`, read by `hub_outdated.py`'s judge on every call (ledger rows when
+  the skill is not on that machine); a line on the hub-review Cleaning tab = kind feedback, surface cleaning ->
+  ledger_verdict (box patch `currency/patch-hub-review-cleaning-20261004.py`).
 - **A spoken rule enters the feedback queue (G100, 4 Oct 2026)**: a sentence he says is a rule ("Rule: ...", "regola:
   ...") in a voice review (`task-land/_system/voice/voice_review.py`, result.json `rules`) or in a phone recording (box
   lane `vps/voice-longform-vps.py`, before the classifier) goes through `rule_directive.queue` to hub-review
