@@ -9,9 +9,13 @@ details fixed"). Renders the page headless (Playwright Chromium, 1568 px wide), 
   4. no two nodes overlap; no node sticks out of its chart;
   5. no console error;
 and writes full-page + per-chart screenshots to --out so a human look follows the checks, in light and dark theme.
-Exit 0 only when every check passes.
+With --phone N (e.g. 390) it also renders at that width in both themes, screenshots the full page and checks that the
+page itself never scrolls sideways (a chart may scroll inside its own box). Exit 0 only when every check passes.
 
-    python soda-brain/tools/review_map.py [--html <path>] [--out <dir>]
+    python soda-brain/tools/review_map.py [--html <path>] [--out <dir>] [--charts id,id] [--sections id,id] [--phone 390]
+
+The defaults screenshot the system map's charts and sections; another page in the same family (the simulation map,
+4 Oct 2026) names its own ids.
 """
 import argparse
 import json
@@ -63,7 +67,11 @@ def main():
     ap.add_argument("--html", default=str(DEFAULT_HTML))
     ap.add_argument("--out", default=str(HERE.parent / "system" / "_review"))
     ap.add_argument("--width", type=int, default=1568)
+    ap.add_argument("--charts", default="chart-shape,chart-machines", help="ids of the elements screenshotted one by one")
+    ap.add_argument("--sections", default="flows,surfaces,workers", help="ids of the sections screenshotted one by one")
+    ap.add_argument("--phone", type=int, default=0, help="also render at this width (390) and check the page does not scroll sideways")
     a = ap.parse_args()
+    charts = [c for c in a.charts.split(",") if c]; sections = [c for c in a.sections.split(",") if c]
     from playwright.sync_api import sync_playwright
     out = pathlib.Path(a.out); out.mkdir(parents=True, exist_ok=True)
     url = pathlib.Path(a.html).resolve().as_uri()
@@ -79,19 +87,30 @@ def main():
             pg.evaluate("document.fonts && document.fonts.ready"); pg.wait_for_timeout(400)
             res = pg.evaluate(CHECK_JS); res["console_errors"] = errors
             pg.screenshot(path=str(out / f"full-{theme}.png"), full_page=True)
-            for cid in ("chart-shape", "chart-machines"):
+            for cid in charts:
                 el = pg.query_selector("#" + cid)
                 if el: el.screenshot(path=str(out / f"{cid}-{theme}.png"))
-            for i, sec in enumerate(("flows", "surfaces", "workers")):
+            for sec in sections:
                 el = pg.query_selector("#" + sec)
                 if el: el.screenshot(path=str(out / f"{sec}-{theme}.png"))
+            res["page_hscroll"] = []
             report[theme] = res
             pg.close()
+            if a.phone:
+                pg = br.new_page(viewport={"width": a.phone, "height": 844}, color_scheme=theme)
+                perr = []
+                pg.on("pageerror", lambda e: perr.append(str(e)))
+                pg.goto(url); pg.wait_for_timeout(1200)
+                sw = pg.evaluate("[document.documentElement.scrollWidth, window.innerWidth]")
+                if sw[0] > sw[1] + 1: res["page_hscroll"].append({"width": a.phone, "scrollWidth": sw[0]})
+                res["console_errors"] += perr
+                pg.screenshot(path=str(out / f"phone{a.phone}-{theme}.png"), full_page=True)
+                pg.close()
         br.close()
     (out / "report.json").write_text(json.dumps(report, indent=1), encoding="utf-8")
     bad = 0
     for theme, res in report.items():
-        for k in ("wires", "loose", "overflow", "gates", "overlaps", "outside", "console_errors"):
+        for k in ("wires", "loose", "overflow", "gates", "overlaps", "outside", "console_errors", "page_hscroll"):
             n = len(res[k]); bad += n
             print(f"{theme:5} {k:15} {n}")
             for item in res[k][:12]: print("      ", json.dumps(item, ensure_ascii=False)[:200])
