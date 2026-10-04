@@ -1370,6 +1370,47 @@
    "broken": "M2 04 Oct 16:47 · fix_session · find what held the commit charge; a tick that fails on a full page file must not look like a crash of the watcher"
   },
   {
+   "id": "w_intcheck",
+   "group": "infra workers (registry only)",
+   "label": "DA-IntegrationCheck",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 2 h from 21:00 (task DA-IntegrationCheck)",
+   "code": "task-land/_system/goal-run/integration_check.py",
+   "reads": "5 of 10 randomized read-only end-to-end checks across the surfaces",
+   "writes": "goal-run/integration.jsonl; registry lines IC-<check>",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "DA-IntegrationCheck"
+   ],
+   "paths": [
+    "~/task-land/_system/goal-run/integration_check.py"
+   ]
+  },
+  {
+   "id": "w_uiwalk",
+   "group": "infra workers (registry only)",
+   "label": "DA-UIWalk (the UI walk)",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "08:00, 11:00, 14:00, 17:00, 20:00, 23:00 (task DA-UIWalk)",
+   "code": "task-land/_system/system-agent/ui_walk.py",
+   "reads": "hub-review, CRM review mode, CRM Today (box and laptop) in headless Chrome at 1568 and 390 px; the hub's Telegram ledger",
+   "writes": "registry lines UI-<surface>-<width> in broken.jsonl; goal-run/ui-walk/<date>/ reports and screenshots",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "Read-only by construction: every non-GET request is answered locally.",
+   "tasks": [
+    "DA-UIWalk"
+   ],
+   "paths": [
+    "~/task-land/_system/system-agent/ui_walk.py"
+   ]
+  },
+  {
    "id": "w_design",
    "group": "infra workers (registry only)",
    "label": "DesignMirror-Server :4190",
@@ -1527,6 +1568,23 @@
    "llm": "none",
    "gate": "hub card",
    "status": "live"
+  },
+  {
+   "id": "b_sysupdate",
+   "group": "infra workers (registry only)",
+   "label": "System Update + the weekly Judge",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "box cron 0 6,7,8 * * * (runs once, in the 08:00 hour of Rome); the Judge on Sundays",
+   "code": "/home/da/task-land/_system/system-agent/system_update.py, /home/da/task-land/_system/system-agent/judge.py",
+   "reads": "the ledger, the System Agent's runs and incidents, broken.jsonl, decisions, rule hits, integration runs, the UI walk, box health, the hub",
+   "writes": "system-agent/updates/<date>.html, ONE hub update card a day (series 'system update'), judge.jsonl; a SYSTEM-WIDE verdict = registry line J-SW-<date>",
+   "llm": "Opus (the Judge, weekly)",
+   "gate": "update card",
+   "status": "live",
+   "paths": [
+    "/home/da/task-land/_system/system-agent/system_update.py"
+   ]
   },
   {
    "id": "b_promptwatch",
