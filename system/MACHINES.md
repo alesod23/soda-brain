@@ -217,3 +217,23 @@ Not built as of the inventories; described here so the map does not go stale on 
 - Conflict branch names used by `repo-sync.sh` for vault_kb and medtech-brain.
 - The box `gtm-eng` dir: is it still needed now that :4141 is laptop-only?
 - `da-brain-index.timer` cadence and whether the `crm` schema becomes the writer (replacing `crm.json`) or a versioned copy first.
+
+## Box gaps: Notion MCP and the lemlist key (G81, checked 5 Oct 2026 00:17 from the laptop, no ssh)
+
+- **lemlist key: MISSING on the box.** `GET http://100.85.52.84:4137/lemlist/status` answers `LEMLIST_API_KEY not found
+  in /home/da/.env/lemlist.env`. One file, one var: `/home/da/.env/lemlist.env` with `LEMLIST_API_KEY` (value only in
+  the laptop's `dev/cdtm-gtm-engine/.env`); `start-box.sh` already passes `LEMLIST_ENV` to the CRM processes. Since the
+  box became the CRM writer (4 Oct 20:26Z) the reply sync `lemlistTick` (server.js, 15 min, writer only) runs THERE, and
+  `lemlist-sync.js` ignored `LEMLIST_ENV` until coattio d43407e. Degraded without the key: lemlist reply sync (LinkedIn
+  and email replies marked "Repondu" + `outreach_via lemlist`) and the CRM drawer's lemlist panel (status / start /
+  pause, `:4137/lemlist/*`). Even with the key, `emailsReplied` answers HTTP 402 ("available starting emailPro plan") on
+  the laptop too: a plan limit, not a machine gap. Box commands: block G81 of `task-land/_system/box-steps-20261004-goal.sh`.
+- **Notion MCP: absent on the box, and no box process needs it today.** Every Notion loop is laptop-gated in code:
+  CRM `notionSource` (3 h, meetings as events) and `coattio-notion-sync` (15 min, the Contacts radar) run only when
+  `!IS_BOX` and write through httpIo (laptop replica proxies to the box writer); `meeting_loop.py` (DA-MeetingLoop),
+  Notion-MeetingFiler, `todo_worker.py` and `job_runner.py` run headless claude on the laptop with
+  `~/.claude/scripts/meeting-reader.mcp.json` (hosted `https://mcp.notion.com/mcp`, OAuth bound to his claude login, no
+  token file to copy). Degraded while the laptop sleeps: meeting notes -> CRM steps and follow-up cards (meeting loop),
+  meetings as CRM events, the Notion Contacts radar, Notion inputs of to-do jobs and decks. Giving the box Notion needs his
+  one-time OAuth consent on the box account plus a code flip of those loops (PARKED in the plan), never `claude mcp add`
+  from the savior.

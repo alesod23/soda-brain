@@ -498,6 +498,18 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   (San Raffaele PoC, Luca Diamanti call Tue 6 Oct 11:00; release `holds.py release --group "Gruppo San Donato"`), the 14
   laptop-only privati-nord holds copied. The legacy `boards/<slug>/held-ids.json` + `holds.json` are still read (true =
   cancel). Open: the CRM parents themselves are still wrong on the writer; `hub_outdated.py` still reads only held-ids.
+  **G145 (5 Oct 2026 00:12): closed.** `hub_outdated.py board_held` now merges `store_held(slug)`: every person of the
+  board (board.json + risk-in-contact.json) a store hold covers (person, org, or a store-defined group) counts as held, so a
+  HOLD / org-pause card whose people are held in the store alone is closed ("condition: hold applied", keys `store person` /
+  `store group <name>`). Store path `OUTREACH_HOLDS` (tests never read the live one). Test `python _system/test_hub_outdated.py`
+  (`test_condition_store_hold`: no held-ids.json, group hold closes Humanitas, released or 4 of 5 held = kept).
+- **A dry tick writes nothing (G144, 5 Oct 2026 00:08).** `campaign.py tick --dry` saved plan.json whenever it cancelled a
+  person (legacy hold true, off the board, replied, invite accepted) or re-dated a step (window, spacing, cap, LinkedIn
+  not ready), and its bounce gate POSTED a real hub card and marked the person. Now every plan write of a tick goes through
+  one `save()` (`not dry or simulate`), and a plain dry bounce gate only prints. The real path is unchanged (save == the old
+  write when not dry). Test `python gtm-eng/tools/test_campaign_dry.py` (scratch copy: a legacy-held person and a bounced
+  address due now; dry = plan.json byte-identical, no lock / wake / dry plan; the real tick still cancels and saves; the
+  pre-fix copy FAILS it). Backup `campaign.py.bak-20261005-dry`.
 
 - **Feeds are streamed, never read whole (hub #69, goal run G123 + G126, 4 Oct 2026).** The 21:09 tick died with a
   MemoryError in `campaign.py inbound_by_thread` (`f.read()` of the inbound feed `~/.medtech-crm/events-ledger.jsonl`):
@@ -1024,3 +1036,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - The LinkedIn accept tick and `li_restore.py` "needs you" cards: the sign-in window must be opened by the system first.
 - The box's contacts sync and the sodano23 Gmail token are expired (FINDINGS-20261001.md); the 23:00 digest's Telegram
   send fails with HTTP 400.
+- Box gaps (G81, 5 Oct 2026): the lemlist key is missing on the box (`/home/da/.env/lemlist.env`, var `LEMLIST_API_KEY`):
+  the reply sync `lemlistTick` runs on the box since the writer flip and fails until the key is there (block G81 of
+  `task-land/_system/box-steps-20261004-goal.sh`; `lemlist-sync.js` honours `LEMLIST_ENV` since coattio d43407e). The
+  Notion MCP is absent on the box and every Notion loop (meeting loop, CRM notionSource, Notion radar sync, to-do jobs) is
+  laptop-gated: they stop while the laptop sleeps. Details and what degrades: `MACHINES.md`, "Box gaps".
