@@ -719,7 +719,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · laptop intake :4137 /review/items 502 and slow (the replica proxy to the box); fix that, then two clean walks close it | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review`"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598"
   },
   {
    "id": "gate_page",
@@ -1982,7 +1982,7 @@
    "writes": "the digest card and a calendar event (the Telegram post fails with HTTP 400)",
    "llm": "none",
    "gate": "digest",
-   "status": "broken",
+   "status": "live",
    "checks": {
     "box:eod-digest": {
      "probe": {
@@ -2015,8 +2015,7 @@
      "escalate": "STUCK terminal: a line typed in the savior's tmux",
      "healthy_when": "the newest presweep-<date>.done stamp is newer than the newest 'watchdog fired' line"
     }
-   },
-   "broken": "M4 28 Sep 23:00 · fix_session · the savior runs the M4 block of box-steps-20261004-goal.sh before 23:00; the check after 23:05 must pass"
+   }
   },
   {
    "id": "b_shipwa",

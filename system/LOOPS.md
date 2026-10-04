@@ -704,6 +704,22 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   removed. hub-review's CRM tab shows the same rows (`currency/patch-hub-review-systemlog-20261004.py`, box step G114).
   Tests: `node --test tests/system-feedback.test.js` (.medtech-crm), `python task-land/_system/test_crm_system_log.py`.
 
+- **Compiled skills never lag their ledgers (goal run G137, 4 Oct 2026 23:00).** `task-land/_system/drafts/skill_lag.py`
+  compares every ledger's `H<n>` rows with its installed skill's `[ledger H..]` tags and `rules_in_ledger:`; `fix`
+  recompiles + installs only what lags. Daily: the System Update (`system-agent/system_update.py`, section 4 "Compiled
+  skills" + the card's MAINTENANCE line) runs it on the laptop; a compile that fails its checks (110 lines, every H once,
+  no emoji) is registry line `SK-<surface>` (owner agent, node `ln_compile`), closed by the next in-sync run; the box only
+  reports, its `~/.claude/skills` copies follow the mirror by box step G137 (parked for him). Done at 23:00: 26 drafting
+  rows and 2 notif rows merged into `skill-map-email.json` (two combined rules, `campaign-mail` and `student-voice`, the
+  rest into existing rules) and `skill-map-notif.json` (`answered` + a new `stale`; its `glyphs` lets the collapsed card's
+  check mark through the no-emoji check); all 8 skills in sync (drafting 89/89, crm 57/57, notif 7/7). The skills map is rebuilt by
+  `soda-brain/tools/skills_map/build.py`. Still compiled verbatim, unmapped: hub H15-H44 and crm H25-H57 (in sync, but
+  those rows outrank the curated rules for the 15 front slots).
+- **Direct-read deciders (G138).** The meeting loop and trippy have no compiled skill by design; `rule_loop_check.py`
+  writes their skill cell `n/a: direct read: meeting_loop.py reads MEETING-CONTRACT.md on every call` and `n/a: direct
+  read: trip_chat_worker.py (the trip worker) reads TRIPPY-CONTRACT.md + preferences.json on every call`, each proven by a
+  grep of the reading line, so the cell goes red if the read is removed.
+
 ## 9. Tasks and the daily page
 
 - Code: `task-land/_system/daily-sync.ps1` + `daily-lib.ps1` (the watcher, task DailySync-Watchdog every 5 min),
