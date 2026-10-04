@@ -190,6 +190,23 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   check, H4 every dated item a real date), else `flag` with what failed. Never blocks, never edits. First real hits: 8 ok
   on the GSD call (`read`, 19:56). Test: `python task-land/_system/test_meeting_observer.py` (6 stored readings + a
   doctored one flagging H1 H2 H3 H4 H6; temp hits file).
+- Since 4 Oct 2026 (G131, meetings as a source of the proactive to-do reader): what he took on in a call becomes to-do
+  lines on ONE card per meeting, from the loop's own reading (no second Notion reader, no second model call). The reading's
+  `dated_items` now also carry `owner` (crm / trip / task), `person`, `asked_by` and `is_next_step`;
+  `proactive_todo.meeting_todos()` keeps his items (`who_owes` him; `he_owes` for a reading of before 2 Oct) and drops the
+  step this card already proposes, what the reading names `already_covered`, a commitment to the counterpart (on the CRM
+  row as an open loop + the step), a line the brain holds open, a line on another open proactive card, the same meeting
+  twice (ask id `notion:<page>` in the synced `proactive-todo.jsonl`). Owners checked in code as for a thread (a trip
+  only when the line names one upcoming trippy trip, Caleb/team never a CRM step). WHY the lines ride on the loop's card
+  for a call with somebody outside: the loop already posts one card per call, a second card about the same call would be
+  two cards per event and split one decision in two. Its text adds "And N to-dos you took on (listed below)", the context
+  gets the numbered lines with owner and the note's quote; `check_verdicts` creates them through
+  `proactive_todo.apply_meeting` (yes or his sentence = all; numbers only, e.g. "no 1 3" = those and no step; no = none).
+  An internal call (the loop posts no card) gets the reader's own card instead (`meeting_card`, type `todo-proposal`,
+  `meta.auto`), executed by `proactive_todo.apply` like a WhatsApp one. `read <url>` prints `TODOS (G131, dry, never
+  posted)` with what it would propose and what it drops. Logged `todos` / `todos-applied` in `meeting-loop.jsonl`. Test:
+  `python task-land/_system/test_proactive_meeting.py` (fixture readings through `meeting_loop.run`: one dry card per
+  meeting, a live pass with a stub hub = one card each, a second pass none, both verdict paths; all temp, nothing posted).
 
 ## 4. The draft lane (every message to a person)
 
@@ -814,6 +831,12 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   crm-outdated path A and the pg mirror, whose behaviour on Slack lines is unproven. Test
   `python _system/test_proactive_slack.py` (fake slack.py, fixture ask + his yes -> exactly one card to a stub hub; a
   second ingest appends 0 and a second pass makes none; xplore dead said once).)
+- **Meetings as a source (G131, 4 Oct 2026).** A finished Notion meeting note is an event of the same reader: the meeting
+  loop's reading (section 3) holds the commitments, `proactive_todo.meeting_todos/meeting_lines/meeting_card/apply_meeting`
+  turn his into to-do lines with their owning system and the note's quote. ONE card per meeting: on the meeting loop's own
+  card for a call with somebody outside, the reader's `todo-proposal` card for an internal call (Caleb, the team). Deduped
+  against that card's step, `already_covered`, the counterpart's CRM row, the brain, other open proactive cards and the
+  same meeting twice (`notion:<page>`). Test `_system/test_proactive_meeting.py`.
 
 ## 10. Notifications and voice
 

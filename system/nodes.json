@@ -1202,7 +1202,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "M13 04 Oct 07:09 · fix_session · a fix session: why the poller stops completing polls (launcher, profile, session), fix the root cause"
+   "broken": "M13 04 Oct 07:09 · fix_session · the next tick's check must pass"
   },
   {
    "id": "w_sent",
