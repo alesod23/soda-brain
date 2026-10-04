@@ -765,6 +765,23 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `claude-opus-5-5` (was `claude-haiku-4-5`, because `SODANOTIF_MODEL` is unset on the box); the env var still wins.
   One line in `daemon.js` and one in `notif-observer.js` (marker NOTIF-MODEL-2020, box patch
   `currency/patch-sodanotif-model-20261004.py`, run after the observer patch); every notif hit line names the model.
+- **AUTO-COLLAPSE + stale filter (G136, item 21, his word 4 Oct 2026 22:12, NOTIF-CONTRACT H6 + H7)**: box patch
+  `task-land/_system/currency/patch-sodanotif-collapse-20261004.py` (marker NOTIF-COLLAPSE-2230, after the three above)
+  writes `sodanotif/notif-collapse.js` + `pollers/answered_check.py`. (1) Every 3 min inside the daemon
+  (`SODANOTIF_COLLAPSE_MS`), each pushed card of the last 48 h (notif-log entry with `tg_message_id`) whose every person he
+  answered AFTER their message is edited in place, silent, through push.js `--edit` into one line
+  "✓ SODANOtif · <channel> · <name>: answered by you at HH:MM, closed". Evidence: WhatsApp store fromMe in that chat
+  (lid/pn aliases joined), LinkedIn store fromMe in that thread, Gmail SENT in that thread, his Slack message in that DM /
+  thread (Gmail + Slack read-only with the pollers' own auth). The evidence is the notif-log field `collapse` (state
+  collapsed / retry / failed) + a daemon.log line; each decision is a rule hit H6 (`block` collapsed, `flag` after 3 failed
+  edits); a collapsed card is never touched again. (2) Before classify: nothing written more than `stale_hours` ago (12,
+  HIS number in H7, read from the compiled skill else the ledger; no number = filter off + a log line), no LinkedIn
+  thread he wrote last in, no store line whose folded text is already in that thread under an earlier id (the 22:09
+  fetch_person duplicate of Jonathan Crowe, tg 5297), nothing already on a card; one H6 `block` hit per thinned batch.
+  (3) `notif_feedback.py --show <notif id | tg id>` prints shown / collapsed / failed-to-collapse with the evidence, and
+  every feedback body carries that state. Test `task-land/_system/test_notif_collapse.py` on the PRISTINE fixture
+  (`sodanotif_fixture.py`: daemon.js + notif-log.js from task-land fce9d52a9, the four patches in box order, == the box
+  mirror after three); `test_sodanotif_model.py` uses the same fixture since G115's 22:04 fail.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
 - **Trippy in the ledgers and the brain (G105, 4 Oct 2026)**: `task-land/_system/TRIPPY-CONTRACT.md` (H1-H21 imported
