@@ -47,3 +47,10 @@ Now: `chat_jid(key)` reads the real chatJid from the WA store and every WhatsApp
 wa-drafts were backfilled via hub `/revise` (action with the @lid jid). hub-review `editableOf` falls back to meta.body
 for wa-draft/slack-draft, and `hubedit.py` writes his text into meta.body when a card has no action. Verified: all 17
 open message cards editable. Not verified: a live WhatsApp send to an @lid jid through the hub (daemon send.js accepts @lid).
+
+**2026-10-04 16:35: the iteration log (HUB H40, his "I want to be able to see that log in the card itself ... as physical
+proof").** Hub cards carry `iterations` (his inputs verbatim, dated, with the version each produced) and `version`;
+`POST /iterate` on the hub, `/revise` links open entries; the page shows "Your earlier comments on this card" under the
+draft plus a "vN · N earlier comments" chip in the head. Derivation and backfill: `task-land/_system/iterations.py`;
+box patches `task-land/_system/currency/patch-hub-iterations-20261004.py` then `patch-hub-review-iterations-20261004.py`
+(both need a restart: da-hub main pid, the :4142 listener). Full shape in `soda-brain/system/LOOPS.md` section 5.
