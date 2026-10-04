@@ -4,6 +4,10 @@ The visual map is `SODA-SYSTEM-MAP.html` in this folder (open it in Chrome; it w
 This page is its narrative and its index, so the brain can recall it. Same rules as the rest of `system/`: updated in
 the same turn as a service, port, job, store or rule changes; dated; no secrets; no person records.
 
+See also: the skills map, every skill in its current state with its ledger, map, loader, observer and coverage
+([SODA-SKILLS-MAP.html](file:///C:/Users/Alessandro/soda-brain/system/SODA-SKILLS-MAP.html), Markdown twin
+[SODA-SKILLS-MAP.md](file:///C:/Users/Alessandro/soda-brain/system/SODA-SKILLS-MAP.md), 2026-10-04).
+
 Last verified: 2026-10-04 22:13 (laptop `schtasks` read at 03:17; box rows from the inventory of 1 Oct and the build
 log of 3-4 Oct, not re-checked on the box that night). 2026-10-04 19:15: Granola retired (his ruling); node w_granola
 is drawn retired (task Granola-Auto-Sweep disabled), the Notion meeting note is written by Notion's meeting AI.

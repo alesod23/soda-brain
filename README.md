@@ -24,13 +24,16 @@ Started 2026-10-01 from the repo `claude-memory` (the assistants' memory since M
 11. `system/SODA-SYSTEM-MAP.html` and `system/SODA-SIMULATION-MAP.html` (each with its `.md`): the system drawn, and the
     simulation harness that tests it drawn next to it (what runs unchanged, faked, stubbed or missing; the eval; the
     results over nights 1 to 3). Review both with `tools/review_map.py`.
+12. `system/SODA-SKILLS-MAP.html` (with its `.md` of Markdown links): every skill in its current state, the rule loop
+    in one strip, and per surface the ledger, the compiled skill (installed, mirror, box), the map, who loads it, the
+    observer's hit lines and the coverage chips of `rule_loop_check.py`; the hand-written skills listed apart.
 
 ## Layout
 
 ```
 README.md, AGENTS.md
 system/      the SODA SYSTEM map (LOOPS, MACHINES, DATA-MAP, REPOS, ACCOUNTS, FINDINGS-*, SODA-SYSTEM-MAP,
-             SODA-SIMULATION-MAP)
+             SODA-SIMULATION-MAP, SODA-SKILLS-MAP)
 memory/      the facts: MEMORY.md index, index_*.md sub-indexes, one markdown file per fact, _attic/
 handoffs/    HANDOFF-*.md, dated
 rules/       README.md pointer to the ledgers (they move here in phase 2)
