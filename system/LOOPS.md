@@ -341,7 +341,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   vs path B (sweep) attribution with overlap and time-to-find; a failure raises the threshold of its path and adds
   a (producer, person) exception without asking him; `cleaning_eval.py report` per path and surface.
   Since 4 Oct 2026: Slack (cdtm, xplore) is an event source for the forward and reverse passes (`slack_events`, the
-  helper `slack.py` on both machines, non-fatal when a workspace fails). Retention (docs/RETENTION.md): the to-do
+  helper `slack.py` on both machines, non-fatal when a workspace fails). (4 Oct 23:36, goal run G139: Slack is read
+  ONCE a pass, cards or not, 96 h window; a workspace whose token Slack refuses (`invalid_auth`, `admin_deactivated_account`
+  ..., sodanotif's DEAD_AUTH set) is `SLACK_DEAD`, not DEGRADED: one line a day `Slack <ws>: token dead (<code>) ...
+  his action: ...` (stamp `~/.local/state/hub-outdated/slack-dead.json`), revives the pass after the re-auth; a slack-draft
+  card is still never judge-closed while any workspace is blind. Measured: xplore's browser token (xoxc + d cookie, 8 May
+  2026) answers `invalid_auth` on the laptop; re-auth parked in the plan. Same pass appends every Slack event to the Slack
+  event ledger, see section 9 G130.) Retention (docs/RETENTION.md): the to-do
   history is append-only (RESTRICT + trigger), one CRM document snapshot a day, nightly `pg_dump` to the Drive mount.
 - Since 3 Oct 2026 (his currency rule): every hub card is a row of the brain (`hub.cards`, embedded, filled from the
   hub's state on every index pass; a resolved or pruned card keeps its row), `brain.match_event` returns open cards
@@ -796,6 +802,18 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   queue -> `feedback_session.TYPE_ROUTES` -> `ledger_verdict` surface proactive. Observer: hit lines H22 (minutes after his
   reply) and H3, `by proactive_todo.py`; `rule_loop_check.py` row `proactive-todo`. Tests `_system/test_proactive_todo.py`;
   replay `proactive_todo.py replay --wa-chat <jid> --since --until` (dry, the live pass simulated per event over the WA store).
+  (4 Oct 23:36, goal run G130: SLACK is a source. The CRM monitor does not read Slack, so the one Slack ingester is
+  `hub_outdated.slack_events` (cdtm + xplore, same 10-minute pass, DMs, group DMs, tags, and his own thread replies that
+  name nobody, `unnamed`, which the card judge never sees): each message is appended once to the machine-local Slack
+  event ledger `~/.local/state/hub-outdated/slack-events.jsonl` (`slack_ledger_append`; env `SLACK_EVENTS_LEDGER` for
+  both writer and reader; 14 days kept) in the CRM ledger's line shape (ts = first-seen time, at, source slack, id
+  `slack:<ws>:<channel>:<Slack ts>` = the dedupe key, kind slack_sent|slack_received, direction, channel slack, name,
+  email, text, url permalink, thread `<ws>:<channel>` for a DM or `<ws>:<channel>:<thread_ts>` in a channel).
+  `proactive_todo.scan` reads it next to `events-ledger.jsonl` (ids merged), thread key `slack:<thread>`, card "To-dos
+  from <name> (Slack)". Not written into events-ledger.jsonl on purpose: that file has one writer (monitor.js) and feeds
+  crm-outdated path A and the pg mirror, whose behaviour on Slack lines is unproven. Test
+  `python _system/test_proactive_slack.py` (fake slack.py, fixture ask + his yes -> exactly one card to a stub hub; a
+  second ingest appends 0 and a second pass makes none; xplore dead said once).)
 
 ## 10. Notifications and voice
 
