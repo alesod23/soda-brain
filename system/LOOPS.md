@@ -464,6 +464,12 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `system-agent/ui-walk-last.json` (run time, per page pass/fail, fault count and kinds, registry id; no screenshots,
   no page text), which the task-land sync carries to the box for the System Update (19:55). Drill: `python tests/test_ui_walk.py` (the planted page
   `tests/ui_walk_plant.html` twice into a registry copy: one item, then an update, then closed by two clean walks).
+  A fix before it ships (G113, 4 Oct 2026): `UIWALK_HUB=http://127.0.0.1:<temp port>` walks a patched hub-review copy
+  (pair it with `--no-registry` and `UIWALK_PROFILE=<temp dir>`, the scheduled walk holds `~/.ui-walk-chrome`). The first
+  7 items it found (19:34) had three causes: U+FFFD in the CRM from a 2026-09-15 PowerShell 5.1 Latin-1 PUT (coattio now
+  refuses a non-UTF-8 body, `crm-app/utf8-body.js`; `tools/repair-fffd-from-backup.py` restores fields byte-exact from
+  the 6 Sep backup), the Capture + Enrich badge floating over Open/Ask (docked in the sidebar footer), and hub-review
+  `.ag-sec h2` URLs overflowing at 390 (`currency/patch-hub-review-h2wrap-20261004.py`).
   Not covered: how Telegram itself draws a card (Telegram Web needs his one-time login in the walker's profile; PARKED,
   not asked).
 
@@ -587,6 +593,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `currency/patch-sodanotif-model-20261004.py`, run after the observer patch); every notif hit line names the model.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
+- **Trippy in the ledgers and the brain (G105, 4 Oct 2026)**: `task-land/_system/TRIPPY-CONTRACT.md` (H1-H21 imported
+  from `preferences.json`, new sentences appended; indexed by the brain's `*-CONTRACT.md` glob), read by the box trip
+  worker (`travel-search/v2/trip_chat_worker.py`); a comment on a rule of a trip board (`app/server.js` api/rule-feedback)
+  also goes to hub-review `/api/feedback`, surface trippy -> ledger_verdict -> that ledger.
 - **Event pages get the feedback box (G107, 4 Oct 2026)**: the event companion servers (box `~/research-page/`,
   `snitem_server.py`, `event_server.py`) serve `/feedback-box.js` and inject it with `data-surface="event-page"`; a
   sentence there reaches hub-review `/api/feedback` and the CRM ledger by default; the Confirmed worker
