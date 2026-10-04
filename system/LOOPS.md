@@ -388,9 +388,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   fire.log tail). Left on purpose: bounded tail reads (gtm_agent tick-log 200 KB, `last_run` 60 KB), small JSON state
   files, per-run worker slices (`daily-campaign/research.py` w*.jsonl), the drained board-feedback outbox. A side
   effect: `decode().splitlines()` also split on a raw U+2028 inside a JSON string and lost that event (15 inbound
-  mails of the real ledger carry one); the stream keeps them. Note: the 400 KB / 600 KB windows are by append order,
-  not by `at` (the ledger is not sorted by `at`), so an inbound mail appended before the window is not seen however
-  recent its `at`. Test `python gtm-eng/agent/tests/test_stream_feeds.py` (window cut mid-line and on a line start,
+  mails of the real ledger carry one); the stream keeps them. **Windows by time (G132, 21:51):** the old 400 KB /
+  600 KB byte windows went by append order and the ledger is not sorted by `at` (15,253 of 16,073 lines out of order):
+  on 4 Oct the last 400 KB held ZERO inbound mails (a WA replay filled it), so the handover check saw nothing. Now
+  `inbound_by_thread` streams the whole ledger and keeps `at` >= the plan's `created_at` (its documented contract;
+  only lines containing `"mail"` are parsed, ~0.03 s), and `inbound_asks.run` keeps `at` >= now - `--days` (3). Real
+  impact at the switch: campaign dry tick on copies = 0 new handovers; inbound asks sees 41 threads of the last 3 days
+  instead of 15, 13 of them not yet judged (the next DA-InboundAsks run judges them: model calls, possibly cards).
+  Test `python gtm-eng/agent/tests/test_stream_feeds.py` (window cut mid-line and on a line start,
   old == new on copies of the real WA store, decisions.jsonl, runs.jsonl, peak memory on a 60 MB feed); the dry tick
   of all 12 plans on COPIES against a 500 MB feed peaks at 81 MB working set, 0 send attempts, send ledger unchanged.
 
