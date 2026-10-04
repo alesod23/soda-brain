@@ -10,6 +10,8 @@ metadata:
 
 RETIRED 2026-09-02: replaced by Notion AI Meeting Notes + Call Intake agent; vbs moved to Startup\_disabled.
 
+FULLY RETIRED 2026-10-04 (his ruling, `feedback_granola_is_dead_notion_meeting_ai`): the daily sweep task Granola-Auto-Sweep had stayed ENABLED after 2 Sep and ran every morning at 08:15 against an MCP that saw 0 notes; disabled 4 Oct 19:12, `run.js` now exits unless `--force-retired`.
+
 # granola-auto (built 2026-07-30)
 
 **Granola MCP is connected** (`https://mcp.granola.ai/mcp`, user scope, OAuth as

@@ -486,7 +486,7 @@ const ALIGN = [
   why:"Same record shape the daemon writes; the Drive hop (a minute of lag, a sync that can stall) is absent."},
  {id:"li",h:0,st:"stub",real:{label:"LinkedIn poller",kind:"script",sub:"Chrome, ~17 newest threads",sched:"LinkedIn-Poll every 15 min",store:"linkedin-store.jsonl",ledger:""},sim:{label:"feeds + li_accept_tick.js",kind:"script",sub:"store written directly"},
   why:"No browser, no dropped session, no 17-thread window: every LinkedIn event the world writes is seen, so the real poller's blind spots cannot show. Accepts come from a list; run-commit.py sends nothing."},
- {id:"notion",h:0,st:"fake",real:{label:"Notion meeting notes",kind:"event",sub:"Granola writes, MCP lists",sched:"Granola-Auto-Sweep; Notion-MeetingFiler hourly",store:"",ledger:""},sim:{label:"notion_notes.json",kind:"store",sub:"listed free, the note inlined"},
+ {id:"notion",h:0,st:"fake",real:{label:"Notion meeting notes",kind:"event",sub:"Notion meeting AI writes, MCP lists",sched:"DA-MeetingLoop every 5 min; Notion-MeetingFiler hourly",store:"",ledger:""},sim:{label:"notion_notes.json",kind:"store",sub:"listed free, the note inlined"},
   why:"The meeting loop's code runs, but its two Notion calls are answered by simclaude: the listing from the world file without a model, the reading with the note text inside the prompt (no MCP). Settle times are written by the world, not observed."},
  {id:"cal",h:0,st:"fake",real:{label:"Google Calendar",kind:"event",sub:"bookings, invites",sched:"",store:"",ledger:""},sim:{label:"calstore + fake gcal.py",kind:"store",sub:"the real helper on JSON"},
   why:"Bookings and invites land in a JSON calendar the real helper and slots.py read. Calendar auth outages are scripted."},

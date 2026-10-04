@@ -2,7 +2,7 @@
 
 The system acts under Alessandro's own identities: five Google accounts (CDTM, Tundra, two Gmail, Lobbly) plus an HEC Outlook mailbox with no token, three Slack workspaces, two Telegram bots and one Telegram user session, one Notion workspace reached only through the Notion MCP, one LinkedIn profile driven through Chrome, one Langfuse project, one GitHub user and one Tailscale tailnet. No API key for a model provider is used anywhere (plan compute only). Every credential is a file; this document names the file and who reads it, never a value. Secrets live outside every repo on both machines (`~/.env/`, `~/.claude/`, `triage/tokens/`, `slack/tokens/`, `wa-daemon/auth/`, `~/.config/rclone/`), the mirror scripts exclude them by pattern, and `.gitignore` repeats the same patterns as a second guard.
 
-Last verified: 2026-10-01 (from the inventories of that day)
+Last verified: 2026-10-01 (from the inventories of that day); 2026-10-04 19:15: Granola retired (his ruling), meeting notes come from Notion's meeting AI
 
 Conventions: laptop = `C:/Users/Alessandro/`, box = `/home/da/`. "Where" names the file; "Who uses it" names the scripts or services that read it.
 
@@ -60,11 +60,11 @@ Chat ids: messages to Alessandro's own chat id are allowed without approval; sen
 |---|---|---|
 | Workspace (Tundra) | id `0f7b30c6-d57e-818c-ad08-0003a268b635` | everything below |
 | Contacts database | data source `a747cb32-a4bd-42bf-818e-df4c97390f4f` | `coattio-notion-sync.js` (CRM -> Contacts), `campaign.py plan`, `daily-campaign/review.py`, the names snapshot |
-| Meetings database | data source `3a3b30c6-d57e-8093-9e35-000b79676b41` (env `CRM_NOTION_MEETINGS_DS`) | `crm-app/sources.js` notionScan, `agent/meeting_loop.py`, `scripts/notion-meeting-filer.ps1` (task Notion-MeetingFiler), `granola-auto`, `/granola`, `drafts/handoff.py` |
+| Meetings database | data source `3a3b30c6-d57e-8093-9e35-000b79676b41` (env `CRM_NOTION_MEETINGS_DS`) | `crm-app/sources.js` notionScan, `agent/meeting_loop.py`, `scripts/notion-meeting-filer.ps1` (task Notion-MeetingFiler), `drafts/handoff.py`; written by Notion's meeting AI (`granola-auto` and `/granola` retired 4 Oct 2026) |
 | Competition > TRIMEDX-affiliated hospitals | page `3e6b30c6-d57e-8135-a67c-e81651d01d73`, data source `2cdbc0d0-de27-4681-9132-b9e0ec8a6be6` (private draft, 2026-09-25) | `review.py` |
 | Credential | NO API token anywhere. Access is the Notion MCP (`https://mcp.notion.com/mcp`) with OAuth state in `~/.claude.json` on each machine; scripts shell out `claude -p --strict-mcp-config --mcp-config <notion.mcp.json>` | the scripts above, on the laptop and on the box (`CLAUDE_BIN=/usr/bin/claude`) |
 
-Also Granola (meeting notes, MCP `granola`, OAuth in `~/.claude.json`) feeds the Meetings database and `/granola`.
+Granola is RETIRED (his ruling, 4 Oct 2026: "Granola is dead; meetings come from Notion's meeting AI"). Meeting notes are Notion's meeting AI notes, read by the meeting loop (LOOPS.md section 3). The MCP server `granola` is still registered in `~/.claude.json` (account-level config, left for him to remove); task Granola-Auto-Sweep is disabled and `~/.claude/granola-auto/run.js` exits unless `--force-retired`.
 
 ## 6. LinkedIn
 

@@ -2,7 +2,7 @@
 
 The system keeps its state in a few hundred files spread over two machines, one Google Drive folder and a handful of cloud services; there is no database yet. Most state is JSON or JSONL inside the task-land repo (synced by git), the CRM is one 5.7 MB JSON file on the laptop with a read replica on the box, the memory is a git repo both machines write, and the message stores (WhatsApp, LinkedIn, Sent mail) are JSONL files that travel through the Drive `DA/` folder or do not travel at all. This document lists each domain as a table, then says for each kind of fact which copy is the truth, then lists the stores with no backup, then the planned Postgres on the box.
 
-Last verified: 2026-10-01 (from the inventories of that day); 2026-10-02: the CRM activity lines of inbound mail now
+Last verified: 2026-10-01 (from the inventories of that day); 2026-10-04 19:15: Granola retired, the Meetings DB is fed by Notion's meeting AI; 2026-10-02: the CRM activity lines of inbound mail now
 carry `full` (the mail text, 4,000 chars) next to `detail`, and `crm.json` is mirrored into Postgres `soda.crm` on the
 box on every save (versions in `crm.doc_versions`).
 
@@ -127,11 +127,11 @@ Conventions: laptop paths start with `C:/Users/Alessandro/`, box paths with `/ho
 | Store | Laptop path | Box path | Format and size | Writers | Readers | Backup | Personal data | In git |
 |---|---|---|---|---|---|---|---|---|
 | Contacts DB | cloud; data source `a747cb32-a4bd-42bf-818e-df4c97390f4f` | same | Notion database | `coattio-notion-sync.js` (CRM -> Contacts), `campaign.py plan` (contacts to CRM + Notion first) | `daily-campaign/review.py`, `notion-names-snapshot.json` builder | Notion | yes | none |
-| Meetings DB | cloud; data source `3a3b30c6-d57e-8093-9e35-000b79676b41` (env `CRM_NOTION_MEETINGS_DS`) | same | Notion database | Granola, `scripts/notion-meeting-filer.ps1` (task Notion-MeetingFiler), `granola-auto`, `/granola` | `crm-app/sources.js` notionScan (Meetings -> CRM), `agent/meeting_loop.py`, `drafts/handoff.py` | Notion | yes | none |
+| Meetings DB | cloud; data source `3a3b30c6-d57e-8093-9e35-000b79676b41` (env `CRM_NOTION_MEETINGS_DS`) | same | Notion database | Notion's meeting AI, `scripts/notion-meeting-filer.ps1` (task Notion-MeetingFiler); Granola, `granola-auto`, `/granola` retired 4 Oct 2026 | `crm-app/sources.js` notionScan (Meetings -> CRM), `agent/meeting_loop.py`, `drafts/handoff.py` | Notion | yes | none |
 | Tundra workspace | cloud; `0f7b30c6-d57e-818c-ad08-0003a268b635` | same | Notion | people | same | Notion | yes | none |
 | TRIMEDX-affiliated hospitals | cloud; page `3e6b30c6-d57e-8135-a67c-e81651d01d73`, data source `2cdbc0d0-de27-4681-9132-b9e0ec8a6be6` (private draft, 2026-09-25) | same | Notion database | `review.py` | the daily campaign cards | Notion; local `competition.json` | no (hospitals) | none |
 | Access | no API token anywhere: the Notion MCP (`https://mcp.notion.com/mcp`, OAuth state in `~/.claude.json`) via `claude -p --strict-mcp-config --mcp-config <notion.mcp.json>` | same pattern on the box (`CLAUDE_BIN=/usr/bin/claude`) | n/a | n/a | n/a | n/a | n/a | n/a |
-| Local snapshots | `gtm-eng/daily-campaign/notion-*.json`, `notion-names-snapshot.json`; `.claude/granola-auto/state.json` | none | JSON | the scripts above | the scripts above | mirror (gtm-eng) | yes | task-land (mirror) |
+| Local snapshots | `gtm-eng/daily-campaign/notion-*.json`, `notion-names-snapshot.json`; `.claude/granola-auto/state.json` (retired 4 Oct 2026, kept as history) | none | JSON | the scripts above | the scripts above | mirror (gtm-eng) | yes | task-land (mirror) |
 
 ### Drive
 
@@ -196,7 +196,7 @@ Conventions: laptop paths start with `C:/Users/Alessandro/`, box paths with `/ho
 | A memory | `soda-brain/memory/<topic>.md` plus its index line | the repo is two-way: both clones are peers, GitHub is the meeting point; the planned `brain` schema is an index, not a second truth |
 | A WhatsApp message | the box daemon's `message-store.jsonl` (the live linked device) | `gdrive/DA/wa-store.jsonl` is a minute-old copy the laptop reads; the laptop `wa-daemon` store is a frozen older history (different line count, 57,785) |
 | A LinkedIn event | LinkedIn itself | `DA/linkedin-store.jsonl` is what the laptop poller saw; the CRM row's `campaigns[]` is the trace of what we sent |
-| A meeting | Notion Meetings DB (fed by Granola) | the CRM row's `meeting_event_id`, the meeting loop's state file, the vault `Raw/` note from `/granola` |
+| A meeting | Notion's meeting AI note (Granola retired 4 Oct 2026) | the CRM row's `meeting_event_id`, the meeting loop's state file; old vault `Raw/` notes from the retired `/granola` |
 | Company knowledge | the vault's compiled pages (`medtech-brain` for Tundra, `vault_kb` for Alessandro) | `catalog.jsonl` and `index.md` are generated; `Raw/` is immutable input; the task-land digest in `context.md` is a daily summary |
 | The code of a tool | its real folder (`gtm-eng/`, `triage/`, `approval-hub/` ...) | `laptop-tools/` and `box-tools/` mirrors are backups refreshed by the sync scripts: restore by copying OUT, never run or edit inside |
 | Which machine is up | `_system/health.json` (laptop) and `_system/health-vps.json` (box), each written by its own machine | the other machine reads the synced copy; staleness is the alarm (and also what a parked sync looks like) |

@@ -6,7 +6,7 @@ Last verified: 2026-10-01 (from the inventories of that day). 2026-10-04 03:17 (
 table in section 4 is corrected by the visual map `SODA-SYSTEM-MAP.html`: DA-MeetingLoop every 5 min (not 30),
 DA-InboundAsks 15 min, DA-FeedbackWorker 10 min, LinkedIn-Poll 15 min, SentCorpus-Harvest 07:30, Notion-MeetingFiler
 hourly, DA-HubForward 5 min keep-alive, Voice-Lane-Watch enabled every minute; tasks missing here: DA-Supervisor
-(10 min), DA-InstinctInbox (15 min), DA-DueToday (08:30), Granola-Auto-Sweep (08:15), Peer60-AcceptCheck (09:00,
+(10 min), DA-InstinctInbox (15 min), DA-DueToday (08:30), Granola-Auto-Sweep (08:15; DISABLED 4 Oct 19:12, Granola retired), Peer60-AcceptCheck (09:00,
 18:00), RuleLoop-SystemCheck (09:10), SODANOtif-Recap (2 h), CDTM-Kickoff-Weekly-Update (Thu 16:00); the laptop
 hub-era tasks (Approval-Hub-Watchdog, Push-Lane-Watchdog, WA-Daemon-*, TG-*, SODANOtif-Daemon-*) are Disabled.
 `da-brain.service` and `da-brain-index.timer` (section 9) are live since 2 Oct. Section 3: the daily pg_dump at

@@ -87,7 +87,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   needs him. Accept guard: a LinkedIn accept on a person with an existing conversation does not reset the step.
 - Hints: `task-land/_system/hints/inbound-asks.md`.
 
-## 3. The meeting loop (Notion meeting notes)
+## 3. The meeting loop (Notion meeting AI notes; Granola retired 4 Oct 2026)
 
 - Code: `gtm-eng/agent/meeting_loop.py` (task DA-MeetingLoop, every 30 min on the laptop). Lists Notion meeting notes
   through the Notion MCP (`claude -p --strict-mcp-config`), reads the FULL transcript, interrogates it with
@@ -104,6 +104,17 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   to propose, and returns `already_covered` + `next_step.covered_by`; the card then says "Already on your to-do (id):
   no new step" instead of proposing it again. Verified on Sophie Tollmann's note: the Pietro intro was found as the
   open sub-item `healthcare-ecosystem-push#3`.
+- Since 4 Oct 2026 19:15 (his ruling: "Granola is dead; meetings come from Notion's meeting AI"): this loop is the ONLY
+  meeting reader. Granola is retired everywhere: task Granola-Auto-Sweep disabled (never deleted; window_lint clean),
+  `~/.claude/granola-auto/run.js` exits unless `--force-retired`, `/granola` (`~/.claude/commands/granola/SKILL.md`) is a
+  redirect to this loop (old text kept under "Retired"; for a Notion page link: `meeting_loop.py read <url>`
+  read-only, `redo <url>` to re-read a note of the last 24 h). The reader is unchanged: listing
+  `notion-query-meeting-notes` (sonnet, created in the last day) and per note `notion-fetch` with the transcript
+  (opus), both through `~/.claude/scripts/notion-meeting-filer.mcp.json` / `meeting-reader.mcp.json`. Check:
+  `python meeting_loop.py run --dry --force-list` (exit 0, nothing written) and `meeting_loop.py read <url>` on
+  the Sophie Tollmann note returned the full interrogation (19:20). Gaps: the `granola` MCP server is still in
+  `~/.claude.json` (his account-level config); granola-auto's medtech-brain `Raw/` copy of each Tundra call has no
+  Notion-side replacement; `~/.claude/CLAUDE.md` still names `/granola` in the auto-open list (his file).
 
 ## 4. The draft lane (every message to a person)
 
