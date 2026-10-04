@@ -719,7 +719,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · laptop intake :4137 /review/items 502 and slow (the replica proxy to the box); fix that, then two clean walks close it | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-review 04 Oct 21:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 246017 --target both"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · laptop intake :4137 /review/items 502 and slow (the replica proxy to the box); fix that, then two clean walks close it | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | UI-laptop-review-390 04 Oct 20:48 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review`"
   },
   {
    "id": "gate_page",
@@ -1992,7 +1992,7 @@
      "healthy_when": "the newest presweep-<date>.done stamp is newer than the newest 'watchdog fired' line"
     }
    },
-   "broken": "M5 28 Sep 22:47 · fix_session · the agent's own check after 22:25 Rome must pass | M4 28 Sep 23:00 · fix_session · fix the rejected body, prove with a dry post"
+   "broken": "M4 28 Sep 23:00 · fix_session · fix the rejected body, prove with a dry post"
   },
   {
    "id": "b_shipwa",
