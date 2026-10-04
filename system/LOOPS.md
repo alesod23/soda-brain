@@ -479,8 +479,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   twice in the agent's own ticks, or once after a fix session's own pass; a maintenance line owned by the fix session
   starts ONE fix job (`jobs.add_fix`, `job_runner.py run --job`, lane mutex `runner-fix.lock`): Opus, 30 min soft, 45
   hard kill, 1 week point read from `sim/harness/budget.py`, extended once to 2 only when progress.json shows a
-  reproduction, never at 80% of the 5-hour window, never when `system-agent/OFF` exists, one per line per day, three a
-  day; the never-list is enforced by the PreToolUse hook `system-agent/fix_guard.py` (fail-closed preflight); the box is
+  reproduction, never at 80% of the 5-hour window, never when `system-agent/OFF` exists, no daily cap (his word 19:14: sessions.jsonl memory, the trend alert, the 92% commit brake), a
+  failed attempt waits 30 min; the never-list is enforced by the PreToolUse hook `system-agent/fix_guard.py` (fail-closed preflight); the box is
   read-only for a fix session (a box change = a laptop commit in a synced repo, or a for_him command); a cause on the
   never-list = `stuck` at once (his word 19:13). (4) A STUCK card ("STUCK on X: I did ... I need you to do exactly
   this ... YES = ... NO = ...") only after a fix session returned stuck, or for a check the LEDGER marks his_command;
