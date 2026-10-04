@@ -43,11 +43,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   (`DA_DEPTH=full`: tools Read and Grep, more turns, higher effort).
 - Writes: through `PUT :4124/api/data` only. From 2 Oct every save is mirrored to Postgres on the box (`pg-mirror.js`,
   phase 3a of the brain).
-- He sees: CRM Today (:4124/#today, laptop; the box's :4124 is a pull), the review mode (j/k, a/s/c held until commit),
+- He sees: CRM Today (:4124/#today; since the writer flip of 4 Oct 2026 18:04 the box's :4124 is the writer and the
+  laptop's :4124 a proxy replica, both answer `/api/health` with their role; before it the laptop wrote and the box pulled), the review mode (j/k, a/s/c held until commit),
   the daily page's one line "Today's items in the CRM (n)".
 - Rules: `CRM-CONTRACT.md` (42); observer scores H2, H15, H16, H17, H21 on every write and render.
 - Since 4 Oct 2026 05:00 (THE PLAN 10(d), CRM H51, the hub's double system on the CRM): the hygiene worker
-  `.medtech-crm/crm-outdated.js` (laptop task CRM-Outdated, every 10 min through `run-hidden.vbs`; log
+  `.medtech-crm/crm-outdated.js` (box cron every 10 min since the 4 Oct 18:04 writer flip, laptop task CRM-Outdated
+  DISABLED (verified 4 Oct 22:34, schtasks); 05:00 to 18:00 it was the laptop task through `run-hidden.vbs`; log
   `crm-outdated.log` + `crm-outdated.out.log`, state `crm-outdated-state.json`, lock beside it) checks every OPEN review
   item (`review-api.items({coming})`, about 180 on the first pass). PATH A: every new line of `events-ledger.jsonl` goes
   through `POST :4150/brain/match` (brain.match_event, the lookup of `todo_match.on_event`); the event's pid and a CRM
@@ -70,13 +72,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   update retired, the step, origin, reply_owed and reply_seen restored, a `step_restored` activity, a `crm-updates`
   line in decisions.jsonl). Deep link `?review=1&updates=1` or `#/today/updates`. Ping: ONE link-only hub card (kind
   update, `meta.origin crm-outdated`) at most every 12 h when a pass changed something. Tests:
-  `node --test tests/crm-outdated.test.js` (a stub CRM on a copy; no model). Box: not scheduled yet (the CRM writer is
-  the laptop); at the cut-over the cron line is
+  `node --test tests/crm-outdated.test.js` (a stub CRM on a copy; no model). Box: scheduled since the writer flip (4 Oct 2026
+  18:04, the box is the CRM writer; until then it had no box schedule because the laptop was the CRM writer); the cron line is
   `*/10 * * * * cd /home/da/coattio && flock -n /tmp/crm-outdated.lock node crm-outdated.js >> /home/da/.local/state/crm-outdated.log 2>&1`
   (4 Oct 19:19, goal run G10: that box cron crashed on every run, `lemlist-api.js:39` `path.join(USERPROFILE)` undefined
   on Linux; coattio 67ad780 falls back to `os.homedir()` in every box-required module; box check in
   `_system/box-steps-20261004-goal.sh` block G10.)
-  and the laptop task is disabled the same minute (one worker, one writer).
+  and the laptop task CRM-Outdated is disabled (one worker, one writer; Disabled on schtasks 4 Oct 22:34).
   (4 Oct 19:48, goal run G111: path A's backlog of 8619 on the box had two causes. The ledger cursor lived in
   `crm-outdated-state.json`, which git tracks, so the box read the LAPTOP's byte offset against its own ledger; and the
   ledger repeats ids (laptop: 16073 lines, 1997 distinct ids, one corpus id 372 times). Now `scanLedger`: the cursor is
@@ -257,8 +259,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   the lane-failed and no-address cards, the meeting card (step + invite), a lane draft with declared `attachments`
   or `keep_card:` (meeting follow-up whose invite goes first), silent lanes (Quick Claude, CRM Ask), revisions of a
   card that is already open.
-- Reach: the producers run on the laptop (DA-DueToday, DA-InboundAsks, DA-MeetingLoop) where :4137 is the writer; on
-  the box 127.0.0.1:4137 proxies to the laptop while it answers, else 503 and the card. No queue.
+- Reach: the producers run on the laptop (DA-DueToday, DA-InboundAsks, DA-MeetingLoop, all Enabled 4 Oct 22:34). Since
+  the writer flip (4 Oct 18:04) each machine's :4137 answers locally and every CRM write goes through CRM_API, which
+  the laptop (proxy replica) forwards to the box writer; the old "box 127.0.0.1:4137 proxies to the laptop while it
+  answers, else 503 and the card" is opt-in only (`COATTIO_INTAKE_PROXY=1` on the non-writer). No queue.
 - Off switch: `task-land/_system/drafts/crm-attach.off` (or env `CRM_ATTACH_OFF=1`) = cards again. Test:
   `node --test review-artifact.test.js` in `.medtech-crm` (a copy of crm.json, a fake person, a temp review dir).
 - The send (closed 4 Oct 05:24): his approve of an EMAIL version that carries a lane `draft_id` goes through
@@ -392,8 +396,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - **The SodaPing hub (H42, 4 Oct 2026):** the Telegram header of every card reads "SodaPing hub"; a card with
   `meta.crm_url` / `meta.crm_pid` ends with "Open the CRM card" -> `CRM_PUBLIC_URL/?review=1#/today/<pid>`; /revise of
   the import card edits its Telegram message in place. Box patch `currency/patch-hub-sodaping-20261004.py`.
-- **The CRM tab on hub-review (H41):** `GET /api/crm` reads the CRM review items (`CRM_ITEMS_URL`, default the laptop
-  writer `http://desktop-1bojsrg:4137/review/items?coming=1`, fallback the box intake), keeps what waits for him (today's
+- **The CRM tab on hub-review (H41):** `GET /api/crm` reads the CRM review items (`CRM_ITEMS_URL`, default
+  `http://desktop-1bojsrg:4137/review/items?coming=1` (written when the laptop was the writer), fallback the box intake,
+  which is the writer's own since 4 Oct 18:04), keeps what waits for him (today's
   items with a draft, a call or a comment being worked; a later item only when iterated, commented or NOT sent), one
   line each (name, org, "NOT sent ...", "vN after your comment of <date>, waiting for your verdict", ...) linking to that
   exact CRM card. Nothing is decided on the hub. Box patch `currency/patch-hub-review-crm-20261004.py`.
@@ -506,7 +511,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `jobs.py whitelist` / `jobs.py add`. `system-feedback.jsonl` stays (CRM digest, simulation learner, savior claims).
 - `due_today.py` (built 1 Oct, laptop task DA-DueToday): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
-- **The feedback session (hub; built, armed, OFF until the cut-over).** `task-land/_system/feedback_session.py`, box
+- **The feedback session (hub; built, armed, LIVE since 4 Oct 2026 17:06; this heading read "OFF until the cut-over").** `task-land/_system/feedback_session.py`, box
   cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent (LIVE since 4 Oct 2026 17:06: the switch exists and the laptop's DA-FeedbackWorker is disabled). One resumed Opus session reads the
   open hub-review `queue.jsonl` entries, splits every entry into RULES (addrule.py now) and WORK (a job, below); "big
   job: ..." is a job of size big, his words verbatim. One "told" update card per batch; log
@@ -514,11 +519,12 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - **Big jobs (THE PLAN item 7).** `_system/jobs.py` stores one file per job (`_system/jobs/<id>.json` + `jobs.jsonl`);
   `_system/job_runner.py run` takes the oldest `queued` job, runs ONE Opus orchestrator (`claude -p`, bypassPermissions,
   specialists through the Agent tool, 90 min wall), and links each artifact with `jobs.link`, the only path to `done`;
-  `needs_him` = ONE update card, the job parks until re-queued. Since 4 Oct 16:45 it runs ON THE LAPTOP: task
-  `DA-JobRunner` every 5 min through `run-hidden.vbs` (no window); the mutex `_system/jobs/runner.lock` (pid,
-  started_at, stale after 100 min) makes a tick exit while a job runs. The box line (`flock -n /tmp/da-job-runner.lock
-  python3 .../job_runner.py run`) is for after the writer cut-over, with DA-JobRunner disabled the same minute: the two
-  locks do not see each other. Status: `python _system/job_runner.py status`; log `_system/jobs/runner.log`.
+  `needs_him` = ONE update card, the job parks until re-queued. Since the writer flip (4 Oct 2026 18:04) it runs
+  ON THE BOX: cron `*/5 * * * * flock -n /tmp/da-job-runner.lock python3 /home/da/task-land/_system/job_runner.py run
+  >> /home/da/.local/state/job-runner.log 2>&1`, laptop task `DA-JobRunner` DISABLED (schtasks 4 Oct 22:34). From 16:45
+  to 18:04 it ran on the laptop (DA-JobRunner every 5 min through `run-hidden.vbs`); the mutex `_system/jobs/runner.lock`
+  (pid, started_at, stale after 100 min) makes a tick exit while a job runs; the flock and runner.lock do not see each
+  other, so only one machine may carry the schedule. Status: `python _system/job_runner.py status`; log `_system/jobs/runner.log`.
 - **The CRM feedback path (the CRM commit, built 4 Oct 16:50).** A commit on the CRM review board hands his sentences to
   `review-api.js digest()`, ONE Opus categorizer with four scopes: `case` (a case note on the dossier, read by the
   generator for that person), `rule` (addrule.py, or a confirmation of an existing rule), `system` (system-feedback.jsonl
@@ -783,7 +789,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - A Claude Code session in tmux on the box (`savior`), the only Telegram poller (plugin), relays his words: verdicts
   on cards, "hub-review commit ...", corrections to file, questions to answer. It never runs the `claude` CLI, never
   respawns itself (cron `box-sessions.sh` keeps it alive), never sends anything that is not a verdict he gave.
-- A laptop session (DA SYSTEM) does what needs Chrome, Windows, the CRM writer and the GTM boards.
+- A laptop session (DA SYSTEM) does what needs Chrome, Windows and the GTM boards (and the CRM writer until the 4 Oct
+  2026 18:04 flip; the box is the writer since).
 
 ## 12. The simulation (the judge of all loops)
 
