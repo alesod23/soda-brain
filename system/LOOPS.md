@@ -273,12 +273,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   prepared, his run); the ALERT rule in `hub_outdated.py` matches only the head of a card and never a routine report.
 
 - Code: `/home/da/approval-hub/server.js` (systemd `da-hub`, :4180 on the box; the laptop's 127.0.0.1:4180 is a
-  forward over Tailscale), `/home/da/hub-review/server.js` (:4142, the phone page: j/k, a/s/x/c, one commit = the yes).
+  forward over Tailscale), `/home/da/hub-review/server.js` (:4142, the phone page: j/k, a/s/x/c, one commit = the yes; since 4 Oct 2026 18:14 its CRM tab reads the box
+  CRM first, `127.0.0.1:4137/review/items`, and links to `http://100.85.52.84:4124`, the box being the CRM writer).
 - A card: `POST /pending {text, context, notify:true}`; the decision in `text`, the artifact in `context`; it pings
   once on Telegram; resolved cards are pruned after 24 h from `state.json`, so counts come from `decisions.jsonl`.
 - The guard (`hub-rules.json`) downgrades cards that break `HUB-CARD-CONTRACT.md` (kind update, never refuses).
 - Hygiene: `task-land/_system/hub_outdated.py` (box cron every 10 min) closes cards made moot by later events; the
-  23:00 digest (`triage/eod_sweep.py`) lists every open card; the 22:12 pre-sweep (savior) closes what he already did.
+  23:00 digest (`triage/eod_sweep.py`) lists every open card; the 22:12 pre-sweep is that same hub_outdated pass (since 4 Oct, M5: its first full
+  pass from 22:12 writes `~/.local/state/presweep-<date>.done`; the savior session cron is retired).
 - Rule H15 (hub): he ticked the line himself = the card closes.
 - **The review page, three fixes of 2026-10-01, all client side in `page.html` (backups beside it).** A card he
   committed a CHANGE on was frozen (`ST.queued`) and had every button hidden, so (a) a second thought had nowhere to
@@ -404,7 +406,7 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 - `due_today.py` (built 1 Oct, laptop task DA-DueToday): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
 - **The feedback session (hub; built, armed, OFF until the cut-over).** `task-land/_system/feedback_session.py`, box
-  cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent. One resumed Opus session reads the
+  cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent (LIVE since 4 Oct 2026 17:06: the switch exists and the laptop's DA-FeedbackWorker is disabled). One resumed Opus session reads the
   open hub-review `queue.jsonl` entries, splits every entry into RULES (addrule.py now) and WORK (a job, below); "big
   job: ..." is a job of size big, his words verbatim. One "told" update card per batch; log
   `_system/feedback-session.jsonl`. Turning it on: the command list in THE PLAN, RESUME item (4).
@@ -573,7 +575,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
 
 - `/home/da/sodanotif/` (systemd `da-sodanotif`, pollers every 60 s): Gmail, Slack, WhatsApp taps and the LinkedIn
   store, classified by `routing-prompt.md` and `NOTIF-CONTRACT.md`, pushed as Telegram cards; CDTM group mail never,
-  noreply never, groups never.
+  noreply never, groups never. WhatsApp tap (`sources/wa.js`, 4 Oct 2026): each message id is emitted once (the store can
+  hold copies; the box CRM monitor self-appended its tail until coattio f0dc584), and a message is dropped when he
+  wrote later in that chat (already answered).
 - Observer (G101, 4 Oct 2026): `notif-observer.js` writes `rule-hits.jsonl` lines, surface `notif`, on every rendered card
   (H1 sender on every line, H2 per WhatsApp card) and on every batch the answered() filter thins (H2 `block`). Hits reach
   the laptop through the task-land sync.

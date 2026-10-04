@@ -302,8 +302,8 @@
    "writes": "addrule.py in one or two ledgers, recompiled skills, /api/queue/done, ONE told card (meta.origin feedback-session), feedback-session.jsonl",
    "llm": "one resumed Opus session (--session-id / --resume, 60 turns)",
    "gate": "the told card: his sentence on it is a correction",
-   "status": "armed",
-   "note": "Inert until /home/da/hub-review/no-telegram exists. Next: every comment splits into rules filed now and a tracked WORK job linked to the card."
+   "status": "live",
+   "note": "Live since 4 Oct 2026 17:06 (no-telegram touched, DA-FeedbackWorker disabled on the laptop). Next: every comment splits into rules filed now and a tracked WORK job linked to the card."
   },
   {
    "id": "rd_classifier",
@@ -396,13 +396,13 @@
   {
    "id": "rd_gtmagent",
    "group": "readers",
-   "label": "the GTM agent (campaigns only)",
+   "label": "the system agent",
    "kind": "script",
    "machine": "laptop",
    "cadence": "every 10 min (task GTM-Agent)",
    "code": "gtm-eng/agent/gtm_agent.py",
-   "reads": "campaign plans, the daily campaign board and fire, CRM Today, contacts to find, the send ledger",
-   "writes": "runs.jsonl, incidents.jsonl, its campaign fixes (release_channel, start_task of the campaign tasks), its section of the combined report (gtm_agent.py section --json), inbox.jsonl lines to the System Agent for non-campaign faults",
+   "reads": "campaigns, CRM Today, hub cards (:4142), servers, tasks, Gmail, LinkedIn, sync, console windows",
+   "writes": "runs.jsonl, incidents.jsonl, whitelist fixes, the heartbeat pushed to the box, two update cards a day (09:00, 18:15)",
    "llm": "none",
    "gate": "update cards",
    "status": "live",
@@ -411,8 +411,7 @@
    ],
    "paths": [
     "~/gtm-eng/agent/gtm_agent.py"
-   ],
-   "note": "Since 4 Oct 2026 the campaigns only ('just focusing on the campaigns'); everything else moved to the System Agent. Reads blockers.json: a channel whose tool the System Agent is fixing is 'held', never a second alert."
+   ]
   },
   {
    "id": "rd_fbworker",
@@ -420,7 +419,7 @@
    "label": "feedback worker",
    "kind": "reader",
    "machine": "laptop",
-   "cadence": "every 10 min (task DA-FeedbackWorker)",
+   "cadence": "DISABLED 4 Oct 2026 17:06 (was task DA-FeedbackWorker, every 10 min); the box feedback session replaced it",
    "code": "gtm-eng/agent/feedback_worker.py",
    "reads": "decisions.jsonl, 'system' verdicts of the review boards",
    "writes": "_system/gtm-agent/system-feedback.jsonl, whitelist fixes, needs_him",
@@ -1635,8 +1634,8 @@
    "label": "eod_sweep.py + the 22:12 pre-sweep",
    "kind": "script",
    "machine": "box",
-   "cadence": "23:00 (cron); 22:12 (the savior); 22:47 watchdog; 22:58 system check post",
-   "code": "triage/eod_sweep.py, presweep-watchdog.sh, post_system_check.py",
+   "cadence": "23:00 (cron); 22:12 pre-sweep = the first hub_outdated.py pass from 22:12, which writes presweep-<date>.done (M5, 4 Oct); 22:47 watchdog; 22:58 system check post",
+   "code": "triage/eod_sweep.py, task-land/_system/hub_outdated.py (stamp_presweep), presweep-watchdog.sh, post_system_check.py",
    "reads": "open cards",
    "writes": "the digest card and a calendar event (the Telegram post fails with HTTP 400)",
    "llm": "none",

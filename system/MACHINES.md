@@ -120,7 +120,7 @@ Crontab header sets `TELEGRAM_STATE_DIR=/home/da/.claude/channels/telegram-null`
 | `*/30` | `triage/contacts_sync.py sync --account alesoda2002` | Google Contacts -> `_system/contacts-inbox.jsonl` -> one hub card per batch -> coattio intake :4137 (failing since 2026-09-21, FINDINGS 2) |
 | `0 23` | `triage/eod_sweep.py` | 23:00 digest card + calendar event (card post failing, FINDINGS 4) |
 | `@reboot` + `*/5` | `~/.local/bin/hub-review-supervise.sh` | keeps hub-review :4142 up |
-| `47 22` | `~/.local/bin/presweep-watchdog.sh` | Telegram message if the savior's 22:12 pre-sweep stamp is missing |
+| `47 22` | `~/.local/bin/presweep-watchdog.sh` | Telegram message if the 22:12 pre-sweep stamp is missing (written by `hub_outdated.py`'s first full pass from 22:12, since 4 Oct, M5) |
 | `0 9 21 9 *` | `travel-search/refresh_milan_paris.py` | one-off, still in crontab (fires again 2027-09-21) |
 | `* * * * *` | `~/.local/bin/tg-lane-watchdog.sh` | dead Telegram lane detector |
 | `58 22` | `task-land/_system/post_system_check.py` | posts the newest weekly `system-check-<n>.md` as a hub update |
