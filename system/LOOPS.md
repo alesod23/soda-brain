@@ -476,8 +476,14 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   feedback-session.jsonl. holds.py `hold` on an existing hold now UPDATES it (until moved, why and outside contacts kept,
   a released hold re-armed; a bare date = through that day, 23:59:59Z). Test
   `python ~/task-land/_system/currency/test-hub-holds-action-20261005.py` (33 checks, temp copies + a patched and an
-  unpatched stub hub). Box block HOLDS CARD ACTION in `_system/box-steps-20261004-goal.sh`. Gap: YES promises "then one
-  card asks you again" on 12 Oct; no producer posts that card yet.
+  unpatched stub hub). Box block HOLDS CARD ACTION in `_system/box-steps-20261004-goal.sh`. G152 (00:45): the re-ask exists:
+  `holds.reask_due`, called once per tick by gtm-eng/campaign.py (the owner of pause re-asks), posts ONE decision card for
+  every hold in its last 24 h (idem holds:<kind>:<key>:reask:<until>, same action shape, yes = until one week later,
+  context = CRM activity of the covered people since the hold's last change) and sets the hold's until to None so it
+  stands until his verdict. His words with a verdict: a readable length ("two weeks", "until 20 Oct", "fino al 20
+  ottobre", a weekday) is applied in code (hold_action.parse_length); one it cannot read is shown back as NOT applied and
+  left to the session. Targets: group, org or person. Tests test-holds-reask-20261005.py (19) +
+  test-hub-holds-action-20261005.py (37); box block HOLDS v2.
 
 - **A DATA-REPAIR CARD RUNS ITS FROZEN PLAN (5 Oct 2026 00:40 Rome, G146, hub #2 a2jggsi3yqw, CRM parents AP-HP).** 15
   company rows on the CRM writer carried parent "AP-HP"; 11 wrong (7 Gruppo San Donato, 1 Gruppo MultiMedica, 3 no parent:
