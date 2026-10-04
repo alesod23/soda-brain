@@ -32,3 +32,5 @@ change-queued until the artifact is linked.
 while the laptop wrote); a person's follow-up is decided on the CRM, a card about a person is a link to it, not a
 second proposal; a CRM draft goes through the lane like any other. See [[reference_soda_brain]],
 [[reference_review_staged_commit]], [[feedback_hub_digest_replaced_by_review_page]].
+
+**Status 4 Oct 2026 18:04:** the box IS the CRM writer (COATTIO_WRITER=box; laptop :4124/:4137 = proxy replica); the phone opens `http://100.85.52.84:4124/?review=1#/today` with the laptop off. Producers attach to CRM items (review-artifact.js), the hub was swept (H41), the iteration log, the whitelist loop and the CRM feedback path exist. Lesson: a merge of a branch that untracks files deletes them from the working tree, and the vault sync committed a mid-merge file once (guard added in vault-git-sync.ps1).
