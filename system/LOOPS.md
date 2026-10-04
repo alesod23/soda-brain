@@ -94,6 +94,33 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   killed before it ever reached a card. When the sidecar names a source event (`source: ... (YYYY-MM-DD)`) only a
   message sent after THAT counts. The Martina case it was built for is unaffected: no event, no floor.
 
+## 4b. Producers attach to the CRM item, not a card (THE PLAN 10(c), built 4 Oct 2026 04:50)
+
+- A producer's draft for a person with a CRM row goes onto that person's Today review item and posts NO hub card.
+  Route `POST :4137/review/artifact {pid, draft_id, sidecar, critic_line, compose_url, card:{text, context}, channel,
+  subject, text, when_why, questions, source}` (`.medtech-crm/review-artifact.js`): appends a version
+  (`source: hub:<producer>`, `draft_id`, `step_text` = the current step, so CRM H48 serves it as the step's draft);
+  idempotent on `draft_id` (same text = unchanged, a revised text for the same id = updated in place); a new version
+  clears a held approve of the old text. Refuses: 400 unknown pid or a channel the row cannot use (`channelFor`),
+  409 not on today's review or already dealt with today, 503 the answering server is not the writer (the box in
+  local mode). On any refusal the producer posts its card as before: a draft is never lost.
+- Callers: `task-land/_system/drafts/crm_artifact.py` (`attach`, `match_pid` by email, LinkedIn, unique name),
+  used by the lane `send_card.py` (every email draft registered through `register.py`: due_today, inbound_asks,
+  meeting_loop, instinct_inbox) and by the chat cards of `due_today.py`, `inbound_asks.py` (WhatsApp, LinkedIn) and
+  `meeting_loop.py` (WhatsApp follow-up). Questions for him ride at the head of `when_why`.
+- Still cards: "add this person?" (inbound_asks `propose`, `introduced`, CRM H39), non-person cards, call steps,
+  the lane-failed and no-address cards, the meeting card (step + invite), a lane draft with declared `attachments`
+  or `keep_card:` (meeting follow-up whose invite goes first), silent lanes (Quick Claude, CRM Ask), revisions of a
+  card that is already open.
+- Reach: the producers run on the laptop (DA-DueToday, DA-InboundAsks, DA-MeetingLoop) where :4137 is the writer; on
+  the box 127.0.0.1:4137 proxies to the laptop while it answers, else 503 and the card. No queue.
+- Off switch: `task-land/_system/drafts/crm-attach.off` (or env `CRM_ATTACH_OFF=1`) = cards again. Test:
+  `node --test review-artifact.test.js` in `.medtech-crm` (a copy of crm.json, a fake person, a temp review dir).
+- Gap: the review's approve sends through `drawer-api.sendNext` (a fresh Gmail draft, then send), not the lane's
+  Gmail draft by id; the lane's Gmail draft stays in Drafts and its sidecar stays `drafted` (reconcile acts only
+  when a draft leaves Drafts). `items()` does not
+  serve `draft_id`/`compose_url` yet (review-api.js change owed).
+
 ## 5. The approval hub and the review page
 
 - Since 3 Oct 2026 23:20, THE CONNECTION: every new mail, WhatsApp and CRM event (hub_outdated.py on the box, every

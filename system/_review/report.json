@@ -1,6 +1,7 @@
 {
  "light": {
   "wires": [],
+  "loose": [],
   "overflow": [],
   "gates": [],
   "overlaps": [],
@@ -15,6 +16,7 @@
  },
  "dark": {
   "wires": [],
+  "loose": [],
   "overflow": [],
   "gates": [],
   "overlaps": [],
