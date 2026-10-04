@@ -2,10 +2,11 @@
 """todo_ingest.py: the to-dos become rows of the brain (S10 phase 1, the mirror; his word 3 Oct 2026: "it's going
 to be my brain"). task-land `Tasks/{active,inbox,waiting,archive}/*.md` -> todo.items (+ a row per sub-checkbox as
 <slug>#<n>), todo.history on every change, todo.links (person, hub card, parent), todo.chunks embedded with the
-index model; crm.people -> crm.people_chunks (one embedded chunk per person). Runs at the end of brain_index.run_index
+index model; crm.people -> crm.people_chunks (one embedded chunk per person); hub cards -> hub.cards; the CRM review
+board (GET :4137/review/items?coming=1, read-only) -> crm.review_items + crm.review_chunks (G12, 4 Oct 2026). Runs at the end of brain_index.run_index
 on the da-brain-index timer (same process, the model already loaded), or by hand:
 
-    todo_ingest.py [--dry-run] [--stats] [--tasks DIR]
+    todo_ingest.py [--dry-run] [--stats] [--tasks DIR] [--reviews-dry]
 
 Idempotent: a file whose sha is unchanged touches nothing. Done is a state with evidence, never a delete: a file that
 vanished from task-land gets deleted_at (history says so) and comes back when the file does. Nothing here writes a
@@ -308,6 +309,88 @@ def upsert_cards(conn, embed: Callable[[list[str]], list[list[float]]]) -> dict:
     return {"cards": len(pending), "changed": len(changed), "resolved_gone": len(gone)}
 
 
+REVIEW_URL = os.environ.get("REVIEW_ITEMS_URL") or "http://127.0.0.1:4137/review/items?coming=1"
+REVIEW_KIND = {"reply": "owed"}     # the board's "reply" = a reply he owes; due, waiting, coming, done keep their name
+
+
+def fetch_review_items(url: str = REVIEW_URL, timeout: int = 90) -> list[dict]:
+    """The CRM review board, read-only, from the writer (on the box: its own loopback :4137)."""
+    import urllib.request
+    with urllib.request.urlopen(url, timeout=timeout) as r:
+        d = json.loads(r.read().decode("utf-8"))
+    if not d.get("ok", True) or not isinstance(d.get("items"), list):
+        raise ValueError("review/items answered without items")
+    return d["items"]
+
+
+def review_row(x: dict) -> dict:
+    """One board item -> the crm.review_items row and its one chunk (who, the step, the head of the current draft)."""
+    step = x.get("step") or {}
+    rv = x.get("review") or {}
+    cur = rv.get("current") or None
+    dealt = x.get("dealt") or None
+    kind = REVIEW_KIND.get(x.get("kind"), x.get("kind") or "due")
+    status = "dealt" if (dealt or kind == "done") else "open"
+    head = ""
+    if cur:
+        head = ((("subject: " + cur["subject"] + "\n") if cur.get("subject") else "") + str(cur.get("text") or ""))[:400]
+    data = {"crm_kind": x.get("kind"), "overdue": step.get("overdue") or 0, "who_owes": step.get("who_owes"),
+            "waiting": x.get("waiting"), "commented": bool(x.get("commented")), "work_job": x.get("work_job"),
+            "versions": rv.get("versions") or 0}
+    data = {k: v for k, v in data.items() if v not in (None, "", False, 0)}
+    when = f", due {step['date']}" if step.get("date") else ""
+    chunk = "\n".join(t for t in (
+        f"{x.get('name') or x.get('pid')}" + (f", {x['org']}" if x.get("org") else "") + f": CRM review item, {kind}, {status}",
+        f"next step{when}: {step.get('text') or ''}" + (f" [{x.get('channel') or step.get('channel')}]" if (x.get("channel") or step.get("channel")) else ""),
+        ("current draft: " + head) if head else "") if t)
+    row = {"pid": x["pid"], "name": x.get("name") or None, "org": x.get("org") or None, "kind": kind, "status": status,
+           "step_text": step.get("text") or None, "step_date": bi._as_date(step.get("date")), "channel": x.get("channel") or step.get("channel"),
+           "version_v": (cur or {}).get("v"), "version_at": _dt((cur or {}).get("at")), "version_head": head or None,
+           "dealt": dealt, "data": data, "chunk": chunk}
+    row["sha"] = _sha(json.dumps([chunk, status, kind, dealt, data], ensure_ascii=False, sort_keys=True, default=str))
+    return row
+
+
+def upsert_reviews(conn, embed: Callable[[list[str]], list[list[float]]], items: list[dict] | None = None, url: str = REVIEW_URL) -> dict:
+    """CRM review items -> crm.review_items (+ one embedded chunk each), G12. Unreachable board = nothing changes (a
+    row is never marked gone on a failed read). An item no longer on the board keeps its row, status gone."""
+    from psycopg.types.json import Jsonb
+    if items is None:
+        try:
+            items = fetch_review_items(url)
+        except Exception as e:
+            return {"skipped": f"review/items unreachable: {type(e).__name__} {str(e)[:120]}"}
+    rows = [review_row(x) for x in items if x.get("pid")]
+    have = {r[0]: (r[1], r[2]) for r in conn.execute("SELECT pid, sha, status FROM crm.review_items").fetchall()}
+    now = datetime.now(timezone.utc)
+    changed = []
+    for r in rows:
+        if have.get(r["pid"], (None, None))[0] == r["sha"]:
+            continue
+        conn.execute(
+            "INSERT INTO crm.review_items (pid, name, org, kind, status, step_text, step_date, channel, version_v, version_at, version_head, dealt, data, sha, updated_at) "
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT (pid) DO UPDATE SET name=EXCLUDED.name, org=EXCLUDED.org, kind=EXCLUDED.kind, "
+            "status=EXCLUDED.status, step_text=EXCLUDED.step_text, step_date=EXCLUDED.step_date, channel=EXCLUDED.channel, version_v=EXCLUDED.version_v, "
+            "version_at=EXCLUDED.version_at, version_head=EXCLUDED.version_head, dealt=EXCLUDED.dealt, data=EXCLUDED.data, sha=EXCLUDED.sha, updated_at=EXCLUDED.updated_at",
+            [r["pid"], r["name"], r["org"], r["kind"], r["status"], r["step_text"], r["step_date"], r["channel"], r["version_v"], r["version_at"],
+             r["version_head"], Jsonb(r["dealt"]) if r["dealt"] else None, Jsonb(r["data"]), r["sha"], now])
+        changed.append(r)
+    listed = {r["pid"] for r in rows}
+    gone = [pid for pid, (_, st) in have.items() if pid not in listed and st != "gone"]
+    for pid in gone:
+        conn.execute("UPDATE crm.review_items SET status = 'gone', sha = 'gone', updated_at = %s WHERE pid = %s", [now, pid])
+    if changed:
+        vecs = []
+        for start in range(0, len(changed), bi.EMBED_BATCH):
+            batch = changed[start:start + bi.EMBED_BATCH]
+            vecs.extend(embed([bi.passage_text("CRM review item", r["chunk"]) for r in batch]))
+        for r, v in zip(changed, vecs):
+            conn.execute("DELETE FROM crm.review_chunks WHERE pid = %s", [r["pid"]])
+            conn.execute("INSERT INTO crm.review_chunks (pid, ord, text, embedding) VALUES (%s,0,%s,%s)", [r["pid"], r["chunk"], v])
+    conn.commit()
+    return {"items": len(rows), "open": sum(1 for r in rows if r["status"] == "open"), "changed": len(changed), "gone": len(gone)}
+
+
 def run(conn=None, embed: Callable | None = None, root: Path | None = None, log=print) -> dict:
     t0 = time.time()
     root = root or tasks_root()
@@ -319,6 +402,7 @@ def run(conn=None, embed: Callable | None = None, root: Path | None = None, log=
         s = upsert_items(conn, rows, enc, log)
         s["people_chunks"] = upsert_people_chunks(conn, enc)
         s["cards"] = upsert_cards(conn, enc)
+        s["reviews"] = upsert_reviews(conn, enc)
     finally:
         if own:
             conn.close()
@@ -343,8 +427,17 @@ def main(argv=None) -> int:
     ap.add_argument("--dry-run", action="store_true", help="parse the files, print counts, touch nothing")
     ap.add_argument("--stats", action="store_true")
     ap.add_argument("--tasks", help="task-land root (default TASKLAND, the box path, or ~/task-land)")
+    ap.add_argument("--reviews-dry", action="store_true", help="read the CRM review board (REVIEW_ITEMS_URL), print the rows it would write, touch nothing")
     a = ap.parse_args(argv)
     bi.load_env()
+    if a.reviews_dry:
+        rows = [review_row(x) for x in fetch_review_items() if x.get("pid")]
+        by = {}
+        for r in rows:
+            by[r["kind"] + " " + r["status"]] = by.get(r["kind"] + " " + r["status"], 0) + 1
+        print(json.dumps({"url": REVIEW_URL, "rows": len(rows), "by_kind_status": by,
+                          "sample": [{k: r[k] for k in ("pid", "kind", "status", "step_date", "chunk")} for r in rows[:3]]}, indent=1, default=str, ensure_ascii=False))
+        return 0
     root = Path(a.tasks) if a.tasks else tasks_root()
     if a.dry_run:
         rows = collect(root)

@@ -150,8 +150,8 @@ def his_rules(topic: str, k: int = 10, ledger: str | None = None) -> dict:
 
 
 def match_event(text: str, k: int = 8, include_done: bool = False) -> list[dict]:
-    """S10: the nearest open to-dos and CRM people for an event text (brain.match_event, RRF over todo.chunks and
-    crm.people_chunks). include_done also returns done to-dos, status says so."""
+    """S10: the nearest open to-dos, CRM review items (G12), CRM people and hub cards for an event text
+    (brain.match_event, RRF over their chunks). include_done also returns done to-dos and dealt review items."""
     k = max(1, min(int(k or 8), 50))
     emb = query_embedding(text)
     res = rows("SELECT * FROM brain.match_event(%s, %s::vector, %s, %s)", [text, emb, k, bool(include_done)])
@@ -393,8 +393,10 @@ def build_mcp():
         return his_rules(topic, k, ledger)
 
     @srv.tool(name="match_event", description="An event text (a mail, a calendar change, a meeting note, a proposed "
-              "step) -> the nearest OPEN to-dos (task-land tasks and sub-items, kind 'todo') and CRM people (kind "
-              "'person'), with scores. Use before proposing a step: it may already be on his to-do.")
+              "step) -> the nearest OPEN to-dos (task-land tasks and sub-items, kind 'todo'), CRM review items (kind "
+              "'review': id = the person id, parent_id = due|owed|waiting|coming, due = the step date), CRM people (kind "
+              "'person') and hub cards (kind 'card'), with scores. Use before proposing a step: it may already be on his to-do "
+              "or on the CRM review board.")
     def _match_event(text: str, k: int = 8, include_done: bool = False) -> list[dict]:
         return match_event(text, k, include_done)
 

@@ -249,8 +249,8 @@ CREATE TRIGGER history_no_truncate BEFORE TRUNCATE ON todo.history FOR EACH STAT
 -- the embedding model is stored next to every vector (a model change = re-embed what differs, never a silent mix)
 ALTER TABLE brain.chunks      ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
 ALTER TABLE todo.chunks       ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
-ALTER TABLE crm.people_chunks ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
-ALTER TABLE hub.card_chunks   ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+ALTER TABLE IF EXISTS crm.people_chunks ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+ALTER TABLE IF EXISTS hub.card_chunks   ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
 
 CREATE INDEX IF NOT EXISTS todo_items_status_idx  ON todo.items (status) WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS todo_items_due_idx     ON todo.items (due);
@@ -313,8 +313,47 @@ CREATE INDEX IF NOT EXISTS hub_cards_person_idx ON hub.cards (person);
 CREATE INDEX IF NOT EXISTS hub_card_chunks_tsv_gin ON hub.card_chunks USING gin (tsv);
 CREATE INDEX IF NOT EXISTS hub_card_chunks_embedding_hnsw ON hub.card_chunks USING hnsw (embedding vector_cosine_ops);
 
+-- on a fresh database the two ALTERs above run before these tables exist (IF EXISTS skips them): add the column here
+ALTER TABLE crm.people_chunks ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+ALTER TABLE hub.card_chunks   ADD COLUMN IF NOT EXISTS model text NOT NULL DEFAULT 'intfloat/multilingual-e5-small';
+
+-- CRM review items are rows too (G12, 4 Oct 2026; THE PLAN 10(d) "review items become rows of the brain"): one row per
+-- person on the CRM review board (GET :4137/review/items?coming=1 of the box writer, read-only), filled by
+-- todo_ingest.upsert_reviews on the index timer. kind = due | owed (a reply he owes) | waiting | coming | done; status
+-- open | dealt (sent, skipped, dealt with today) | gone (no longer on the board: the row stays, never a delete).
+CREATE TABLE IF NOT EXISTS crm.review_items (
+    pid          text        PRIMARY KEY,
+    name         text,
+    org          text,
+    kind         text        NOT NULL,
+    status       text        NOT NULL DEFAULT 'open' CHECK (status IN ('open','dealt','gone')),
+    step_text    text,
+    step_date    date,
+    channel      text,
+    version_v    int,
+    version_at   timestamptz,
+    version_head text,                                     -- subject + the first 400 characters of the current draft
+    dealt        jsonb,
+    data         jsonb       NOT NULL DEFAULT '{}'::jsonb, -- overdue, who_owes, waiting, commented, work_job, crm_kind
+    sha          text        NOT NULL,
+    updated_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS crm.review_chunks (
+    id        bigserial PRIMARY KEY,
+    pid       text      NOT NULL REFERENCES crm.review_items(pid) ON DELETE RESTRICT,
+    ord       int       NOT NULL,
+    text      text      NOT NULL,
+    tsv       tsvector  GENERATED ALWAYS AS (to_tsvector('english', text)) STORED,
+    embedding vector(384),
+    model     text      NOT NULL DEFAULT 'intfloat/multilingual-e5-small',
+    UNIQUE (pid, ord)
+);
+CREATE INDEX IF NOT EXISTS review_items_status_idx ON crm.review_items (status);
+CREATE INDEX IF NOT EXISTS review_chunks_tsv_gin ON crm.review_chunks USING gin (tsv);
+CREATE INDEX IF NOT EXISTS review_chunks_embedding_hnsw ON crm.review_chunks USING hnsw (embedding vector_cosine_ops);
+
 -- An event (a mail, a calendar change, a Notion note, a verdict) finds the nearest open to-dos and CRM people:
--- the same RRF as brain.search over todo.chunks and crm.people_chunks. include_done = true also returns done
+-- the same RRF as brain.search over todo.chunks and crm.people_chunks (plus hub cards and, G12, CRM review items). include_done = true also returns done
 -- items (ranked by the same score, status says so): "did I already do this?".
 DROP FUNCTION IF EXISTS brain.match_event(text, vector, int, boolean);   -- the row type grew (sim, 3 Oct): a plain REPLACE refuses
 CREATE OR REPLACE FUNCTION brain.match_event(q text, q_emb vector(384), k int DEFAULT 8, include_done boolean DEFAULT false)
@@ -343,6 +382,12 @@ cand AS (
            (CASE WHEN h.status = 'open' THEN 1.0 ELSE 0.6 END) * (CASE WHEN coalesce(h.created_at, now()) < now() - interval '90 days' THEN 0.85 ELSE 1.0 END)
     FROM hub.card_chunks c JOIN hub.cards h ON h.id = c.card_id
     WHERE include_done OR h.status = 'open'
+    UNION ALL
+    -- G12: a CRM review item (id = the pid, parent_id = its kind, title = the person's name, due = the step date)
+    SELECT 'review'::text, c.id, r.pid, r.kind, r.name, c.text, r.status, r.step_date, c.embedding, c.tsv,
+           (CASE WHEN r.status = 'open' THEN 1.0 ELSE 0.6 END)
+    FROM crm.review_chunks c JOIN crm.review_items r ON r.pid = c.pid
+    WHERE r.status = 'open' OR (include_done AND r.status = 'dealt')
 ),
 vec AS (
     SELECT kind, cid, row_number() OVER (ORDER BY embedding <=> q_emb) AS r
@@ -369,5 +414,5 @@ ranked AS (                    -- k per kind: 641 people never crowd the to-dos 
 )
 SELECT kind, id, parent_id, title, text, status, due, score, sim
 FROM ranked WHERE rk <= (SELECT k FROM params)
-ORDER BY kind DESC, score DESC;   -- 'todo' rows first, then 'person'
+ORDER BY kind DESC, score DESC;   -- 'todo' rows first, then 'review', 'person', 'card'
 $$;
