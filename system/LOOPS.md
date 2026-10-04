@@ -254,6 +254,30 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   learner) and fixes what is in its whitelist; items it cannot take are `needs_him`.
 - `due_today.py` (built 1 Oct, not scheduled): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
+- **The feedback session (hub; built, armed, OFF until the cut-over).** `task-land/_system/feedback_session.py`, box
+  cron `*/5` with flock, exits while `/home/da/hub-review/no-telegram` is absent. One resumed Opus session reads the
+  open hub-review `queue.jsonl` entries, splits every entry into RULES (addrule.py now) and WORK (a job, below); "big
+  job: ..." is a job of size big, his words verbatim. One "told" update card per batch; log
+  `_system/feedback-session.jsonl`. Turning it on: the command list in THE PLAN, RESUME item (4).
+- **Big jobs (THE PLAN item 7).** `_system/jobs.py` stores one file per job (`_system/jobs/<id>.json` + `jobs.jsonl`);
+  `_system/job_runner.py run` takes the oldest `queued` job, runs ONE Opus orchestrator (`claude -p`, bypassPermissions,
+  specialists through the Agent tool, 90 min wall), and links each artifact with `jobs.link`, the only path to `done`;
+  `needs_him` = ONE update card, the job parks until re-queued. Since 4 Oct 16:45 it runs ON THE LAPTOP: task
+  `DA-JobRunner` every 5 min through `run-hidden.vbs` (no window); the mutex `_system/jobs/runner.lock` (pid,
+  started_at, stale after 100 min) makes a tick exit while a job runs. The box line (`flock -n /tmp/da-job-runner.lock
+  python3 .../job_runner.py run`) is for after the writer cut-over, with DA-JobRunner disabled the same minute: the two
+  locks do not see each other. Status: `python _system/job_runner.py status`; log `_system/jobs/runner.log`.
+- **The CRM feedback path (the CRM commit, built 4 Oct 16:50).** A commit on the CRM review board hands his sentences to
+  `review-api.js digest()`, ONE Opus categorizer with four scopes: `case` (a case note on the dossier, read by the
+  generator for that person), `rule` (addrule.py, or a confirmation of an existing rule), `system` (system-feedback.jsonl
+  + the CRM workplan's change requests + a big job, expect document:repo), `work` (a deliverable: deck, translation,
+  document, one-pager, research, "build", "prepare", "make me"; "big job:" is always work) -> `jobs.py add --surface
+  crm-review --card crm-review:<pid> --person <pid>`, his words verbatim as `spec.words`, the step, the draft and the
+  digest's reading as `spec.expansion`. The dossier carries `job: {id, status}`; the card says "work in progress: <id>";
+  when the runner links the artifact, `jobs.link` posts `POST :4137/review/artifact {pid, job_artifact}`: the comment line
+  "artifact ready: <link>", the work comment resolved, the item back to review (an artifact is never a message version,
+  so it cannot be approved into a send). A person off today's board gets the one hub update card instead. Test
+  `.medtech-crm/tests/work-job.test.js`.
 
 ## 8. The rule loop
 
