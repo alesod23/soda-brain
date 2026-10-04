@@ -1145,7 +1145,7 @@
    "writes": "G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "tasks": [
     "LinkedIn-Poll"
    ],
@@ -1177,8 +1177,32 @@
       "type": "finding"
      },
      "if_fails": "li_repair; when LinkedIn itself refused the restore twice: a fix session finds the exact sign-in step and returns it as for_him"
+    },
+    "linkedin:poll-recurring": {
+     "probe": {
+      "type": "cmd",
+      "argv": [
+       "python",
+       "-c",
+       "import json,datetime as d;t=d.datetime.now(d.timezone.utc)-d.timedelta(hours=24);n=sum(1 for x in open(r'C:/Users/Alessandro/task-land/_system/system-agent/incidents.jsonl',encoding='utf-8') if '\"linkedin:poll\"' in x and '\"opened\"' in x and d.datetime.fromisoformat(json.loads(x)['at'].replace('Z','+00:00'))>t)+sum(1 for x in open(r'C:/Users/Alessandro/gtm-eng/agent/incidents.jsonl',encoding='utf-8') if '\"linkedin:poll\"' in x and '\"opened\"' in x and d.datetime.fromisoformat(json.loads(x)['at'].replace('Z','+00:00'))>t);print(('OK' if n<=1 else 'BAD'),n,'poller outages in 24 h')"
+      ],
+      "ok_re": "^OK",
+      "timeout": 60
+     },
+     "healthy_when": "at most 1 poller outage in 24 h (incidents of both agents)",
+     "if_fails": "a fix session: the root cause of the repeated outages",
+     "known_fixes": [],
+     "files": [
+      "~/.claude/linkedin-poll/poll.py",
+      "~/.claude/linkedin-poll/launcher.py",
+      "~/gtm-eng/agent/li_restore.py"
+     ],
+     "rollback": "the .bak of any file changed",
+     "escalate": "fix session"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "M13 04 Oct 07:09 · fix_session · a fix session: why the poller stops completing polls (launcher, profile, session), fix the root cause"
   },
   {
    "id": "w_sent",
@@ -1992,7 +2016,7 @@
      "healthy_when": "the newest presweep-<date>.done stamp is newer than the newest 'watchdog fired' line"
     }
    },
-   "broken": "M4 28 Sep 23:00 · fix_session · fix the rejected body, prove with a dry post"
+   "broken": "M4 28 Sep 23:00 · fix_session · the savior runs the M4 block of box-steps-20261004-goal.sh before 23:00; the check after 23:05 must pass"
   },
   {
    "id": "b_shipwa",
