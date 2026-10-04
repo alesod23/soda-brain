@@ -70,7 +70,7 @@ section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
 .legend .item.wide b{display:inline}
 
 /* nodes */
-.node{position:relative;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px 8px 12px;font-size:13px;line-height:1.3;min-width:0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.node{position:relative;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:7px 9px 7px 10px;font-size:12.5px;line-height:1.3;min-width:0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .node:hover,.node:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
 .node .l{font-weight:600;display:block}
 .node .s{display:block;color:var(--muted);font-size:12px;margin-top:2px}
@@ -99,7 +99,8 @@ section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
 
 /* lane chart (grid + svg) */
 .chart{position:relative;overflow-x:auto;margin:14px 0 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.chart .grid{display:grid;gap:10px 28px;padding:18px 18px 22px;align-items:start;position:relative;z-index:1}
+.chart.bleed{width:min(1560px,calc(100vw - 32px));margin-left:calc(50% - min(780px,50vw - 16px))}
+.chart .grid{display:grid;gap:10px 28px;padding:18px 18px 22px;align-items:start;position:relative;z-index:1;width:max-content;margin:0 auto}
 .chart .lane-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line);align-self:end}
 .chart svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
 .chart svg path{fill:none;stroke:var(--line-strong);stroke-width:1.3;stroke-linejoin:round;transition:opacity .15s,stroke .15s}
@@ -209,7 +210,7 @@ footer p{max-width:90ch}
   <div class="eyebrow">1</div>
   <h2>The shape every loop shares</h2>
   <p class="intro">Six lanes. An event enters on the left, a reader decides what it means for one person, the brain says what is already open, a card asks him, the owning system executes the yes, and his sentence on the card becomes a rule. Teal wires are the paths added on 3 and 4 October: the connection, the reverse pass, the cleaning tab.</p>
-  <div class="chart" id="chart-shape"></div>
+  <div class="chart bleed" id="chart-shape"></div>
 </div></section>
 
 <section class="block" id="machines"><div class="wrap">
@@ -479,7 +480,7 @@ const SHAPE = {
 // machines chart
 const MACH = {
   // the cloud sits between the two computers because that is where they meet: GitHub for the repos, Drive for the live stores
-  lanes:["laptop (Windows, sleeps)","cloud (the meeting point)","box (Ubuntu VPS, always on)","phone"],
+  lanes:["laptop (sleeps)","cloud","box (always on)","phone"],
   nodes:{
     m_crm:{label:"coattio CRM :4124 + intake :4137",kind:"service",sub:"the ONLY crm.json writer; Coattio-Watchdog"},
     m_boards:{label:"GTM boards :4141",kind:"service",sub:"open-board.ps1 only"},
@@ -551,8 +552,8 @@ function nodeEl(id,extra){
   const el=document.createElement("div"); el.className="node "+(kind==="service"||kind==="session"?"":kind);
   if(n.llm&&!/^none/.test(n.llm)&&kind!=="reader") el.classList.add("llm");
   el.tabIndex=0; el.dataset.id=id;
-  const st=n.status||""; const sub=extra&&extra.sub!==undefined?extra.sub:(n.cadence||"");
-  el.innerHTML=`<span class="l">${st?`<i class="dot ${st}"></i>`:""}${n.label}</span>${sub?`<span class="s">${sub}</span>`:""}`;
+  const st=n.status||""; const sub=kind==="gate"?"":(extra&&extra.sub!==undefined?extra.sub:(n.cadence||""));
+  el.innerHTML=`<span class="l">${st&&kind!=="gate"?`<i class="dot ${st}"></i>`:""}${n.label}</span>${sub?`<span class="s">${sub}</span>`:""}`;
   if(["off","planned","armed"].includes(st)) el.dataset.planned="1";
   el.addEventListener("click",()=>openDrawer(id,n)); el.addEventListener("keydown",e=>{if(e.key==="Enter")openDrawer(id,n)});
   return el;
@@ -561,7 +562,7 @@ function nodeEl(id,extra){
 // one vertical channel per wire, channels assigned so that no two overlapping wires share one) or on the BUS under the
 // chart for the few skip-lane wires marked "bus". Every other link becomes a chip on the node, so no wire ever runs
 // through a node. Hover a node: its wires light up, the rest fade.
-const LANE_W=222, GUTTER=96, CH_STEP=12, CH_PAD=12, BUS_STEP=14;
+const LANE_W=188, GUTTER=74, CH_STEP=12, CH_PAD=13, BUS_STEP=14;
 function laneChart(container,spec,nodes){
   const grid=document.createElement("div"); grid.className="grid";
   grid.style.gridTemplateColumns=`repeat(${spec.lanes.length},${LANE_W}px)`; grid.style.columnGap=GUTTER+"px"; grid.style.rowGap="14px";

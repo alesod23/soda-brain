@@ -1,0 +1,30 @@
+{
+ "light": {
+  "wires": [],
+  "overflow": [],
+  "gates": [],
+  "overlaps": [],
+  "outside": [],
+  "counts": {
+   "charts": 2,
+   "nodes": 162,
+   "wires": 54,
+   "rows": 67
+  },
+  "console_errors": []
+ },
+ "dark": {
+  "wires": [],
+  "overflow": [],
+  "gates": [],
+  "overlaps": [],
+  "outside": [],
+  "counts": {
+   "charts": 2,
+   "nodes": 162,
+   "wires": 54,
+   "rows": 67
+  },
+  "console_errors": []
+ }
+}

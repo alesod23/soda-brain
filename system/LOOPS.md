@@ -8,7 +8,7 @@ box (/home/da/...); the machines are described in MACHINES.md, the stores in DAT
 Last verified: 2026-10-02 (from the code and the inventories of 1 Oct). 2026-10-04: the visual map
 `SODA-SYSTEM-MAP.html` (+ `.md`) draws these loops; its inventory corrected this page: `due_today.py` IS scheduled
 (task DA-DueToday, 08:30); there is no task CRM-Monitor, the monitor ticks inside the CRM server; the meeting loop
-runs every 5 min. Decision of 4 Oct 04:00: the CRM becomes the surface where every follow-up with a person is decided
+runs every 5 min. Decision of 4 Oct 03:48: the CRM becomes the surface where every follow-up with a person is decided
 and sent and the box its writer (THE PLAN item 10; memory `project_crm_is_the_followup_surface`).
 
 ## The shape every loop shares

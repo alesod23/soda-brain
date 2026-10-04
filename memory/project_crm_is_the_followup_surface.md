@@ -1,6 +1,6 @@
 ---
 name: project_crm_is_the_followup_surface
-description: "His decision 4 Oct 2026 04:00: the CRM is where every follow-up with a person is decided and sent; the box becomes the CRM writer (laptop a replica); the hub keeps non-person items and 'add this person?' cards; the CRM inherits the hub pipeline (lane, hygiene worker, Updates page, ping once). Why, the measured overlap, where the build stands."
+description: "His decision 4 Oct 2026 03:48: the CRM is where every follow-up with a person is decided and sent; the box becomes the CRM writer (laptop a replica); the hub keeps non-person items and 'add this person?' cards; the CRM inherits the hub pipeline (lane, hygiene worker, Updates page, ping once). Why, the measured overlap, where the build stands."
 metadata:
   type: project
 since: 2026-10-04

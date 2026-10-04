@@ -6,7 +6,7 @@ metadata:
 since: 2026-10-04
 ---
 
-**His words (4 Oct 2026 04:30, the first SODA System Map):** "you didn't even bother to put a review mechanism that
+**His words (4 Oct 2026 04:05, the first SODA System Map):** "you didn't even bother to put a review mechanism that
 actually meant you sure you outputted something that is readable. This is disgusting. You need to do better in this.
 Recreate it with such a review. Continue until loop until you have all those minor details fixed. The lines are all
 messy like that. The text that is not centered inside is surrounding figures and shapes, it's weird."
