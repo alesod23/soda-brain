@@ -66,15 +66,25 @@ def open_todos(hits: list[dict]) -> list[dict]:
     return [h for h in hits if h.get("kind") == "todo" and h.get("status") == "open"]
 
 
+def open_reviews(hits: list[dict]) -> list[dict]:
+    """G12: the person's open CRM review item (kind 'review', id = pid, parent_id = due|owed|waiting|coming). The CRM
+    side (crm-outdated.js path A) closes or changes it with evidence; here it only informs the producer."""
+    return [h for h in hits if h.get("kind") == "review" and h.get("status") == "open"]
+
+
 def already_open_text(hits: list[dict], max_items: int = 6) -> str:
     """One block for a producer's prompt: what is already open for this person or action."""
     todos = open_todos(hits)[:max_items]
+    reviews = open_reviews(hits)[:3]
     people = [h for h in hits if h.get("kind") == "person"][:3]
-    if not todos and not people:
+    if not todos and not people and not reviews:
         return ""
     L = ["Already in his system (the brain lookup; judge whether any of it IS the step you are about to propose):"]
     for h in todos:
         L.append(f"- to-do {h['id']}" + (f" (due {h['due']})" if h.get("due") else "") + f": {str(h.get('title') or '')[:160]}")
+    for h in reviews:
+        txt = re.sub(r"\s+", " ", str(h.get("text") or ""))[:220]
+        L.append(f"- CRM review item {h['id']} ({h.get('parent_id')}" + (f", step {h['due']}" if h.get("due") else "") + f"): {txt}")
     for h in people:
         txt = re.sub(r"\s+", " ", str(h.get("text") or ""))[:220]
         L.append(f"- CRM {h['id']}: {txt}")
@@ -193,7 +203,8 @@ def on_event(text: str, source: str, apply: bool = True, k: int = 6, dry: bool =
     strong = [h for h in hits if h.get("kind") in ("todo", "card") and h.get("status") == "open" and (h.get("sim") or 0) >= STRONG]
     top = max((h.get("sim") or 0) for h in hits) if hits else 0
     if not strong:
-        log_line(event="lookup", source=source, hits=len(hits), top_sim=round(top, 3), judged=False)
+        log_line(event="lookup", source=source, hits=len(hits), top_sim=round(top, 3), judged=False,
+                 reviews=[h["id"] for h in open_reviews(hits)][:5])
         return {"hits": len(hits), "top_sim": top, "judged": False}
     try:
         verdicts = judge(text, source, strong, model)
