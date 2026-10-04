@@ -581,6 +581,19 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   text}` for any page (`soda-brain/system/feedback-box.js`, one script line). The SODANOtif classifier reads the compiled
   notif skill on every batch. Box side = three patch scripts in `task-land/_system/currency/` (THE PLAN item 16).
   The brain answers from the ledgers: `POST /brain/rules {topic}`, MCP `his_rules`.
+- **Skills and observers of the younger surfaces (goal run, 4 Oct 2026 21:15).** Daily page: its decider
+  (`Resolve-TaskDirective` in `task-land/_system/daily-lib.ps1`, a `((prompt))` -> bucket, dates, sub-steps) reads the
+  compiled proactive skill on every call (the ledger page rules land in by default); `_system/daily_observer.py` runs after
+  every daily-sync render and scores the page on disk (PROACTIVE H2 orange link to the card, CRM H7 one CRM line), one hit
+  line per rule and outcome per day. Event pages: `_system/event_observer.py` scores every real Confirmed run of the box
+  worker against CRM H16 H2 H15 H4 H48 (box patch `currency/patch-event-observer-20261004.py`, EVENT-OBS-2105; replay of
+  the real Benoist run proven). Trippy: `travel-search/v2/app/trippy-observer.js`, called by server.js on every results
+  render: the engine's kills (outlier + ruleViolations) as "block" lines per TRIPPY-CONTRACT row, plus H2 H3 H4 H17 H18 on
+  the live board (live after the app restarts on 675b03a). Quick Claude and voice review: skill and observer are "n/a" in
+  `rule_loop_check.py` (no decider and no artifact of their own; reason in the cell, counted apart).
+  Box supervisor of trippy (G117): liveness by the :4126 listener, never pgrep -f; an empty tailscale ip waits
+  (`currency/patch-trippy-supervise-20261004.py`). Tests: `test_daily_observer.py`, `test_event_observer.py`,
+  `test_trippy_supervise.py` in `task-land/_system/`.
 
 - **THE CRM SYSTEM LOG (plan item 18, G114; his word of 4 Oct 2026 19:42; built 20:50).** A "Something missing / wrong"
   button on every CRM page (top bar; in review mode in the review bar, behind More on a phone) opens the System log: the
