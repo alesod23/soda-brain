@@ -235,7 +235,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   ok. Never twice: a sidecar already in a DONE status is skipped (`skipped: already sent`); `reconcile.py` never marks
   a LinkedIn sidecar (`kind: linkedin` -> continue, and `load_sidecars` globs `r*.md` only, so `li-*.md` is never
   read) and skips every DONE one. A version with no sidecar (instinct's chat drafts, id `producer:pid:sha`) marks
-  nothing. Tests: `node --test tests/lane-linkedin.test.js tests/lane-linkedin-local.test.js` (stub bridge, stub CRM,
+  nothing. Double-send guard (21:07): a LinkedIn lane version whose sidecar is already DONE is refused by `sendNext`
+  with 409 "the lane draft <id> is already <status>: nothing sent" before the rate limit, a dry run, the bridge and the
+  box queue (`laneDoneStatus`), so send-approved writes it as `send_error`, the NOT-sent line on the card; the laptop
+  queue consumer re-checks a queued entry and reports one that finished meanwhile as failed without calling the bridge. Tests: `node --test tests/lane-linkedin.test.js tests/lane-linkedin-local.test.js` (stub bridge, stub CRM,
   fixture sidecar, the lane's real common.py via `LANE_LIB`).
 - **instinct's meta rides with the draft (G7, 4 Oct 2026 20:55).** `crm_artifact.crm_or_card` takes `instinct_of(card
   meta)` (origin instinct: `instinct_rank`, `instinct_why`, `brief`) and `attach` posts it as `instinct: {rank, why,
