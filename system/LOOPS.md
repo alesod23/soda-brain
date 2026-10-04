@@ -141,8 +141,11 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `meeting_loop.py read <url> [<created>] [<title>]` also prints the Raw file a Tundra note would get (always dry).
   Logged `raw` / `raw-failed` in `meeting-loop.jsonl`; the state note carries `raw: {state, path}`. Test:
   `python tests/test_raw_copy.py` (temp dir only: one write, second call none, non-Tundra none, dry none, no
-  overwrite). No backfill: the notes carded before G96 get no Raw file; the first real write is the next Tundra note
-  the scheduled loop finishes. Backup `meeting_loop.py.bak-20261004-raw` (gtm-eng is not a git repo; the task-land
+  overwrite). Backfill (4 Oct, orchestrator's request): `meeting_loop.py backfill-raw [--since 2026-09-01] [--dry]`
+  re-reads (read-only, once; readings cached in `meeting-loop-backfill.json`) the notes the loop processed before G96
+  (state done / carded / internal) that have no Raw file, then calls `raw_copy`; it never writes the loop's state
+  file. Run once for real: 8 files written (Ale x cal, Luigi Intrieri, Sebastiano, Annika, Istituti Clinici Zucchi,
+  Ale x Caleb, Vincent Carte-Jacquesson of Hopital Foch, Sophie Tollmann); "Personal Finances" read as not Tundra. Backup `meeting_loop.py.bak-20261004-raw` (gtm-eng is not a git repo; the task-land
   mirror `_system/laptop-tools/gtm-eng/` picks it up on git-sync).
 - Since 4 Oct 2026 (G103, the meeting OBSERVER): `gtm-eng/agent/meeting_observer.py`, called by `meeting_loop.py` after the
   card text is built (run, also `--dry`) and in `read <url>`. One hit line per HARD row of `MEETING-CONTRACT.md` into
@@ -336,6 +339,16 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   meanwhile built from the pool backlog (361 people, all drafted on 2 Oct).
 - LinkedIn session: `agent/li_restore.py` (exit 2 = he must sign in; the sign-in window must be opened by the system
   before any "needs you" card), `linkedin-poll/poll.py` (inbox every 15 min), the accept tick in monitor.js.
+- **The board rule loop (goal run G99, 4 Oct 2026; RULE-LOOP.md section 7).** Ledger `task-land/_system/BOARD-CONTRACT.md`
+  (`addrule.py --contract board`); skill `~/.claude/skills/board/SKILL.md` (`compile_skill.py --contract board --install`,
+  laptop and box), recompiled and appended to the research workers' prompt on every run (`daily-campaign/workers.js`,
+  env BOARD_SKILL overrides). His comment under a card (a / s open the box) or a category note: `board-server.js`
+  `routeComment` appends it to `gtm-eng/agent/board-feedback-outbox.jsonl`, then posts hub-review `POST /api/feedback
+  {surface: "gtm-board", item: <slug>/<person id>}` (retried every 5 min and on the next comment; a category note waits
+  45 s for the last keystroke); the box feedback session classifies it with `ledger_verdict.py` (board ledger by
+  default, email when it is about the wording) and recompiles. Live on :4141 from the server's next restart (the node
+  process keeps the code it loaded; `rule_loop_check.py` shows the route amber until then). Test
+  `task-land/_system/test_board_loop.py`. No observer yet.
 
 ## 7. The system agent and the feedback worker
 
@@ -377,9 +390,13 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   start_task of the campaign tasks; a non-campaign fault goes to the System Agent's `inbox.jsonl`, never a card of its
   own; it posts no report any more (its section is in the combined one). `box_watch.py` on the box posts "laptop
   silent" from the System Agent's heartbeat. `feedback_worker.py` (task DA-FeedbackWorker, DISABLED on the laptop 2026-10-04 19:19, the box
-  feedback session took over: one filer) takes system feedback items
+  feedback session took over: one filer) took system feedback items
   (`_system/gtm-agent/system-feedback.jsonl`, filed by `feedback_queue.py` from his sentences and by the simulation's
-  learner) and fixes what is in its whitelist; items it cannot take are `needs_him`.
+  learner) and fixed what was in its whitelist. **Since 4 Oct 2026 (goal run G99) it is a STUB that processes nothing**
+  (old code `feedback_worker.py.bak-20261004-fold`): the box feedback session is the one processor of his sentences.
+  What it alone did moved: board comments go through the board route (section 6), its `add` is
+  `task-land/_system/feedback_session.py add --surface <x> --text "..."`, a system request is the session's
+  `jobs.py whitelist` / `jobs.py add`. `system-feedback.jsonl` stays (CRM digest, simulation learner, savior claims).
 - `due_today.py` (built 1 Oct, laptop task DA-DueToday): a promise he made ("reach back in two weeks") comes back prepared on
   its day.
 - **The feedback session (hub; built, armed, OFF until the cut-over).** `task-land/_system/feedback_session.py`, box
@@ -558,6 +575,10 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   the laptop through the task-land sync.
 - Voice: short notes on the laptop (`.claude/voice-lane`), long recordings on the Drive mount transcribed on the box
   (`da-voice.timer`, faster-whisper) and routed by the safe-word prompt.
+- **A spoken rule enters the feedback queue (G100, 4 Oct 2026)**: a sentence he says is a rule ("Rule: ...", "regola:
+  ...") in a voice review (`task-land/_system/voice/voice_review.py`, result.json `rules`) or in a phone recording (box
+  lane `vps/voice-longform-vps.py`, before the classifier) goes through `rule_directive.queue` to hub-review
+  `POST /api/feedback` (kind feedback, surface voice) and the feedback session files it; refused = filed at once.
 
 ## 11. The savior (the always-on session)
 
