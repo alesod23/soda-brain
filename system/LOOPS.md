@@ -445,9 +445,12 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   not asked).
 
 - **The daily System Update and the Judge (goal run G74, G94, G95; 4 Oct 2026 19:40).**
-  `task-land/_system/system-agent/system_update.py run --cron`, BOX cron `0 6,7,8 * * *` (goes on only in the 08:00
-  hour of Rome and once a day, so it is right under UTC or Rome and across DST; the box runs with the laptop asleep; no
-  laptop task). It reads the last 24 h and 7 days: the ledger `soda-brain/system/nodes.json` (node states), the System
+  `task-land/_system/system-agent/system_update.py run --cron`. Runs on the LAPTOP: task `DA-SystemUpdate` daily 08:00
+  (run-hidden.vbs, `--until 23`: a slot missed asleep runs at wake until 23:00; window_lint clean), box data read only
+  through the synced repos and HTTP. The box line (`0 6,7,8 * * * ... run --cron`, 08:00 hour only) is PARKED for him:
+  his one-liner for the laptop-asleep case, in `_system/box-steps-20261004-goal.sh`. The synced `updates.jsonl` (field
+  `by` = hostname) is the cross-machine guard: a day with a posted card is only verified, never posted again;
+  `updates/NO-POST-ONCE` makes the next run post nothing (a task test-start). It reads the last 24 h and 7 days: the ledger `soda-brain/system/nodes.json` (node states), the System
   Agent's `runs.jsonl` (ticks, failing checks) and `incidents.jsonl` (plus the GTM agent's history while it exists),
   the registry `broken.jsonl` (opened, closed, open by owner, open over 60 min), `decisions.jsonl` (his verdicts, the
   system's closes), `rule-hits.jsonl`, the new rules (rows of the `*-CONTRACT.md` ledgers whose id was not in git at

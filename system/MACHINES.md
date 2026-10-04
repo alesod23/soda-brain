@@ -13,6 +13,8 @@ hub-era tasks (Approval-Hub-Watchdog, Push-Lane-Watchdog, WA-Daemon-*, TG-*, SOD
 03:30 writes to the Drive mount.
 2026-10-04 19:20: laptop task DA-IntegrationCheck added (every 2 h from 21:00, wscript + run-hidden.vbs, python
 `task-land/_system/goal-run/integration_check.py`; LOOPS.md section 7).
+2026-10-04 19:58: laptop task DA-SystemUpdate added (daily 08:00, wscript + run-hidden.vbs, python
+`task-land/_system/system-agent/system_update.py run --cron --until 23`; LOOPS.md section 7).
 
 ## 1. The three devices
 
@@ -79,13 +81,16 @@ Every task named in the sources. Cadence and script as the sources state them; a
 | DesignMirror-Server | logon, 1-min keep-alive | `pythonw tundra-design/sync/dsync.py serve` | design-sync server :4190; commits, pulls, pushes tundra-design |
 | DA-HubForward | unverified (keep-alive) | `~/.claude/approval-hub/forward-to-box.js` | laptop :4180 -> box :4180 |
 | DA-WindowWatch | continuous (`pythonw`, 4 samples a second) | `task-land/_system/window-watch/window_watch.py` | records every new console window with its opener in `window-watch/windows.jsonl` |
-| GTM-Agent | every 10 min | `gtm-agent-hidden.vbs` -> `gtm-eng/agent/gtm_agent.py` | the system agent: checks campaigns, CRM Today, hub cards, servers, tasks, Gmail, LinkedIn, sync, console windows; whitelist fixes; updates at 09:00 and 18:15 Rome; heartbeat pushed to the box |
+| GTM-Agent | every 10 min | `gtm-agent-hidden.vbs` -> `gtm-eng/agent/gtm_agent.py` | the GTM agent, CAMPAIGNS ONLY since 4 Oct 2026: campaigns, daily board and fire, CRM Today, contacts, campaign audit; non-campaign faults to the System Agent's inbox.jsonl; no report of its own |
+| DA-SystemAgent | every 10 min | `wscript run-hidden.vbs` -> `task-land/_system/system-agent/system_agent.py check` | THE SYSTEM AGENT (4 Oct 2026): every check of the ledger nodes.json, whitelist fixes, registry broken.jsonl, fix sessions (job kind fix), STUCK cards, map-sync, the ONE combined report 09:00/18:15, the heartbeat to the box |
+| DA-Unstuck | every 1 min | `wscript run-hidden.vbs` -> `task-land/_system/system-agent/unstuck.py tick` | his YES on a STUCK card performs its one action (auth / terminal pre-typed / run) |
 | GTM-Campaign-Tick | every 10 min | `gtm-eng/campaign.py` tick (via .vbs since 2026-09-25) | sends campaign steps inside 08:00-17:00 PT from the tundra account; cap `EMAIL_HARD` 20/day |
 | DailyCampaign-Fire | 16:55 Rome | `daily-campaign-hidden.vbs` -> `gtm-eng/daily-campaign/fire.py` | first 10 of `boards/daily-<today>` -> commit -> `campaign.py plan` -> update card -> research for the next board |
 | DailyCampaign-Research | every 20 min (17:00-24:00 for the next day, 08:00-16:20 for today) | `daily-campaign/supervise.py` | one round of 2 hidden Sonnet workers x 80 min while the day is short of 30 people, then `review.py`, then the board |
 | DailyCampaign-Postmortem | monthly (card on the 1st) | `daily-campaign/postmortem.py` | proposed-vs-sent post-mortem card |
 | DailyCampaign-AB-Reminder | unverified | unverified | A/B reminder; was rewrapped by `window_lint.py --fix` on 2026-09-28 |
 | US-Campaign-Daily | unverified | unverified | the 114-person US wave (`us-campaign-emails`); rewrapped 2026-09-28 |
+| DA-SystemUpdate | daily 08:00, StartWhenAvailable (a missed slot runs at wake until 23:00) | wscript + `run-hidden.vbs` -> `task-land/_system/system-agent/system_update.py run --cron --until 23` (registered by `register-system-update-task.ps1`, 4 Oct 2026 19:58) | the daily System Update page `system-agent/updates/<date>.html` + ONE hub update card; Sundays the weekly Judge (Opus); the synced `updates.jsonl` guard stops a second card from either machine; `updates/NO-POST-ONCE` makes one run post nothing; log `system-agent/updates/system-update.log` |
 | DA-FeedbackWorker | DISABLED 2026-10-04 19:19 (was every 10 min) | `gtm-eng/agent/feedback_worker.py` | lifts system sentences from review fields into `_system/gtm-agent/system-feedback.jsonl`; disabled because the box feedback session took over (one filer, goal run G34) |
 | DA-InboundAsks | unverified | `gtm-eng/agent/inbound_asks.py` | reads WhatsApp, LinkedIn and events ledger for asks owed to people |
 | DA-MeetingLoop | unverified | `gtm-eng/agent/meeting_loop.py` | reads Notion meetings, drives the booked-call loop |
