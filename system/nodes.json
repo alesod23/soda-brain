@@ -1,0 +1,1983 @@
+{
+ "about": "THE SYSTEM LEDGER (his word 4 Oct 2026 19:13): the manual the System Agent reads and the source the map renders. Every session that changes a service, port, job, store or rule edits THIS file the same turn, then runs python soda-brain/tools/build_map.py. Fields: see the docstring of tools/build_map.py.",
+ "nodes": [
+  {
+   "id": "ev_mail",
+   "group": "events",
+   "label": "inbound email",
+   "kind": "event",
+   "machine": "cloud",
+   "cadence": "continuous",
+   "reads": "Gmail: cdtm, tundra (sodano23 token on the box expired)",
+   "writes": "",
+   "note": "Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box.",
+   "status": "live",
+   "checks": {
+    "box:gmail-sodano23": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "l=$(grep -a 'sodano23' ~/.local/state/draft-reconcile.log | grep -v 'Token path' | tail -1); case \"$l\" in *'AUTH REQUIRED'*) echo 'BAD the sodano23 token on the box is unusable (AUTH REQUIRED)';; *) echo \"OK ${l:-no sodano23 line}\";; esac"
+     },
+     "for_him": {
+      "kind": "auth",
+      "what": "sign in once to alessandrosodano23@gmail.com on the Google page I open (the account is already chosen), then approve",
+      "account": "alessandrosodano23@gmail.com",
+      "command": "ssh box /home/da/triage/venv/bin/python /home/da/triage/phone_auth.py url --account sodano23 --login-hint alessandrosodano23@gmail.com",
+      "exchange": "ssh box /home/da/triage/venv/bin/python /home/da/triage/phone_auth.py exchange --account sodano23 --response",
+      "why_only_him": "a Google sign-in is his alone (never-list: never log in)"
+     },
+     "his_command": true,
+     "healthy_when": "the last sodano23 line of draft-reconcile.log is not AUTH REQUIRED"
+    },
+    "gmail:*": {
+     "probe": {
+      "type": "finding"
+     },
+     "for_him": {
+      "kind": "auth",
+      "what": "sign in again to the {account} Gmail on the page I open (the account is already chosen)",
+      "account": "{email}",
+      "command": "python ~/triage/gmail.py reauth --account {acct} --login-hint {email}",
+      "why_only_him": "a Google sign-in is his alone"
+     },
+     "his_command": true
+    }
+   }
+  },
+  {
+   "id": "ev_wa",
+   "group": "events",
+   "label": "WhatsApp message",
+   "kind": "event",
+   "machine": "box",
+   "cadence": "continuous",
+   "reads": "the linked device (Baileys daemon)",
+   "writes": "message-store.jsonl, shipped to Drive DA/ every minute",
+   "status": "live"
+  },
+  {
+   "id": "ev_li",
+   "group": "events",
+   "label": "LinkedIn accept or DM",
+   "kind": "event",
+   "machine": "laptop",
+   "cadence": "every 15 min",
+   "reads": "the inbox in a dedicated Chrome profile (~17 newest threads)",
+   "writes": "G:/My Drive/DA/linkedin-store.jsonl (in and fromMe)",
+   "status": "live",
+   "note": "The per-person thread read (the Ienna case) is in the monitor-layer design, not built."
+  },
+  {
+   "id": "ev_notion",
+   "group": "events",
+   "label": "Notion meeting note",
+   "kind": "event",
+   "machine": "cloud",
+   "cadence": "Notion meeting AI writes it 22 to 49 min after the call starts",
+   "reads": "the Meetings DB",
+   "writes": "",
+   "status": "live"
+  },
+  {
+   "id": "ev_cal",
+   "group": "events",
+   "label": "calendar booking",
+   "kind": "event",
+   "machine": "cloud",
+   "cadence": "continuous",
+   "reads": "Google Calendar of the chosen account",
+   "writes": "",
+   "status": "live",
+   "checks": {
+    "calendar:*": {
+     "probe": {
+      "type": "finding"
+     },
+     "for_him": {
+      "kind": "auth",
+      "what": "sign in again to the {account} calendar on the page I open (the account is already chosen)",
+      "account": "{email}",
+      "command": "python ~/triage/gcal.py auth --account {acct}",
+      "why_only_him": "a Google sign-in is his alone"
+     },
+     "his_command": true
+    }
+   }
+  },
+  {
+   "id": "ev_slack",
+   "group": "events",
+   "label": "Slack DM",
+   "kind": "event",
+   "machine": "box",
+   "cadence": "every 60 s (poller); every 10 min (sweep)",
+   "reads": "cdtm, xplore workspaces",
+   "writes": "",
+   "status": "live",
+   "note": "An event source for the forward and reverse passes since 4 Oct."
+  },
+  {
+   "id": "ev_page",
+   "group": "events",
+   "label": "a line on the daily page",
+   "kind": "event",
+   "machine": "laptop",
+   "cadence": "absorbed ~60 s after typing stops",
+   "reads": "task-land/Daily/<date>.md",
+   "writes": "a task file",
+   "status": "live"
+  },
+  {
+   "id": "ev_sentence",
+   "group": "events",
+   "label": "his sentence",
+   "kind": "event",
+   "machine": "phone",
+   "cadence": "whenever",
+   "reads": "Telegram, the review page, a session",
+   "writes": "",
+   "status": "live",
+   "note": "The five sentences: this sucks because, I like this, this again, change X, slower/faster."
+  },
+  {
+   "id": "rd_crm",
+   "group": "readers",
+   "label": "CRM monitor + reader",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "ticks inside the CRM server (no schtask of its own)",
+   "code": ".medtech-crm/crm-app/monitor.js, reader.js, observer.js, owed.js, sources.js",
+   "reads": "Gmail (full text), the WA and LinkedIn stores on Drive, the sent corpus, the calendar, the Notion Meetings DB",
+   "writes": "events-ledger.jsonl, the row's step and state through PUT :4124/api/data, rule-hits.jsonl",
+   "llm": "Opus per person, the CRM contract whole plus hints",
+   "gate": "CRM Today, review mode",
+   "status": "live",
+   "paths": [
+    "~/.medtech-crm/crm-app/monitor.js"
+   ]
+  },
+  {
+   "id": "rd_meeting",
+   "group": "readers",
+   "label": "meeting loop",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "every 5 min (task DA-MeetingLoop)",
+   "code": "gtm-eng/agent/meeting_loop.py",
+   "reads": "Notion Meetings through the Notion MCP, the full transcript, MEETING-CONTRACT.md, hints/meeting-loop.md",
+   "writes": "the CRM step with origin notion:<page>, open_loops, owed-artifact cards, a WhatsApp follow-up card when there is no email; calls todo_match.on_event",
+   "llm": "Opus with two MCP tools: Notion and the brain's match_event (the producer check: 'already on your to-do')",
+   "gate": "hub card",
+   "status": "live",
+   "note": "Measured: the card lands 2 min after the note settles.",
+   "tasks": [
+    "DA-MeetingLoop"
+   ],
+   "paths": [
+    "~/gtm-eng/agent/meeting_loop.py"
+   ]
+  },
+  {
+   "id": "rd_asks",
+   "group": "readers",
+   "label": "inbound asks",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "every 15 min (task DA-InboundAsks)",
+   "code": "gtm-eng/agent/inbound_asks.py",
+   "reads": "the WA store, the LinkedIn store, the events ledger, the CRM",
+   "writes": "a card with a draft answer (email through the lane, wa-draft, linkedin-draft), proposed rows",
+   "llm": "headless claude",
+   "gate": "hub card",
+   "status": "live",
+   "tasks": [
+    "DA-InboundAsks"
+   ],
+   "paths": [
+    "~/gtm-eng/agent/inbound_asks.py"
+   ]
+  },
+  {
+   "id": "rd_due",
+   "group": "readers",
+   "label": "due today",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "daily 08:30 (task DA-DueToday)",
+   "code": "gtm-eng/agent/due_today.py",
+   "reads": "CRM steps due today that he owes",
+   "writes": "one prepared card per person, due-today.jsonl",
+   "llm": "headless claude",
+   "gate": "hub card",
+   "status": "live",
+   "tasks": [
+    "DA-DueToday"
+   ],
+   "paths": [
+    "~/gtm-eng/agent/due_today.py"
+   ]
+  },
+  {
+   "id": "rd_instinct",
+   "group": "readers",
+   "label": "instinct inbox",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "every 15 min (task DA-InstinctInbox)",
+   "code": "gtm-eng/agent/instinct_inbox.py",
+   "reads": "the WhatsApp chat with instinct on the Drive store",
+   "writes": "lane cards 'instinct proposes', the text written by the reader when instinct gave none (a yes is final, H34)",
+   "llm": "one Opus call per batch",
+   "gate": "hub card",
+   "status": "paused",
+   "note": "The task runs; its producer is set aside (4 Oct 01:50).",
+   "tasks": [
+    "DA-InstinctInbox"
+   ],
+   "paths": [
+    "~/gtm-eng/agent/instinct_inbox.py"
+   ]
+  },
+  {
+   "id": "rd_match",
+   "group": "readers",
+   "label": "todo_match judge",
+   "kind": "reader",
+   "machine": "box",
+   "cadence": "on every event (the connection) and every finished call",
+   "code": "soda-brain/tools/todo_match.py: lookup, judge, apply, on_event",
+   "reads": "POST /brain/match (read-only token): open to-dos, people, cards, k per kind",
+   "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
+   "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
+   "gate": "none: the Cleaning tab shows it and can reverse it",
+   "status": "live",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
+  },
+  {
+   "id": "rd_sweep",
+   "group": "readers",
+   "label": "hub sweep + reverse pass",
+   "kind": "reader",
+   "machine": "box",
+   "cadence": "cron every 10 min",
+   "code": "task-land/_system/hub_outdated.py",
+   "reads": "every open card; mail (3-try retry), WhatsApp, the CRM, LinkedIn in and out, Slack; his own messages up to 10 days before a card",
+   "writes": "step 0 condition re-checker, info ageing, deterministic rules, step 2a' the connection on new events, step 2b the reverse pass (card_marks), POST /close; hub-outdated-log.jsonl, todo-match.jsonl",
+   "llm": "Opus judge with CLOSE_CONFIDENCE (auto-adjusted when the learning layer is on)",
+   "gate": "none; holds everything on DEGRADATO (a Gmail account unreadable)",
+   "status": "live"
+  },
+  {
+   "id": "rd_research",
+   "group": "readers",
+   "label": "daily campaign research",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "every 20 min, 17:00 to 24:00 and 08:00 to 16:20 (task DailyCampaign-Research)",
+   "code": "gtm-eng/daily-campaign/supervise.py, research.py, review.py, build.py",
+   "reads": "the pool, the CRM, the Notion snapshot, the boards",
+   "writes": "pool.json, runs/, the TRIMEDX Notion DB, the board daily-<date> (Opus per email with the drafting skill)",
+   "llm": "the research round: one Opus worker x 80 min, the most expensive job of the week",
+   "gate": "board review, optional",
+   "status": "paused",
+   "note": "Paused until 2026-10-07 (research-pause.json). Boards are built from the 361-person backlog.",
+   "tasks": [
+    "DailyCampaign-Research"
+   ],
+   "paths": [
+    "~/gtm-eng/daily-campaign/supervise.py"
+   ]
+  },
+  {
+   "id": "rd_feedback",
+   "group": "readers",
+   "label": "feedback session",
+   "kind": "reader",
+   "machine": "box",
+   "cadence": "cron every 5 min with flock",
+   "code": "task-land/_system/feedback_session.py",
+   "reads": "hub-review queue.jsonl after the cursor; AGENTS.md, RULE-LOOP.md, rules/README.md, LOOPS.md, hints/agent-work.md",
+   "writes": "addrule.py in one or two ledgers, recompiled skills, /api/queue/done, ONE told card (meta.origin feedback-session), feedback-session.jsonl",
+   "llm": "one resumed Opus session (--session-id / --resume, 60 turns)",
+   "gate": "the told card: his sentence on it is a correction",
+   "status": "armed",
+   "note": "Inert until /home/da/hub-review/no-telegram exists. Next: every comment splits into rules filed now and a tracked WORK job linked to the card."
+  },
+  {
+   "id": "rd_classifier",
+   "group": "readers",
+   "label": "page classifier + ((prompt))",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "inside the daily watcher",
+   "code": "task-land/_system/daily-lib.ps1 (Resolve-TaskProject, Resolve-TaskDirective)",
+   "reads": "the new line, the registry of project slugs, sibling titles",
+   "writes": "project, due, surface_on, bucket, sub-checkboxes, notes",
+   "llm": "claude.exe -p, single-line JSON, confidence decided in code",
+   "gate": "none",
+   "status": "live",
+   "paths": [
+    "~/task-land/_system/daily-lib.ps1"
+   ]
+  },
+  {
+   "id": "rd_notif",
+   "group": "readers",
+   "label": "sodanotif classifier",
+   "kind": "reader",
+   "machine": "box",
+   "cadence": "always (da-sodanotif.service), pollers every 60 s",
+   "code": "/home/da/sodanotif/daemon.js, pollers/*, routing-prompt.md, NOTIF-CONTRACT.md",
+   "reads": "Gmail, Slack, the WA tap, the LinkedIn store",
+   "writes": "stores/, notification-log.jsonl, a Telegram card per notification (never CDTM group mail, noreply, groups)",
+   "llm": "a classifier prompt",
+   "gate": "Telegram card",
+   "status": "live",
+   "paths": [
+    "/home/da/sodanotif/daemon.js"
+   ]
+  },
+  {
+   "id": "rd_savior",
+   "group": "readers",
+   "label": "the savior session",
+   "kind": "session",
+   "machine": "box",
+   "cadence": "always (tmux savior, kept by box-sessions.sh every 5 min)",
+   "code": "claude --remote-control --channels plugin:telegram",
+   "reads": "Telegram (the only poller), hub cards, the hub-review queue",
+   "writes": "verdicts to the hub, corrections filed with addrule.py, the 22:12 pre-sweep; never runs the claude CLI, never sends what is not his verdict",
+   "llm": "an Opus session",
+   "gate": "it IS the relay of his gate",
+   "status": "live",
+   "checks": {
+    "box:savior-prompt": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "if tmux capture-pane -p -t savior 2>/dev/null | tail -25 | grep -qE 'Do you want to proceed|Esc to cancel'; then echo 'BAD the savior pane shows a permission prompt'; else echo 'OK no prompt in the savior pane'; fi"
+     },
+     "for_him": {
+      "kind": "terminal",
+      "what": "answer the permission prompt in the savior's tmux (the window opens attached; Ctrl-b d detaches)",
+      "account": null,
+      "command": "ssh box -t tmux attach -t savior",
+      "why_only_him": "answering a permission prompt is his (never-list: a permission)"
+     },
+     "his_command": true,
+     "healthy_when": "no permission prompt in the savior's tmux pane"
+    }
+   }
+  },
+  {
+   "id": "rd_gtmagent",
+   "group": "readers",
+   "label": "the system agent",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 10 min (task GTM-Agent)",
+   "code": "gtm-eng/agent/gtm_agent.py",
+   "reads": "campaigns, CRM Today, hub cards (:4142), servers, tasks, Gmail, LinkedIn, sync, console windows",
+   "writes": "runs.jsonl, incidents.jsonl, whitelist fixes, the heartbeat pushed to the box, two update cards a day (09:00, 18:15)",
+   "llm": "none",
+   "gate": "update cards",
+   "status": "live",
+   "tasks": [
+    "GTM-Agent"
+   ],
+   "paths": [
+    "~/gtm-eng/agent/gtm_agent.py"
+   ]
+  },
+  {
+   "id": "rd_fbworker",
+   "group": "readers",
+   "label": "feedback worker",
+   "kind": "reader",
+   "machine": "laptop",
+   "cadence": "every 10 min (task DA-FeedbackWorker)",
+   "code": "gtm-eng/agent/feedback_worker.py",
+   "reads": "decisions.jsonl, 'system' verdicts of the review boards",
+   "writes": "_system/gtm-agent/system-feedback.jsonl, whitelist fixes, needs_him",
+   "llm": "headless claude",
+   "gate": "told card",
+   "status": "live",
+   "note": "To be disabled at the P3 cut-over (it would double-file).",
+   "tasks": [
+    "DA-FeedbackWorker"
+   ],
+   "paths": [
+    "~/gtm-eng/agent/feedback_worker.py"
+   ],
+   "checks": {
+    "task:DA-FeedbackWorker:exit": {
+     "probe": {
+      "type": "ps",
+      "cmd": "$i = Get-ScheduledTask -TaskName 'DA-FeedbackWorker' | Get-ScheduledTaskInfo; if ($i.LastTaskResult -ne 0x800710e0) { \"OK last result $('0x{0:x}' -f $i.LastTaskResult)\" } else { \"BAD last result 0x800710e0\" }"
+     },
+     "if_fails": "watch; a 4th in 24 h = a fix session",
+     "known_fixes": [],
+     "files": [
+      "~/gtm-eng/agent/feedback_worker.py"
+     ],
+     "rollback": "",
+     "escalate": "fix session",
+     "healthy_when": "the last result is not 0x800710e0"
+    }
+   }
+  },
+  {
+   "id": "rd_supervisor",
+   "group": "readers",
+   "label": "DA supervisor",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 10 min (task DA-Supervisor)",
+   "code": "task-land/_system/supervisor.ps1",
+   "reads": "the health of the DA SYSTEM fault classes",
+   "writes": "supervisor.log, state; ONE hub card after 3 failed repairs",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "live",
+   "tasks": [
+    "DA-Supervisor"
+   ],
+   "paths": [
+    "~/task-land/_system/supervisor.ps1"
+   ]
+  },
+  {
+   "id": "st_pg",
+   "group": "brain + stores",
+   "label": "Postgres soda (box)",
+   "kind": "store",
+   "machine": "box",
+   "cadence": "index every 5 min (da-brain-index.timer)",
+   "code": "soda-brain/tools/schema.sql, brain_index.py, todo_ingest.py",
+   "reads": "soda-brain md, the contracts and hints, task-land Tasks/**, the hub's state.json, crm.people",
+   "writes": "brain.pages/chunks (e5-small, 384-d), crm.doc_versions (one a day) + companies, people, people_chunks (641), events; todo.items (310), links, history (append-only, RESTRICT + trigger), chunks; hub.cards + card_chunks",
+   "llm": "none (local embeddings on CPU)",
+   "gate": "",
+   "status": "live",
+   "note": "The repos and the task files stay the truth; the DB is the index plus the CRM versions. Nightly pg_dump 03:30 to the Drive mount, 14 days. pgvector 0.6.0 (0.8 is his sudo step)."
+  },
+  {
+   "id": "st_door",
+   "group": "brain + stores",
+   "label": "the door :4150",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "always (da-brain.service)",
+   "code": "soda-brain/tools/brain_serve.py",
+   "reads": "Postgres soda",
+   "writes": "serves recall, what_is_true, page, crm_person, crm_search, match_event over HTTP and MCP (/mcp); POST /crm/put stores versions; POST /brain/match with the read-only token",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "Tailscale address only (loopback gives 000); Funnel at da-box.taile93f00.ts.net. Tokens in ~/.env/soda.env, never printed.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4150
+    }
+   ]
+  },
+  {
+   "id": "st_crm",
+   "group": "brain + stores",
+   "label": "crm.json (laptop)",
+   "kind": "store",
+   "machine": "laptop",
+   "cadence": "",
+   "code": ".medtech-crm/crm.json, 5.7 MB",
+   "reads": "",
+   "writes": "ONE writer: crm-app/server.js PUT /api/data (through it: intake :4137, the monitor, peer.js, run-commit, the Notion sync)",
+   "status": "live",
+   "note": "The box copy is a pull replica and is merged per record on 4 Oct 04:07 (647 people, cards #10 closed); one writer: the BOX since 4 Oct 18:03 (COATTIO_WRITER=box; the laptop :4124/:4137 is a proxy replica, role laptop writer false).",
+   "paths": [
+    "~/.medtech-crm/crm.json"
+   ]
+  },
+  {
+   "id": "st_tasks",
+   "group": "brain + stores",
+   "label": "task files",
+   "kind": "store",
+   "machine": "laptop",
+   "cadence": "git both ways: 15 min laptop, 60 s box",
+   "code": "task-land/Tasks/{inbox,active,waiting,archive}",
+   "reads": "",
+   "writes": "daily-sync.ps1, capture.py, pipeline.py (sole writer of stage, tick, redate), surface-sweep.ps1, crm-bridge.ps1",
+   "status": "live"
+  },
+  {
+   "id": "st_hub",
+   "group": "brain + stores",
+   "label": "hub state.json",
+   "kind": "store",
+   "machine": "box",
+   "cadence": "",
+   "code": "/home/da/approval-hub/state.json (52 open), hub-rules.json; hub-review/queue.jsonl",
+   "reads": "",
+   "writes": "approval-hub/server.js only (POST /pending, /resolve, /revise, /close); supersede-at-post by producer + person + action since 3 Oct",
+   "status": "live",
+   "note": "Resolved cards are pruned after 24 h; counts come from decisions.jsonl. Mirrored into task-land/_system/box-tools/ every minute; queue.jsonl has no backup.",
+   "paths": [
+    "/home/da/approval-hub/state.json"
+   ],
+   "checks": {
+    "audit:dup-cards": {
+     "probe": {
+      "type": "finding",
+      "key": "audit:dup-cards"
+     },
+     "if_fails": "close the younger as a duplicate (close_duplicates, HUB H5)",
+     "known_fixes": [
+      "close_duplicates"
+     ],
+     "files": [
+      "task-land/_system/system-agent/system_agent.py check_audit"
+     ],
+     "rollback": "the hub keeps the closed card in decisions.jsonl; re-post by hand",
+     "escalate": "fix session",
+     "healthy_when": "no two open cards with the same text"
+    }
+   }
+  },
+  {
+   "id": "st_ledgers",
+   "group": "brain + stores",
+   "label": "the rule ledgers",
+   "kind": "store",
+   "machine": "laptop",
+   "cadence": "",
+   "code": "task-land/_system/{CRM,EMAIL-REVIEW,HUB-CARD,MEETING,NOTIF,PROACTIVE}-CONTRACT.md",
+   "reads": "",
+   "writes": "addrule.py only; compile_skill.py --install builds the skills crm, drafting, hub, proactive",
+   "status": "live",
+   "note": "Compiled skills reach the box by scp, by hand (gap S4)."
+  },
+  {
+   "id": "st_decisions",
+   "group": "brain + stores",
+   "label": "decisions.jsonl + rule-hits.jsonl",
+   "kind": "store",
+   "machine": "laptop",
+   "cadence": "union-merged by git",
+   "code": "task-land/_system/decisions.jsonl, rule-hits.jsonl",
+   "reads": "",
+   "writes": "the hub on every resolve or close; the observers (critic, hub guard, CRM observer, proactive observer)",
+   "status": "live",
+   "paths": [
+    "~/task-land/_system/decisions.jsonl"
+   ]
+  },
+  {
+   "id": "st_drive",
+   "group": "brain + stores",
+   "label": "Drive DA/",
+   "kind": "store",
+   "machine": "cloud",
+   "cadence": "wa-store every minute, linkedin-store every 15 min",
+   "code": "G:/My Drive/DA/ = /home/da/gdrive/DA/",
+   "reads": "",
+   "writes": "the box ships wa-store.jsonl; the laptop writes linkedin-store.jsonl; backups/ holds the nightly dumps",
+   "status": "live"
+  },
+  {
+   "id": "st_drafts",
+   "group": "brain + stores",
+   "label": "the draft lane",
+   "kind": "store",
+   "machine": "laptop",
+   "cadence": "reconcile every 5 min on the box",
+   "code": "task-land/_system/drafts/: register.py, critic.py, reconcile.py, handoff.py, hubedit.py, send_card.py; sidecars r*.md, queue.jsonl, attachments/",
+   "reads": "",
+   "writes": "a real Gmail draft + a sidecar + a critic verdict + a hub card; the hub sends by draft id only",
+   "status": "live",
+   "note": "A draft is never deleted by the system; a message he sent himself closes the card.",
+   "paths": [
+    "~/task-land/_system/drafts/"
+   ]
+  },
+  {
+   "id": "gate_tg",
+   "group": "gates and surfaces",
+   "label": "Telegram",
+   "kind": "gate",
+   "machine": "phone",
+   "cadence": "",
+   "code": "the savior relays",
+   "reads": "",
+   "writes": "N yes / no / dsend / change",
+   "status": "live"
+  },
+  {
+   "id": "gate_review",
+   "group": "gates and surfaces",
+   "label": "hub-review page :4142",
+   "kind": "gate",
+   "machine": "box",
+   "cadence": "cron supervisor every 5 min",
+   "code": "/home/da/hub-review/server.js, page.html",
+   "reads": "the hub's state.json from disk, hub-outdated-log.jsonl, todo-match.jsonl",
+   "writes": "queue.jsonl (one commit = the yes), /api/cleaning/reverse, /api/queue/done",
+   "status": "live",
+   "note": "Tabs 1 Cards, 2 Agent, 3 Updates, 4 Cleaning (keys 1-4). Patched 3 and 4 Oct: ledger check first, no-telegram switch, cleaning tab, spot check, committed skips leave the list. Outages tonight were a Tailscale flap (EADDRNOTAVAIL), not the patches.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4142
+    }
+   ],
+   "paths": [
+    "/home/da/hub-review/server.js"
+   ],
+   "checks": {
+    "box:hub-iterations": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "if grep -q '/iterate' ~/approval-hub/server.js && grep -q 'iteration' ~/hub-review/page.html; then echo 'OK the iteration patches are live on the box'; else echo 'BAD THE PLAN item 12: the hub and hub-review iteration patches are not applied on the box'; fi"
+     },
+     "for_him": {
+      "kind": "terminal",
+      "what": "apply the hub iteration patch on the box (THE PLAN item 12, the first of its three lines; the other two follow the same way)",
+      "account": null,
+      "command": "Get-Content $HOME/task-land/_system/currency/patch-hub-iterations-20261004.py | ssh box python3 - --restart",
+      "why_only_him": "a remote write on the box: the auto-mode classifier refuses it to an agent"
+     },
+     "his_command": true,
+     "healthy_when": "POST /iterate in the hub, the iteration block in hub-review"
+    }
+   }
+  },
+  {
+   "id": "gate_board",
+   "group": "gates and surfaces",
+   "label": "GTM board :4141",
+   "kind": "gate",
+   "machine": "laptop",
+   "cadence": "",
+   "code": "gtm-eng/board-server.js; open-board.ps1",
+   "reads": "",
+   "writes": "state.json, commits/; run-commit.py executes the yes",
+   "status": "live",
+   "ports": [
+    {
+     "host": "127.0.0.1",
+     "port": 4141
+    }
+   ],
+   "paths": [
+    "~/gtm-eng/board-server.js"
+   ]
+  },
+  {
+   "id": "gate_crm",
+   "group": "gates and surfaces",
+   "label": "CRM Today :4124",
+   "kind": "gate",
+   "machine": "laptop",
+   "cadence": "",
+   "code": ".medtech-crm/crm-app (review-api.js, drawer-api.js, ask-api.js)",
+   "reads": "",
+   "writes": "PUT /api/data; a/s/c held until commit",
+   "status": "live",
+   "ports": [
+    {
+     "host": "127.0.0.1",
+     "port": 4124
+    }
+   ],
+   "paths": [
+    "~/.medtech-crm/crm-app"
+   ]
+  },
+  {
+   "id": "gate_page",
+   "group": "gates and surfaces",
+   "label": "the daily page",
+   "kind": "gate",
+   "machine": "laptop",
+   "cadence": "",
+   "code": "task-land/Daily/<date>.md",
+   "reads": "",
+   "writes": "his tick closes the card (H15); the card decides the task (pipeline.py sync)",
+   "status": "live"
+  },
+  {
+   "id": "ex_hub",
+   "group": "execution",
+   "label": "approval hub :4180",
+   "kind": "exec",
+   "machine": "box",
+   "cadence": "always (da-hub.service, Restart=always)",
+   "code": "/home/da/approval-hub/server.js",
+   "reads": "POST /pending {text, context, notify:true}",
+   "writes": "executes a yes: gmail-send-draft by id, wa-send through :4119, slack-send; pings Telegram once; decisions.jsonl",
+   "llm": "none",
+   "gate": "it IS the gate's executor",
+   "status": "live",
+   "note": "The laptop's 127.0.0.1:4180 is a TCP forward (task DA-HubForward). The guard hub-rules.json downgrades cards that break the hub contract.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4180
+    }
+   ],
+   "paths": [
+    "/home/da/approval-hub/server.js"
+   ]
+  },
+  {
+   "id": "ex_lane",
+   "group": "execution",
+   "label": "the lane sends",
+   "kind": "exec",
+   "machine": "box",
+   "cadence": "on his yes",
+   "code": "the hub's gmail-send-draft; reconcile.py sees Sent",
+   "reads": "",
+   "writes": "the Gmail draft goes out by id; the card closes; the CRM activity line",
+   "status": "live"
+  },
+  {
+   "id": "ex_wa",
+   "group": "execution",
+   "label": "WhatsApp send :4119",
+   "kind": "exec",
+   "machine": "box",
+   "cadence": "on his yes",
+   "code": "/home/da/wa-daemon/send.js (da-wa.service)",
+   "reads": "",
+   "writes": "the message; message-store.jsonl",
+   "status": "live",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4119
+    }
+   ],
+   "paths": [
+    "/home/da/wa-daemon/send.js"
+   ]
+  },
+  {
+   "id": "ex_li",
+   "group": "execution",
+   "label": "LinkedIn on the laptop",
+   "kind": "exec",
+   "machine": "laptop",
+   "cadence": "inside 08:00 to 17:00 PT for campaigns",
+   "code": "gtm-eng/campaign.py (invites, DMs), li_restore.py (exit 2 = he must sign in)",
+   "reads": "",
+   "writes": "invites, DMs; the CRM row's campaigns[]",
+   "status": "live",
+   "note": "S11: the box will decide, the laptop will only execute a linkedin-queue.jsonl.",
+   "paths": [
+    "~/gtm-eng/campaign.py"
+   ]
+  },
+  {
+   "id": "ex_campaign",
+   "group": "execution",
+   "label": "campaign tick",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 10 min (task GTM-Campaign-Tick); the daily fire at 16:55",
+   "code": "gtm-eng/campaign.py tick, daily-campaign/fire.py + pick.py",
+   "reads": "boards/*/campaign/plan.json, outreach/ledger.json (caps: 20 hard a day), held-ids, Gmail replies",
+   "writes": "SENDS email from the tundra account (the one delegated send, on a committed plan), labels Campaign/<slug>, the CRM campaigns[], a pause card when a hospital replies",
+   "llm": "none",
+   "gate": "delegated: the committed board is the yes",
+   "status": "live",
+   "note": "Auto-replies are not replies; 'remove me' suppresses for 12 months; a hard bounce is final (H96).",
+   "tasks": [
+    "GTM-Campaign-Tick"
+   ],
+   "paths": [
+    "~/gtm-eng/campaign.py"
+   ]
+  },
+  {
+   "id": "ex_crm_step",
+   "group": "execution",
+   "label": "the CRM step moves",
+   "kind": "exec",
+   "machine": "laptop",
+   "cadence": "",
+   "code": "PUT :4124/api/data; intake :4137 /task-handoff",
+   "reads": "",
+   "writes": "next_step with its origin; one person = one step",
+   "status": "live"
+  },
+  {
+   "id": "ex_tick",
+   "group": "execution",
+   "label": "the to-do ticks",
+   "kind": "exec",
+   "machine": "laptop",
+   "cadence": "",
+   "code": "task-land/_system/pipeline.py tick <slug>[#n] --evidence, redate",
+   "reads": "",
+   "writes": "status: done with done_evidence; a history row; the daily page re-renders",
+   "status": "live",
+   "paths": [
+    "~/task-land/_system/pipeline.py"
+   ]
+  },
+  {
+   "id": "ln_addrule",
+   "group": "learning",
+   "label": "addrule.py",
+   "kind": "learn",
+   "machine": "laptop",
+   "cadence": "the same turn as his sentence",
+   "code": "task-land/_system/drafts/addrule.py --contract email|hub|crm|notif|meeting|proactive",
+   "reads": "his words",
+   "writes": "one numbered line in the ledger with his quote",
+   "status": "live",
+   "paths": [
+    "~/task-land/_system/drafts/addrule.py"
+   ]
+  },
+  {
+   "id": "ln_compile",
+   "group": "learning",
+   "label": "compile_skill.py",
+   "kind": "learn",
+   "machine": "laptop",
+   "cadence": "after a ledger change",
+   "code": "task-land/_system/drafts/compile_skill.py --contract ... --install (limit 110 lines)",
+   "reads": "the ledger, the hit counts, the skill map",
+   "writes": "~/.claude/skills/{crm,drafting,hub,proactive}/SKILL.md; the box copy by scp",
+   "status": "live",
+   "paths": [
+    "~/task-land/_system/drafts/compile_skill.py"
+   ]
+  },
+  {
+   "id": "ln_observers",
+   "group": "learning",
+   "label": "observers",
+   "kind": "learn",
+   "machine": "laptop",
+   "cadence": "on every write, draft, card",
+   "code": "crm-app/observer.js, drafts/critic.py, the hub guard, the proactive observer in pipeline.py",
+   "reads": "the artifact against its ledger",
+   "writes": "rule-hits.jsonl; system-check.py 09:10 writes the weekly check, the box posts it 22:58",
+   "status": "live"
+  },
+  {
+   "id": "ln_cleaning",
+   "group": "learning",
+   "label": "cleaning_eval.py",
+   "kind": "learn",
+   "machine": "box",
+   "cadence": "with every pass; weekly spot check",
+   "code": "task-land/_system/cleaning_eval.py",
+   "reads": "cleaning-reverse.jsonl, the 'wrong' rows of the Cleaning tab",
+   "writes": "cleaning-actions.jsonl, cleaning-traces.jsonl, Langfuse; auto-adjust: path A match_strong +0.02 (cap 0.95), path B close_confidence +5 (cap 95), a (producer, person) exception; report per path and surface",
+   "llm": "none (it records the judges)",
+   "gate": "the spot check of 3 random successes",
+   "status": "off",
+   "note": "Off until _system/cleaning-eval.on exists, after the Tuesday reset. Success = 72 h without a reverse or a 'wrong' comment."
+  },
+  {
+   "id": "ln_sim",
+   "group": "learning",
+   "label": "the simulation",
+   "kind": "learn",
+   "machine": "laptop",
+   "cadence": "a night, on his word",
+   "code": "~/sim/harness/ (local git, no remote)",
+   "reads": "a sandbox copy of the system with a fake world (60 fictional people, mail, WA, LinkedIn, calendar, Notion)",
+   "writes": "a score (detected, latency, sent-without-yes, artifacts, hub surface), learn.jsonl (misses as hints, rules, fixes, needs_him)",
+   "llm": "a 'me' agent that decides as he does, a judge, a learner",
+   "gate": "nothing fake ever enters the real CRM, mail, Notion, memory or tasks",
+   "status": "off",
+   "note": "12 simulated days on 1 Oct: 56 to 61; meetings-night on 2 Oct: 64.6. The next night scores the brain in the readers and the Edge variant.",
+   "paths": [
+    "~/sim/harness/"
+   ]
+  },
+  {
+   "id": "ln_janitor",
+   "group": "learning",
+   "label": "the janitor (S2)",
+   "kind": "learn",
+   "machine": "box",
+   "cadence": "planned: systemd timer 22:30",
+   "code": "task-land/_system/janitor.py (does not exist yet)",
+   "reads": "the daily page and task files, hub cards, Gmail drafts, Notion, CRM Today",
+   "writes": "deterministic candidates, one Opus judgement each; ONE card a night; currency.jsonl (the stale share per surface, S3)",
+   "llm": "Opus per candidate",
+   "gate": "one card a night; his sentences on it = rules (contract janitor)",
+   "status": "planned"
+  },
+  {
+   "id": "w_gitsync",
+   "group": "infra workers (registry only)",
+   "label": "TaskLand-GitSync",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 15 min + logon",
+   "code": "task-land/_system/git-sync.ps1",
+   "reads": "task-land, 7 tool folders",
+   "writes": "mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "TaskLand-GitSync"
+   ],
+   "paths": [
+    "~/task-land/_system/git-sync.ps1"
+   ]
+  },
+  {
+   "id": "w_vaultsync",
+   "group": "infra workers (registry only)",
+   "label": "DA-VaultSync",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 10 min",
+   "code": "task-land/_system/vault-git-sync.ps1",
+   "reads": "vault_kb, medtech-brain, soda-brain, coattio",
+   "writes": "commit-first, pull, push; a memory tar to the box",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "DA-VaultSync"
+   ],
+   "paths": [
+    "~/task-land/_system/vault-git-sync.ps1"
+   ]
+  },
+  {
+   "id": "w_watcher",
+   "group": "infra workers (registry only)",
+   "label": "DailySync-Watchdog",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 5 min (the watcher absorbs ~60 s after typing stops)",
+   "code": "task-land/_system/start-watcher.ps1, watch-daily.ps1, daily-sync.ps1, daily-lib.ps1",
+   "reads": "Daily/<date>.md, the task files",
+   "writes": "task files, the page re-render, crm-bridge.ps1, pipeline.py sync, the daily digest in context.md",
+   "llm": "claude.exe -p for the classifier and ((prompt))",
+   "gate": "the page itself",
+   "status": "live",
+   "tasks": [
+    "DailySync-Watchdog"
+   ],
+   "paths": [
+    "~/task-land/_system/start-watcher.ps1"
+   ]
+  },
+  {
+   "id": "w_coattio",
+   "group": "infra workers (registry only)",
+   "label": "Coattio-Watchdog",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 5 min + logon + resume from sleep",
+   "code": ".medtech-crm/coattio-serve.ps1",
+   "reads": "ports 4124 and 4137",
+   "writes": "starts the CRM servers when down; the pg-mirror replay tick (crm.json to the box's Postgres)",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "Never started with run_in_background: Stop-Process + coattio-serve.ps1.",
+   "tasks": [
+    "Coattio-Watchdog"
+   ],
+   "paths": [
+    "~/.medtech-crm/coattio-serve.ps1"
+   ]
+  },
+  {
+   "id": "w_postmortem",
+   "group": "infra workers (registry only)",
+   "label": "DailyCampaign-Postmortem",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "daily 09:30; a card on the 1st",
+   "code": "gtm-eng/daily-campaign/postmortem.py",
+   "reads": "plans, bounces, replies",
+   "writes": "the post-mortem card",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "live",
+   "tasks": [
+    "DailyCampaign-Postmortem"
+   ],
+   "paths": [
+    "~/gtm-eng/daily-campaign/postmortem.py"
+   ]
+  },
+  {
+   "id": "w_ab",
+   "group": "infra workers (registry only)",
+   "label": "DailyCampaign-AB-Reminder",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "one shot 2026-10-09 10:00",
+   "code": "gtm-eng/daily-campaign/ab-reminder.ps1",
+   "reads": "drafts-cache",
+   "writes": "one hub card",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "armed",
+   "tasks": [
+    "DailyCampaign-AB-Reminder"
+   ],
+   "paths": [
+    "~/gtm-eng/daily-campaign/ab-reminder.ps1"
+   ]
+  },
+  {
+   "id": "w_us",
+   "group": "infra workers (registry only)",
+   "label": "US-Campaign-Daily",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "daily 18:15",
+   "code": "us-campaign-emails (the 114-person wave)",
+   "reads": "the wave",
+   "writes": "sends through the campaign engine",
+   "llm": "none",
+   "gate": "delegated",
+   "status": "live",
+   "tasks": [
+    "US-Campaign-Daily"
+   ]
+  },
+  {
+   "id": "w_lipoll",
+   "group": "infra workers (registry only)",
+   "label": "LinkedIn-Poll",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 15 min",
+   "code": "~/.claude/linkedin-poll/poll.py, launcher.py",
+   "reads": "the LinkedIn inbox in a dedicated Chrome profile",
+   "writes": "G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "LinkedIn-Poll"
+   ],
+   "paths": [
+    "~/.claude/linkedin-poll/poll.py"
+   ],
+   "checks": {
+    "linkedin:poll": {
+     "probe": {
+      "type": "finding",
+      "key": "linkedin:poll"
+     },
+     "if_fails": "start_task LinkedIn-Poll, then li_repair; a fix session on the 3rd outage of the day",
+     "known_fixes": [
+      "start_task",
+      "li_repair"
+     ],
+     "files": [
+      "~/.claude/linkedin-poll/poll.py",
+      "~/.claude/linkedin-poll/launcher.py",
+      "~/gtm-eng/agent/li_restore.py"
+     ],
+     "rollback": "nothing (restarts)",
+     "escalate": "fix session",
+     "healthy_when": "a completed poll within 50 min"
+    },
+    "linkedin:session": {
+     "probe": {
+      "type": "finding"
+     },
+     "if_fails": "li_repair; when LinkedIn itself refused the restore twice: a fix session finds the exact sign-in step and returns it as for_him"
+    }
+   }
+  },
+  {
+   "id": "w_sent",
+   "group": "infra workers (registry only)",
+   "label": "SentCorpus-Harvest",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "daily 07:30",
+   "code": "~/.claude/sent-corpus/harvest.js",
+   "reads": "Sent mail",
+   "writes": ".claude/sent-corpus/corpus.jsonl (no backup)",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "SentCorpus-Harvest"
+   ],
+   "paths": [
+    "~/.claude/sent-corpus/harvest.js"
+   ]
+  },
+  {
+   "id": "w_filer",
+   "group": "infra workers (registry only)",
+   "label": "Notion-MeetingFiler",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "hourly",
+   "code": "~/.claude/scripts/notion-meeting-filer.ps1",
+   "reads": "meetings",
+   "writes": "the Notion Meetings DB through the MCP",
+   "llm": "claude -p",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "Notion-MeetingFiler"
+   ],
+   "paths": [
+    "~/.claude/scripts/notion-meeting-filer.ps1"
+   ]
+  },
+  {
+   "id": "w_granola",
+   "group": "infra workers (registry only)",
+   "label": "Granola-Auto-Sweep (retired)",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "disabled 4 Oct 2026",
+   "code": "~/.claude/granola-auto/",
+   "reads": "nothing: Granola retired, meetings come from Notion meeting AI",
+   "writes": "",
+   "llm": "",
+   "gate": "",
+   "status": "retired",
+   "tasks": [
+    "Granola-Auto-Sweep"
+   ],
+   "paths": [
+    "~/.claude/granola-auto/"
+   ]
+  },
+  {
+   "id": "w_syscheck",
+   "group": "infra workers (registry only)",
+   "label": "RuleLoop-SystemCheck",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "daily 09:10",
+   "code": "task-land/_system/system-check.py",
+   "reads": "decisions, rule-hits, the ledgers",
+   "writes": "system-check-<n>.md when the decision window is full; the box posts it at 22:58",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "RuleLoop-SystemCheck"
+   ],
+   "paths": [
+    "~/task-land/_system/system-check.py"
+   ]
+  },
+  {
+   "id": "w_recap",
+   "group": "infra workers (registry only)",
+   "label": "SODANOtif-Recap",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 2 h (at most once per 6 h)",
+   "code": "~/.claude/sodanotif/recap.ps1",
+   "reads": "the old laptop notification stores",
+   "writes": "a Telegram recap",
+   "llm": "claude -p",
+   "gate": "",
+   "status": "live",
+   "note": "A remnant of the laptop daemon; the box sodanotif is the live classifier.",
+   "tasks": [
+    "SODANOtif-Recap"
+   ],
+   "paths": [
+    "~/.claude/sodanotif/recap.ps1"
+   ]
+  },
+  {
+   "id": "w_peer60",
+   "group": "infra workers (registry only)",
+   "label": "Peer60-AcceptCheck 09:00 / 18:00",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "daily 09:00 and 18:00",
+   "code": "tundra-outreach/peer-60/accept-*.vbs",
+   "reads": "LinkedIn accepts of the peer-60 wave",
+   "writes": "the DM queue and its approval page",
+   "llm": "",
+   "gate": "approval page",
+   "status": "live",
+   "tasks": [
+    "Peer60-AcceptCheck-0900",
+    "Peer60-AcceptCheck-1800"
+   ]
+  },
+  {
+   "id": "w_kickoff",
+   "group": "infra workers (registry only)",
+   "label": "CDTM-Kickoff-Weekly-Update",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "weekly Thu 16:00",
+   "code": "cdtm-taskforce/run-weekly-hidden.vbs",
+   "reads": "progress.json",
+   "writes": "the Friday status draft",
+   "llm": "",
+   "gate": "a draft",
+   "status": "live",
+   "tasks": [
+    "CDTM-Kickoff-Weekly-Update"
+   ],
+   "paths": [
+    "~/cdtm-taskforce/run-weekly-hidden.vbs"
+   ]
+  },
+  {
+   "id": "w_trippy",
+   "group": "infra workers (registry only)",
+   "label": "Trippy-RailLane / Trippy-Requests-Watch",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every 2 min / every 5 min",
+   "code": ".claude/travel-search/v2/ (rail_lane.py)",
+   "reads": "trip requests, Drive DA/trippy/",
+   "writes": "hub cards",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "live",
+   "tasks": [
+    "Trippy-RailLane",
+    "Trippy-Requests-Watch"
+   ],
+   "paths": [
+    "~/.claude/travel-search/v2/"
+   ]
+  },
+  {
+   "id": "w_voice",
+   "group": "infra workers (registry only)",
+   "label": "Voice-Lane-Watch",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "every minute",
+   "code": ".claude/voice-lane/",
+   "reads": "fast-lane voice notes",
+   "writes": "hub /pending",
+   "llm": "",
+   "gate": "hub card",
+   "status": "live",
+   "tasks": [
+    "Voice-Lane-Watch"
+   ],
+   "paths": [
+    "~/.claude/voice-lane/"
+   ]
+  },
+  {
+   "id": "w_hubfwd",
+   "group": "infra workers (registry only)",
+   "label": "DA-HubForward",
+   "kind": "service",
+   "machine": "laptop",
+   "cadence": "keep-alive every 5 min",
+   "code": "~/.claude/approval-hub/forward-to-box.js",
+   "reads": "127.0.0.1:4180",
+   "writes": "a TCP forward to the box :4180",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "tasks": [
+    "DA-HubForward"
+   ],
+   "paths": [
+    "~/.claude/approval-hub/forward-to-box.js"
+   ]
+  },
+  {
+   "id": "w_winwatch",
+   "group": "infra workers (registry only)",
+   "label": "DA-WindowWatch",
+   "kind": "service",
+   "machine": "laptop",
+   "cadence": "logon + every 10 min (pythonw, 4 samples a second)",
+   "code": "task-land/_system/window-watch/window_watch.py",
+   "reads": "console windows",
+   "writes": "windows.jsonl with the opener",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "The reviewer of the no-console-window rule; window_lint.py after every task change.",
+   "tasks": [
+    "DA-WindowWatch"
+   ],
+   "paths": [
+    "~/task-land/_system/window-watch/window_watch.py"
+   ],
+   "checks": {
+    "laptop:commit-limit": {
+     "probe": {
+      "type": "ps",
+      "cmd": "$e = @(Get-WinEvent -FilterHashtable @{LogName='System'; Id=2004; StartTime=(Get-Date).AddMinutes(-120)} -ErrorAction SilentlyContinue); $t = Get-ScheduledTask -TaskName 'DA-WindowWatch' | Get-ScheduledTaskInfo; $os = Get-CimInstance Win32_OperatingSystem; $pct = [int](100 * ($os.TotalVirtualMemorySize - $os.FreeVirtualMemory) / $os.TotalVirtualMemorySize); if ($e.Count -eq 0 -and $t.LastTaskResult -ne 0xc000012d -and $pct -lt 90) { \"OK no low-virtual-memory event (2004) in 2 h, commit charge $pct%, DA-WindowWatch last result $('0x{0:x}' -f $t.LastTaskResult)\" } else { \"BAD $($e.Count) low-virtual-memory events (System 2004) in 2 h, last $($e[0].TimeCreated), commit charge $pct%, DA-WindowWatch last result $('0x{0:x}' -f $t.LastTaskResult)\" }"
+     },
+     "if_fails": "fix session: find what holds the commit charge (the 2004 event names the top consumers), make a tick that fails on a full page file not look like a crash of the watcher",
+     "known_fixes": [],
+     "files": [
+      "~/task-land/_system/window-watch/window_watch.py",
+      "~/task-land/_system/window-watch/window-watch-hidden.vbs"
+     ],
+     "rollback": "restore the .bak of any file changed",
+     "escalate": "STUCK: a page-file size change is a permission/system setting (his)",
+     "healthy_when": "no System event 2004 (Resource-Exhaustion-Detector, low virtual memory) in 2 h, commit charge under 90%, the watcher's tick not ending 0xc000012d"
+    }
+   }
+  },
+  {
+   "id": "w_design",
+   "group": "infra workers (registry only)",
+   "label": "DesignMirror-Server :4190",
+   "kind": "service",
+   "machine": "laptop",
+   "cadence": "logon, 1-min keep-alive (pythonw)",
+   "code": "tundra-design/sync/dsync.py serve",
+   "reads": "Claude Design extension snapshots",
+   "writes": "tundra-design commits, pull, push",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "ports": [
+    {
+     "host": "127.0.0.1",
+     "port": 4190
+    }
+   ],
+   "tasks": [
+    "DesignMirror-Server"
+   ],
+   "paths": [
+    "~/tundra-design/sync/dsync.py"
+   ]
+  },
+  {
+   "id": "w_misc",
+   "group": "infra workers (registry only)",
+   "label": "ClaudeBar, Archive-Screenshots 03:00, Curriculum crawls",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "as named",
+   "code": "misc",
+   "reads": "",
+   "writes": "",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "Not system-critical."
+  },
+  {
+   "id": "w_retired",
+   "group": "infra workers (registry only)",
+   "label": "laptop hub and daemon era tasks",
+   "kind": "script",
+   "machine": "laptop",
+   "cadence": "disabled",
+   "code": "Approval-Hub-Watchdog, Push-Lane-Watchdog, SNM-Receiver, SODANOtif-Daemon-Watchdog, SODANOtif-Watch, TG-Bridge-Autostart, TG-Savior-Watchdog, Voice-Longform, WA-Daemon-AtLogon, WA-Daemon-Watchdog; three fired one-shots",
+   "reads": "",
+   "writes": "",
+   "llm": "",
+   "gate": "",
+   "status": "retired",
+   "note": "The hub and the daemons moved to the box; popups are off, Telegram only."
+  },
+  {
+   "id": "b_workbench",
+   "group": "infra workers (registry only)",
+   "label": "workbench session",
+   "kind": "session",
+   "machine": "box",
+   "cadence": "always (tmux)",
+   "code": "claude --remote-control",
+   "reads": "",
+   "writes": "",
+   "llm": "a session",
+   "gate": "",
+   "status": "live"
+  },
+  {
+   "id": "b_coattio",
+   "group": "infra workers (registry only)",
+   "label": "coattio on the box :4124 / :4137",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "always (tmux coattio; coattio-sync.sh every 2 min)",
+   "code": "/home/da/coattio/crm-app/server.js, intake-server.js (COATTIO_BOX=1)",
+   "reads": "git ff-only pulls; peer.js pulls the laptop's crm.json",
+   "writes": "the box replica (it WROTE on 3-4 Oct: conflict #10)",
+   "llm": "none",
+   "gate": "",
+   "status": "broken",
+   "note": "Plan items 1 and 2: merge per record, then one writer.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4124
+    },
+    {
+     "host": "box",
+     "port": 4137
+    }
+   ],
+   "paths": [
+    "/home/da/coattio/crm-app/server.js"
+   ],
+   "checks": {
+    "box:coattio-laptop-guard": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "if git -C ~/coattio diff --quiet origin/main -- start-box.sh 2>/dev/null; then echo 'OK the box start-box.sh equals origin/main'; else echo 'BAD the box start-box.sh guard is not in the laptop clone yet'; fi"
+     },
+     "if_fails": "fix session: copy the box's guard into the laptop file, commit, push (the laptop half of H3)",
+     "known_fixes": [],
+     "files": [
+      "~/.medtech-crm/start-box.sh (the laptop coattio clone)",
+      "box:/home/da/coattio/start-box.sh (read only)"
+     ],
+     "rollback": "git revert",
+     "escalate": "fix session",
+     "healthy_when": "the guard the box carries in start-box.sh is committed in the laptop coattio clone and pushed"
+    },
+    "box:coattio-dirty": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "s=$(git -C ~/coattio status --porcelain start-box.sh 2>/dev/null); [ -z \"$s\" ] && echo 'OK the box coattio clone is clean' || echo \"BAD box coattio clone: $s\""
+     },
+     "for_him": {
+      "kind": "terminal",
+      "what": "discard the box's local copy of start-box.sh now that the laptop carries the same guard",
+      "account": null,
+      "command": "ssh box git -C /home/da/coattio checkout start-box.sh",
+      "why_only_him": "a synced repo on the box is never touched by hand by an agent (memory feedback_never_touch_synced_repo_on_box_by_hand)"
+     },
+     "his_command": true,
+     "healthy_when": "git status of the pull-only box clone is clean"
+    }
+   }
+  },
+  {
+   "id": "b_rulesinbox",
+   "group": "infra workers (registry only)",
+   "label": "rules_inbox.py",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "cron every 5 min",
+   "code": "soda-brain/tools/rules_inbox.py",
+   "reads": "soda-brain/rules/inbox/",
+   "writes": "one hub card per proposed rule; his yes files it with addrule.py",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "paused",
+   "note": "Idle: instinct is set aside."
+  },
+  {
+   "id": "b_boxwatch",
+   "group": "infra workers (registry only)",
+   "label": "box_watch.py + box_linkedin_watch.py",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "cron every 10 min",
+   "code": "task-land/_system/gtm-agent/",
+   "reads": "the laptop's heartbeat; the LinkedIn session state",
+   "writes": "one 'laptop silent' card a day; a safety card",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "live"
+  },
+  {
+   "id": "b_promptwatch",
+   "group": "infra workers (registry only)",
+   "label": "savior_prompt_watch.py",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "cron every minute",
+   "code": "task-land/_system/vps/savior_prompt_watch.py",
+   "reads": "the savior tmux pane",
+   "writes": "one card when a permission prompt sits unanswered",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "live"
+  },
+  {
+   "id": "b_reconcile",
+   "group": "infra workers (registry only)",
+   "label": "drafts/reconcile.py",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "cron every 5 min",
+   "code": "task-land/_system/drafts/reconcile.py",
+   "reads": "Gmail drafts (cdtm, tundra), sidecars, queue, cards",
+   "writes": "sidecar status; a card closed when Sent shows the message (answered_elsewhere with an event floor)",
+   "llm": "none",
+   "gate": "",
+   "status": "live"
+  },
+  {
+   "id": "b_contacts",
+   "group": "infra workers (registry only)",
+   "label": "contacts_sync.py",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "cron every 30 min",
+   "code": "triage/contacts_sync.py sync --account alesoda2002",
+   "reads": "Google Contacts",
+   "writes": "contacts-inbox.jsonl, one card per batch, intake :4137",
+   "llm": "none",
+   "gate": "hub card",
+   "status": "broken",
+   "note": "Failing since 21 Sep (token)."
+  },
+  {
+   "id": "b_eod",
+   "group": "infra workers (registry only)",
+   "label": "eod_sweep.py + the 22:12 pre-sweep",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "23:00 (cron); 22:12 (the savior); 22:47 watchdog; 22:58 system check post",
+   "code": "triage/eod_sweep.py, presweep-watchdog.sh, post_system_check.py",
+   "reads": "open cards",
+   "writes": "the digest card and a calendar event (the Telegram post fails with HTTP 400)",
+   "llm": "none",
+   "gate": "digest",
+   "status": "broken",
+   "checks": {
+    "box:eod-digest": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "l=$(grep -a 'digest sent' ~/.local/state/eod-sweep.log | tail -1); case \"$l\" in *'http 4'*|*'http 5'*) echo \"BAD last digest: $l\";; '') echo 'BAD no digest line';; *) echo \"OK last digest: $l\";; esac"
+     },
+     "if_fails": "fix session: read the body Telegram rejects (FINDINGS: markup), fix, prove with a dry post of the same body",
+     "known_fixes": [],
+     "files": [
+      "box:/home/da/triage/eod_sweep.py (not a repo: mirrored in task-land/_system/box-tools/triage/)",
+      "box:/home/da/.local/state/eod-sweep.log"
+     ],
+     "rollback": "the .bak of eod_sweep.py",
+     "escalate": "STUCK terminal: the patch is applied on the box by his command (the box is read-only for a fix session)",
+     "healthy_when": "the last 'digest sent' line of eod-sweep.log is not an HTTP 4xx/5xx"
+    },
+    "box:presweep": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "f=$(grep -a 'watchdog fired' ~/.local/state/presweep-watchdog.log | tail -1 | cut -c1-10); d=$(ls ~/.local/state/presweep-*.done 2>/dev/null | sed 's/.*presweep-//;s/\\.done$//' | sort | tail -1); if [ -z \"$f\" ] || [[ \"$d\" > \"$f\" ]]; then echo \"OK last pre-sweep stamp ${d:-none}, last watchdog fire ${f:-never}\"; else echo \"BAD the 22:47 watchdog fired on $f and the last pre-sweep stamp is ${d:-none}\"; fi"
+     },
+     "if_fails": "fix session: re-arm the 22:12 pre-sweep (a session cron inside the savior, 7-day expiry) or make it durable",
+     "known_fixes": [],
+     "files": [
+      "box:/home/da/.local/bin/presweep-watchdog.sh",
+      "memory feedback_presweep_deep_check_before_23.md",
+      "task-land/_system/vps/"
+     ],
+     "rollback": "",
+     "escalate": "STUCK terminal: a line typed in the savior's tmux",
+     "healthy_when": "the newest presweep-<date>.done stamp is newer than the newest 'watchdog fired' line"
+    }
+   }
+  },
+  {
+   "id": "b_shipwa",
+   "group": "infra workers (registry only)",
+   "label": "ship-wa-store.sh",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "cron every minute",
+   "code": "~/.local/bin/ship-wa-store.sh",
+   "reads": "wa-daemon/message-store.jsonl",
+   "writes": "~/gdrive/DA/wa-store.jsonl",
+   "llm": "none",
+   "gate": "",
+   "status": "live"
+  },
+  {
+   "id": "b_trippy",
+   "group": "infra workers (registry only)",
+   "label": "trippy :4126",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "cron @reboot + every 5 min",
+   "code": "travel-search/app/server.js, trippy-supervise.sh",
+   "reads": "",
+   "writes": "trip boards",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "note": "The supervisor is buggy (EADDRINUSE noise).",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4126
+    }
+   ],
+   "checks": {
+    "box:trippy-supervise": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "n=$(grep -a 'starting trippy webapp' ~/.local/state/trippy.log | awk -v c=\"$(date -d '-30 min' '+%F %T')\" '($1\" \"$2)>=c' | wc -l); [ \"$n\" -le 1 ] && echo \"OK $n start(s) in 30 min\" || echo \"BAD $n starts in 30 min: the supervisor starts a second node every 5 min (EADDRINUSE)\""
+     },
+     "if_fails": "fix session: supervise by port, not pgrep (FINDINGS box 1)",
+     "known_fixes": [],
+     "files": [
+      "box:/home/da/.local/bin/trippy-supervise.sh (not a repo)"
+     ],
+     "rollback": "the .bak of trippy-supervise.sh",
+     "escalate": "STUCK terminal",
+     "healthy_when": "at most one 'starting trippy webapp' in 30 min"
+    }
+   }
+  },
+  {
+   "id": "b_sync",
+   "group": "infra workers (registry only)",
+   "label": "da-sync.timer + repo-sync timers",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "task-land every 60 s; vault_kb, medtech-brain, soda-brain, travel-search every 5 min",
+   "code": "task-land/_system/vps/git-sync.sh, repo-sync.sh",
+   "reads": "the repos; the box tools (approval-hub, sodanotif, triage, skills)",
+   "writes": "mirrors into _system/box-tools/, commit, merge, push; parks on conflict-vps",
+   "llm": "none",
+   "gate": "",
+   "status": "live"
+  },
+  {
+   "id": "b_health",
+   "group": "infra workers (registry only)",
+   "label": "da-health.timer / da-alert.timer",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "every 5 min",
+   "code": "health-vps.sh, alert-bridge.sh",
+   "reads": "",
+   "writes": "health-vps.json (the laptop raises a 'VPS DOWN' calendar event when it goes stale); the laptop's health.json to Telegram",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "checks": {
+    "box:failed-units": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "u=$(systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}' | tr '\\n' ' '); [ -z \"${u// /}\" ] && echo 'OK no failed unit' || echo \"BAD failed units: $u\""
+     },
+     "if_fails": "fix session: count failed units in health-vps.sh (FINDINGS box 16)",
+     "known_fixes": [],
+     "files": [
+      "task-land/_system/vps/health-vps.sh"
+     ],
+     "rollback": "",
+     "escalate": "fix session",
+     "healthy_when": "systemctl --failed lists nothing"
+    }
+   }
+  },
+  {
+   "id": "b_wa",
+   "group": "infra workers (registry only)",
+   "label": "da-wa.service",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "always",
+   "code": "/home/da/wa-daemon/daemon.js (Baileys)",
+   "reads": "WhatsApp",
+   "writes": "message-store.jsonl; the send API :4119",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "paths": [
+    "/home/da/wa-daemon/daemon.js"
+   ]
+  },
+  {
+   "id": "b_tgbridge",
+   "group": "infra workers (registry only)",
+   "label": "da-tg-bridge.service",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "always",
+   "code": "/home/da/tg-bridge/bot.js (the second bot)",
+   "reads": "phone text",
+   "writes": "claude -p answers",
+   "llm": "yes",
+   "gate": "",
+   "status": "live",
+   "note": "Never used for pings: he does not see that chat.",
+   "paths": [
+    "/home/da/tg-bridge/bot.js"
+   ]
+  },
+  {
+   "id": "b_drive",
+   "group": "infra workers (registry only)",
+   "label": "da-gdrive / da-tundra-drive mounts",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "always (rclone)",
+   "code": "/home/da/gdrive (cdtm:), /home/da/tundra-drive (tundra:)",
+   "reads": "Drive",
+   "writes": "",
+   "llm": "none",
+   "gate": "",
+   "status": "live",
+   "paths": [
+    "/home/da/gdrive",
+    "/home/da/tundra-drive"
+   ]
+  },
+  {
+   "id": "b_voice",
+   "group": "infra workers (registry only)",
+   "label": "da-voice.timer",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "every 5 min",
+   "code": "voice-longform-vps.py (faster-whisper)",
+   "reads": "long recordings on the Drive mount",
+   "writes": "transcripts; safe-word routing to cards and tasks",
+   "llm": "faster-whisper + claude",
+   "gate": "hub card",
+   "status": "live"
+  },
+  {
+   "id": "b_pgdump",
+   "group": "infra workers (registry only)",
+   "label": "nightly pg_dump",
+   "kind": "script",
+   "machine": "box",
+   "cadence": "03:30",
+   "code": "box retention (docs/RETENTION.md)",
+   "reads": "Postgres soda",
+   "writes": "~/gdrive/DA/backups/, 14 days (first dump 4 Oct 00:50, 7.4 MB)",
+   "llm": "none",
+   "gate": "",
+   "status": "live"
+  },
+  {
+   "id": "b_pages",
+   "group": "infra workers (registry only)",
+   "label": "research-page :4143 to :4145",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "nothing keeps them",
+   "code": "/home/da/research-page/",
+   "reads": "",
+   "writes": "event companion pages",
+   "llm": "none",
+   "gate": "",
+   "status": "broken",
+   "note": "Unsupervised; a reboot kills them.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4143
+    },
+    {
+     "host": "box",
+     "port": 4144
+    },
+    {
+     "host": "box",
+     "port": 4145
+    }
+   ],
+   "paths": [
+    "/home/da/research-page/"
+   ],
+   "checks": {
+    "box:research-pages": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "m=''; for p in 4143 4144 4145; do ss -ltn | grep -q \":$p \" || m=\"$m $p\"; done; [ -z \"$m\" ] && echo 'OK 4143 4144 4145 listen' || echo \"BAD not listening:$m\""
+     },
+     "if_fails": "fix session: one da-research-page@<port> unit with Restart=always (FINDINGS box 6); his decision of 4 Oct: keep them",
+     "known_fixes": [],
+     "files": [
+      "box:/home/da/research-page/",
+      "task-land/_system/vps/ (units)"
+     ],
+     "rollback": "disable the unit",
+     "escalate": "STUCK terminal: installing a unit is a box write",
+     "healthy_when": ":4143, :4144, :4145 listen on the box"
+    }
+   }
+  },
+  {
+   "id": "b_boards",
+   "group": "infra workers (registry only)",
+   "label": "gtm-eng on the box :4141",
+   "kind": "service",
+   "machine": "box",
+   "cadence": "nothing",
+   "code": "/home/da/gtm-eng",
+   "reads": "",
+   "writes": "",
+   "llm": "none",
+   "gate": "",
+   "status": "retired",
+   "note": "Dead since 19 Sep; boards are laptop-only.",
+   "ports": [
+    {
+     "host": "box",
+     "port": 4141
+    }
+   ],
+   "paths": [
+    "/home/da/gtm-eng"
+   ]
+  },
+  {
+   "id": "c_instinct",
+   "group": "infra workers (registry only)",
+   "label": "instinct (orchestrator)",
+   "kind": "session",
+   "machine": "cloud",
+   "cadence": "",
+   "code": "its own connectors; reads the repos on GitHub; proposes through rules/inbox/ and the hub",
+   "reads": "",
+   "writes": "",
+   "llm": "yes",
+   "gate": "hub card",
+   "status": "paused",
+   "note": "Set aside 4 Oct 01:50 ('forget about instinct for now'). When an orchestrator is wanted again: through the door and rules/inbox/ only."
+  },
+  {
+   "id": "c_edge",
+   "group": "infra workers (registry only)",
+   "label": "Edge (getedge.cc)",
+   "kind": "service",
+   "machine": "cloud",
+   "cadence": "once per new task",
+   "code": "MCP edge on both machines (/home/da/.mcp.json on the box)",
+   "reads": "~20k public skills",
+   "writes": "a candidate skill to compare with the local ones",
+   "llm": "",
+   "gate": "",
+   "status": "live",
+   "note": "Adopting a skill still needs the test the people-search lost on 18 Sep."
+  },
+  {
+   "id": "c_langfuse",
+   "group": "infra workers (registry only)",
+   "label": "Langfuse",
+   "kind": "service",
+   "machine": "cloud",
+   "cadence": "every Claude Code turn (hook), the poller, the simulation",
+   "code": "~/.env/langfuse.env on the laptop only",
+   "reads": "",
+   "writes": "traces",
+   "llm": "",
+   "gate": "",
+   "status": "live",
+   "note": "The box has no SDK and no keys yet: the learning layer traces locally there."
+  },
+  {
+   "id": "sys_laptop_oneoffs",
+   "group": "ledger only",
+   "label": "old one-off scheduled tasks on the laptop",
+   "kind": "script",
+   "machine": "laptop",
+   "status": "live",
+   "hidden": true,
+   "checks": {
+    "task:one-offs": {
+     "probe": {
+      "type": "ps",
+      "cmd": "$r = @('Scheduled-Email-Test-20260531-1230','WA-Test-Send-1350') | ForEach-Object { $t = Get-ScheduledTask -TaskName $_ -ErrorAction SilentlyContinue; if ($t -and [string]$t.State -ne 'Disabled') { $_ } }; if (-not $r) { 'OK both one-offs disabled' } else { 'BAD still enabled: ' + ($r -join ', ') }"
+     },
+     "if_fails": "disable_task",
+     "known_fixes": [
+      "disable_task"
+     ],
+     "fix": {
+      "name": "disable_task",
+      "tasks": [
+       "Scheduled-Email-Test-20260531-1230",
+       "WA-Test-Send-1350"
+      ]
+     },
+     "files": [],
+     "rollback": "Enable-ScheduledTask -TaskName <name>",
+     "escalate": "none",
+     "healthy_when": "the two old one-off tasks are disabled (never deleted)"
+    }
+   }
+  },
+  {
+   "id": "sys_map_docs",
+   "group": "ledger only",
+   "label": "the system map documents (LOOPS.md, the map's notes)",
+   "kind": "store",
+   "machine": "laptop",
+   "status": "live",
+   "hidden": true,
+   "checks": {
+    "map:loops-drift": {
+     "probe": {
+      "type": "file_absent",
+      "file": "~/soda-brain/system/LOOPS.md",
+      "pattern": "due_today\\.py[^\\n]{0,80}(not|un)scheduled"
+     },
+     "if_fails": "edit the line",
+     "known_fixes": [],
+     "files": [
+      "~/soda-brain/system/LOOPS.md"
+     ],
+     "rollback": "git revert",
+     "escalate": "none",
+     "healthy_when": "LOOPS.md no longer says due_today.py is unscheduled"
+    },
+    "map:stale-notes": {
+     "probe": {
+      "type": "file_absent",
+      "file": "~/soda-brain/system/SODA-SYSTEM-MAP.html",
+      "pattern": "Failing since 21 Sep \\(token\\)|in conflict tonight|Plan items 1 and 2: merge per record|Unsupervised; a reboot kills them"
+     },
+     "if_fails": "edit the notes",
+     "known_fixes": [],
+     "files": [
+      "~/soda-brain/system/SODA-SYSTEM-MAP.html"
+     ],
+     "rollback": "git revert",
+     "escalate": "none",
+     "healthy_when": "the four stale notes are gone from NODES"
+    }
+   }
+  },
+  {
+   "id": "sys_box_secrets",
+   "group": "ledger only",
+   "label": "box secret files (modes only)",
+   "kind": "store",
+   "machine": "box",
+   "status": "live",
+   "hidden": true,
+   "checks": {
+    "box:secret-modes": {
+     "probe": {
+      "type": "box_sh",
+      "cmd": "b=$(stat -c '%a %n' ~/slack/tokens/*.json ~/sodanotif/push.env ~/tg-reply-resolver/user.session 2>/dev/null | grep -v '^600 ' | awk '{print $2}' | tr '\\n' ' '); [ -z \"${b// /}\" ] && echo 'OK all 600' || echo \"BAD not 600: $b\""
+     },
+     "for_him": {
+      "kind": "run",
+      "what": "let me set mode 600 on the five box secret files (names only: slack/tokens/*.json, sodanotif/push.env, tg-reply-resolver/user.session)",
+      "account": null,
+      "command": "ssh box chmod 600 /home/da/slack/tokens/cdtm.json /home/da/slack/tokens/horus.json /home/da/slack/tokens/xplore.json /home/da/sodanotif/push.env /home/da/tg-reply-resolver/user.session",
+      "why_only_him": "a permission change (never-list); your yes is the authority, nothing is read or printed"
+     },
+     "his_command": true,
+     "healthy_when": "the Slack tokens, push.env and the resolver session are mode 600"
+    }
+   }
+  }
+ ]
+}
