@@ -429,7 +429,9 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   Faults: one registry item per page `UI-<surface>-<width>` (key `ui-walk:<surface>@<width>`, maintenance, owner
   fix_session, agent when the page does not answer), a repeat updates the same id (`seen`+1), two clean walks close it
   as fixed. Screenshots and `report-HHMM.json` / `last.json` in `task-land/_system/goal-run/ui-walk/<date>/` (gitignored,
-  3 days kept), log `ui-walk.log` there. Drill: `python tests/test_ui_walk.py` (the planted page
+  3 days kept), log `ui-walk.log` there. Every full walk (not `--plant`) also writes the small TRACKED summary
+  `system-agent/ui-walk-last.json` (run time, per page pass/fail, fault count and kinds, registry id; no screenshots,
+  no page text), which the task-land sync carries to the box for the System Update (19:55). Drill: `python tests/test_ui_walk.py` (the planted page
   `tests/ui_walk_plant.html` twice into a registry copy: one item, then an update, then closed by two clean walks).
   Not covered: how Telegram itself draws a card (Telegram Web needs his one-time login in the walker's profile; PARKED,
   not asked).
@@ -458,8 +460,8 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   why; a SYSTEM-WIDE verdict becomes registry line `J-SW-YYYYMMDD` through `registry.put` (maintenance / fix_session,
   or his_command / him). First real verdict J-20261004: "no system-wide problem". Test
   `system-agent/tests/test_system_update.py` (fixture: both ALERTs, a stub hub on a temp port gets exactly one card, a
-  stub claude, `held` filled the next Sunday). Gaps: `goal-run/ui-walk/` is gitignored, so the box run sees no UI walk;
-  the update node is not yet in `nodes.json` (the System Agent build owns the ledger).
+  stub claude, `held` filled the next Sunday). When `goal-run/ui-walk/` is absent (the box) the UI walk line comes from `ui-walk-last.json`.
+  Gap: the update node is not yet in `nodes.json` (the System Agent build owns the ledger).
 
 ## 8. The rule loop
 
