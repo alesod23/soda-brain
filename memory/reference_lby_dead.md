@@ -23,3 +23,10 @@ So **Gmail = cdtm only** now for triage/SODANOtif. Any older memory that says "G
 So the `--account` label is a filename, not a promise. **Always `whoami` before any send** — sending "as cdtm" actually sends from a personal Gmail. All five refresh silently (no interactive login).
 
 NOT removed: `daemon.js` still lists "Lobbly" as a WhatsApp *project-relevance* keyword — that's the Lobbly PROJECT (see [[project_lobbly]]), not the email account. Only revisit if the project itself is confirmed dead.
+
+**4 Oct 2026 (his word: "lobbly is dead, get it out of here"; goal run G134):** the rest is out too. Laptop: token renamed
+`triage/tokens/lobbly.json.retired-20261004` (reversible), `gmail.py` refuses `--account lobbly` by name (`RETIRED_ACCOUNTS`),
+snm `scan.ps1` + `prompt.md`, laptop sodanotif `gmail_poll.py` default list and classifier prompt, `oauth_catch.py` ACCOUNTS,
+system agent EMAILS/ACCOUNTS, todo worker prompt, triage/snm/daily skills (backups `*.bak-20261004-lobbly`), ACCOUNTS.md,
+DATA-MAP.md, the maps. Box: the savior did the ACCOUNTS lists; the daemon prompt and box skills are block G134 in
+`task-land/_system/box-steps-20261004-goal.sh`. The `lobbly` project slug in `vault_kb/project-registry.md` was NOT touched.
