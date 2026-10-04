@@ -117,7 +117,25 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   `python meeting_loop.py run --dry --force-list` (exit 0, nothing written) and `meeting_loop.py read <url>` on
   the Sophie Tollmann note returned the full interrogation (19:20). Gaps: the `granola` MCP server is still in
   `~/.claude.json` (his account-level config); granola-auto's medtech-brain `Raw/` copy of each Tundra call has no
-  Notion-side replacement; `~/.claude/CLAUDE.md` still names `/granola` in the auto-open list (his file).
+  Notion-side replacement (closed by G96, next bullet); `~/.claude/CLAUDE.md` still names `/granola` in the auto-open
+  list (his file).
+- Since 4 Oct 2026 (G96, the medtech-brain Raw copy): the reader also answers `tundra_type` (granola-auto's three
+  folders: `Client Call` = hospital or clinical-engineering buyer, `Ecosystem` = anyone else about Tundra, `Internal` =
+  Tundra's team on Tundra, `""` = not Tundra business: CDTM, personal, other projects) and, for a Tundra call only,
+  `notes_verbatim` (the page's own meeting-AI notes). `raw_copy()` then writes ONE file
+  `~/medtech-brain/Raw/MM-DD <Title>.md` (no year in the name, `created:` inside; a generic Notion title such as
+  "Meeting" becomes "Call with <name> (<org>)"): frontmatter `notion_page_id`, the meeting-AI notes verbatim, the
+  reading's summary, key points (he owes, they owe, facts, commitments) and the transcript answers with their quotes.
+  Idempotent by `notion_page_id` (a second pass finds the file and writes nothing); never overwrites (open "x", a
+  same-name file gets " (2)"); no ingest (`/kb-ingest` is his). It runs after the empty/recording checks and BEFORE
+  the internal skip, so a Tundra team meeting is kept as granola-auto kept it; any other note follows the old path
+  unchanged (no state key, no print, no log). `--dry` prints the path and the first 25 lines, writes nothing;
+  `meeting_loop.py read <url> [<created>] [<title>]` also prints the Raw file a Tundra note would get (always dry).
+  Logged `raw` / `raw-failed` in `meeting-loop.jsonl`; the state note carries `raw: {state, path}`. Test:
+  `python tests/test_raw_copy.py` (temp dir only: one write, second call none, non-Tundra none, dry none, no
+  overwrite). No backfill: the notes carded before G96 get no Raw file; the first real write is the next Tundra note
+  the scheduled loop finishes. Backup `meeting_loop.py.bak-20261004-raw` (gtm-eng is not a git repo; the task-land
+  mirror `_system/laptop-tools/gtm-eng/` picks it up on git-sync).
 
 ## 4. The draft lane (every message to a person)
 
