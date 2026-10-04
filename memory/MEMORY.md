@@ -11,6 +11,7 @@
 - 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
 
 ## Rules that bite first
+- 💬1️⃣ [Quick feedback from him gets a ONE-line ack naming what was filed](feedback_quick_feedback_gets_one_line_ack.md) — "Okay, filed: <name>.", no wall (2026-10-04).
 - 🔑 [Every Google sign-in: his CDTM Chrome profile, the one account pre-selected, finished by the box receiver :8765](feedback_signins_open_in_cdtm_chrome_profile.md) — no card, no chooser, no paste-back; app published out of Testing (2026-10-04).
 - 💬↩️ [A bare TG line after a SODANOtif card ("i got it") is his answer to that person: reply same turn, offer the send](feedback_bare_tg_line_after_notif_card_is_a_reply.md) — missed Caleb's hotel question while busy (2026-10-04).
 - 🃏✍️ [A card proposing a new CRM row SHOWS THE DRAFT; the row yes never sends, the draft goes to the lane as its own card](feedback_propose_row_card_carries_the_draft.md) — hub #41 Vittoria + #40 Donarini, HUB H39 (partly supersedes H38 #42); instinct's own Gmail draft first, never a second; one-token addresses (dimarcoberardino@) matched inside (2026-10-04).
