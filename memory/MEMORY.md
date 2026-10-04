@@ -2,11 +2,14 @@
 
 - 🧠🚪 [THE SODA BRAIN (2 Oct 2026): this repo, the system map in `system/`, the Postgres+pgvector door on the box (:4150, Funnel), the CRM mirrored, instinct as orchestrator](reference_soda_brain.md) — update `system/` in the same turn as any service, port, job, store or rule changes; tokens in `~/.env/soda.env`, never printed.
 
+- 📇➡️ [The CRM is where every follow-up is decided and sent; the box becomes the CRM writer; the hub keeps non-person items (his decision 4 Oct 2026 04:00)](project_crm_is_the_followup_surface.md) — never a second writer of crm.json; a card about a person links to the CRM item; build order in THE PLAN item 10.
+- 👁️🔁 [A visual deliverable gets a screenshot review LOOP before he sees it: no line through a node, no label on a shape, text centred, repeat until clean](feedback_visual_review_loop_before_handing_a_page.md) — "This is disgusting ... Continue until loop until you have all those minor details fixed" (2026-10-04).
+- 🗺️ The visual map: `soda-brain/system/SODA-SYSTEM-MAP.html` (+ `.md` narrative), same rules as the system map; "loading cards" on hub-review with a healthy server = a client JS error, read the console first (2026-10-04).
 - 💸🛑 [A cap he gives is the number to USE, never a line to stop a point before](feedback_cap_means_use_it.md) — "cap 92" and I stopped at 91: "No. No. Fuck." Check budget.py between steps, stop only at the cap (2026-10-03).
 - 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
 
 ## Rules that bite first
-- 🃏✍️ [A card proposing a new CRM row asks for the ROW ONLY, no draft on it](feedback_propose_row_card_carries_the_draft.md) — hub #42 Roussel, HUB H38 supersedes H37 (#43 Severi); instinct_inbox's yes opens the row + puts his words on it, a message is its own later card (2026-10-04).
+- 🃏✍️ [A card proposing a new CRM row SHOWS THE DRAFT; the row yes never sends, the draft goes to the lane as its own card](feedback_propose_row_card_carries_the_draft.md) — hub #41 Vittoria + #40 Donarini, HUB H39 (partly supersedes H38 #42); instinct's own Gmail draft first, never a second; one-token addresses (dimarcoberardino@) matched inside (2026-10-04).
 - 🛑 [Unattended run: NEVER end the turn waiting on agents](feedback_unattended_run_never_wait_on_agents.md) — do the work in the main thread, check agent liveness by transcript mtime after 10 min, keep a self-wake heartbeat; cost him 10 idle hours on the thesis (2026-09-27).
 - 🧊 [Session frozen on "running PreToolUse hooks N/6" = a hook that never returned](reference_pretooluse_hook_hang_npx.md) — post-compaction-recall.sh ran `npx` on every tool call; fixed 2026-09-27, recipe inside.
 - 🪟🚫 [NO console window ever in front of him: tasks through run-hidden.vbs, CREATE_NO_WINDOW, window_lint.py after every new task](reference_window_watch.md) — the recorder names who opened each window (2026-09-28).

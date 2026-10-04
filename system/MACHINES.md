@@ -2,7 +2,15 @@
 
 The system runs on two computers and one phone joined by a Tailscale tailnet. The laptop (Windows 11, `desktop-1bojsrg`, Tailscale 100.127.7.80) is where Alessandro works: Chrome, Obsidian, the CRM writer, the GTM boards, and every scheduled task that touches his screen or his Chrome profiles. The box (Ubuntu 24.04 VPS, hostname `vmd202974`, Tailscale name `da-box`, 100.85.52.84) is always on and holds everything that must not depend on the laptop being awake: the Telegram savior session, the approval hub, the WhatsApp daemon, the notification daemon, the pollers, cron and systemd jobs, and the two Google Drive mounts. The phone (`pixel-9a`, 100.121.68.86) is a Telegram client and the hub-review page; it runs nothing of its own. The repos (task-land, soda-brain, vault_kb, medtech-brain, coattio, travel-search) are the shared state between the two computers; the Drive folder `DA/` carries the two data files that are too big or too live for git.
 
-Last verified: 2026-10-01 (from the inventories of that day)
+Last verified: 2026-10-01 (from the inventories of that day). 2026-10-04 03:17 (`schtasks /query`, laptop): the
+table in section 4 is corrected by the visual map `SODA-SYSTEM-MAP.html`: DA-MeetingLoop every 5 min (not 30),
+DA-InboundAsks 15 min, DA-FeedbackWorker 10 min, LinkedIn-Poll 15 min, SentCorpus-Harvest 07:30, Notion-MeetingFiler
+hourly, DA-HubForward 5 min keep-alive, Voice-Lane-Watch enabled every minute; tasks missing here: DA-Supervisor
+(10 min), DA-InstinctInbox (15 min), DA-DueToday (08:30), Granola-Auto-Sweep (08:15), Peer60-AcceptCheck (09:00,
+18:00), RuleLoop-SystemCheck (09:10), SODANOtif-Recap (2 h), CDTM-Kickoff-Weekly-Update (Thu 16:00); the laptop
+hub-era tasks (Approval-Hub-Watchdog, Push-Lane-Watchdog, WA-Daemon-*, TG-*, SODANOtif-Daemon-*) are Disabled.
+`da-brain.service` and `da-brain-index.timer` (section 9) are live since 2 Oct. Section 3: the daily pg_dump at
+03:30 writes to the Drive mount.
 
 ## 1. The three devices
 

@@ -1,23 +1,33 @@
 ---
 name: feedback_propose_row_card_carries_the_draft
-description: A hub card proposing a new CRM row asks for the ROW ONLY; no draft on it, his yes carries no message (hub #42 Roussel, 4 Oct 2026, HUB H38; supersedes hub #43 Severi / H37)
+description: "A hub card proposing a new CRM row SHOWS the draft (instinct's unsent Gmail draft, else ours from the last exchange + why); the row yes never sends, the draft goes to the lane as its own card (hub #41 Vittoria + #40 Donarini, HUB H39, 4 Oct 2026; partly supersedes H38 / #42 Roussel)"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: c187d271-3593-4bb6-8043-3c5ba319d8a1
+  modified: 2026-10-04T02:13:25.260Z
 ---
 
-A card that proposes opening a CRM row for someone asks ONE thing: "yes = open the row only (no message)". Nothing is
-drafted for it, his yes never carries a text, and his words on the card become a `note` activity on the new row. A
-message to that person comes later as its own card that shows what it says and why.
+A card that proposes opening a CRM row for someone the system means to write to SHOWS THE DRAFT, already written, so he
+judges it on the spot. The draft is the person's unsent Gmail draft when one exists (instinct saves its own, never write
+a second), else one written from the last mail exchange with a "Why this text" line. His yes opens the row and puts the
+draft into the lane as its OWN email card (register.py), where his yes is the send. His words on the row card become a
+note on the row and rewrite our draft.
 
-His words (hub #42, Sandrine Roussel, 4 Oct 2026): "The yes is referred to creating a role in the CRM, but not to actually
-draft a message ... I don't see you having thought about what to put in the draft."
+His words (hub #41, Vittoria Di Marco Berardino, 4 Oct 2026): "Why did you not already draft? In general, why are you not
+already drafting these emails ... You can draft and go back to me. I can actually tell you whether I like a certain
+draft". Same commit, #40 Donarini: "You should have drafted it already, so that I could also check the draft."
 
-**Why:** the earlier rule (hub #43, Severi, same day, H37) put a written draft on the row card so he judged both at once.
-The drafts were written from instinct's one-line reason ("pilot unanswered for 17 days") with no thought about content,
-and bundling made his yes to the row look like a yes to a message. H37 is marked SUPERSEDED in HUB-CARD-CONTRACT.md.
+**Why:** the three cards #41/#42/#43 were answered in ONE commit (3 Oct 23:20). The earlier session read #42 Roussel
+("the yes is referred to creating a row, not to draft ... I don't see you having thought about what to put in the
+draft") as "no draft at all" (H38). Read together they say: draft first, show the thinking, keep the send a separate yes.
+Also: instinct HAD saved a draft to Vittoria on 2 Oct, but `draft_already` searched `to:Berardino` and her address
+`vittoria.dimarcoberardino@` is one token, so it was missed.
 
-**How to apply:** `gtm-eng/agent/instinct_inbox.py` `propose_row_card` writes no text (instinct's own text, if any, is
-shown "for information, NOT carried by this yes"); `apply_decisions` on his yes calls only `A.open_row` + `note_on_row`
-(his feedback), never `handle_proposal`. Test: `python gtm-eng/agent/tests/test_instinct_inbox.py` case [5]. Any new
-script that proposes a row follows the same shape. Hints line in `_system/hints/instinct-inbox.md`. See
-[[reference_approval_hub]], [[reference_soda_brain]].
+**How to apply:** `gtm-eng/agent/instinct_inbox.py`: `propose_row_card` -> `draft_for_row_card` (existing draft or
+`WRITE_NEW` from `person_thread`); `apply_decisions` yes -> `open_row` + `note_on_row` + `lane_on_yes` (instinct's draft:
+`register_existing`, register.py `--no-apply`, never replaced or deleted; ours: `REVISE` with his words, then
+`handle_proposal(pid=...)` through the lane). With a row, an unsent instinct draft with no sidecar is registered, not
+skipped. Name matching: `is_person` (surname inside the squashed address). Tests: `python
+gtm-eng/agent/tests/test_instinct_inbox.py` cases [5], [8]. Hints in `_system/hints/instinct-inbox.md`. Rule: HUB H39.
+See [[reference_approval_hub]], [[reference_soda_brain]], [[feedback_every_email_draft_goes_through_the_lane]].

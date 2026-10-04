@@ -63,6 +63,11 @@ section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
 .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:12px}
 .legend .item{display:flex;gap:12px;align-items:flex-start;font-size:13px;color:var(--muted)}
 .legend .item b{color:var(--ink);font-weight:500;display:block}
+.legend .item.wide{grid-column:1 / -1;align-items:center;margin-top:4px}
+.legend .dots{display:inline-flex;gap:10px;white-space:nowrap;font-size:12.5px;color:var(--muted);align-items:center}
+.legend .dots .dot{margin-right:4px}
+.legend .item.wide div{display:flex;gap:8px;align-items:baseline}
+.legend .item.wide b{display:inline}
 
 /* nodes */
 .node{position:relative;background:var(--surface);border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px 8px 12px;font-size:13px;line-height:1.3;min-width:0;cursor:pointer;transition:border-color .15s,box-shadow .15s}
@@ -72,12 +77,19 @@ section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
 .node .s code{font-size:11px}
 .node.event{border-style:dashed;border-radius:999px;background:var(--event);padding-left:14px}
 .node.reader{border-width:1.5px}
-.node.reader::before{content:"OPUS";position:absolute;top:-8px;right:10px;font:500 10px/1 var(--mono);letter-spacing:.08em;background:var(--surface);color:var(--accent);padding:1px 5px;border:1px solid var(--accent);border-radius:4px}
+.node.reader::before,.node.llm::before{content:"OPUS";position:absolute;top:-8px;right:10px;font:500 10px/1 var(--mono);letter-spacing:.08em;background:var(--surface);color:var(--accent);padding:1px 5px;border:1px solid var(--accent);border-radius:4px}
 .node.llm::before{content:"LLM"}
 .node.store{background:var(--store);border-radius:6px;border-bottom-width:4px}
 .node.store .l{font-family:var(--mono);font-weight:500;font-size:12.5px}
-.node.gate{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,10px 100%,0 50%);padding:10px 20px;border-radius:0}
-.node.gate .s{color:color-mix(in srgb,var(--accent-ink) 78%,transparent)}
+.node.gate{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%,0 50%);padding:10px 22px;border-radius:0;text-align:center}
+.node.gate .l{display:block;text-align:center}
+.node.gate .s{color:color-mix(in srgb,var(--accent-ink) 78%,transparent);text-align:center}
+.node .chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.node .chips span{font:500 10px/1.4 var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.node.hot{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.chart .grid.focus .node:not(.hot):not(.src){opacity:.45}
+.sample{display:inline-flex;align-items:center;justify-content:center;height:30px;min-width:76px;padding:0 12px;font-size:12.5px;font-weight:600;flex:none;cursor:default;box-sizing:border-box}
+.sample.gate{min-width:90px}
 .node.surface{border-color:var(--accent);border-width:1.5px}
 .node.exec{border-radius:4px}
 .node.learn{border-style:dotted;border-width:2px}
@@ -90,12 +102,13 @@ section.block>.wrap>p.intro{max-width:76ch;color:var(--muted);margin:8px 0 18px}
 .chart .grid{display:grid;gap:10px 28px;padding:18px 18px 22px;align-items:start;position:relative;z-index:1}
 .chart .lane-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--line);align-self:end}
 .chart svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
-.chart svg path{fill:none;stroke:var(--line-strong);stroke-width:1.4}
+.chart svg path{fill:none;stroke:var(--line-strong);stroke-width:1.3;stroke-linejoin:round;transition:opacity .15s,stroke .15s}
 .chart svg path.strong{stroke:var(--accent);stroke-width:1.8}
 .chart svg path.dashed{stroke-dasharray:4 4}
-.chart svg text{font:11px var(--mono);fill:var(--muted)}
-.chart svg text.strong{fill:var(--accent)}
-.chart .lanebg{position:absolute;top:0;bottom:0;background:var(--event);opacity:.5;z-index:0;pointer-events:none}
+.chart svg path.hot{stroke:var(--accent);stroke-width:2.2;opacity:1}
+.chart .grid.focus~svg path:not(.hot),.chart svg.focus path:not(.hot){opacity:.12}
+.chart .busline{position:absolute;left:0;right:0;border-top:1px dashed var(--line);pointer-events:none}
+.chart .hint{position:absolute;right:14px;bottom:8px;font:11px var(--mono);color:var(--muted);letter-spacing:.06em}
 
 /* chain chart (flows) */
 .flow{margin:12px 0 4px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px 10px;overflow-x:auto}
@@ -182,13 +195,13 @@ footer p{max-width:90ch}
     <span>Open hub cards tonight <b>52</b> (77 at dusk)</span>
   </div>
   <div class="legend" aria-label="How to read the charts">
-    <div class="item"><span class="node event" style="pointer-events:none;padding:4px 12px"><span class="l">event</span></span><div><b>An event from the world</b>a mail, a WhatsApp, a note, a line he typed</div></div>
-    <div class="item"><span class="node reader" style="pointer-events:none;padding:4px 12px"><span class="l">reader</span></span><div><b>A reader that decides</b>Opus, headless, with the rules of its surface</div></div>
-    <div class="item"><span class="node" style="pointer-events:none;padding:4px 12px"><span class="l">script</span></span><div><b>A deterministic worker</b>no model, a cron or a task</div></div>
-    <div class="item"><span class="node store" style="pointer-events:none;padding:4px 12px"><span class="l">store</span></span><div><b>A store</b>a table, a file, a ledger</div></div>
-    <div class="item"><span class="node gate" style="pointer-events:none;padding:4px 18px"><span class="l">his yes</span></span><div><b>His gate</b>nothing reaches a person without it</div></div>
-    <div class="item"><span class="node learn" style="pointer-events:none;padding:4px 12px"><span class="l">learning</span></span><div><b>Learning</b>a sentence becomes a rule, a miss a threshold</div></div>
-    <div class="item"><span><i class="dot live"></i>live <i class="dot armed"></i>armed <i class="dot off"></i>built, off <i class="dot paused"></i>paused <i class="dot planned"></i>planned <i class="dot broken"></i>broken</span><div><b>Status dots</b>as of the date above; click any node for its card</div></div>
+    <div class="item"><span class="sample node event">event</span><div><b>An event from the world</b>a mail, a WhatsApp, a note, a line he typed</div></div>
+    <div class="item"><span class="sample node reader">reader</span><div><b>A reader that decides</b>Opus, headless, with the rules of its surface</div></div>
+    <div class="item"><span class="sample node">script</span><div><b>A deterministic worker</b>no model, a cron or a task</div></div>
+    <div class="item"><span class="sample node store">store</span><div><b>A store</b>a table, a file, a ledger</div></div>
+    <div class="item"><span class="sample node gate">his yes</span><div><b>His gate</b>nothing reaches a person without it</div></div>
+    <div class="item"><span class="sample node learn">learning</span><div><b>Learning</b>a sentence becomes a rule, a miss a threshold</div></div>
+    <div class="item wide"><span class="dots"><i class="dot live"></i>live <i class="dot armed"></i>armed <i class="dot off"></i>off <i class="dot paused"></i>paused <i class="dot planned"></i>planned <i class="dot broken"></i>broken</span><div><b>Status dots</b>as of the date above. Hover a node to light its wires, click it for its card.</div></div>
   </div>
 </div>
 
@@ -441,28 +454,32 @@ const SHAPE = {
     ex_hub:[4,2],ex_lane:[4,3],ex_wa:[4,4],ex_li:[4,5],ex_crm_step:[4,6],ex_tick:[4,7],ex_campaign:[4,8],
     ln_addrule:[5,2],ln_compile:[5,3],ln_observers:[5,4],ln_cleaning:[5,5],ln_sim:[5,6],ln_janitor:[5,7]
   },
+  // [from, to, label, style]: style tokens: strong (teal), dashed (off or paused), bus (a skip-lane wire routed under
+  // the chart). A wire is drawn only between neighbouring lanes or on the bus; every other link is a chip on the node.
   edges:[
-    ["ev_mail","rd_notif",""],["ev_mail","rd_crm",""],["ev_mail","rd_sweep","every 10 min",""],
-    ["ev_wa","rd_notif",""],["ev_wa","rd_crm","via Drive"],["ev_wa","rd_asks",""],
-    ["ev_li","rd_crm",""],["ev_li","rd_asks",""],["ev_li","rd_sweep","reverse"],
-    ["ev_notion","rd_meeting",""],["ev_cal","rd_crm",""],["ev_slack","rd_sweep",""],
-    ["ev_page","rd_classifier",""],["ev_sentence","rd_feedback","after cut-over","dashed"],["ev_sentence","ln_addrule","same turn","strong"],
-    ["rd_crm","st_crm","PUT /api/data"],["rd_meeting","st_crm","step + origin"],["rd_meeting","st_door","match_event","strong"],
-    ["rd_sweep","rd_match","on_event","strong"],["rd_crm","rd_match","","strong"],["rd_match","st_door","/brain/match","strong"],
-    ["st_door","st_pg",""],["st_crm","st_pg","mirror 3a"],["st_tasks","st_pg","ingest 5 min"],["st_hub","st_pg","cards"],
-    ["rd_asks","st_drafts","a draft + a card"],["rd_meeting","st_hub","owed artifacts"],["rd_classifier","st_tasks",""],
-    ["rd_match","ex_tick","tick with quote","strong"],["rd_match","st_hub","/close with evidence","strong"],
-    ["st_hub","gate_tg","ping once"],["st_hub","gate_review",""],["st_crm","gate_crm",""],["st_drafts","gate_tg",""],["st_tasks","gate_page",""],["st_tasks","gate_board","","dashed"],
-    ["gate_tg","ex_hub","N yes","strong"],["gate_review","ex_hub","commit = yes","strong"],["gate_board","ex_campaign","commit = yes","strong"],["gate_crm","ex_crm_step","a/s/c commit","strong"],["gate_page","ex_tick","his tick","strong"],
-    ["ex_hub","ex_lane","by draft id"],["ex_hub","ex_wa","wa-send"],["ex_campaign","ex_li",""],["ex_hub","st_decisions",""],
-    ["gate_review","ln_cleaning","Cleaning tab, reverse","strong"],["ln_addrule","st_ledgers",""],["st_ledgers","ln_compile",""],["ln_observers","st_decisions","rule-hits"],["rd_feedback","ln_addrule","","dashed"],
-    ["ln_cleaning","rd_match","thresholds","dashed"],["ln_cleaning","rd_sweep","","dashed"],["ln_sim","ln_addrule","misses as rules","dashed"],["ln_janitor","st_hub","","dashed"]
+    ["ev_mail","rd_notif","60 s"],["ev_mail","rd_crm","full text"],["ev_mail","rd_sweep","every 10 min"],
+    ["ev_wa","rd_notif","the tap"],["ev_wa","rd_crm","via Drive"],["ev_wa","rd_asks","an ask"],
+    ["ev_li","rd_crm","accept tick"],["ev_li","rd_asks","a DM"],["ev_li","rd_sweep","reverse pass"],
+    ["ev_notion","rd_meeting","every 5 min"],["ev_cal","rd_crm","booking"],["ev_slack","rd_sweep","since 4 Oct"],
+    ["ev_page","rd_classifier","~60 s"],["ev_sentence","rd_feedback","after the cut-over","dashed"],["ev_sentence","ln_addrule","the same turn","strong bus"],
+    ["rd_crm","st_crm","PUT /api/data"],["rd_meeting","st_crm","step + origin"],["rd_meeting","st_door","match_event: already covered?","strong"],
+    ["rd_sweep","rd_match","on_event","strong"],["rd_crm","rd_match","every event","strong"],["rd_match","st_door","POST /brain/match","strong"],
+    ["st_door","st_pg","the index"],["st_crm","st_pg","mirror (3a)"],["st_tasks","st_pg","ingest every 5 min"],["st_hub","st_pg","cards"],
+    ["rd_asks","st_drafts","a draft + a card"],["rd_meeting","st_hub","owed artifacts"],["rd_classifier","st_tasks","a task file"],
+    ["rd_match","st_hub","POST /close with evidence","strong"],["rd_match","ex_tick","tick with the quote","strong"],["rd_sweep","st_hub","closes by state"],
+    ["rd_notif","gate_tg","a notification card","bus"],
+    ["st_hub","gate_tg","ping once"],["st_hub","gate_review","the cards"],["st_crm","gate_crm","Today"],["st_drafts","gate_tg","the draft card"],["st_tasks","gate_page","rendered"],
+    ["gate_tg","ex_hub","N yes","strong"],["gate_review","ex_hub","commit = the yes","strong"],["gate_board","ex_campaign","commit = the yes","strong"],["gate_crm","ex_crm_step","a/s/c commit","strong"],["gate_page","ex_tick","his tick","strong"],
+    ["ex_hub","ex_lane","by draft id"],["ex_hub","ex_wa","wa-send"],["ex_campaign","ex_li","invites, DMs"],["ex_hub","st_decisions","every verdict","bus"],["ex_tick","st_tasks","done with evidence"],
+    ["gate_review","ln_cleaning","Cleaning tab: judge, reverse","strong bus"],["ln_addrule","st_ledgers","one H line","bus"],["st_ledgers","ln_compile","the skills"],["ln_observers","st_decisions","rule-hits"],["rd_feedback","ln_addrule","files the rule","dashed"],
+    ["ln_cleaning","rd_match","thresholds, exceptions","dashed bus"],["ln_sim","ln_addrule","misses as rules","dashed"],["ln_janitor","st_hub","one card a night","dashed"]
   ]
 };
 
 // machines chart
 const MACH = {
-  lanes:["laptop (Windows, sleeps)","box (Ubuntu VPS, always on)","phone","cloud"],
+  // the cloud sits between the two computers because that is where they meet: GitHub for the repos, Drive for the live stores
+  lanes:["laptop (Windows, sleeps)","cloud (the meeting point)","box (Ubuntu VPS, always on)","phone"],
   nodes:{
     m_crm:{label:"coattio CRM :4124 + intake :4137",kind:"service",sub:"the ONLY crm.json writer; Coattio-Watchdog"},
     m_boards:{label:"GTM boards :4141",kind:"service",sub:"open-board.ps1 only"},
@@ -490,10 +507,12 @@ const MACH = {
     m_lf:{label:"Langfuse, Edge, instinct (aside)",kind:"service",sub:""}
   },
   place:{m_crm:[0,1],m_boards:[0,2],m_fwd:[0,3],m_design:[0,4],m_chrome:[0,5],m_obsidian:[0,6],m_tasks:[0,7],m_sessions_l:[0,8],
-         m_savior:[1,1],m_hub:[1,2],m_review:[1,3],m_brain:[1,4],m_wa:[1,5],m_notif:[1,6],m_cron:[1,7],m_coattio_b:[1,8],m_mounts:[1,9],
-         m_tg:[2,1],m_page:[2,3],
-         m_google:[3,1],m_notion:[3,2],m_github:[3,4],m_li:[3,5],m_lf:[3,7]},
-  edges:[["m_fwd","m_hub","Tailscale","strong"],["m_crm","m_coattio_b","peer.js pull"],["m_crm","m_brain","pg-mirror on every save"],["m_sessions_l","m_brain","MCP /mcp"],["m_tasks","m_github","git 10 to 15 min"],["m_github","m_cron","git 60 s to 5 min"],["m_cron","m_mounts","wa-store every min"],["m_chrome","m_mounts","linkedin-store 15 min","dashed"],["m_savior","m_tg","the lane","strong"],["m_hub","m_tg","ping once"],["m_review","m_page","","strong"],["m_notif","m_google","60 s"],["m_wa","m_li",""],["m_hub","m_google","send by draft id"],["m_crm","m_notion","sync"],["m_mounts","m_google","rclone"],["m_obsidian","m_tasks","watcher"],["m_chrome","m_li","LinkedIn"]]
+         m_google:[1,1],m_notion:[1,2],m_github:[1,4],m_li:[1,5],m_lf:[1,7],
+         m_savior:[2,1],m_hub:[2,2],m_review:[2,3],m_brain:[2,4],m_wa:[2,5],m_notif:[2,6],m_cron:[2,7],m_coattio_b:[2,8],m_mounts:[2,9],
+         m_tg:[3,1],m_page:[3,3]},
+  edges:[["m_tasks","m_github","git every 10 to 15 min"],["m_github","m_cron","git every 60 s to 5 min"],["m_crm","m_notion","Contacts sync"],["m_chrome","m_google","linkedin-store to Drive"],["m_google","m_mounts","rclone mounts"],["m_google","m_notif","polls every 60 s"],["m_li","m_wa","the linked device"],["m_chrome","m_li","LinkedIn in Chrome"],["m_hub","m_google","sends by draft id"],
+         ["m_savior","m_tg","the only poller","strong"],["m_hub","m_tg","ping once"],["m_review","m_page","over Tailscale","strong"],
+         ["m_fwd","m_hub","TCP forward over Tailscale","strong bus"],["m_sessions_l","m_brain","MCP /mcp","bus"],["m_crm","m_coattio_b","peer.js pull (replica)","bus"],["m_crm","m_brain","pg-mirror on every save","bus"],["m_obsidian","m_tasks","the watcher"]]
 };
 
 // flows: chains of {n:nodeId or label, k:kind} with arrows {a:label, g:gate, d:dashed}
@@ -538,36 +557,62 @@ function nodeEl(id,extra){
   el.addEventListener("click",()=>openDrawer(id,n)); el.addEventListener("keydown",e=>{if(e.key==="Enter")openDrawer(id,n)});
   return el;
 }
+// Lane chart with orthogonal wiring. Wires exist only between neighbouring lanes (routed in the gutter between them,
+// one vertical channel per wire, channels assigned so that no two overlapping wires share one) or on the BUS under the
+// chart for the few skip-lane wires marked "bus". Every other link becomes a chip on the node, so no wire ever runs
+// through a node. Hover a node: its wires light up, the rest fade.
+const LANE_W=222, GUTTER=96, CH_STEP=12, CH_PAD=12, BUS_STEP=14;
 function laneChart(container,spec,nodes){
   const grid=document.createElement("div"); grid.className="grid";
-  grid.style.gridTemplateColumns=`repeat(${spec.lanes.length},minmax(190px,1fr))`;
+  grid.style.gridTemplateColumns=`repeat(${spec.lanes.length},${LANE_W}px)`; grid.style.columnGap=GUTTER+"px"; grid.style.rowGap="14px";
   spec.lanes.forEach((l,i)=>{const h=document.createElement("div");h.className="lane-h";h.style.gridColumn=i+1;h.style.gridRow=1;h.textContent=l;grid.appendChild(h)});
-  for(const [id,[c,r]] of Object.entries(spec.place)){const el=nodeEl(id,nodes?nodes[id]:null);el.style.gridColumn=c+1;el.style.gridRow=r+1;grid.appendChild(el)}
-  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg"); svg.classList.add("wires");
-  svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--line-strong)"></path></marker><marker id="ahs" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"></path></marker></defs>`;
-  container.append(svg,grid);
-  function draw(){
-    const cb=grid.getBoundingClientRect(); svg.setAttribute("width",grid.scrollWidth); svg.setAttribute("height",grid.scrollHeight);
-    $$("path.w,text.w",svg).forEach(e=>e.remove());
-    for(const [a,b,label,style] of spec.edges){
-      const A=$(`[data-id="${a}"]`,grid),B=$(`[data-id="${b}"]`,grid); if(!A||!B||A.hidden||B.hidden) continue;
-      const ra=A.getBoundingClientRect(),rb=B.getBoundingClientRect();
-      const ltr=rb.left>=ra.right-4;
-      const x1=(ltr?ra.right:ra.left)-cb.left+grid.scrollLeft, y1=ra.top+ra.height/2-cb.top;
-      const x2=(ltr?rb.left:rb.right)-cb.left+grid.scrollLeft, y2=rb.top+rb.height/2-cb.top;
-      const same=Math.abs(ra.left-rb.left)<8;
-      let d;
-      if(same){const x0=ra.right-cb.left+grid.scrollLeft; d=`M${x0},${y1} C${x0+40},${y1} ${x0+40},${y2} ${x0},${y2}`;}
-      else{const mx=(x1+x2)/2; d=`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;}
-      const p=document.createElementNS("http://www.w3.org/2000/svg","path"); p.setAttribute("d",d); p.classList.add("w");
-      if(style==="strong")p.classList.add("strong"); if(style==="dashed")p.classList.add("dashed");
-      p.setAttribute("marker-end",style==="strong"?"url(#ahs)":"url(#ah)"); svg.appendChild(p);
-      if(label){const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.classList.add("w"); if(style==="strong")t.classList.add("strong");
-        t.setAttribute("x",(x1+x2)/2); t.setAttribute("y",(y1+y2)/2-4); t.setAttribute("text-anchor","middle"); t.textContent=label; svg.appendChild(t);}
-    }
+  const laneOf=id=>spec.place[id]?spec.place[id][0]:-1;
+  const parsed=spec.edges.map(([a,b,label,style])=>{const st=String(style||"");const la=laneOf(a),lb=laneOf(b);return {a,b,label:label||"",strong:/strong/.test(st),dashed:/dashed/.test(st),bus:/bus/.test(st),kind:(lb===la+1)?"adj":(/bus/.test(st)&&la!==lb)?"bus":"chip"}});
+  const busN=parsed.filter(e=>e.kind==="bus").length;
+  grid.style.paddingBottom=(24+busN*BUS_STEP+10)+"px";
+  for(const [id,[c,r]] of Object.entries(spec.place)){
+    const el=nodeEl(id,nodes?nodes[id]:null); el.style.gridColumn=c+1; el.style.gridRow=r+1;
+    const chips=parsed.filter(e=>e.kind==="chip"&&(e.a===id||e.b===id)).slice(0,3);
+    if(chips.length){const box=document.createElement("div");box.className="chips";for(const e of chips){const other=e.a===id?e.b:e.a;const n=(nodes&&nodes[other])||NODES[other];const short=(n?n.label:other).split(/[:(,]/)[0].trim();const s=document.createElement("span");s.textContent=(e.a===id?"→ ":"← ")+short;s.title=(e.a===id?"to ":"from ")+(n?n.label:other)+(e.label?": "+e.label:"");box.appendChild(s)}el.appendChild(box)}
+    grid.appendChild(el);
   }
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg"); svg.classList.add("wires");
+  svg.innerHTML=`<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--line-strong)"></path></marker><marker id="ahs" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"></path></marker></defs>`;
+  const hint=document.createElement("div"); hint.className="hint"; hint.textContent="hover a node: its wires light up";
+  container.append(svg,grid,hint);
+  function draw(){
+    const cb=grid.getBoundingClientRect(); const W=grid.scrollWidth,H=grid.scrollHeight; svg.setAttribute("width",W); svg.setAttribute("height",H);
+    $$("path.w",svg).forEach(e=>e.remove()); $$(".busline",container).forEach(e=>e.remove());
+    const R={}; for(const id of Object.keys(spec.place)){const el=$(`[data-id="${id}"]`,grid); if(!el||el.hidden) continue; const r=el.getBoundingClientRect(); R[id]={l:r.left-cb.left,r:r.right-cb.left,t:r.top-cb.top,b:r.bottom-cb.top,y:r.top-cb.top+r.height/2};}
+    // entry and exit offsets so that several wires on one side of a node do not share one point
+    const outs={},ins={}; for(const e of parsed){ if(e.kind==="chip"||!R[e.a]||!R[e.b]) continue; (outs[e.a]=outs[e.a]||[]).push(e); (ins[e.b]=ins[e.b]||[]).push(e); }
+    const slot=(list,e,r)=>{const n=list.length,i=list.indexOf(e);const span=Math.min(r.b-r.t-16,(n-1)*8);return r.y-span/2+(n>1?i*(span/(n-1)):0)};
+    // channels per gutter: greedy interval colouring on the vertical span of each wire
+    const gutters={};
+    for(const e of parsed){ if(e.kind!=="adj"||!R[e.a]||!R[e.b]) continue; const g=laneOf(e.a); e.y1=slot(outs[e.a],e,R[e.a]); e.y2=slot(ins[e.b],e,R[e.b]); (gutters[g]=gutters[g]||[]).push(e); }
+    for(const g of Object.keys(gutters)){ const list=gutters[g].sort((p,q)=>Math.min(p.y1,p.y2)-Math.min(q.y1,q.y2)); const lanes=[]; for(const e of list){const top=Math.min(e.y1,e.y2),bot=Math.max(e.y1,e.y2); let c=lanes.findIndex(end=>end<top-4); if(c<0){c=lanes.length;lanes.push(bot)} else lanes[c]=bot; e.ch=c; } }
+    const maxCh=Math.floor((GUTTER-2*CH_PAD)/CH_STEP);
+    let busI=0;
+    for(const e of parsed){
+      if(e.kind==="chip"||!R[e.a]||!R[e.b]) continue;
+      const A=R[e.a],B=R[e.b]; let d;
+      if(e.kind==="adj"){ const cx=A.r+CH_PAD+(e.ch%maxCh)*CH_STEP; d=`M${A.r},${e.y1} H${cx} V${e.y2} H${B.l}`; }
+      else { // bus: out of the right edge, down to the bus, across, up into the target (left edge when forward, right edge when backward)
+        const y1=slot(outs[e.a],e,A), y2=slot(ins[e.b],e,B); const busY=H-24-busN*BUS_STEP+busI*BUS_STEP; const fwd=B.l>A.r;
+        const gx=A.r+CH_PAD+(maxCh-1-(busI%maxCh))*CH_STEP; const gx2=fwd?B.l-CH_PAD-(busI%maxCh)*CH_STEP:B.r+CH_PAD+(busI%maxCh)*CH_STEP;
+        d=`M${A.r},${y1} H${gx} V${busY} H${gx2} V${y2} H${fwd?B.l:B.r}`; busI++;
+      }
+      const p=document.createElementNS("http://www.w3.org/2000/svg","path"); p.setAttribute("d",d); p.classList.add("w"); p.dataset.a=e.a; p.dataset.b=e.b;
+      if(e.strong)p.classList.add("strong"); if(e.dashed)p.classList.add("dashed"); p.setAttribute("marker-end",e.strong?"url(#ahs)":"url(#ah)");
+      const t=document.createElementNS("http://www.w3.org/2000/svg","title"); t.textContent=`${(NODES[e.a]||nodes[e.a]).label} -> ${(NODES[e.b]||nodes[e.b]).label}${e.label?": "+e.label:""}`; p.appendChild(t); svg.appendChild(p);
+    }
+    if(busN){const bl=document.createElement("div");bl.className="busline";bl.style.top=(H-24-busN*BUS_STEP-8)+"px";container.appendChild(bl)}
+  }
+  grid.addEventListener("mouseover",ev=>{const n=ev.target.closest(".node"); if(!n) return; const id=n.dataset.id; svg.classList.add("focus"); grid.classList.add("focus"); n.classList.add("src");
+    $$("path.w",svg).forEach(p=>{const on=p.dataset.a===id||p.dataset.b===id; p.classList.toggle("hot",on); if(on){const o=p.dataset.a===id?p.dataset.b:p.dataset.a; const el=$(`[data-id="${o}"]`,grid); if(el) el.classList.add("hot");}});});
+  grid.addEventListener("mouseout",ev=>{const n=ev.target.closest(".node"); if(!n) return; svg.classList.remove("focus"); grid.classList.remove("focus"); $$(".node.hot,.node.src",grid).forEach(x=>x.classList.remove("hot","src")); $$("path.hot",svg).forEach(p=>p.classList.remove("hot"));});
   new ResizeObserver(draw).observe(grid); if(document.fonts) document.fonts.ready.then(draw); setTimeout(draw,50);
-  container._draw=draw;
+  container._draw=draw; container._edges=parsed;
 }
 function arrow(a){const el=document.createElement("div"); el.className="arrow"+(a.g?" gate":"")+(a.d?" dashed":""); el.innerHTML=`<span>${a.a||""}</span><svg viewBox="0 0 46 14"><path d="M1,7 H40"/><path d="M34,2 L41,7 L34,12"/></svg>`; return el;}
 function flows(){
@@ -616,6 +661,9 @@ function openDrawer(id,n){
   const kv=$("#d-kv"); kv.innerHTML="";
   for(const [k,v] of [["cadence",n.cadence],["code",n.code],["reads",n.reads],["writes",n.writes],["model",n.llm],["his gate",n.gate]]){ if(!v) continue; const dt=document.createElement("dt");dt.textContent=k;const dd=document.createElement("dd");dd.innerHTML=k==="code"?`<code>${v}</code>`:v;kv.append(dt,dd);}
   $("#d-note").textContent=n.note||"";
+  // every wire of this node, drawn or not, with its label
+  const wires=[].concat(...$$(".chart").map(c=>c._edges||[])).filter(e=>e.a===id||e.b===id);
+  if(wires.length){const dt=document.createElement("dt");dt.textContent="wires";const dd=document.createElement("dd");dd.innerHTML=wires.map(e=>{const o=e.a===id?e.b:e.a;const on=NODES[o]||MACH.nodes[o]||{label:o};return `${e.a===id?"to":"from"} <b>${on.label}</b>${e.label?` · ${e.label}`:""}`}).join("<br>");kv.append(dt,dd);}
   $("#drawer").setAttribute("aria-hidden","false"); $("#backdrop").classList.add("on");
 }
 function closeDrawer(){$("#drawer").setAttribute("aria-hidden","true");$("#backdrop").classList.remove("on");}
