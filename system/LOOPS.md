@@ -370,6 +370,27 @@ Three ledgers of truth cut across all loops: Sent mail, WhatsApp and LinkedIn ou
   passes close it (`registry_close_after_passes`). Runs: `goal-run/integration.jsonl`. Test flags `--inject-fail
   <check>` and `--registry <temp file>` (tests never write the real registry).
 
+- **The UI walk (goal run, 4 Oct 2026; his "a walker that physically opens the places he goes to").**
+  `task-land/_system/system-agent/ui_walk.py`, laptop task `DA-UIWalk` at 08:00, 11:00, 14:00, 17:00, 20:00, 23:00
+  (run-hidden.vbs, window_lint clean; `register-ui-walk-task.ps1`). System Chrome headless with its own profile
+  `~/.ui-walk-chrome`, at 1568 x 900 and 390 x 844 (touch): hub-review `:4142/?dry=1` (every tab found on the page, the
+  Messages filter, two cards opened by `#c<id>`), CRM review mode `?review=1#/today` (board, Next / Prev, Why, Updates;
+  plus `review_board_check.py`'s CHECK_JS, imported), CRM Today `#today`, on the box (writer) and on the laptop
+  (replica); the Telegram chat through the hub's ledger (GET :4180/pending: every open non-silent card carries the
+  Telegram message id push.js returned; no broken characters), no browser and no bot call. Read-only by construction:
+  every non-GET request is answered locally and listed in the report (the review board fires POST /review/generate on
+  load: blocked), /review/updates is read with ?peek=1. Checks per state: console and page errors, failed requests,
+  horizontal page scroll, clipped text, a key field cut by an ellipsis, overlapping fixed bars, a floating element
+  lying on a control, broken characters (U+FFFD) on screen, "loading" after 10 s, counts against the API (hub header
+  and tabs vs /api/cards and /api/open-count, laptop Today badge vs the box), empty states where the API has items.
+  Faults: one registry item per page `UI-<surface>-<width>` (key `ui-walk:<surface>@<width>`, maintenance, owner
+  fix_session, agent when the page does not answer), a repeat updates the same id (`seen`+1), two clean walks close it
+  as fixed. Screenshots and `report-HHMM.json` / `last.json` in `task-land/_system/goal-run/ui-walk/<date>/` (gitignored,
+  3 days kept), log `ui-walk.log` there. Drill: `python tests/test_ui_walk.py` (the planted page
+  `tests/ui_walk_plant.html` twice into a registry copy: one item, then an update, then closed by two clean walks).
+  Not covered: how Telegram itself draws a card (Telegram Web needs his one-time login in the walker's profile; PARKED,
+  not asked).
+
 ## 8. The rule loop
 
 - His five sentences: "this sucks because", "I like this", "this again", a change request, "slower/faster".

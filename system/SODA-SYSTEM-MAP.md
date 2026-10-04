@@ -58,6 +58,15 @@ in Obsidian · 6 a daily campaign day (research paused to 7 Oct) · 7 a sentence
   duplicate `const` from the Cleaning patch): "loading cards" with the server healthy means a client error; read the
   browser console first.
 
+## New node 4 Oct 2026 19:40: the UI walk (`w_uiwalk`, laptop, script)
+
+`task-land/_system/system-agent/ui_walk.py`, task `DA-UIWalk` (08:00 to 23:00 every 3 h). It reads his gates the way
+he sees them: `gate_review` (hub-review, every tab, 1568 and 390 px), `gate_crm` (CRM review mode and Today, box and
+laptop), `gate_tg` (through the hub ledger's Telegram message ids). It writes faults into the System Agent's registry
+(`broken.jsonl`, items `UI-<surface>-<width>`), which map-sync draws on those gate nodes. Wires: w_uiwalk -> gate_review,
+gate_crm, gate_tg (reads); w_uiwalk -> the registry (writes). Not yet drawn in the HTML (the System Agent build owns
+the NODES rebuild and its review loop); details in `LOOPS.md` section 7.
+
 ## How to keep it
 
 The data is one JS object at the bottom of the HTML (`NODES`, `EDGES` in `SHAPE` and `MACH`, `FLOWS`); the charts draw
