@@ -717,7 +717,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | IC-crm-review 05 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 249233 --target both"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 71802 | IC-crm-review 05 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 249233 --target both"
   },
   {
    "id": "gate_page",
