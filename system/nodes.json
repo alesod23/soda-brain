@@ -717,7 +717,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | IC-crm-review 05 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 211018 --target both"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 5598 | IC-crm-review 05 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 249233 --target both"
   },
   {
    "id": "gate_page",
@@ -954,7 +954,7 @@
    "writes": "mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "tasks": [
     "TaskLand-GitSync"
    ],
@@ -978,7 +978,9 @@
      "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
      "escalate": "fix session (G116); a box-side park is a for_him terminal command"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "A-gitsync-task-land-10050504 05 Oct 04:24 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "w_vaultsync",
@@ -1756,7 +1758,7 @@
    "writes": "registry lines UI-<surface>-<width> in broken.jsonl; goal-run/ui-walk/<date>/ reports and screenshots",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "note": "Read-only by construction: every non-GET request is answered locally.",
    "tasks": [
     "DA-UIWalk"
@@ -1782,7 +1784,9 @@
      "rollback": "",
      "escalate": "fix session"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "S-task-da-uiwalk-alive-10050513 05 Oct 05:03 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "w_design",
@@ -2665,7 +2669,7 @@
    "writes": "one collapsed Telegram card per burst",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "owner": "item 21 builder",
    "paths": [
     "/home/da/sodanotif/notif-collapse.js"
@@ -2686,7 +2690,9 @@
      "rollback": "",
      "escalate": "fix session"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "S-box-notif-collapse-10050503 05 Oct 04:53 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "tool_import_judge",
