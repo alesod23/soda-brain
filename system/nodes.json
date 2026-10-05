@@ -2195,49 +2195,17 @@
    "label": "research-page :4143 to :4145",
    "kind": "service",
    "machine": "box",
-   "cadence": "nothing keeps them",
+   "cadence": "retired 2026-10-05 02:07 (his decision)",
    "code": "/home/da/research-page/",
    "reads": "",
    "writes": "event companion pages",
    "llm": "none",
    "gate": "",
-   "status": "broken",
-   "note": "Not listening since a reboot (no unit keeps them); his decision 4 Oct 18:31: keep them, a fix session builds the unit (M6).",
-   "ports": [
-    {
-     "host": "box",
-     "port": 4143
-    },
-    {
-     "host": "box",
-     "port": 4144
-    },
-    {
-     "host": "box",
-     "port": 4145
-    }
-   ],
+   "status": "retired",
+   "note": "RETIRED 2026-10-05 02:07, his decision on hub-review: \"the stuck card here is outdated. so is this whole thing too outdated?\" :4143 was the old CRM check board (the CRM review lives inside the CRM since 26 Sep), :4144 and :4145 the event research pages, no longer run. The unit file _system/vps/da-research-page@.service stays as history.",
    "paths": [
     "/home/da/research-page/"
-   ],
-   "checks": {
-    "box:research-pages": {
-     "probe": {
-      "type": "box_sh",
-      "cmd": "m=''; for p in 4143 4144 4145; do ss -ltn | grep -q \":$p \" || m=\"$m $p\"; done; [ -z \"$m\" ] && echo 'OK 4143 4144 4145 listen' || echo \"BAD not listening:$m\""
-     },
-     "if_fails": "fix session: one da-research-page@<port> unit with Restart=always (FINDINGS box 6); his decision of 4 Oct: keep them",
-     "known_fixes": [],
-     "files": [
-      "box:/home/da/research-page/",
-      "task-land/_system/vps/ (units)"
-     ],
-     "rollback": "disable the unit",
-     "escalate": "STUCK terminal: installing a unit is a box write",
-     "healthy_when": ":4143, :4144, :4145 listen on the box"
-    }
-   },
-   "broken": "M6 04 Oct 16:56 · him · his yes on the STUCK card"
+   ]
   },
   {
    "id": "b_boards",
