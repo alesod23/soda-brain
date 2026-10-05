@@ -994,7 +994,7 @@
    "writes": "commit-first, pull, push; a memory tar to the box",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "tasks": [
     "DA-VaultSync"
    ],
@@ -1034,7 +1034,9 @@
      "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
      "escalate": "fix session (G116); a box-side park is a for_him terminal command"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "A-gitsync-soda-brain-10051224 05 Oct 12:08 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "w_watcher",
