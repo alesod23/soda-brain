@@ -188,7 +188,7 @@ footer p{max-width:90ch}
   <h1>One brain, many agents, one decider</h1>
   <p class="lede">The system as it runs on 4 October 2026: events from the world, readers that decide what an event means for one person, a brain that remembers what is open, one gate where Alessandro says yes, the systems that execute the yes, and the loop that turns his sentences into rules. Same rules as the rest of the map: updated in the same turn as the system, dated, no secrets.</p>
   <div class="meta">
-    <span>Last verified <b>2026-10-05 12:23</b></span>
+    <span>Last verified <b>2026-10-05 12:33</b></span>
     <span>Workers <b id="n-workers">0</b></span>
     <span>Live <b id="n-live">0</b></span>
     <span>Built, off or armed <b id="n-armed">0</b></span>
@@ -334,7 +334,6 @@ footer p{max-width:90ch}
       <li><b>gate_crm</b> (UI-laptop-today-1568, fix_session, since 05 Oct 11:04): UI walk laptop-today@1568: broken characters on screen (today); next: open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-today`</li>
       <li><b>gate_crm</b> (UI-crm-today-390, fix_session, since 05 Oct 11:04): UI walk crm-today@390: broken characters on screen (today); next: open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-today`</li>
       <li><b>gate_crm</b> (UI-laptop-today-390, fix_session, since 05 Oct 11:04): UI walk laptop-today@390: broken characters on screen (today); next: open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-today`</li>
-      <li><b>w_vaultsync</b> (A-gitsync-soda-brain-10051224, fix_session, since 05 Oct 12:08): soda-brain does not sync: 1 behind origin/main and 2 ahead; pushes go to origin/conflict-laptop-soda-brain while origin/main stands still; next: a fix session (reproduce, fix, prove)</li>
       <li><b>checklist:G80</b> (PK-G80, him, since 05 Oct 03:04): G80: pgvector 0.6 -&gt; 0.8 (sudo); next: a fix session: pgvector 0.6 -&gt; 0.8 (sudo)</li>
       <li>waiting for his decision (not broken): 15 items, listed in the System Agent report</li>
       <!-- registry:end -->
@@ -422,7 +421,7 @@ ln_sim:{label:"the simulation",kind:"learn",machine:"laptop",cadence:"a night, o
 ln_janitor:{label:"the janitor (S2)",kind:"learn",machine:"box",cadence:"planned: systemd timer 22:30",code:"task-land/_system/janitor.py (does not exist yet)",reads:"the daily page and task files, hub cards, Gmail drafts, Notion, CRM Today",writes:"deterministic candidates, one Opus judgement each; ONE card a night; currency.jsonl (the stale share per surface, S3)",llm:"Opus per candidate",gate:"one card a night; his sentences on it = rules (contract janitor)",status:"planned"},
 // infra workers (registry only)
 w_gitsync:{label:"TaskLand-GitSync",kind:"script",machine:"laptop",cadence:"every 15 min + logon",code:"task-land/_system/git-sync.ps1",reads:"task-land, 7 tool folders",writes:"mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",llm:"none",gate:"",status:"live"},
-w_vaultsync:{label:"DA-VaultSync",kind:"script",machine:"laptop",cadence:"every 10 min",code:"task-land/_system/vault-git-sync.ps1",reads:"vault_kb, medtech-brain, soda-brain, coattio",writes:"commit-first, pull, push; a memory tar to the box",llm:"none",gate:"",status:"broken",broken:"A-gitsync-soda-brain-10051224 05 Oct 12:08 · fix_session · a fix session (reproduce, fix, prove)"},
+w_vaultsync:{label:"DA-VaultSync",kind:"script",machine:"laptop",cadence:"every 10 min",code:"task-land/_system/vault-git-sync.ps1",reads:"vault_kb, medtech-brain, soda-brain, coattio",writes:"commit-first, pull, push; a memory tar to the box",llm:"none",gate:"",status:"live"},
 w_watcher:{label:"DailySync-Watchdog",kind:"script",machine:"laptop",cadence:"every 5 min (the watcher absorbs ~60 s after typing stops)",code:"task-land/_system/start-watcher.ps1, watch-daily.ps1, daily-sync.ps1, daily-lib.ps1",reads:"Daily/<date>.md, the task files",writes:"task files, the page re-render, crm-bridge.ps1, pipeline.py sync, the daily digest in context.md",llm:"claude.exe -p for the classifier and ((prompt))",gate:"the page itself",status:"live"},
 w_coattio:{label:"Coattio-Watchdog",kind:"script",machine:"laptop",cadence:"every 5 min + logon + resume from sleep",code:".medtech-crm/coattio-serve.ps1",reads:"ports 4124 and 4137",writes:"starts the CRM servers when down; the pg-mirror replay tick (crm.json to the box's Postgres)",llm:"none",gate:"",status:"live",note:"Never started with run_in_background: Stop-Process + coattio-serve.ps1."},
 w_postmortem:{label:"DailyCampaign-Postmortem",kind:"script",machine:"laptop",cadence:"daily 09:30; a card on the 1st",code:"gtm-eng/daily-campaign/postmortem.py",reads:"plans, bounces, replies",writes:"the post-mortem card",llm:"none",gate:"hub card",status:"live"},
