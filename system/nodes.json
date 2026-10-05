@@ -1873,7 +1873,7 @@
    "writes": "the box replica (it WROTE on 3-4 Oct: conflict #10)",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "Merged per record 4 Oct 04:07 (THE PLAN item 1); one writer = the box since 4 Oct 18:03. Its broken part was the dirty pull-only clone (H3), tracked by the System Agent.",
    "ports": [
     {
@@ -1919,9 +1919,7 @@
      "his_command": true,
      "healthy_when": "git status of the pull-only box clone is clean"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "IC-crm-health 05 Oct 03:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-health --seed 466736"
+   }
   },
   {
    "id": "b_rulesinbox",
