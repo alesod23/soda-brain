@@ -954,7 +954,7 @@
    "writes": "mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "tasks": [
     "TaskLand-GitSync"
    ],
@@ -978,7 +978,9 @@
      "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
      "escalate": "fix session (G116); a box-side park is a for_him terminal command"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "A-gitsync-task-land-10050408 05 Oct 03:54 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "w_vaultsync",
@@ -2665,7 +2667,7 @@
    "writes": "one collapsed Telegram card per burst",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "owner": "item 21 builder",
    "paths": [
     "/home/da/sodanotif/notif-collapse.js"
@@ -2686,7 +2688,9 @@
      "rollback": "",
      "escalate": "fix session"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "S-box-notif-collapse-10050407 05 Oct 03:57 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "tool_import_judge",
