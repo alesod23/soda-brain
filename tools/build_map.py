@@ -151,7 +151,7 @@ def render(led=None, write=True):
     led = led or load()
     html = HTML.read_text(encoding="utf-8")
     a, b, _ = parse_block(html)
-    new = with_feedback_box(html[:a] + render_block(led["nodes"]) + html[b:], dict(FEEDBACK_PAGES)[HTML])
+    new = with_feedback_box(html[:a] + render_block(led["nodes"]) + html[b:], dict(FEEDBACK_PAGES).get(HTML, "system-map"))   # HTML may be repointed (registry.map_sync, tests)
     if write and new != html:
         HTML.write_text(new, encoding="utf-8", newline="\n")
     if write:
