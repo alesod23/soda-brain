@@ -99,5 +99,6 @@
 - Agents: [long-running](feedback_agent_long_running.md) · ⏳ [output files are INTERIM](feedback_agent_output_file_is_interim.md) · [no polling bg tasks](feedback_no_polling_on_background_tasks.md).
 - [User Background](user_background.md) · [User Life Context](context_user_life.md) — APPEND.
 
+- ⏰🃏 [A delayed send becomes a CARD, never an automatic send: check the clock right before sending, dsend included](feedback_stale_message_becomes_a_card_not_a_send.md) — sent Caleb "I'm with Isabella at 16:00" at 21:15 because the wa-daemon had been down (2026-10-05).
 - 🕰️ [Get-Date before ANY written time; never carry a time forward from the thread](feedback_check_clock_before_timestamps.md) — told a peer "00:30" at 12:06 the next day (2026-10-01).
 - 📂 [Sub-index: system rules 29 Sept to 1 Oct 2026](index_system_rules_2026_09_end.md) — meeting loop, feedback worker, owed to-dos, performance hints, LinkedIn ingest, simulation harness, Word batch edits, visual check, slot/calendar check, booked-call loop, Notion fetch-first, send ledger, the promised connectivity gate.
