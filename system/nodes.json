@@ -1769,9 +1769,10 @@
      "probe": {
       "type": "task",
       "name": "DA-UIWalk",
-      "cadence_min": 180
+      "cadence_min": 180,
+      "max_gap_min": 540
      },
-     "healthy_when": "task DA-UIWalk registered and enabled, last run within 360 min",
+     "healthy_when": "task DA-UIWalk registered and enabled, last run within 600 min (its triggers leave 23:00 to 08:00 empty, 540 min, plus 60 min slack)",
      "if_fails": "start_task if it is only silent; a fix session if it is missing or keeps failing",
      "known_fixes": [
       "start_task"
