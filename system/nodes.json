@@ -2665,7 +2665,7 @@
    "writes": "one collapsed Telegram card per burst",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "owner": "item 21 builder",
    "paths": [
     "/home/da/sodanotif/notif-collapse.js"
@@ -2686,9 +2686,7 @@
      "rollback": "",
      "escalate": "fix session"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "S-box-notif-collapse-10050407 05 Oct 03:57 · fix_session · a fix session (reproduce, fix, prove)"
+   }
   },
   {
    "id": "tool_import_judge",
