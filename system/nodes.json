@@ -673,7 +673,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · box step G113 in _system/box-steps-20261004-goal.sh (python3 - < patch-hub-review-h2wrap-20261004.py), then two clean walks close it | UI-hub-review-1568 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only hub-review`"
+   "broken": "UI-hub-review-390 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only hub-review`"
   },
   {
    "id": "gate_board",
@@ -717,7 +717,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 71802 | IC-crm-review 05 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 249233 --target both"
+   "broken": "UI-laptop-review-1568 04 Oct 19:32 · fix_session · open the screenshots in 2026-10-04, fix the page, re-run `ui_walk.py --only laptop-review` | IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 71802 | IC-crm-review 05 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 249233 --target both | UI-laptop-review-390 05 Oct 08:05 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-review`"
   },
   {
    "id": "gate_page",
@@ -878,10 +878,12 @@
    "code": "task-land/_system/drafts/compile_skill.py --contract ... --install (limit 110 lines)",
    "reads": "the ledger, the hit counts, the skill map",
    "writes": "~/.claude/skills/{crm,drafting,hub,proactive}/SKILL.md; the box copy by scp",
-   "status": "live",
+   "status": "broken",
    "paths": [
     "~/task-land/_system/drafts/compile_skill.py"
-   ]
+   ],
+   "status_before_broken": "live",
+   "broken": "SK-hub 05 Oct 08:00 · agent · merge the new rows into _system/drafts/skill-map-hub.json (existing rules first, 110-line check), then compile_skill.py --contract hub --ins"
   },
   {
    "id": "ln_observers",
