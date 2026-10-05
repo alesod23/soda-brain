@@ -954,7 +954,7 @@
    "writes": "mirrors into _system/laptop-tools/, commit, merge origin/main, push; parks on conflict-laptop",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "tasks": [
     "TaskLand-GitSync"
    ],
@@ -978,9 +978,7 @@
      "rollback": "git merge --abort before the commit; after: git revert -m 1 <merge>",
      "escalate": "fix session (G116); a box-side park is a for_him terminal command"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "A-gitsync-task-land-10050504 05 Oct 04:24 · fix_session · a fix session (reproduce, fix, prove)"
+   }
   },
   {
    "id": "w_vaultsync",
