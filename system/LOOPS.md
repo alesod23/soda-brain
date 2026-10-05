@@ -1104,6 +1104,15 @@ section 4); the hygiene worker's normal pass now drains the G14 replay itself (G
   created after his yes 15; a to-do before his yes = 0) and `compare.py goal` prints the G-P block after condition 3
   (goal: average >= 80 over >= 3 scenarios, 0 before a yes). Proof: `python ~/sim/harness/tests/test_g133_twins.py`
   and `python ~/sim/harness/tests/check_g133_gp_day.py`.
+- Build item 25, 5 Oct 2026 (his word 02:44, HUB H77): THE IMPROVER LOOP. After every scored day `improve.py` (called by
+  `run_night.py --improve`, default on) groups the day's misses by class and makes ONE live change per class (at most 2 a
+  day): a RULE into the real ledger (addrule, the simulated case as the quote, `source: simulation <run> day <n>`,
+  skill recompiled) or a CODE fix through the System Agent's fix-session path (never-list guard, 45 min, `.bak`, one
+  commit `sim-improve: ...`); a case test `~/sim/harness/cases/<id>.py` must fail on the parent commit and pass live;
+  the sandbox is rebuilt so the next day runs on the change; a next-day drop (vs the same-date baseline) beyond
+  `compare.py noise` reverts it ("tried, reverted"). Ledger `~/sim/runs/<run>/results.jsonl`; hub-review tab
+  "Simulation results" (data `task-land/_system/sim-results/<run>.json`; his Right / Wrong + line -> ledger_verdict,
+  surface simulation; Wrong reverts). Details: SODA-SIMULATION-MAP.md, "The improver loop".
 
 ## 13. The brain (this repo) and the door
 

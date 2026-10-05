@@ -5,7 +5,7 @@ works offline except for the fonts). This page is its narrative and its index, s
 as the rest of `system/`: updated in the same turn as `~/sim/harness` changes; dated; no secrets; no real person (the
 cast is fictional, at `.example`).
 
-Last verified: 2026-10-04 22:40 (harness code and git log, `tests/test_g133_twins.py` PASS x2; the results numbers are
+Last verified: 2026-10-05 03:30 (the improver loop, item 25: `tests/test_i25_improve.py` ALL PASS x2); before that 2026-10-04 22:40 (harness code and git log, `tests/test_g133_twins.py` PASS x2; the results numbers are
 still the 16:17 reading of `compare.py report` on both roots). Harness changes of 2026-10-04 20:40 (G84, G85, G86) and
 22:30 (G133, the SIM-UPDATE twins and the G-P score) are written into both files.
 
@@ -128,6 +128,43 @@ Every TO BUILD row of `~/sim/harness/SIM-UPDATE-20261004.md` runs in the sandbox
 Proof: `python tests/test_g133_twins.py` (39 checks, no model call) and `python tests/check_g133_gp_day.py` (run_night
 setup + the first 3 events of `tests/fixtures/gp-day.json`, his Caleb case with Caspar Lind, stopped through STOP,
 real model calls). New `run_night.py` flags: `--fixture-day <events.json>`, `--max-events N`.
+
+## The improver loop (build item 25, 5 Oct 2026)
+
+His word, 02:44: "a live system change during the simulation: i WANT THAT. i want to then see if it improves because
+of that." `~/sim/harness/improve.py`, called by `run_night.py` after every scored day (`--improve`, default ON;
+`--no-improve` off; `accept.ps1 -Improve` / `-NoImprove`, `-ImproveMax N`):
+1. Case tests: every earlier live change's `~/sim/harness/cases/<id>.py` runs again on the live tree (`--root <repo>`).
+2. Revert check: day n ran on the changes made after day n-1. Each day is read against its baseline (what other runs
+   scored on the same world and date, `compare.baseline`), because two consecutive days carry different events (55 and
+   83 in night 3 B). If (s_n - base_n) < (s_n-1 - base_n-1) - `compare.noise_band()` (same world, same date, different
+   runs: twice the mean difference, at least 3 points, 5 without pairs; `python compare.py noise`), the day's changes
+   are reverted (`git revert` of their commit; a rule whose revert conflicts loses its row by an exact edit) and logged
+   "tried, reverted". Without both baselines the raw scores are compared.
+3. Misses: judged events under 60 or with a FATAL, plus the guard G1 lines of the day (blocked connections), grouped by
+   class (kind + FATAL reason, else the costliest point bucket), worst first; a class already changed in the run is skipped.
+4. Per class (at most `--improve-max`, default 2, each under `budget.allowed()`), ONE Opus decide call (read-only tools)
+   sees the worst case, its event and truth, the ledgers, the real code the sandbox runs (`manifest.json`) and the
+   run's earlier changes, and answers rule / code / none:
+   - RULE: `addrule.py --contract <x>` with the simulated case as the quote and `source: simulation <run> day <n> (<id>)`,
+     `compile_skill.py --install` when a skill map exists, one task-land commit `sim-improve: ...`; the case test checks
+     the row (tagged with the case id, holding the rule's key words) is in the ledger.
+   - CODE: a fix job through the System Agent's path (`jobs.add_fix` + `job_runner.py run --job`: the never-list guard
+     `fix_guard.py`, the 45-min wall, the budget point); the session edits the REAL code with a `.bak`, writes the case
+     test, makes ONE commit `sim-improve: ...`; a line in `system-agent/sessions.jsonl` (the orchestrator's memory).
+   - NONE: the miss is the simulation's own (a twin, the judge): logged, nothing changed.
+5. Proof per change: the case test runs on a sparse git worktree of the commit's parent (must FAIL) and on the live tree
+   (must PASS); a test that does not discriminate reverts the change at once.
+6. The sandbox is rebuilt from the live files (`build_sandbox.py` + the G5 leak scan; a leak reverts the day's
+   changes), so the next simulated day runs on the changed system.
+Ledger: `~/sim/runs/<run>/results.jsonl` (one line per change; later lines per change add case runs, the next-day
+effect, the revert). The hub tab's data: `task-land/_system/sim-results/<run>.json` (`improve.py export`), drawn by
+hub-review's "Simulation results" tab (currency patch `patch-hub-review-simres-20261005.py`, marker SIMRES-I25, on top of
+ITEM22): one card per run (date, arm, days, the score curve), System changes, New rules, Tests, Right / Wrong + one line
+per change -> `sim-results/verdicts.jsonl` -> `improve.py verdicts` (at every run_night start): the line through
+`ledger_verdict` (surface simulation), a Wrong reverts the change. A STOP file seen during the improver ends it after
+the change in hand (committed and tested, or reverted). Proof: `python ~/sim/harness/tests/test_i25_improve.py` (no
+model call) and the smoke day below.
 
 ## How to keep it
 
