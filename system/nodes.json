@@ -2676,9 +2676,9 @@
     "box:notif-collapse": {
      "probe": {
       "type": "box_sh",
-      "cmd": "if grep -q notif-collapse ~/sodanotif/daemon.js && [ -f ~/sodanotif/notif-collapse.js ] && [ -n \"$(find ~/sodanotif/daemon.log -mmin -30 2>/dev/null)\" ]; then echo 'OK notif-collapse wired, daemon.log moved in 30 min'; else echo 'BAD notif-collapse not wired or the daemon log is still'; fi"
+      "cmd": "if grep -q notif-collapse ~/sodanotif/daemon.js && [ -f ~/sodanotif/notif-collapse.js ] && p=$(cat ~/sodanotif/daemon.pid 2>/dev/null) && [ \"$(readlink /proc/$p/cwd 2>/dev/null)\" = \"$HOME/sodanotif\" ] && [ $(( $(date +%s) - $(ps -o etimes= -p $p) )) -ge $(stat -c %Y ~/sodanotif/daemon.js) ]; then echo \"OK notif-collapse wired, daemon pid $p running since after daemon.js changed\"; else echo 'BAD notif-collapse not wired, or the sodanotif daemon is down or older than daemon.js'; fi"
      },
-     "healthy_when": "daemon.js requires notif-collapse.js and daemon.log moved within 30 min",
+     "healthy_when": "daemon.js requires notif-collapse.js and the daemon in daemon.pid is alive in ~/sodanotif and started after daemon.js last changed (daemon.log moves only on incoming messages, so it is no liveness signal at night)",
      "if_fails": "a fix session (a box change goes through the savior's box-steps block)",
      "known_fixes": [],
      "files": [
