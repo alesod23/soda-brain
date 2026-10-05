@@ -11,6 +11,7 @@
 - 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
 
 ## Rules that bite first
+- 🐘📇 [CRM store = Postgres on the box (3b); to-dos, cards, messages in with embeddings; meetings via RAG tool; native TG buttons by plugin patch (his decisions 5 Oct 2026)](project_crm_postgres_one_store.md) — build on the Postgres path only.
 - 🔢🚫 [Hub cards are resolved by id, never by #N: two numbering series share numbers (the savior closed the wrong #58 on 5 Oct)](feedback_resolve_hub_cards_by_id_not_seq.md) — match his quoted words to the card text, act on that id (2026-10-05).
 - 💬1️⃣ [Quick feedback from him gets a ONE-line ack naming what was filed](feedback_quick_feedback_gets_one_line_ack.md) — "Okay, filed: <name>.", no wall (2026-10-04).
 - 🔑 [Every Google sign-in: his CDTM Chrome profile, the one account pre-selected, finished by the box receiver :8765](feedback_signins_open_in_cdtm_chrome_profile.md) — no card, no chooser, no paste-back; app published out of Testing (2026-10-04).
