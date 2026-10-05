@@ -1756,7 +1756,7 @@
    "writes": "registry lines UI-<surface>-<width> in broken.jsonl; goal-run/ui-walk/<date>/ reports and screenshots",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "Read-only by construction: every non-GET request is answered locally.",
    "tasks": [
     "DA-UIWalk"
@@ -1783,9 +1783,7 @@
      "rollback": "",
      "escalate": "fix session"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "S-task-da-uiwalk-alive-10050513 05 Oct 05:03 · fix_session · a fix session (reproduce, fix, prove)"
+   }
   },
   {
    "id": "w_design",
