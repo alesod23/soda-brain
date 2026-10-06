@@ -1148,7 +1148,7 @@
    "writes": "G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "tasks": [
     "LinkedIn-Poll"
    ],
@@ -1203,9 +1203,7 @@
      "rollback": "the .bak of any file changed",
      "escalate": "fix session"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "M13 04 Oct 07:09 · fix_session · the next tick's check must pass"
+   }
   },
   {
    "id": "w_sent",

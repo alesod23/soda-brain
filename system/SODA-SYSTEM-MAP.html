@@ -188,7 +188,7 @@ footer p{max-width:90ch}
   <h1>One brain, many agents, one decider</h1>
   <p class="lede">The system as it runs on 4 October 2026: events from the world, readers that decide what an event means for one person, a brain that remembers what is open, one gate where Alessandro says yes, the systems that execute the yes, and the loop that turns his sentences into rules. Same rules as the rest of the map: updated in the same turn as the system, dated, no secrets.</p>
   <div class="meta">
-    <span>Last verified <b>2026-10-06 00:43</b></span>
+    <span>Last verified <b>2026-10-06 05:46</b></span>
     <span>Workers <b id="n-workers">0</b></span>
     <span>Live <b id="n-live">0</b></span>
     <span>Built, off or armed <b id="n-armed">0</b></span>
@@ -315,7 +315,6 @@ footer p{max-width:90ch}
       <li><b>gate_crm</b> (IC-review-parity, agent, since 04 Oct 19:49): laptop and box serve different CRM review queues (pids, dealt or current version); next: reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 964666</li>
       <li><b>integration:maps-fresh</b> (IC-maps-fresh, agent, since 05 Oct 03:00): a soda-brain/system map is older than the newest LOOPS.md change; next: reproduce: python task-land/_system/goal-run/integration_check.py --only maps-fresh --seed 554287</li>
       <li><b>ln_compile</b> (SK-hub, agent, since 05 Oct 08:00): compiled skill hub lags HUB-CARD-CONTRACT.md: skill rules_in_ledger 57, ledger 76; missing H60, H61, H62, H63, H64, H65, H66, H67, H68, H69, H70, H71, H72, H73,; next: merge the new rows into _system/drafts/skill-map-hub.json (existing rules first, 110-line check), then compile_skill.py </li>
-      <li><b>w_lipoll</b> (M13, fix_session, since 04 Oct 07:09): the LinkedIn inbox poller went down 3 times today (07:09, 15:41, 20:34, over 2 h the last time); start_task held each time and it came back only after the third; next: the next tick&#x27;s check must pass</li>
       <li><b>gate_review</b> (UI-hub-review-390, fix_session, since 04 Oct 19:32): UI walk hub-review@390: count contradicts the API (cards, cleaning, updates); control missing (whitelist); next: open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only hub-review`</li>
       <li><b>task:DA-Unstuck:missing</b> (A-task-da-unstuck-missing-10041942, fix_session, since 04 Oct 19:41): the scheduled task DA-Unstuck does not exist any more; next: a fix session (reproduce, fix, prove)</li>
       <li><b>gate_review</b> (UI-hub-review-1568, fix_session, since 04 Oct 20:24): UI walk hub-review@1568: count contradicts the API (cards, cleaning, updates); control missing (whitelist); next: open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only hub-review`</li>
@@ -428,7 +427,7 @@ w_coattio:{label:"Coattio-Watchdog",kind:"script",machine:"laptop",cadence:"ever
 w_postmortem:{label:"DailyCampaign-Postmortem",kind:"script",machine:"laptop",cadence:"daily 09:30; a card on the 1st",code:"gtm-eng/daily-campaign/postmortem.py",reads:"plans, bounces, replies",writes:"the post-mortem card",llm:"none",gate:"hub card",status:"live"},
 w_ab:{label:"DailyCampaign-AB-Reminder",kind:"script",machine:"laptop",cadence:"one shot 2026-10-09 10:00",code:"gtm-eng/daily-campaign/ab-reminder.ps1",reads:"drafts-cache",writes:"one hub card",llm:"none",gate:"hub card",status:"armed"},
 w_us:{label:"US-Campaign-Daily",kind:"script",machine:"laptop",cadence:"daily 18:15",code:"us-campaign-emails (the 114-person wave)",reads:"the wave",writes:"sends through the campaign engine",llm:"none",gate:"delegated",status:"live"},
-w_lipoll:{label:"LinkedIn-Poll",kind:"script",machine:"laptop",cadence:"every 15 min",code:"~/.claude/linkedin-poll/poll.py, launcher.py",reads:"the LinkedIn inbox in a dedicated Chrome profile",writes:"G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",llm:"none",gate:"",status:"broken",broken:"M13 04 Oct 07:09 · fix_session · the next tick's check must pass"},
+w_lipoll:{label:"LinkedIn-Poll",kind:"script",machine:"laptop",cadence:"every 15 min",code:"~/.claude/linkedin-poll/poll.py, launcher.py",reads:"the LinkedIn inbox in a dedicated Chrome profile",writes:"G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",llm:"none",gate:"",status:"live"},
 w_sent:{label:"SentCorpus-Harvest",kind:"script",machine:"laptop",cadence:"daily 07:30",code:"~/.claude/sent-corpus/harvest.js",reads:"Sent mail",writes:".claude/sent-corpus/corpus.jsonl (no backup)",llm:"none",gate:"",status:"live"},
 w_filer:{label:"Notion-MeetingFiler",kind:"script",machine:"laptop",cadence:"hourly",code:"~/.claude/scripts/notion-meeting-filer.ps1",reads:"meetings",writes:"the Notion Meetings DB through the MCP",llm:"claude -p",gate:"",status:"live"},
 w_granola:{label:"Granola-Auto-Sweep (retired)",kind:"script",machine:"laptop",cadence:"disabled 4 Oct 2026",code:"~/.claude/granola-auto/",reads:"nothing: Granola retired, meetings come from Notion meeting AI",writes:"",llm:"",gate:"",status:"retired"},
