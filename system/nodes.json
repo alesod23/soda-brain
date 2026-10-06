@@ -252,8 +252,10 @@
    "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
    "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
    "gate": "none: the Cleaning tab shows it and can reverse it",
-   "status": "live",
-   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
+   "status": "broken",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done.",
+   "status_before_broken": "live",
+   "broken": "IC-event-dry-run 06 Oct 13:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only event-dry-run --seed 153472"
   },
   {
    "id": "rd_sweep",
@@ -719,7 +721,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 815535 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 05 Oct 15:00 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-review-1568 05 Oct 23:05 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-review`"
+   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 153472 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-today` | UI-laptop-review-1568 05 Oct 15:00 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only laptop-review` | UI-crm-review-1568 05 Oct 23:05 · fix_session · open the screenshots in 2026-10-05, fix the page, re-run `ui_walk.py --only crm-review`"
   },
   {
    "id": "gate_page",
