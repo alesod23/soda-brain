@@ -252,10 +252,8 @@
    "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
    "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
    "gate": "none: the Cleaning tab shows it and can reverse it",
-   "status": "broken",
-   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done.",
-   "status_before_broken": "live",
-   "broken": "IC-event-dry-run 06 Oct 13:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only event-dry-run --seed 153472"
+   "status": "live",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
   },
   {
    "id": "rd_sweep",
