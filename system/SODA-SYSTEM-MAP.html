@@ -188,7 +188,7 @@ footer p{max-width:90ch}
   <h1>One brain, many agents, one decider</h1>
   <p class="lede">The system as it runs on 4 October 2026: events from the world, readers that decide what an event means for one person, a brain that remembers what is open, one gate where Alessandro says yes, the systems that execute the yes, and the loop that turns his sentences into rules. Same rules as the rest of the map: updated in the same turn as the system, dated, no secrets.</p>
   <div class="meta">
-    <span>Last verified <b>2026-10-06 13:54</b></span>
+    <span>Last verified <b>2026-10-06 15:03</b></span>
     <span>Workers <b id="n-workers">0</b></span>
     <span>Live <b id="n-live">0</b></span>
     <span>Built, off or armed <b id="n-armed">0</b></span>
@@ -313,7 +313,7 @@ footer p{max-width:90ch}
     <div class="card"><h3><i class="dot broken"></i>Known broken or stale (generated from the System Agent registry, task-land/_system/system-agent/broken.jsonl)</h3><ul>
 <!-- registry:start -->
       <li><b>gate_crm</b> (IC-review-parity, agent, since 04 Oct 19:49): laptop and box serve different CRM review queues (pids, dealt or current version); next: reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 153472</li>
-      <li><b>integration:maps-fresh</b> (IC-maps-fresh, agent, since 05 Oct 03:00): a soda-brain/system map is older than the newest LOOPS.md change; next: reproduce: python task-land/_system/goal-run/integration_check.py --only maps-fresh --seed 978596</li>
+      <li><b>integration:maps-fresh</b> (IC-maps-fresh, agent, since 05 Oct 03:00): a soda-brain/system map is older than the newest LOOPS.md change; next: reproduce: python task-land/_system/goal-run/integration_check.py --only maps-fresh --seed 248093</li>
       <li><b>ln_compile</b> (SK-hub, agent, since 05 Oct 08:00): compiled skill hub lags HUB-CARD-CONTRACT.md: skill rules_in_ledger 57, ledger 76; missing H60, H61, H62, H63, H64, H65, H66, H67, H68, H69, H70, H71, H72, H73,; next: merge the new rows into _system/drafts/skill-map-hub.json (existing rules first, 110-line check), then compile_skill.py </li>
       <li><b>gate_review</b> (UI-hub-review-390, fix_session, since 04 Oct 19:32): UI walk hub-review@390: count contradicts the API (cards, cleaning, updates); control missing (whitelist); next: open the screenshots in 2026-10-06, fix the page, re-run `ui_walk.py --only hub-review`</li>
       <li><b>task:DA-Unstuck:missing</b> (A-task-da-unstuck-missing-10041942, fix_session, since 04 Oct 19:41): the scheduled task DA-Unstuck does not exist any more; next: a fix session (reproduce, fix, prove)</li>
