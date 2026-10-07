@@ -719,7 +719,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 273499 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-review-1568 05 Oct 23:05 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only crm-review` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 902829 --target both | UI-laptop-review-1568 07 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-review` | UI-laptop-review-390 07 Oct 14:16 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-board 07 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-board --seed 56236 --target both"
+   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 273499 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-review-1568 05 Oct 23:05 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only crm-review` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 985981 --target both | UI-laptop-review-1568 07 Oct 11:04 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-review` | UI-laptop-review-390 07 Oct 14:16 · fix_session · open the screenshots in 2026-10-07, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-board 07 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-board --seed 985981 --target both"
   },
   {
    "id": "gate_page",
@@ -1417,7 +1417,7 @@
    "writes": "windows.jsonl with the opener",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "The reviewer of the no-console-window rule; window_lint.py after every task change.",
    "tasks": [
     "DA-WindowWatch"
@@ -1441,9 +1441,7 @@
      "escalate": "STUCK: a page-file size change is a permission/system setting (his)",
      "healthy_when": "no System event 2004 (Resource-Exhaustion-Detector, low virtual memory) in 2 h, commit charge under 90%, the watcher's tick not ending 0xc000012d"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "IC-window-lint 07 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only window-lint --seed 273499"
+   }
   },
   {
    "id": "w_intcheck",
