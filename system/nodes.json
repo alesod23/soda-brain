@@ -252,8 +252,10 @@
    "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
    "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
    "gate": "none: the Cleaning tab shows it and can reverse it",
-   "status": "live",
-   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
+   "status": "broken",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done.",
+   "status_before_broken": "live",
+   "broken": "IC-event-dry-run 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only event-dry-run --seed 193765"
   },
   {
    "id": "rd_sweep",
@@ -497,14 +499,16 @@
    "writes": "serves recall, what_is_true, page, crm_person, crm_search, match_event over HTTP and MCP (/mcp); POST /crm/put stores versions; POST /brain/match with the read-only token",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "note": "Tailscale address only (loopback gives 000); Funnel at da-box.taile93f00.ts.net. Tokens in ~/.env/soda.env, never printed.",
    "ports": [
     {
      "host": "box",
      "port": 4150
     }
-   ]
+   ],
+   "status_before_broken": "live",
+   "broken": "IC-brain-recall 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only brain-recall --seed 193765"
   },
   {
    "id": "st_crm",
@@ -745,7 +749,7 @@
    "writes": "executes a yes: gmail-send-draft by id, wa-send through :4119, slack-send; pings Telegram once; decisions.jsonl",
    "llm": "none",
    "gate": "it IS the gate's executor",
-   "status": "live",
+   "status": "broken",
    "note": "The laptop's 127.0.0.1:4180 is a TCP forward (task DA-HubForward). The guard hub-rules.json downgrades cards that break the hub contract.",
    "ports": [
     {
@@ -755,7 +759,9 @@
    ],
    "paths": [
     "/home/da/approval-hub/server.js"
-   ]
+   ],
+   "status_before_broken": "live",
+   "broken": "IC-hub-pending 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only hub-pending --seed 193765"
   },
   {
    "id": "ex_lane",
@@ -1419,7 +1425,7 @@
    "writes": "windows.jsonl with the opener",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "note": "The reviewer of the no-console-window rule; window_lint.py after every task change.",
    "tasks": [
     "DA-WindowWatch"
@@ -1443,7 +1449,9 @@
      "escalate": "STUCK: a page-file size change is a permission/system setting (his)",
      "healthy_when": "no System event 2004 (Resource-Exhaustion-Detector, low virtual memory) in 2 h, commit charge under 90%, the watcher's tick not ending 0xc000012d"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "IC-window-lint 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only window-lint --seed 193765"
   },
   {
    "id": "w_intcheck",
@@ -1878,7 +1886,7 @@
    "writes": "the box replica (it WROTE on 3-4 Oct: conflict #10)",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "note": "Merged per record 4 Oct 04:07 (THE PLAN item 1); one writer = the box since 4 Oct 18:03. Its broken part was the dirty pull-only clone (H3), tracked by the System Agent.",
    "ports": [
     {
@@ -1924,7 +1932,9 @@
      "his_command": true,
      "healthy_when": "git status of the pull-only box clone is clean"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "IC-crm-health 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-health --seed 193765"
   },
   {
    "id": "b_rulesinbox",
