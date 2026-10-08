@@ -18,3 +18,7 @@ Stopping early wastes the budget he allocated and the evening.
 **How to apply:** when he names a cap, keep building and run `python ~/sim/harness/budget.py` between steps; stop
 only when the reported week number reaches the cap (the hard number above it, if he gives one, is the real ceiling).
 Never present "stopped at N" as prudence when N is below the cap. See [[feedback_design_on_merit_not_his_offhand_numbers]].
+
+**Scope (his words, 8 Oct 2026 12:2x):** "the budget cap is lifted. It was for that evening. Now we can go beyond that
+budget." A cap he gives belongs to THAT run or evening only; it does not carry into the next day's work. Ask nothing,
+just stop applying it once that run is over (the 7 Oct 16% cap stopped me from building the savior's items on 8 Oct).
