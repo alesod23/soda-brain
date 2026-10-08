@@ -1148,7 +1148,7 @@
    "writes": "G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",
    "llm": "none",
    "gate": "",
-   "status": "live",
+   "status": "broken",
    "tasks": [
     "LinkedIn-Poll"
    ],
@@ -1203,7 +1203,9 @@
      "rollback": "the .bak of any file changed",
      "escalate": "fix session"
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "S-linkedin-poll-recurring-10080453 08 Oct 04:43 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "w_sent",
