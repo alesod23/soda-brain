@@ -252,8 +252,10 @@
    "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
    "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
    "gate": "none: the Cleaning tab shows it and can reverse it",
-   "status": "live",
-   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
+   "status": "broken",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done.",
+   "status_before_broken": "live",
+   "broken": "IC-event-dry-run 08 Oct 09:39 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only event-dry-run --seed 787187"
   },
   {
    "id": "rd_sweep",
@@ -719,7 +721,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 815037 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-review-1568 05 Oct 23:05 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-review` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 425749 --target both | UI-laptop-review-1568 07 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-review`"
+   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 787187 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-review-1568 05 Oct 23:05 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-review` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 425749 --target both | UI-laptop-review-1568 07 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-board 08 Oct 09:39 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-board --seed 787187 --target both"
   },
   {
    "id": "gate_page",
