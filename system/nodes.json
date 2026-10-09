@@ -11,7 +11,7 @@
    "reads": "Gmail: cdtm, tundra (sodano23 token on the box expired)",
    "writes": "",
    "note": "Read by the box poller every 60 s (sodanotif), by the CRM monitor on the laptop with the full text (4,000 chars), and by hub_outdated.py every 10 min on the box.",
-   "status": "live",
+   "status": "broken",
    "checks": {
     "box:gmail-sodano23": {
      "probe": {
@@ -42,7 +42,9 @@
      },
      "his_command": true
     }
-   }
+   },
+   "status_before_broken": "live",
+   "broken": "A-gmail-tundra-10091639 08 Oct 15:15 · fix_session · a fix session (reproduce, fix, prove)"
   },
   {
    "id": "ev_wa",
@@ -252,10 +254,8 @@
    "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
    "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
    "gate": "none: the Cleaning tab shows it and can reverse it",
-   "status": "broken",
-   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done.",
-   "status_before_broken": "live",
-   "broken": "IC-event-dry-run 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only event-dry-run --seed 422885"
+   "status": "live",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
   },
   {
    "id": "rd_sweep",
@@ -681,7 +681,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review`"
+   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review` | IC-hub-review-count 09 Oct 16:29 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only hub-review-count --seed 495689"
   },
   {
    "id": "gate_board",
@@ -763,7 +763,7 @@
     "/home/da/approval-hub/server.js"
    ],
    "status_before_broken": "live",
-   "broken": "IC-hub-pending 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only hub-pending --seed 193765"
+   "broken": "IC-hub-pending 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only hub-pending --seed 495689"
   },
   {
    "id": "ex_lane",
@@ -1934,7 +1934,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "IC-crm-health 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-health --seed 193765"
+   "broken": "IC-crm-health 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-health --seed 495689"
   },
   {
    "id": "b_rulesinbox",
