@@ -499,16 +499,14 @@
    "writes": "serves recall, what_is_true, page, crm_person, crm_search, match_event over HTTP and MCP (/mcp); POST /crm/put stores versions; POST /brain/match with the read-only token",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "Tailscale address only (loopback gives 000); Funnel at da-box.taile93f00.ts.net. Tokens in ~/.env/soda.env, never printed.",
    "ports": [
     {
      "host": "box",
      "port": 4150
     }
-   ],
-   "status_before_broken": "live",
-   "broken": "IC-brain-recall 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only brain-recall --seed 193765"
+   ]
   },
   {
    "id": "st_crm",
@@ -681,7 +679,7 @@
     }
    },
    "status_before_broken": "live",
-   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review` | IC-hub-review-count 09 Oct 16:29 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only hub-review-count --seed 495689"
+   "broken": "UI-hub-review-390 04 Oct 19:32 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review` | UI-hub-review-1568 04 Oct 20:24 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only hub-review`"
   },
   {
    "id": "gate_board",
@@ -725,7 +723,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 787187 | UI-crm-today-1568 05 Oct 11:04 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-review-1568 05 Oct 23:05 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-review` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 422885 --target both | UI-laptop-review-1568 07 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-board 08 Oct 19:17 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-board --seed 422885 --target both | UI-crm-review-390 08 Oct 19:38 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-review`"
+   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 832005 | UI-crm-today-1568 05 Oct 11:04 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-review-1568 05 Oct 23:05 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-review` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 832005 --target both | UI-laptop-review-1568 07 Oct 11:04 · fix_session · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only laptop-review` | IC-crm-board 08 Oct 19:17 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-board --seed 422885 --target both | UI-crm-review-390 08 Oct 19:38 · agent · open the screenshots in 2026-10-08, fix the page, re-run `ui_walk.py --only crm-review`"
   },
   {
    "id": "gate_page",
@@ -751,7 +749,7 @@
    "writes": "executes a yes: gmail-send-draft by id, wa-send through :4119, slack-send; pings Telegram once; decisions.jsonl",
    "llm": "none",
    "gate": "it IS the gate's executor",
-   "status": "broken",
+   "status": "live",
    "note": "The laptop's 127.0.0.1:4180 is a TCP forward (task DA-HubForward). The guard hub-rules.json downgrades cards that break the hub contract.",
    "ports": [
     {
@@ -761,9 +759,7 @@
    ],
    "paths": [
     "/home/da/approval-hub/server.js"
-   ],
-   "status_before_broken": "live",
-   "broken": "IC-hub-pending 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only hub-pending --seed 495689"
+   ]
   },
   {
    "id": "ex_lane",
@@ -1119,13 +1115,15 @@
    "writes": "one hub card",
    "llm": "none",
    "gate": "hub card",
-   "status": "armed",
+   "status": "stale-ledger",
    "tasks": [
     "DailyCampaign-AB-Reminder"
    ],
    "paths": [
     "~/gtm-eng/daily-campaign/ab-reminder.ps1"
-   ]
+   ],
+   "status_before_broken": "armed",
+   "broken": "L-w_ab-10091714 09 Oct 17:14 · fix_session · a fix session: correct nodes.json (or the system) so the ledger is true again, then build_map.py"
   },
   {
    "id": "w_us",
@@ -1156,7 +1154,7 @@
    "writes": "G:/My Drive/DA/linkedin-store.jsonl (fromMe stored since 3 Oct, never notified); Langfuse traces",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "tasks": [
     "LinkedIn-Poll"
    ],
@@ -1211,9 +1209,7 @@
      "rollback": "the .bak of any file changed",
      "escalate": "fix session"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "S-linkedin-poll-recurring-10080453 08 Oct 04:43 · him · his yes on the STUCK card"
+   }
   },
   {
    "id": "w_sent",
@@ -1886,7 +1882,7 @@
    "writes": "the box replica (it WROTE on 3-4 Oct: conflict #10)",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "Merged per record 4 Oct 04:07 (THE PLAN item 1); one writer = the box since 4 Oct 18:03. Its broken part was the dirty pull-only clone (H3), tracked by the System Agent.",
    "ports": [
     {
@@ -1932,9 +1928,7 @@
      "his_command": true,
      "healthy_when": "git status of the pull-only box clone is clean"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "IC-crm-health 08 Oct 15:04 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-health --seed 495689"
+   }
   },
   {
    "id": "b_rulesinbox",
