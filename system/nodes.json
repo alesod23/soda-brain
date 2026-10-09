@@ -252,10 +252,8 @@
    "writes": "a to-do ticked with the quote (laptop, pipeline.py tick|redate --evidence) or a card closed through POST /close with evidence and no verdict; _system/todo-match.jsonl",
    "llm": "one Opus judgement, only when the nearest hit has sim >= 0.84 (MATCH_STRONG)",
    "gate": "none: the Cleaning tab shows it and can reverse it",
-   "status": "broken",
-   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done.",
-   "status_before_broken": "live",
-   "broken": "IC-event-dry-run 10 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only event-dry-run --seed 687606"
+   "status": "live",
+   "note": "Proven on Sophie Tollmann's note: sim 0.859, the Pietro to-do not done, card #2 done."
   },
   {
    "id": "rd_sweep",
@@ -1419,7 +1417,7 @@
    "writes": "windows.jsonl with the opener",
    "llm": "none",
    "gate": "",
-   "status": "broken",
+   "status": "live",
    "note": "The reviewer of the no-console-window rule; window_lint.py after every task change.",
    "tasks": [
     "DA-WindowWatch"
@@ -1443,9 +1441,7 @@
      "escalate": "STUCK: a page-file size change is a permission/system setting (his)",
      "healthy_when": "no System event 2004 (Resource-Exhaustion-Detector, low virtual memory) in 2 h, commit charge under 90%, the watcher's tick not ending 0xc000012d"
     }
-   },
-   "status_before_broken": "live",
-   "broken": "IC-window-lint 10 Oct 01:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only window-lint --seed 687606"
+   }
   },
   {
    "id": "w_intcheck",
