@@ -1109,17 +1109,21 @@
    "label": "DailyCampaign-AB-Reminder",
    "kind": "script",
    "machine": "laptop",
-   "cadence": "one shot, fired 2026-10-09 10:33 (card posted, task self-unregistered)",
+   "cadence": "one shot 2026-10-09 10:00",
    "code": "gtm-eng/daily-campaign/ab-reminder.ps1",
    "reads": "drafts-cache",
    "writes": "one hub card",
    "llm": "none",
    "gate": "hub card",
-   "status": "retired",
-   "tasks": [],
+   "status": "stale-ledger",
+   "tasks": [
+    "DailyCampaign-AB-Reminder"
+   ],
    "paths": [
     "~/gtm-eng/daily-campaign/ab-reminder.ps1"
-   ]
+   ],
+   "status_before_broken": "armed",
+   "broken": "L-w_ab-10091714 09 Oct 17:14 · fix_session · a fix session: correct nodes.json (or the system) so the ledger is true again, then build_map.py"
   },
   {
    "id": "w_us",
