@@ -106,3 +106,4 @@
 - 🕰️ [Get-Date before ANY written time; never carry a time forward from the thread](feedback_check_clock_before_timestamps.md) — told a peer "00:30" at 12:06 the next day (2026-10-01).
 - 📂 [Sub-index: system rules 29 Sept to 1 Oct 2026](index_system_rules_2026_09_end.md) — meeting loop, feedback worker, owed to-dos, performance hints, LinkedIn ingest, simulation harness, Word batch edits, visual check, slot/calendar check, booked-call loop, Notion fetch-first, send ledger, the promised connectivity gate.
 - 🧪 [Every desired outcome he states, in any session, is a candidate eval case for SODA v2](feedback_desired_outcomes_become_evals.md) — compare with the set, add where there is a spot (2026-10-08).
+- 🇺🇸🕰️ [Times for him in HIS current zone (US trip: laptop clock, EDT then PT), never UTC/Rome by default](feedback_use_his_local_time_zone.md) (2026-10-10).
