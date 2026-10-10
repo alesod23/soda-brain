@@ -132,7 +132,7 @@ Crontab header sets `TELEGRAM_STATE_DIR=/home/da/.claude/channels/telegram-null`
 | `*/10` | `task-land/_system/gtm-agent/box_linkedin_watch.py` | LinkedIn session safety net |
 | `* * * * *` | `task-land/_system/vps/savior_prompt_watch.py` | one hub card when a claude permission prompt sits unanswered in the savior pane |
 | `*/5` | `clinics-campaign/fire.py tick` (triage venv, `flock /tmp/clinics-fire.lock`) | US clinics campaign (10 Oct 2026): plans the day's 10 from 06:00 Rome Mon-Fri, sends inside 08:00-17:00 recipient-local, bumps, reply/bounce sweep, daily hub update card |
-| `*/20` | `clinics-campaign/supervise.py` (`flock /tmp/clinics-research.lock`) | clinics research supervisor, Mon-Fri 04:30-15:00 Rome: starts `research.py` (2 headless Opus workers, ~75 min) when today has no completed run; top-up, max 3 starts a day |
+| `*/20` | `clinics-campaign/supervise.py` (`flock /tmp/clinics-research.lock`) | clinics research supervisor, Mon-Fri 04:30-15:00 Rome: starts `research.py` (2 headless Opus workers x 35 min, ~15 people; skipped while 60+ wait) when today has no completed run; top-up, max 3 starts a day |
 
 The job runner's */5 run (`task-land/_system/job_runner.py run`) also carries THE TODO LANE (G119, 4 Oct 2026): `todo_worker.py box-lane` starts one detached to-do worker tick when the laptop has been offline 30 min on the tailnet (no cron line of its own; stamp `todo-worker/box-last-tick.txt`, log `todo-worker/box-tick.log`).
 
