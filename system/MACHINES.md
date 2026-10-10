@@ -131,6 +131,8 @@ Crontab header sets `TELEGRAM_STATE_DIR=/home/da/.claude/channels/telegram-null`
 | `*/10` | `task-land/_system/gtm-agent/box_watch.py` | laptop GTM-agent heartbeat watch; one card a day if the laptop is silent 60 min in business hours with sends due |
 | `*/10` | `task-land/_system/gtm-agent/box_linkedin_watch.py` | LinkedIn session safety net |
 | `* * * * *` | `task-land/_system/vps/savior_prompt_watch.py` | one hub card when a claude permission prompt sits unanswered in the savior pane |
+| `*/5` | `clinics-campaign/fire.py tick` (triage venv, `flock /tmp/clinics-fire.lock`) | US clinics campaign (10 Oct 2026): plans the day's 10 from 06:00 Rome Mon-Fri, sends inside 08:00-17:00 recipient-local, bumps, reply/bounce sweep, daily hub update card |
+| `*/20` | `clinics-campaign/supervise.py` (`flock /tmp/clinics-research.lock`) | clinics research supervisor, Mon-Fri 04:30-15:00 Rome: starts `research.py` (2 headless Opus workers, ~75 min) when today has no completed run; top-up, max 3 starts a day |
 
 The job runner's */5 run (`task-land/_system/job_runner.py run`) also carries THE TODO LANE (G119, 4 Oct 2026): `todo_worker.py box-lane` starts one detached to-do worker tick when the laptop has been offline 30 min on the tailnet (no cron line of its own; stamp `todo-worker/box-last-tick.txt`, log `todo-worker/box-tick.log`).
 
@@ -187,6 +189,7 @@ Logs:
 | Box | `~/.local/state/` | every cron and timer log (one dir or file per job), including `hub-outdated/run.log` (grep `DEGRADATO`), `gtm-agent/heartbeat.json` |
 | Box | `travel-search/trippy.log` | trippy supervise noise (5 MB of EADDRINUSE on 2026-10-01) |
 | Box | `sodanotif/notification-log.jsonl` | every card sodanotif and the hub ever pushed |
+| Box | `clinics-campaign/logs/` (fire, research, supervise, cron-*), `clinics-campaign/runs/` | the US clinics campaign |
 | Box | `task-land/_system/TELEGRAM-BRIDGE-LOG.md` | the Telegram lane fix log (read before touching Telegram, append after every fix) |
 | Box | `task-land/_system/vps/git-sync.log` (name as cited in memory: "git-sync.log 18:44") | sync ticks, "MERGED with sidecar auto-resolve" |
 | Laptop | `task-land/_system/daily-sync.log` | every absorb decision: `directive:`, `replace:`, `datebullet:`, `retitle:`, `renamed:`, `mirror tick held:`, `SAFETY:`, classifier confidence |

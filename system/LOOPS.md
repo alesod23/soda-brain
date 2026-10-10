@@ -617,6 +617,23 @@ section 4); the hygiene worker's normal pass now drains the G14 replay itself (G
   old == new on copies of the real WA store, decisions.jsonl, runs.jsonl, peak memory on a 60 MB feed); the dry tick
   of all 12 plans on COPIES against a 500 MB feed peaks at 81 MB working set, 0 send attempts, send ledger unchanged.
 
+- **THE US CLINICS CAMPAIGN (box, his approval 10 Oct 2026 04:18 Rome; installed the same night).** Code and state in
+  `/home/da/clinics-campaign/` (OUTSIDE every synced repo; contract `SPEC.md`, manual `README.md`). Who: ops people
+  (Director of Operations / Practice Administrator / COO) of independent specialty groups (70%: ASC, imaging, ortho,
+  eye, derm, cardio, GI, dental ...) and primary care groups (30%), not hospital-owned, in the 8 trip metros. Loop:
+  `supervise.py` (cron */20, Mon-Fri 04:30-15:00 Rome) starts `research.py` = exclusions (CRM + Notion snapshot; the
+  headless Notion read is attempted every run and fails on the box, logged per run) + 2 headless Opus workers
+  (`--strict-mcp-config`, TELEGRAM_STATE_DIR null, tools WebSearch,WebFetch,Bash,Read,Write) -> `state/pool.json`
+  (only `published` or SMTP-`verified` addresses; port 25 is open on the box). `fire.py tick` (cron */5): from 06:00 Rome
+  plans the day's 10 (7 specialty + 3 primary, one per group, no group within 2 business days, max 2 mailboxes), each at
+  a random time 08:00-17:00 of the recipient's city; clock checked before each send (late = slides, never sent late);
+  `gmail.py send --account tundra --confirmed` with the APPROVED text filled deterministically (`draft.py`), label
+  `Campaign/clinics`, CRM via intake :4137 + `campaigns[]` (`clinics-<date>`) + `campaign_state`, `state/ledger.json` +
+  the shared send ledger (`clinics-<date>`, own cap 10/day per his words), Notion Contacts row QUEUED in
+  `state/notion-queue.jsonl` (no headless Notion on the box). Bump at +4 business days in the same thread unless a
+  non-automatic inbound; bounce = dead; hourly reply/bounce sweep. One hub UPDATE card per business day from 07:00 Rome
+  the next morning. First fire: Mon 12 Oct 2026. Stop: comment out the two `clinics-campaign` crontab lines.
+
 ## 7. The system agent and the feedback worker
 
 - **THE SYSTEM AGENT (built 4 Oct 2026 18:44 to 20:00; DESIGN-20261004-system-agent.md), the maintainer of the whole
