@@ -719,7 +719,7 @@
     "~/.medtech-crm/crm-app"
    ],
    "status_before_broken": "live",
-   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 560526 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only crm-today` | UI-laptop-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only laptop-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only crm-today` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 560526 --target both"
+   "broken": "IC-review-parity 04 Oct 19:49 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 560526 | UI-crm-today-1568 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only crm-today` | UI-crm-today-390 05 Oct 11:04 · fix_session · open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only crm-today` | IC-crm-review 06 Oct 17:00 · agent · reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 560526 --target both | UI-laptop-today-390 10 Oct 14:03 · fix_session · open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only laptop-today`"
   },
   {
    "id": "gate_page",
