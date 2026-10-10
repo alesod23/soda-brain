@@ -188,7 +188,7 @@ footer p{max-width:90ch}
   <h1>One brain, many agents, one decider</h1>
   <p class="lede">The system as it runs on 4 October 2026: events from the world, readers that decide what an event means for one person, a brain that remembers what is open, one gate where Alessandro says yes, the systems that execute the yes, and the loop that turns his sentences into rules. Same rules as the rest of the map: updated in the same turn as the system, dated, no secrets.</p>
   <div class="meta">
-    <span>Last verified <b>2026-10-10 20:13</b></span>
+    <span>Last verified <b>2026-10-10 20:33</b></span>
     <span>Workers <b id="n-workers">0</b></span>
     <span>Live <b id="n-live">0</b></span>
     <span>Built, off or armed <b id="n-armed">0</b></span>
@@ -313,7 +313,7 @@ footer p{max-width:90ch}
     <div class="card"><h3><i class="dot broken"></i>Known broken or stale (generated from the System Agent registry, task-land/_system/system-agent/broken.jsonl)</h3><ul>
 <!-- registry:start -->
       <li><b>gate_crm</b> (IC-review-parity, agent, since 04 Oct 19:49): laptop and box serve different CRM review queues (pids, dealt or current version); next: reproduce: python task-land/_system/goal-run/integration_check.py --only review-parity --seed 776897</li>
-      <li><b>integration:maps-fresh</b> (IC-maps-fresh, agent, since 05 Oct 03:00): a soda-brain/system map is older than the newest LOOPS.md change; next: reproduce: python task-land/_system/goal-run/integration_check.py --only maps-fresh --seed 978026</li>
+      <li><b>integration:maps-fresh</b> (IC-maps-fresh, agent, since 05 Oct 03:00): a soda-brain/system map is older than the newest LOOPS.md change; next: reproduce: python task-land/_system/goal-run/integration_check.py --only maps-fresh --seed 728951</li>
       <li><b>ln_compile</b> (SK-hub, agent, since 05 Oct 08:00): compiled skill hub lags HUB-CARD-CONTRACT.md: skill rules_in_ledger 57, ledger 84; missing H60, H61, H62, H63, H64, H65, H66, H67, H68, H69, H70, H71, H72, H73,; next: merge the new rows into _system/drafts/skill-map-hub.json (existing rules first, 110-line check), then compile_skill.py </li>
       <li><b>gate_crm</b> (IC-crm-review, agent, since 06 Oct 17:00): CRM review mode fails review_board_check.py (laptop proxy or box UI); next: reproduce: python task-land/_system/goal-run/integration_check.py --only crm-review --seed 920382 --target both</li>
       <li><b>ln_compile</b> (SK-crm, agent, since 07 Oct 08:00): compiled skill crm lags CRM-CONTRACT.md: skill rules_in_ledger 60, ledger 63; missing H61, H62, H63; compile: compile_skill: CHECK FAILED: 112 lines: no longer ; next: merge the new rows into _system/drafts/skill-map-crm.json (existing rules first, 110-line check), then compile_skill.py </li>
@@ -343,8 +343,8 @@ footer p{max-width:90ch}
       <li><b>gate_crm</b> (UI-laptop-review-1568, fix_session, since 10 Oct 17:03): UI walk laptop-review@1568: console errors (all); failed requests (all); next: open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only laptop-review`</li>
       <li><b>gate_crm</b> (UI-crm-review-390, fix_session, since 10 Oct 17:03): UI walk crm-review@390: &#x27;loading&#x27; still on screen after 10 s (load); empty state but the API has items (board); next: open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only crm-review`</li>
       <li><b>gate_crm</b> (UI-laptop-review-390, fix_session, since 10 Oct 17:03): UI walk laptop-review@390: console errors (all); failed requests (all); next: open the screenshots in 2026-10-10, fix the page, re-run `ui_walk.py --only laptop-review`</li>
+      <li><b>ledger:task:WA-BoxForward</b> (LC-ledger-task-wa-boxforward, fix_session, since 10 Oct 20:33): the scheduled task WA-BoxForward has no node in the ledger (nodes.json): nothing probes it; next: a fix session: add the node to nodes.json with a real probe (task registered + recent run + log moved), then build_map.p</li>
       <li><b>checklist:G80</b> (PK-G80, him, since 05 Oct 03:04): G80: pgvector 0.6 -&gt; 0.8 (sudo); next: a fix session: pgvector 0.6 -&gt; 0.8 (sudo)</li>
-      <li><b>ev_cal</b> (A-calendar-tundra-10051933, him, since 05 Oct 19:18): the tundra calendar cannot be read: its authorisation expired; next: the check passes once the box receiver has the token</li>
       <li>waiting for his decision (not broken): 15 items, listed in the System Agent report</li>
       <!-- registry:end -->
     </ul></div>
@@ -377,7 +377,7 @@ ev_mail:{label:"inbound email",kind:"event",machine:"cloud",cadence:"continuous"
 ev_wa:{label:"WhatsApp message",kind:"event",machine:"box",cadence:"continuous",reads:"the linked device (Baileys daemon)",writes:"message-store.jsonl, shipped to Drive DA/ every minute",status:"live"},
 ev_li:{label:"LinkedIn accept or DM",kind:"event",machine:"laptop",cadence:"every 15 min",reads:"the inbox in a dedicated Chrome profile (~17 newest threads); quiet threads of CRM Today people by id",writes:"G:/My Drive/DA/linkedin-store.jsonl (in and fromMe)",status:"live",note:"Since 4 Oct 22:10 (G89) every tick also opens up to 2 quiet threads by id (li_person.py fetch_person: CRM Today people outside the inbox window, once a day); poll.py --person reads one on demand. Same store, same ids."},
 ev_notion:{label:"Notion meeting note",kind:"event",machine:"cloud",cadence:"Notion meeting AI writes it 22 to 49 min after the call starts",reads:"the Meetings DB",writes:"",status:"live"},
-ev_cal:{label:"calendar booking",kind:"event",machine:"cloud",cadence:"continuous",reads:"Google Calendar of the chosen account",writes:"",status:"broken",broken:"A-calendar-tundra-10051933 05 Oct 19:18 · him · the check passes once the box receiver has the token"},
+ev_cal:{label:"calendar booking",kind:"event",machine:"cloud",cadence:"continuous",reads:"Google Calendar of the chosen account",writes:"",status:"live"},
 ev_slack:{label:"Slack DM",kind:"event",machine:"box",cadence:"every 60 s (poller); every 10 min (sweep)",reads:"cdtm, xplore workspaces",writes:"",status:"live",note:"An event source for the forward and reverse passes since 4 Oct."},
 ev_page:{label:"a line on the daily page",kind:"event",machine:"laptop",cadence:"absorbed ~60 s after typing stops",reads:"task-land/Daily/<date>.md",writes:"a task file",status:"live"},
 ev_sentence:{label:"his sentence",kind:"event",machine:"phone",cadence:"whenever",reads:"Telegram, the review page, a session",writes:"",status:"live",note:"The five sentences: this sucks because, I like this, this again, change X, slower/faster."},

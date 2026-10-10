@@ -87,7 +87,7 @@
    "cadence": "continuous",
    "reads": "Google Calendar of the chosen account",
    "writes": "",
-   "status": "broken",
+   "status": "live",
    "checks": {
     "calendar:*": {
      "probe": {
@@ -102,9 +102,7 @@
      },
      "his_command": true
     }
-   },
-   "status_before_broken": "live",
-   "broken": "A-calendar-tundra-10051933 05 Oct 19:18 · him · the check passes once the box receiver has the token"
+   }
   },
   {
    "id": "ev_slack",
