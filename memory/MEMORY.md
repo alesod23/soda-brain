@@ -11,6 +11,7 @@
 - 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
 
 ## Rules that bite first
+- 🖥️🧭 [herdr = his SODA monitor: tabs soda (status line) + mind (running agent) + one tab per piece of work; box = machine "box"](reference_herdr_soda_setup.md) — minimal on purpose; check the to-do worker is not already on a to-do before starting a session (10 Oct 2026).
 - 📨🔁 [An approved send this machine can't do goes to the other machine and is pursued until sent; his approval is the authorisation](feedback_approved_send_crosses_machines_until_done.md) — Lena's Slack sat unsent a day on hub #142 (2026-10-10).
 - 🔁⛔ [Never run coattio-sync.sh by hand on the box: racing the cron left the CRM and intake DOWN](feedback_never_run_coattio_sync_by_hand.md) — pull with `git pull --ff-only`, or wait 2 min (2026-10-10).
 - 📄 [An HTML file sent to a phone: static, charset, no JS, screenshot it at 390 px first](feedback_html_file_for_phone_must_be_static.md) — the call sheet opened blank with 路 for · on Caleb's phone (2026-10-09).
