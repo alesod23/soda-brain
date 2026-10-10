@@ -11,6 +11,7 @@
 - 🔎🧩 [Edge first for every NEW task: look up a skill on getedge.cc (MCP `edge`, both machines) as the baseline; the simulation experiments with those skills](feedback_edge_first_for_new_tasks.md) — one `find_skill` call before building; prior: people-search lost to WebSearch on 18 Sep (2026-10-03).
 
 ## Rules that bite first
+- 🔁⛔ [Never run coattio-sync.sh by hand on the box: racing the cron left the CRM and intake DOWN](feedback_never_run_coattio_sync_by_hand.md) — pull with `git pull --ff-only`, or wait 2 min (2026-10-10).
 - 📄 [An HTML file sent to a phone: static, charset, no JS, screenshot it at 390 px first](feedback_html_file_for_phone_must_be_static.md) — the call sheet opened blank with 路 for · on Caleb's phone (2026-10-09).
 - 📏 [Long Telegram messages: one line + the rest in the expandable (collapsed) blockquote](feedback_long_telegram_messages_collapsed.md) — my replies and hub update cards (2026-10-07).
 - 🐘📇 [CRM store = Postgres on the box (3b); to-dos, cards, messages in with embeddings; meetings via RAG tool; native TG buttons by plugin patch (his decisions 5 Oct 2026)](project_crm_postgres_one_store.md) — build on the Postgres path only.
